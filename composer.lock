@@ -1,0 +1,109 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "e2696173a6de1404810ba04fb9bdaee2",
+    "packages": [
+        {
+            "name": "clippings/atlas",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/clippings/atlas.git",
+                "reference": "5a585f46407ded9157ce78f5950fbcf33ed30128"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/clippings/atlas/zipball/5a585f46407ded9157ce78f5950fbcf33ed30128",
+                "reference": "5a585f46407ded9157ce78f5950fbcf33ed30128",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "openbuildings/environment-backup": "0.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CL\\Atlas\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Kerin",
+                    "email": "ikerin@gmail.com",
+                    "homepage": "http://www.openbuildings.com",
+                    "role": "Author"
+                },
+                {
+                    "name": "Haralan Dobrev",
+                    "email": "hkdobrev@gmail.com",
+                    "homepage": "http://hkdobrev.blogspot.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "SQL Builder for PDO",
+            "time": "2014-01-24 16:23:34"
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "openbuildings/environment-backup",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/OpenBuildings/environment-backup.git",
+                "reference": "382d388ec2a9d9c414965a20347671328ab0b1f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/OpenBuildings/environment-backup/zipball/382d388ec2a9d9c414965a20347671328ab0b1f2",
+                "reference": "382d388ec2a9d9c414965a20347671328ab0b1f2",
+                "shasum": ""
+            },
+            "require-dev": {
+                "openbuildings/kohana-test-bootsrap": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Openbuildings\\EnvironmentBackup\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Kerin",
+                    "email": "ivan@openbuildings.com",
+                    "homepage": "https://github.com/OpenBuildings/jam",
+                    "role": "Author"
+                }
+            ],
+            "description": "Backup/restore environment variables: globals, static vars, configs",
+            "time": "2013-07-24 07:26:52"
+        }
+    ],
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "clippings/atlas": 20
+    },
+    "platform": {
+        "php": ">=5.4.0"
+    },
+    "platform-dev": [
+
+    ]
+}

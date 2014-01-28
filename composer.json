@@ -1,0 +1,22 @@
+{
+    "name": "clippings/luna",
+    "description": "Lightweight ORM",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Ivan Kerin",
+            "email": "ikerin@gmail.com",
+            "role": "Author"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "clippings/atlas": "dev-master"
+    },
+    "require-dev": {
+        "openbuildings/environment-backup": "0.1.*"
+    },
+    "autoload": {
+        "psr-4": {"CL\\Luna\\": "src/"}
+    }
+}

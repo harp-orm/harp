@@ -1,7 +1,7 @@
 <?php namespace CL\Luna\Model;
 
 use CL\Luna\DB\DB;
-use CL\Luna\Model\Config;
+use CL\Luna\Util\Arr;
 
 /**
  * @author     Ivan Kerin
@@ -53,7 +53,7 @@ class Model {
 			$this->setOriginals($attributes);
 		}
 
-		// $attributes = self::loadFieldData($attributes);
+		$attributes = Arr::invokeObjects($attributes, static::getFields(), 'load');
 
 		foreach ($attributes as $name => $value)
 		{
@@ -61,8 +61,23 @@ class Model {
 		}
 	}
 
-	// public function validate()
-	// {
-	// 	self::executeValidators($this);
-	// }
+	public function getErrors()
+	{
+		if ( ! $this->errors)
+		{
+			$this->errors = new Errors($this);
+		}
+
+		return $this->errors;
+	}
+
+	public function validate()
+	{
+		$this->getErrors()->executeValidators(static::getValidators());
+	}
+
+	public function isValid()
+	{
+		return $this->getErrors()->isEmpty();
+	}
 }

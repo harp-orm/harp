@@ -7,7 +7,7 @@
  */
 trait SchemaTrait
 {
-	protected static $schema;
+	private static $schema;
 
 	public static function getTable()
 	{

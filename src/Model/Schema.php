@@ -24,11 +24,6 @@ class Schema
 
 	public function setTable($table)
 	{
-		if ($this->finalized)
-		{
-			throw new SchemaFinalizedException();
-		}
-
 		$this->table = (string) $table;
 	}
 
@@ -39,11 +34,6 @@ class Schema
 
 	public function setDb($db)
 	{
-		if ($this->finalized)
-		{
-			throw new SchemaFinalizedException();
-		}
-
 		$this->db = (string) $db;
 	}
 
@@ -54,11 +44,6 @@ class Schema
 
 	public function setFields(array $fields)
 	{
-		if ($this->finalized)
-		{
-			throw new SchemaFinalizedException();
-		}
-
 		$this->fields = array_merge($this->fields, $fields);
 	}
 
@@ -69,11 +54,6 @@ class Schema
 
 	public function setRels(array $rels)
 	{
-		if ($this->finalized)
-		{
-			throw new SchemaFinalizedException();
-		}
-
 		$this->rels = array_merge($this->rels, $rels);
 	}
 
@@ -84,11 +64,6 @@ class Schema
 
 	public function setValidators(array $validators)
 	{
-		if ($this->finalized)
-		{
-			throw new SchemaFinalizedException();
-		}
-
 		$this->validators = array_merge_recursive($this->validators, $validators);
 	}
 

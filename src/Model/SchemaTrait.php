@@ -31,7 +31,7 @@ trait SchemaTrait
 
 	public static function getValidators()
 	{
-		return self::$schema->getVaidators();
+		return self::$schema->getValidators();
 	}
 
 	public static function initializeSchema()

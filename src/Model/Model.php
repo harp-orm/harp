@@ -12,6 +12,8 @@ class Model {
 
 	use DirtyTrackingTrait;
 
+	protected $errors;
+
 	public static function get($id)
 	{
 		$result = static::all()
@@ -65,7 +67,7 @@ class Model {
 	{
 		if ( ! $this->errors)
 		{
-			$this->errors = new Errors($this);
+			$this->errors = new Errors();
 		}
 
 		return $this->errors;
@@ -73,7 +75,9 @@ class Model {
 
 	public function validate()
 	{
-		$this->getErrors()->executeValidators(static::getValidators());
+		$this->getErrors()->validateChanges($this->getChanges(), static::getValidators());
+
+		return $this->isValid();
 	}
 
 	public function isValid()

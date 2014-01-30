@@ -11,6 +11,12 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase {
 
 	public $env;
 
+	public static function setUpBeforeClass()
+	{
+		setlocale(LC_MESSAGES, 'en_US');
+		bindtextdomain("luna", __DIR__."/../../locale");
+	}
+
 	public function setUp()
 	{
 		parent::setUp();
@@ -31,6 +37,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase {
 		$this->env->backup_and_set(array(
 			'CL\Luna\DB\DB::$instances' => array(),
 		));
+
 	}
 
 	public function tearDown()

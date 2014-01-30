@@ -6,12 +6,10 @@ class TestTest extends AbstractTestCase {
 	{
 		$users = User::all()->scope('unregistered');
 		$user = $users->execute()->fetch();
-		setlocale(LC_MESSAGES, 'en');
-		putenv("LANG=en.utf8");
-		bindtextdomain("luna", "../../locale");
-		bind_textdomain_codeset('luna', 'UTF-8');
-		textdomain("luna");
-		var_dump(_('Field must be present'));
+		$user->name = NULL;
+		$user->validate();
+		var_dump($user->getErrors());
+
 		var_dump($user);
 	}
 

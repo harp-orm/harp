@@ -48,6 +48,9 @@ class User extends Model {
 	public static function CL_Luna_Test_User(Schema $config)
 	{
 		$config
+			->setValidators([
+				'name' => [new \CL\Luna\Validator\Present()],
+			])
 			->setFields([
 				'name' => new \CL\Luna\Field\String(),
 				'password' => new \CL\Luna\Field\Password(),

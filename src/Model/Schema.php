@@ -25,6 +25,8 @@ class Schema
 	public function setTable($table)
 	{
 		$this->table = (string) $table;
+
+		return $this;
 	}
 
 	public function getDb()
@@ -35,6 +37,8 @@ class Schema
 	public function setDb($db)
 	{
 		$this->db = (string) $db;
+
+		return $this;
 	}
 
 	public function getFields()
@@ -45,6 +49,8 @@ class Schema
 	public function setFields(array $fields)
 	{
 		$this->fields = array_merge($this->fields, $fields);
+
+		return $this;
 	}
 
 	public function getRels()
@@ -55,6 +61,8 @@ class Schema
 	public function setRels(array $rels)
 	{
 		$this->rels = array_merge($this->rels, $rels);
+
+		return $this;
 	}
 
 	public function getValidators()
@@ -65,6 +73,8 @@ class Schema
 	public function setValidators(array $validators)
 	{
 		$this->validators = array_merge_recursive($this->validators, $validators);
+
+		return $this;
 	}
 
 	function __construct($class_name)

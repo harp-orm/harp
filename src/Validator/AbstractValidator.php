@@ -7,15 +7,8 @@ use CL\Luna\Model\Instance;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class AbstractValidator {
+abstract class AbstractValidator {
 
-	public function execute(Instance $model, $field)
-	{
-		if ($model->isFieldChanged($field))
-		{
-			$this->validate();
-		}
-	}
-
+	abstract public function getError($attribute, $value);
 
 }

@@ -5,15 +5,6 @@
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-abstract class AbstractField
+class Integer extends AbstractField
 {
-	public function load($value)
-	{
-		return $value;
-	}
-
-	public function save($value)
-	{
-		return $value;
-	}
 }

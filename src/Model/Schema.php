@@ -9,13 +9,32 @@ use ReflectionClass;
  */
 class Schema
 {
+	private $name;
 	private $table;
 	private $db = 'default';
+	private $primaryKey = 'id';
 	private $fields = array();
 	private $events = array();
 	private $rels = array();
 	private $validators = array();
 	private $finalized = FALSE;
+
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	public function getPrimaryKey()
+	{
+		return $this->primaryKey;
+	}
+
+	public function setPrimaryKey($primaryKey)
+	{
+		$this->primaryKey = $primaryKey;
+
+		return $this;
+	}
 
 	public function getTable()
 	{
@@ -80,13 +99,18 @@ class Schema
 	function __construct($class_name)
 	{
 		$class = new ReflectionClass($class_name);
-		$this->table = strtolower($class->getShortName());
+		$this->table = $this->name = strtolower($class->getShortName());
 
 		$this->callInitializeMethod($class);
 
 		foreach ($class->getTraits() as $trait)
 		{
 			$this->callInitializeMethod($trait);
+		}
+
+		foreach ($this->getRels() as $name => $rel)
+		{
+			$rel->initialize($this, $name);
 		}
 
 		$this->finialized = TRUE;

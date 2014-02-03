@@ -3,6 +3,9 @@
 use CL\Luna\Model\Model;
 use CL\Luna\Model\Schema;
 use CL\Luna\Model\SchemaTrait;
+use CL\Luna\Field as F;
+use CL\Luna\Rel as R;
+use CL\Luna\Validator as V;
 
 /**
  * @author     Ivan Kerin
@@ -30,11 +33,16 @@ class User extends Model {
 	public $password;
 
 	/**
+	 * @var integer
+	 */
+	public $address_id;
+
+	/**
 	 * @return Post
 	 */
 	public function address()
 	{
-		return $this->loadAssociation('address');
+		return parent::getRel('address');
 	}
 
 	/**
@@ -42,18 +50,22 @@ class User extends Model {
 	 */
 	public function posts()
 	{
-		return $this->loadAssociation('post');
+		return parent::getRel('posts');
 	}
 
 	public static function CL_Luna_Test_User(Schema $config)
 	{
 		$config
+			->setRels([
+				'posts' => new R\HasMany('CL\Luna\Test\Post'),
+				'address' => new R\BelongsTo('CL\Luna\Test\Address'),
+			])
 			->setValidators([
-				'name' => [new \CL\Luna\Validator\Present()],
+				'name' => [new V\Present()],
 			])
 			->setFields([
-				'name' => new \CL\Luna\Field\String(),
-				'password' => new \CL\Luna\Field\Password(),
+				'name' => new F\String(),
+				'password' => new F\Password(),
 			]);
 	}
 

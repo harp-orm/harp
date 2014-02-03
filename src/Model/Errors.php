@@ -35,7 +35,7 @@ class Errors{
 		{
 			foreach ($validators[$attribute] as $validator)
 			{
-				if (($error = $validator->getError($attribute, $change[1])))
+				if (($error = $validator->getError($attribute, $change)))
 				{
 					$this->add($error);
 				}

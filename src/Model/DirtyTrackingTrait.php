@@ -40,7 +40,7 @@ trait DirtyTrackingTrait
 		{
 			if ($this->isAttributeChanged($name))
 			{
-				$changes[$name] = [$original, $this->$name];
+				$changes[$name] = $this->$name;
 			}
 		}
 

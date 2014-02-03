@@ -13,6 +13,8 @@ class Model {
 	use DirtyTrackingTrait;
 
 	protected $errors;
+	protected $rels;
+	protected $isLoaded = FALSE;
 
 	public static function get($id)
 	{
@@ -32,6 +34,27 @@ class Model {
 			->from(static::getTable());
 	}
 
+	public static function delete()
+	{
+		return self::getDbInstance()
+			->delete()
+			->from(static::getTable());
+	}
+
+	public static function update()
+	{
+		return self::getDbInstance()
+			->update()
+			->table(static::getTable());
+	}
+
+	public static function insert()
+	{
+		return self::getDbInstance()
+			->insert()
+			->into(static::getTable());
+	}
+
 	public static function getDbInstance()
 	{
 		static::initializeSchema();
@@ -41,26 +64,83 @@ class Model {
 
 	public function __construct(array $attributes = NULL, $loaded = FALSE)
 	{
-		static::initializeSchema();
-
-		if ($loaded)
+		if ($loaded === TRUE)
 		{
-			$fieldNames = array_keys(static::getFields());
+			$attributes = Arr::invokeObjects($this->getAttributes(), static::getFields(), 'load');
 
-			foreach ($fieldNames as $name)
-			{
-				$attributes[$name] = $this->$name;
-			}
-
+			$this->setAttributes($attributes);
 			$this->setOriginals($attributes);
+
+			$this->isLoaded = TRUE;
 		}
+		else
+		{
+			$this->setOriginals($this->getAttributes());
+			$this->setAttributes($attributes);
+		}
+	}
 
-		$attributes = Arr::invokeObjects($attributes, static::getFields(), 'load');
+	public function getId()
+	{
+		return $this->{static::getPrimaryKey()};
+	}
 
-		foreach ($attributes as $name => $value)
+	public function isLoaded()
+	{
+		return $this->isLoaded;
+	}
+
+	public function setAttributes(array $values)
+	{
+		foreach ($values as $name => $value)
 		{
 			$this->$name = $value;
 		}
+	}
+
+	public function save()
+	{
+		$this->validate();
+
+		if ($this->isChanged())
+		{
+			$changes = Arr::invokeObjects($this->getChanges(), static::getFields(), 'save');
+			$this->insertOrUpdate($changes);
+		}
+	}
+
+	public function getAttributes()
+	{
+		$values = array();
+		$fieldNames = array_keys(static::getFields());
+
+		foreach ($fieldNames as $name)
+		{
+			$values[$name] = $this->$name;
+		}
+
+		return $values;
+	}
+
+	public function insertOrUpdate(array $attributes)
+	{
+		$query = $this->isLoaded()
+			? static::update()->whereKey($this->getId())
+			: static::insert();
+
+		$query
+			->set($attributes)
+			->execute();
+	}
+
+	public function getRel($name)
+	{
+		if ( ! isset($this->rels[$name]))
+		{
+			$this->rels[$name] = static::getRels()[$name]->load($this);
+		}
+
+		return $this->rels[$name];
 	}
 
 	public function getErrors()

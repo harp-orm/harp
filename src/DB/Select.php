@@ -18,18 +18,25 @@ class Select extends \CL\Atlas\Query\SelectQuery {
 		return $this;
 	}
 
-	public function getFetchCLass()
+	public function getFetchClass()
 	{
 		return $this->fetchClass;
+	}
+
+	public function whereKey($key)
+	{
+		$primaryKey = call_user_func([$this->getFetchClass(), 'getPrimaryKey']);
+
+		return $this->where([$primaryKey => $key]);
 	}
 
 	public function execute()
 	{
 		$pdoStatement = parent::execute();
 
-		if ($this->getFetchCLass())
+		if ($this->getFetchClass())
 		{
-			$pdoStatement->setFetchMode(\PDO::FETCH_CLASS, $this->getFetchCLass(), array(NULL, TRUE));
+			$pdoStatement->setFetchMode(\PDO::FETCH_CLASS, $this->getFetchClass(), array(NULL, TRUE));
 		}
 
 		return $pdoStatement;

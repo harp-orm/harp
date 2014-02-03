@@ -1,5 +1,7 @@
 <?php namespace CL\Luna\DB;
 
+use PDO;
+
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -12,8 +14,9 @@ class DB extends \CL\Atlas\DB {
 		'username' => '',
 		'password' => '',
 		'driver_options' => array(
-			\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-			\PDO::ATTR_STATEMENT_CLASS => 'CL\Luna\DB\PDOStatement',
+			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+			PDO::ATTR_STATEMENT_CLASS => 'CL\Luna\DB\PDOStatement',
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 		),
 	);
 
@@ -22,4 +25,13 @@ class DB extends \CL\Atlas\DB {
 		return new Select(NULL, $this);
 	}
 
+	public function delete()
+	{
+		return new Delete(NULL, $this);
+	}
+
+	public function update()
+	{
+		return new Update(NULL, $this);
+	}
 }

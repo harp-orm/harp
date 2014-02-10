@@ -10,14 +10,13 @@ use CL\Luna\Model\Model;
  */
 abstract class AbstractRel
 {
-	protected $foreignClass;
 	protected $foreignSchema;
 	protected $schema;
 	protected $name;
 
-	public function __construct($foreign_class, array $attributes = NULL)
+	public function __construct(Schema $foreign_schema, array $attributes = NULL)
 	{
-		$this->foreignClass = $foreign_class;
+		$this->foreignSchema = $foreign_schema;
 
 		if ($attributes)
 		{
@@ -38,23 +37,8 @@ abstract class AbstractRel
 		return $this->schema;
 	}
 
-	public function getForeignClass()
-	{
-		return $this->foreignClass;
-	}
-
-	public function getForeignQuery()
-	{
-		return call_user_func([$this->getForeignClass(), 'all']);
-	}
-
 	public function getForeignSchema()
 	{
-		if ($this->foreignSchema === NULL)
-		{
-			$this->foreignSchema = call_user_func([$this->foreignClass, 'getSchema']);
-		}
-
 		return $this->foreignSchema;
 	}
 
@@ -63,9 +47,4 @@ abstract class AbstractRel
 		$this->schema = $schema;
 		$this->name = $name;
 	}
-
-	abstract function load(Model $parent);
-
-	// abstract function save(Model $parent);
-
 }

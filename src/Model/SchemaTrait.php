@@ -1,5 +1,10 @@
 <?php namespace CL\Luna\Model;
 
+use CL\Luna\DB\SelectSchema;
+use CL\Luna\DB\UpdateSchema;
+use CL\Luna\DB\InsertSchema;
+use CL\Luna\DB\DeleteSchema;
+
 /*
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -49,6 +54,36 @@ trait SchemaTrait
 		self::initializeSchema();
 
 		return self::$schema;
+	}
+
+	public static function get($id)
+	{
+		$result = static::all()
+			->whereKey($id)
+			->limit(1)
+			->execute();
+
+		return $result->fetch();
+	}
+
+	public static function all()
+	{
+		return new SelectSchema(static::getSchema());
+	}
+
+	public static function delete()
+	{
+		return new DeleteSchema(static::getSchema());
+	}
+
+	public static function update()
+	{
+		return new UpdateSchema(static::getSchema());
+	}
+
+	public static function insert()
+	{
+		return new InsertSchema(static::getSchema());
 	}
 
 	public static function initializeSchema()

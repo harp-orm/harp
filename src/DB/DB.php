@@ -19,19 +19,4 @@ class DB extends \CL\Atlas\DB {
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 		),
 	);
-
-	public function select()
-	{
-		return new Select(NULL, $this);
-	}
-
-	public function delete()
-	{
-		return new Delete(NULL, $this);
-	}
-
-	public function update()
-	{
-		return new Update(NULL, $this);
-	}
 }

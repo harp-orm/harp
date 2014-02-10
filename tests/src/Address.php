@@ -2,6 +2,7 @@
 
 use CL\Luna\Model as M;
 use CL\Luna\Field\String;
+use CL\Luna\Field\Integer;
 use CL\Luna\Rel\HasMany;
 use CL\Luna\Validator\Present;
 
@@ -13,6 +14,11 @@ use CL\Luna\Validator\Present;
 class Address extends M\Model {
 
 	use M\SchemaTrait;
+
+	/**
+	 * @var integer
+	 */
+	public $id;
 
 	/**
 	 * @var string
@@ -32,16 +38,17 @@ class Address extends M\Model {
 		return parent::getRel('users');
 	}
 
-	public static function CL_Luna_Test_User(M\Schema $config)
+	public static function CL_Luna_Test_Address(M\Schema $config)
 	{
 		$config
 			->setRels([
-				'users' => new HasMany('CL\Luna\Test\User'),
+				'users' => new HasMany(User::getSchema()),
 			])
 			->setValidators([
 				'locatoion' => [new Present()],
 			])
 			->setFields([
+				'id' => new Integer(),
 				'zip_code' => new String(),
 				'locatoion' => new String(),
 			]);

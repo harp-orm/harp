@@ -4,8 +4,11 @@ class TestTest extends AbstractTestCase {
 
 	public function testTest()
 	{
-		$user = new User(['name' => 'test 12', 'address_id' => 10]);
-		$user->save();
+		$result = Address::all()->executeAndLoad(['users']);
+		foreach ($result as $address)
+		{
+			var_dump($address, $address->users());
+		}
 	}
 
 }

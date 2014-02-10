@@ -10,6 +10,7 @@ use ReflectionClass;
 class Schema
 {
 	private $name;
+	private $modelClass;
 	private $table;
 	private $db = 'default';
 	private $primaryKey = 'id';
@@ -17,15 +18,24 @@ class Schema
 	private $events = array();
 	private $rels = array();
 	private $validators = array();
-	private $finalized = FALSE;
+	private $configurationLoaded;
 
 	public function getName()
 	{
+		$this->lazyLoadConfiguration();
+
 		return $this->name;
+	}
+
+	public function getModelClass()
+	{
+		return $this->modelClass;
 	}
 
 	public function getPrimaryKey()
 	{
+		$this->lazyLoadConfiguration();
+
 		return $this->primaryKey;
 	}
 
@@ -38,6 +48,8 @@ class Schema
 
 	public function getTable()
 	{
+		$this->lazyLoadConfiguration();
+
 		return $this->table;
 	}
 
@@ -50,6 +62,8 @@ class Schema
 
 	public function getDb()
 	{
+		$this->lazyLoadConfiguration();
+
 		return $this->db;
 	}
 
@@ -62,7 +76,14 @@ class Schema
 
 	public function getFields()
 	{
+		$this->lazyLoadConfiguration();
+
 		return $this->fields;
+	}
+
+	public function getFieldNames()
+	{
+		return array_keys($this->getFields());
 	}
 
 	public function setFields(array $fields)
@@ -74,7 +95,14 @@ class Schema
 
 	public function getRels()
 	{
+		$this->lazyLoadConfiguration();
+
 		return $this->rels;
+	}
+
+	public function getRelNames()
+	{
+		return array_keys($this->getRels());
 	}
 
 	public function setRels(array $rels)
@@ -86,6 +114,8 @@ class Schema
 
 	public function getValidators()
 	{
+		$this->lazyLoadConfiguration();
+
 		return $this->validators;
 	}
 
@@ -98,22 +128,30 @@ class Schema
 
 	function __construct($class_name)
 	{
-		$class = new ReflectionClass($class_name);
-		$this->table = $this->name = strtolower($class->getShortName());
+		$this->modelClass = $class_name;
+	}
 
-		$this->callInitializeMethod($class);
-
-		foreach ($class->getTraits() as $trait)
+	public function lazyLoadConfiguration()
+	{
+		if ($this->configurationLoaded === NULL)
 		{
-			$this->callInitializeMethod($trait);
-		}
+			$this->configurationLoaded = TRUE;
 
-		foreach ($this->getRels() as $name => $rel)
-		{
-			$rel->initialize($this, $name);
-		}
+			$class = new ReflectionClass($this->getModelClass());
+			$this->table = $this->name = strtolower($class->getShortName());
 
-		$this->finialized = TRUE;
+			$this->callInitializeMethod($class);
+
+			foreach ($class->getTraits() as $trait)
+			{
+				$this->callInitializeMethod($trait);
+			}
+
+			foreach ($this->getRels() as $name => $rel)
+			{
+				$rel->initialize($this, $name);
+			}
+		}
 	}
 
 	private function callInitializeMethod(ReflectionClass $class)

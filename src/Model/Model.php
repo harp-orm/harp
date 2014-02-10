@@ -1,6 +1,5 @@
 <?php namespace CL\Luna\Model;
 
-use CL\Luna\DB\DB;
 use CL\Luna\Util\Arr;
 
 /**
@@ -16,57 +15,13 @@ class Model {
 	protected $rels;
 	protected $isLoaded = FALSE;
 
-	public static function get($id)
-	{
-		$result = static::all()
-			->where(['id' => $id])
-			->limit(1)
-			->execute();
-
-		return $result->fetch();
-	}
-
-	public static function all()
-	{
-		return self::getDbInstance()
-			->select()
-			->setFetchClass(get_called_class())
-			->from(static::getTable());
-	}
-
-	public static function delete()
-	{
-		return self::getDbInstance()
-			->delete()
-			->from(static::getTable());
-	}
-
-	public static function update()
-	{
-		return self::getDbInstance()
-			->update()
-			->table(static::getTable());
-	}
-
-	public static function insert()
-	{
-		return self::getDbInstance()
-			->insert()
-			->into(static::getTable());
-	}
-
-	public static function getDbInstance()
-	{
-		static::initializeSchema();
-
-		return DB::instance(static::getDb());
-	}
-
 	public function __construct(array $attributes = NULL, $loaded = FALSE)
 	{
 		if ($loaded === TRUE)
 		{
-			$attributes = Arr::invokeObjects($this->getAttributes(), static::getFields(), 'load');
+			$attributes = $attributes !== NULL ? $attributes : $this->getAttributes();
+
+			$attributes = Arr::invokeObjects($attributes, static::getFields(), 'load');
 
 			$this->setAttributes($attributes);
 			$this->setOriginals($attributes);
@@ -141,6 +96,13 @@ class Model {
 		}
 
 		return $this->rels[$name];
+	}
+
+	public function setRel($name, $value)
+	{
+		$this->rels[$name] = $value;
+
+		return $this;
 	}
 
 	public function getErrors()

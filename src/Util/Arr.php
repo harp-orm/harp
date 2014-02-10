@@ -27,6 +27,23 @@ class Arr
 		}, $arr);
 	}
 
+	public static function index(array $arr, $attribute)
+	{
+		$result = [];
+		foreach ($arr as $item)
+		{
+			$result[$item->{$attribute}] = $item;
+		}
+		return $result;
+	}
+
+	public static function extract(array $arr, $attribute)
+	{
+		return array_map(function($item) use ($attribute) {
+			return $item->$attribute;
+		}, $arr);
+	}
+
 	public static function filterInvoke(array $arr, $method)
 	{
 		return array_filter($arr, function($item) use ($method) {
@@ -43,6 +60,24 @@ class Arr
 			$result []= $key;
 			$result []= $value;
 		}
+
+		return $result;
+	}
+
+	public static function flatten(array $array)
+	{
+		$result = array();
+
+		array_walk_recursive($array, function ($value, $key) use ( & $result) {
+			if (is_numeric($key) OR is_object($value))
+			{
+				$result[] = $value;
+			}
+			else
+			{
+				$result[$key] = $value;
+			}
+		});
 
 		return $result;
 	}

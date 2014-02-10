@@ -29,7 +29,7 @@ VALUES
   (1,'User 1', 1),
   (2,'User 2', NULL),
   (3,'User 3', NULL),
-  (4,'User 4', NULL);
+  (4,'User 4', 1);
 
 INSERT INTO `address` (`id`, `zip_code`, `locatoion`)
 VALUES

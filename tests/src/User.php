@@ -23,6 +23,11 @@ class User extends Model {
 	}
 
 	/**
+	 * @var integer
+	 */
+	public $id;
+
+	/**
 	 * @var string
 	 */
 	public $name;
@@ -57,13 +62,14 @@ class User extends Model {
 	{
 		$config
 			->setRels([
-				'posts' => new R\HasMany('CL\Luna\Test\Post'),
-				'address' => new R\BelongsTo('CL\Luna\Test\Address'),
+				'posts' => new R\HasMany(Post::getSchema()),
+				'address' => new R\BelongsTo(Address::getSchema()),
 			])
 			->setValidators([
 				'name' => [new V\Present()],
 			])
 			->setFields([
+				'id' => new F\Integer(),
 				'name' => new F\String(),
 				'password' => new F\Password(),
 			]);

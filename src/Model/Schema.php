@@ -1,6 +1,9 @@
 <?php namespace CL\Luna\Model;
 
 use ReflectionClass;
+use CL\Luna\Event\EventDispatcherTrait;
+use CL\Luna\Event\ModelEvent;
+use CL\Luna\Event\Event;
 
 /*
  * @author     Ivan Kerin
@@ -9,15 +12,16 @@ use ReflectionClass;
  */
 class Schema
 {
+	use EventDispatcherTrait;
+
 	private $name;
 	private $modelClass;
 	private $table;
 	private $db = 'default';
 	private $primaryKey = 'id';
-	private $fields = array();
-	private $events = array();
-	private $rels = array();
-	private $validators = array();
+	private $fields;
+	private $rels;
+	private $validators;
 	private $configurationLoaded;
 
 	public function getName()
@@ -81,9 +85,9 @@ class Schema
 		return $this->fields;
 	}
 
-	public function getFieldNames()
+	public function getField($name)
 	{
-		return array_keys($this->getFields());
+		return $this->getField()[$name];
 	}
 
 	public function setFields(array $fields)
@@ -100,9 +104,9 @@ class Schema
 		return $this->rels;
 	}
 
-	public function getRelNames()
+	public function getRel($name)
 	{
-		return array_keys($this->getRels());
+		return $this->getRels()[$name];
 	}
 
 	public function setRels(array $rels)
@@ -125,6 +129,19 @@ class Schema
 
 		return $this;
 	}
+
+	private function dipatchModelEvent($type, Model $target)
+	{
+		if ($this->hasEventListener($type))
+		{
+			return $this->dispatchEvent(new ModelEvent($type, $target));
+		}
+		else
+		{
+			return TRUE;
+		}
+	}
+
 
 	function __construct($class_name)
 	{

@@ -62,7 +62,7 @@ class BelongsTo extends AbstractRel implements SingleInterface
 
 	public function setChildren(array $parents, array $children)
 	{
-		$parents = Arr::index($parents, $this->getSchema()->getPrimaryKey());
+		$parents = Arr::index($parents, $this->getForeignKey());
 
 		$key = $this->getKey();
 		$name = $this->getName();

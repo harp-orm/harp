@@ -38,20 +38,33 @@ class SelectSchema extends SelectQuery {
 
 		if ($rels)
 		{
-			foreach ($rels as $relName)
-			{
-				$rel = $schema->getRels()[$relName];
-
-				$loader = new EagerLoader($result, $rel);
-				$loader->execute();
-			}
+			self::eagerLoad($this->getSchema(), $rels, $result);
 		}
 
 		return $result;
 	}
 
+	public static function eagerLoad(Schema $schema, $rels, array $parents)
+	{
+		foreach ($rels as $key => $value)
+		{
+			$relName = is_numeric($key) ? $value : $key;
+
+			$rel = $schema->getRel($relName);
+
+			$loader = new EagerLoader($parents, $rel);
+			$loader->execute();
+
+			if ( ! is_numeric($key))
+			{
+				self::eagerLoad($rel->getForeignSchema(), $value, $loader->getChildren());
+			}
+		}
+	}
+
 	public function execute()
 	{
+		var_dump($this->humanize());
 		$pdoStatement = parent::execute();
 
 		$pdoStatement->setFetchMode(\PDO::FETCH_CLASS, $this->getSchema()->getModelClass(), array(NULL, TRUE));

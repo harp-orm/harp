@@ -1,6 +1,7 @@
 <?php namespace CL\Luna\Model;
 
 use CL\Luna\Util\Arr;
+use CL\Luna\Event\ModelEvent;
 
 /**
  * @author     Ivan Kerin
@@ -14,6 +15,7 @@ class Model {
 	protected $errors;
 	protected $rels;
 	protected $isLoaded = FALSE;
+	protected $unmapped;
 
 	public function __construct(array $attributes = NULL, $loaded = FALSE)
 	{
@@ -33,6 +35,22 @@ class Model {
 			$this->setOriginals($this->getAttributes());
 			$this->setAttributes($attributes);
 		}
+	}
+
+	public function __get($name)
+	{
+		return isset($this->unmapped[$name]) ? $name : NULL;
+	}
+
+	public function __set($name, $value)
+	{
+		$this->unmapped[$name] = $value;
+		return $this;
+	}
+
+	public function __isset($name)
+	{
+		return isset($this->unmapped[$name]);
 	}
 
 	public function getId()
@@ -57,11 +75,13 @@ class Model {
 	{
 		$this->validate();
 
-		if ($this->isChanged())
+		if ($this->getSchema()->dipatchModelEvent(ModelEvent::SAVE, $this) AND $this->isChanged())
 		{
 			$changes = Arr::invokeObjects($this->getChanges(), static::getFields(), 'save');
 			$this->insertOrUpdate($changes);
 		}
+
+		$this->getSchema()->dipatchModelEvent(ModelEvent::AFTER_SAVE, $this);
 	}
 
 	public function getAttributes()

@@ -23,6 +23,11 @@ class Post extends Model {
 	public $id;
 
 	/**
+	 * @var integer
+	 */
+	public $user_id;
+
+	/**
 	 * @var string
 	 */
 	public $title;

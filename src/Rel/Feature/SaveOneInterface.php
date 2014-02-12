@@ -1,4 +1,4 @@
-<?php namespace CL\Luna\Rel;
+<?php namespace CL\Luna\Rel\Feature;
 
 use CL\Luna\Model\Model;
 
@@ -7,7 +7,7 @@ use CL\Luna\Model\Model;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-interface SetManyInterface
+interface SaveOneInterface
 {
-	public function setMany(Model $subject, Many $many);
+	public function saveOne(Model $subject, Model $object);
 }

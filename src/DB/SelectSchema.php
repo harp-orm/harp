@@ -1,7 +1,9 @@
 <?php namespace CL\Luna\DB;
 
 use CL\Luna\Schema\Schema;
-use CL\Luna\Rel\EagerLoader;
+use CL\Luna\Rel\AbstractEagerLoaded;
+use CL\Luna\Util\Arr;
+use CL\Luna\Util\Log;
 use CL\Atlas\Query\SelectQuery;
 
 /**
@@ -29,36 +31,21 @@ class SelectSchema extends SelectQuery {
 	public function executeAndLoad($rels)
 	{
 		$result = $this->execute()->fetchAll();
-		$schema = $this->getSchema();
 
-		if ($rels)
-		{
-			self::eagerLoad($this->getSchema(), $rels, $result);
-		}
+		$rels = Arr::toAssoc( (array) $rels);
+
+		AbstractEagerLoaded::eagerLoad($this->getSchema(), $result, $rels);
 
 		return $result;
 	}
 
-	public static function eagerLoad(Schema $schema, $rels, array $parents)
-	{
-		foreach ($rels as $key => $value)
-		{
-			$relName = is_numeric($key) ? $value : $key;
-
-			$rel = $schema->getRel($relName);
-
-			$loader = new EagerLoader($parents, $rel);
-			$loader->execute();
-
-			if ( ! is_numeric($key))
-			{
-				self::eagerLoad($rel->getForeignSchema(), $value, $loader->getChildren());
-			}
-		}
-	}
-
 	public function execute()
 	{
+		if (Log::getEnabled())
+		{
+			Log::add($this->humanize());
+		}
+
 		$pdoStatement = parent::execute();
 
 		$pdoStatement->setFetchMode(\PDO::FETCH_CLASS, $this->getSchema()->getModelClass(), [NULL, TRUE]);

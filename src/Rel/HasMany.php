@@ -4,13 +4,14 @@ use CL\Luna\Model\Model;
 use CL\Luna\DB\UpdateSchema;
 use CL\Luna\DB\SelectSchema;
 use CL\Luna\Util\Arr;
+use CL\Luna\Rel\Feature\SaveManyInterface;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasMany extends AbstractRel implements SaveManyInterface
+class HasMany extends AbstractEagerLoaded implements SaveManyInterface
 {
 	protected $foreignKey;
 
@@ -55,30 +56,26 @@ class HasMany extends AbstractRel implements SaveManyInterface
 			->where([$this->getForeignKey() => $id]);
 	}
 
-	public function getChildrenQuery(array $parents)
+	public function scopeEagerLoaded(SelectSchema $select, array $parents)
 	{
 		$ids = array_filter(Arr::extract($parents, $this->getKey()));
 
-		return $ids ? $this->getQuery($ids) : NULL;
+		if ($ids)
+		{
+			$select->where([$this->getForeignKey() => $ids]);
+			return TRUE;
+		}
 	}
 
-	public function setChildren(array $parents, array $children)
+	public function setEagerLoaded(array $parents, array $children)
 	{
-		$parents = Arr::index($parents, $this->getSchema()->getPrimaryKey());
+		$parents = Arr::index($parents, $this->getKey());
+		$children = Arr::indexGroup($children, $this->getForeignKey());
 
-		$key = $this->getForeignKey();
-		$name = $this->getName();
-
-		$result = [];
-
-		foreach ($children as $child)
+		foreach ($parents as $id => $parent)
 		{
-			$result[$child->{$key}] []= $child;
-		}
-
-		foreach ($result as $key => $itemChildren)
-		{
-			$parents[$key]->setRel($name, new Many($itemChildren));
+			$items = isset($children[$id]) ? $children[$id] : [];
+			$parent->setRel($this->getName(), new Many($items));
 		}
 	}
 

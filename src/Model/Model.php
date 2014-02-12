@@ -12,10 +12,10 @@ class Model {
 
 	use DirtyTrackingTrait;
 
-	protected $errors;
-	protected $rels;
-	protected $isLoaded = FALSE;
-	protected $unmapped;
+	private $errors;
+	private $rels;
+	private $isLoaded = FALSE;
+	private $unmapped;
 
 	public function __construct(array $properties = NULL, $loaded = FALSE)
 	{

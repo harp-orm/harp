@@ -4,13 +4,14 @@ use CL\Luna\Util\Arr;
 use CL\Luna\Model\Model;
 use CL\Luna\Field\Integer;
 use CL\Luna\DB\SelectSchema;
+use CL\Luna\Rel\Feature\SetOneInterface;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsTo extends AbstractRel implements SetOneInterface
+class BelongsTo extends AbstractEagerLoaded implements SetOneInterface
 {
 	protected $foreignKey;
 
@@ -36,35 +37,32 @@ class BelongsTo extends AbstractRel implements SetOneInterface
 
 	public function load(Model $parent)
 	{
-		return $this->getQuery($parent->getId())
+		return (new SelectSchema($this->getForeignSchema()))
+			->where([$this->getKey() => $parent->getId()])
 			->limit(1)
 			->execute()
 				->fetch();
 	}
 
-	public function getQuery($id)
-	{
-		return (new SelectSchema($this->getForeignSchema()))
-			->where([$this->getKey() => $id]);
-	}
-
-	public function getChildrenQuery(array $parents)
+	public function scopeEagerLoaded(SelectSchema $select, array $parents)
 	{
 		$ids = array_filter(Arr::extract($parents, $this->getForeignKey()));
 
-		return $ids ? $this->getQuery($ids) : NULL;
+		if ($ids)
+		{
+			$select->where([$this->getKey() => $ids]);
+			return TRUE;
+		}
 	}
 
-	public function setChildren(array $parents, array $children)
+	public function setEagerLoaded(array $parents, array $children)
 	{
-		$parents = Arr::index($parents, $this->getForeignKey());
+		$parents = Arr::index($parents, $this->getKey());
+		$children = Arr::index($children, $this->getForeignKey());
 
-		$key = $this->getKey();
-		$name = $this->getName();
-
-		foreach ($children as $child)
+		foreach ($parents as $id => $parent)
 		{
-			$parents[$child->{$key}]->setRel($name, $child);
+			$parent->setRel($this->getName(), isset($children[$id]) ? $children[$id] : NULL);
 		}
 	}
 

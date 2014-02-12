@@ -1,15 +1,21 @@
 <?php namespace CL\Luna\Test;
 
+use CL\Luna\Util\Log;
+
 class TestTest extends AbstractTestCase {
 
 	public function testTest()
 	{
-		$user = User::get(4);
-		$post = Post::get(3);
-		$post->title = 'new title 22';
+		Log::setEnabled(TRUE);
 
-		$user->posts()->add($post);
-		$user->save();
+		$users = User::all()->executeAndLoad('posts');
+
+		var_dump($users[0]->posts());
+		var_dump($users[1]->posts());
+		var_dump($users[2]->posts());
+		var_dump($users[3]->posts());
+
+		var_dump(Log::all());
 	}
 
 }

@@ -1,13 +1,14 @@
-<?php namespace CL\Luna\Rel;
+<?php namespace CL\Luna\Rel\Feature;
 
 use CL\Luna\Model\Model;
+use CL\Luna\Rel\Many;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-interface SetOneInterface
+interface SetManyInterface
 {
-	public function setOne(Model $subject, Model $object);
+	public function setMany(Model $subject, Many $many);
 }

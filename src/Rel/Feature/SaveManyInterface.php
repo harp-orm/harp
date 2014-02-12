@@ -1,6 +1,7 @@
-<?php namespace CL\Luna\Rel;
+<?php namespace CL\Luna\Rel\Feature;
 
 use CL\Luna\Model\Model;
+use CL\Luna\Rel\Many;
 
 /**
  * @author     Ivan Kerin

@@ -20,6 +20,25 @@ class Arr
 		return $arr;
 	}
 
+	public static function toAssoc(array $array)
+	{
+		$converted = array();
+
+		foreach ($array as $key => $value)
+		{
+			if (is_numeric($key))
+			{
+				$converted[$value] = NULL;
+			}
+			else
+			{
+				$converted[$key] = self::toAssoc( (array) $value);
+			}
+		}
+
+	  return $converted;
+	}
+
 	public static function invoke(array $arr, $method)
 	{
 		return array_map(function($item) use ($method) {
@@ -33,6 +52,16 @@ class Arr
 		foreach ($arr as $item)
 		{
 			$result[$item->{$attribute}] = $item;
+		}
+		return $result;
+	}
+
+	public static function indexGroup(array $arr, $attribute)
+	{
+		$result = [];
+		foreach ($arr as $item)
+		{
+			$result[$item->{$attribute}] []= $item;
 		}
 		return $result;
 	}

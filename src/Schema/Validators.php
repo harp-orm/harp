@@ -2,6 +2,8 @@
 
 use CL\Luna\Validator\AbstractValidator;
 use CL\Luna\Util\Collection;
+use CL\Luna\Util\Arr;
+use CL\Luna\Model\Errors;
 
 /**
  * @author     Ivan Kerin
@@ -17,12 +19,12 @@ class Validators extends Collection {
 		return $this;
 	}
 
-	public function execute($value, $name)
+	public function execute( & $value, $name)
 	{
 		$validators = $this->get($name);
 
-		return array_filter(array_map(function($validator) use ($name, $value) {
-			return $validator->getError($key, $value);
+		$value = array_filter(array_map(function($validator) use ($name, $value) {
+			return $validator->getError($name, $value);
 		}, $validators));
 	}
 
@@ -30,9 +32,10 @@ class Validators extends Collection {
 	{
 		$data = array_intersect_key($data, $this->items);
 
-		array_walk($data, [$this, 'executeFor']);
+		array_walk($data, [$this, 'execute']);
 
 		$errorItems = Arr::flatten($data);
+		var_dump($errorItems);
 
 		return new Errors($errorItems);
 	}

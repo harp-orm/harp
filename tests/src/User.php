@@ -62,6 +62,11 @@ class User extends Model {
 		return parent::getRel('posts');
 	}
 
+	public static function test($model, $event)
+	{
+		var_dump('event');
+	}
+
 	public static function CL_Luna_Test_User(Schema $schema)
 	{
 		$schema

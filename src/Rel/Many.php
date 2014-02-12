@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\Rel;
 
-use CL\Luna\Rel;
+use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
 
 /**
@@ -8,14 +8,14 @@ use CL\Luna\Util\Arr;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Rels
+class Many
 {
 	protected $items;
 	protected $originalIds;
 
 	public function __construct(array $items)
 	{
-		$this->items = $items;
+		$this->set($items);
 		$this->originalIds = Arr::invoke($items, 'getId');
 	}
 
@@ -41,6 +41,11 @@ class Rels
 
 	public function hasId($id)
 	{
+		if ( ! $this->items)
+		{
+			return FALSE;
+		}
+
 		foreach ($this->items as $item)
 		{
 			if ($item->getId() == $id)
@@ -52,9 +57,26 @@ class Rels
 		return FALSE;
 	}
 
+	public function getChangedIds()
+	{
+		return array_filter(Arr::invoke($this->getChanged(), 'getId'));
+	}
+
 	public function getChanged()
 	{
 		return Arr::filterInvoke($this->items, 'isChanged');
+	}
+
+	public function saveChanged()
+	{
+		Arr::invoke($this->getChanged(), 'save');
+
+		return $this;
+	}
+
+	public function isEmpty()
+	{
+		return empty($this->items);
 	}
 
 	public function add(Model $model)
@@ -67,6 +89,10 @@ class Rels
 
 	public function set(array $new_items)
 	{
-		$this->items = $new_items;
+		$this->items = NULL;
+
+		array_map([$this, 'add'], $new_items);
+
+		return $this;
 	}
 }

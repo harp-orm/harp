@@ -4,8 +4,11 @@ class TestTest extends AbstractTestCase {
 
 	public function testTest()
 	{
-		$result = Post::all()->executeAndLoad(['user' => ['address']]);
-		var_dump($result[0]->user()->address());
+		$user = User::get(4);
+		$post = Post::get(3);
+
+		$user->posts()->add($post);
+		$user->save();
 	}
 
 }

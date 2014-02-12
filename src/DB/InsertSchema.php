@@ -8,7 +8,7 @@ use CL\Luna\Schema\Schema;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Insert extends InsertQuery {
+class InsertSchema extends InsertQuery {
 
 	use ScopedTrait;
 	use SchemaTrait;

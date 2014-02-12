@@ -21,8 +21,10 @@ class UpdateSchema extends UpdateQuery {
 			->table($schema->getTable());
 	}
 
-	public function setMultiple($id_column, array $values)
+	public function setMultiple(array $values)
 	{
+		$primaryKey = $this->getSchema()->getPrimaryKey();
+
 		$ids = array_keys($values);
 		$values = Arr::flipNested($values);
 
@@ -30,7 +32,7 @@ class UpdateSchema extends UpdateQuery {
 		{
 			$cases = join(' ', array_fill(0, count($changes), 'WHEN ? THEN ?'));
 
-			$value = "CASE {$id_column} {$cases} ELSE {$column} END";
+			$value = "CASE {$primaryKey} {$cases} ELSE {$column} END";
 			$parameters = Arr::disassociate($changes);
 
 			$changes = new SQL($value, $parameters);
@@ -38,6 +40,6 @@ class UpdateSchema extends UpdateQuery {
 
 		return $this
 			->set($values)
-			->where([$id_column => $ids]);
+			->where([$primaryKey => $ids]);
 	}
 }

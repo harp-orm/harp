@@ -7,7 +7,7 @@ use CL\Luna\Model\Model;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-interface ManyInterface
+interface SaveManyInterface
 {
-	public function load(Model $parent);
+	public function saveMany(Model $subject, Many $many);
 }

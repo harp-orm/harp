@@ -10,7 +10,7 @@ use CL\Luna\DB\SelectSchema;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsTo extends AbstractRel implements SingleInterface
+class BelongsTo extends AbstractRel implements SetOneInterface
 {
 	protected $foreignKey;
 
@@ -68,18 +68,14 @@ class BelongsTo extends AbstractRel implements SingleInterface
 		}
 	}
 
-	public function setRel(Model $parent, Model $foreign)
+	public function setOne(Model $parent, Model $foreign)
 	{
-		$parent->{$this->foreignKey} = $foreign->getId();
+		$parent->{$this->getForeignKey()} = $foreign->getId();
 	}
 
 	public function joinRel($query, $alias, $type)
 	{
 		$table = $alias ? [$this->getForeignSchema()->getTable() => $alias] : $this->getForeignSchema()->getTable();
 		$query->join($table, [($alias ? $alias : $table).'.'.$this->getSchema()->getPrimaryKey() => $this->getSchema()->getTable().'.'.$this->getForeignKey()], $type);
-	}
-
-	public function saveRel(Model $parent, Model $foreign)
-	{
 	}
 }

@@ -1,6 +1,7 @@
 <?php namespace CL\Luna\Rel;
 
 use CL\Luna\Model\Model;
+use CL\Luna\DB\UpdateSchema;
 use CL\Luna\DB\SelectSchema;
 use CL\Luna\Util\Arr;
 
@@ -9,7 +10,7 @@ use CL\Luna\Util\Arr;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasMany extends AbstractRel implements ManyInterface
+class HasMany extends AbstractRel implements SaveManyInterface
 {
 	protected $foreignKey;
 
@@ -38,7 +39,7 @@ class HasMany extends AbstractRel implements ManyInterface
 
 		$items = $query->execute()->fetchAll();
 
-		return new Rels($items);
+		return new Many($items);
 	}
 
 	public function joinRel($query, $alias, $type)
@@ -77,30 +78,32 @@ class HasMany extends AbstractRel implements ManyInterface
 
 		foreach ($result as $key => $itemChildren)
 		{
-			$parents[$key]->setRel($name, new Rels($itemChildren));
+			$parents[$key]->setRel($name, new Many($itemChildren));
 		}
 	}
 
-	public function setRels(Model $parent, Rels $rels)
+	public static function setAndSaveChanged(Many $many, array $set)
 	{
-		if ($parent->getId())
-		{
-			foreach ($rels->all() as $foreign)
-			{
-				$foreign->{$this->foreignKey} = $parent->getId();
-			}
-		}
+		return array_map(function($item) use ($set) {
+
+			$item->setProperties($set)->save();
+
+			return $item->getId();
+
+		}, $many->getChanged());
 	}
 
-	public function saveRels(Model $parent, Rels $rels)
+	public function saveMany(Model $parent, Many $many)
 	{
-		$oldIds = array_diff($rels->getOriginalIds(), $rels->getIds());
-		if ($oldIds)
-		{
-			$query = call_user_func([$this->getForeignClass(), 'delete']);
-			$query
-				->where([$this->getForeignSchema()->getPrimaryKey() => $oldIds])
-				->execute();
-		}
+		$alreadySavedIds = self::setAndSaveChanged($many, [$this->getForeignKey() => $parent->getId()]);
+
+		$removeIds = array_diff($many->getOriginalIds(), $many->getIds());
+		$addIds = array_diff($many->getIds(), $many->getOriginalIds(), $alreadySavedIds);
+
+		$set = array_fill_keys($removeIds, [$this->getForeignKey() => NULL]) + array_fill_keys($addIds, [$this->getForeignKey() => $parent->getId()]);
+
+		(new UpdateSchema($this->getForeignSchema()))
+			->setMultiple($set)
+			->execute();
 	}
 }

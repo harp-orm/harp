@@ -83,7 +83,8 @@ class Arr
 	}
 
 	/**
-	 * I'm sure this opration has some proper math name ....
+	 * I'm sure this opration has some proper math name.
+	 * Something like transpose maybe ...
 	 */
 	public static function flipNested(array $arr)
 	{

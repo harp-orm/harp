@@ -17,7 +17,7 @@ class EventListeners extends Collection {
 		return $this;
 	}
 
-	public function despatchEvent(Event $event)
+	public function dispatchEvent(Event $event)
 	{
 		foreach ($this->items[$event->getType()] as $listner)
 		{

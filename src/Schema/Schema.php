@@ -2,6 +2,7 @@
 
 use ReflectionClass;
 use ReflectionProperty;
+use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
 use CL\Luna\Event\EventDispatcherTrait;
 use CL\Luna\Event\ModelEvent;
@@ -147,7 +148,7 @@ class Schema
 		return $this->eventListeners;
 	}
 
-	private function dipatchModelEvent($type, Model $target)
+	public function dipatchModelEvent($type, Model $target)
 	{
 		if ($this->getEventListeners()->has($type))
 		{

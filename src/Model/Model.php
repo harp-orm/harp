@@ -85,10 +85,23 @@ class Model {
 	{
 		$this->validate();
 
-		if ($this->getSchema()->dipatchModelEvent(ModelEvent::SAVE, $this) AND $this->isChanged())
+		if ($this->getSchema()->dipatchModelEvent(ModelEvent::SAVE, $this))
 		{
-			$changes = $this->getSchema()->getFields()->saveData($this->getChanges());
-			$this->insertOrUpdate($changes);
+			if ($this->rels)
+			{
+				$this->getSchema()->getRels()->setArray($this, $this->rels);
+			}
+
+			if ($this->isChanged())
+			{
+				$changes = $this->getSchema()->getFields()->saveData($this->getChanges());
+				$this->insertOrUpdate($changes);
+			}
+
+			if ($this->rels)
+			{
+				$this->getSchema()->getRels()->saveArray($this, $this->rels);
+			}
 		}
 
 		$this->getSchema()->dipatchModelEvent(ModelEvent::AFTER_SAVE, $this);
@@ -137,6 +150,6 @@ class Model {
 
 	public function isValid()
 	{
-		return $$this->getErrors() ? $this->getErrors()->isEmpty() : TRUE;
+		return $this->getErrors() ? $this->getErrors()->isEmpty() : TRUE;
 	}
 }

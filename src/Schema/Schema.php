@@ -1,6 +1,8 @@
-<?php namespace CL\Luna\Model;
+<?php namespace CL\Luna\Schema;
 
 use ReflectionClass;
+use ReflectionProperty;
+use CL\Luna\Util\Arr;
 use CL\Luna\Event\EventDispatcherTrait;
 use CL\Luna\Event\ModelEvent;
 use CL\Luna\Event\Event;
@@ -12,14 +14,13 @@ use CL\Luna\Event\Event;
  */
 class Schema
 {
-	use EventDispatcherTrait;
-
 	private $name;
 	private $modelClass;
 	private $table;
 	private $db = 'default';
 	private $primaryKey = 'id';
 	private $fields;
+	private $propertyNames;
 	private $rels;
 	private $validators;
 	private $configurationLoaded;
@@ -78,6 +79,13 @@ class Schema
 		return $this;
 	}
 
+	public function getPropertyNames()
+	{
+		$this->lazyLoadConfiguration();
+
+		return $this->propertyNames;
+	}
+
 	public function getFields()
 	{
 		$this->lazyLoadConfiguration();
@@ -85,16 +93,16 @@ class Schema
 		return $this->fields;
 	}
 
-	public function getField($name)
+	public function setFields(array $items)
 	{
-		return $this->getField()[$name];
-	}
-
-	public function setFields(array $fields)
-	{
-		$this->fields = array_merge($this->fields, $fields);
+		$this->getFields()->set($items);
 
 		return $this;
+	}
+
+	public function getField($name)
+	{
+		return $this->getFields()->get($name);
 	}
 
 	public function getRels()
@@ -104,16 +112,16 @@ class Schema
 		return $this->rels;
 	}
 
-	public function getRel($name)
-	{
-		return $this->getRels()[$name];
-	}
-
 	public function setRels(array $rels)
 	{
-		$this->rels = array_merge($this->rels, $rels);
+		$this->getRels()->set($rels);
 
 		return $this;
+	}
+
+	public function getRel($name)
+	{
+		return $this->getRels()->get($name);
 	}
 
 	public function getValidators()
@@ -125,23 +133,31 @@ class Schema
 
 	public function setValidators(array $validators)
 	{
-		$this->validators = array_merge_recursive($this->validators, $validators);
+		$this->lazyLoadConfiguration();
+
+		$this->getValidators()->set($validators);
 
 		return $this;
 	}
 
+	public function getEventListeners()
+	{
+		$this->lazyLoadConfiguration();
+
+		return $this->eventListeners;
+	}
+
 	private function dipatchModelEvent($type, Model $target)
 	{
-		if ($this->hasEventListener($type))
+		if ($this->getEventListeners()->has($type))
 		{
-			return $this->dispatchEvent(new ModelEvent($type, $target));
+			return $this->getEventListeners()->dispatchEvent(new ModelEvent($type, $target));
 		}
 		else
 		{
 			return TRUE;
 		}
 	}
-
 
 	function __construct($class_name)
 	{
@@ -154,8 +170,14 @@ class Schema
 		{
 			$this->configurationLoaded = TRUE;
 
+			$this->validators = new Validators();
+			$this->fields = new Fields();
+			$this->eventListeners = new EventListeners();
+			$this->rels = new Rels();
+
 			$class = new ReflectionClass($this->getModelClass());
 			$this->table = $this->name = strtolower($class->getShortName());
+			$this->propertyNames = Arr::invoke($class->getProperties(ReflectionProperty::IS_PUBLIC), 'getName');
 
 			$this->callInitializeMethod($class);
 
@@ -164,10 +186,7 @@ class Schema
 				$this->callInitializeMethod($trait);
 			}
 
-			foreach ($this->getRels() as $name => $rel)
-			{
-				$rel->initialize($this, $name);
-			}
+			$this->rels->initialize($this);
 		}
 	}
 

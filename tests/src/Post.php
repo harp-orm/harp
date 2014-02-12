@@ -1,8 +1,8 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
+use CL\Luna\Schema\Schema;
+use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field\Integer;
 use CL\Luna\Field\String;
 use CL\Luna\Rel\BelongsTo;
@@ -40,19 +40,23 @@ class Post extends Model {
 		return parent::getRel('user');
 	}
 
-	public static function CL_Luna_Test_Post(Schema $config)
+	public static function CL_Luna_Test_Post(Schema $schema)
 	{
-		$config
+		$schema
 			->setRels([
-				'user' => new BelongsTo(User::getSchema()),
-			])
-			->setValidators([
-				'title' => [new Present()],
-			])
+				new BelongsTo('user', User::getSchema()),
+			]);
+
+		$schema
 			->setFields([
-				'id' => new Integer(),
-				'title' => new String(),
-				'body' => new String(),
+				new Integer('id'),
+				new String('title'),
+				new String('body'),
+			]);
+
+		$schema
+			->setValidators([
+				new Present('title'),
 			]);
 	}
 

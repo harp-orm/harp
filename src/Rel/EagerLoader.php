@@ -51,7 +51,11 @@ class EagerLoader
 			$this->children = NULL;
 		}
 
-		$this->rel->setChildren($this->parents, $this->children);
+		if ($this->children)
+		{
+			$this->rel->setChildren($this->parents, $this->children);
+		}
+
 
 		return $this;
 	}

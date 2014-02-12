@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\Test;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Schema\Schema;
 
 /**
  * @author     Ivan Kerin
@@ -14,12 +14,11 @@ trait Nested {
 	 */
 	public $parent;
 
-	public static function CL_Luna_Test_Nested(Schema $config)
+	public static function CL_Luna_Test_Nested(Schema $schema)
 	{
-		$config
-			->setFields([
-				'parent' => new \CL\Luna\Field\String()
-			]);
+		$schema
+			->getFields()
+				->add(new \CL\Luna\Field\String('parent'));
 	}
 
 	/**

@@ -1,7 +1,6 @@
 <?php namespace CL\Luna\Rel;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\Schema;
 use CL\Luna\DB\SelectSchema;
 use CL\Luna\Util\Arr;
 
@@ -24,13 +23,11 @@ class HasMany extends AbstractRel implements ManyInterface
 		return $this->getSchema()->getPrimaryKey();
 	}
 
-	public function initialize(Schema $schema, $name)
+	public function initialize()
 	{
-		parent::initialize($schema, $name);
-
 		if ( ! $this->foreignKey)
 		{
-			$this->foreignKey = $schema->getName().'_id';
+			$this->foreignKey = $this->getSchema()->getName().'_id';
 		}
 	}
 

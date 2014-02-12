@@ -1,4 +1,4 @@
-<?php namespace CL\Luna\Model;
+<?php namespace CL\Luna\Schema;
 
 use CL\Luna\DB\SelectSchema;
 use CL\Luna\DB\UpdateSchema;
@@ -32,6 +32,11 @@ trait SchemaTrait
 	public static function getDb()
 	{
 		return self::getSchema()->getDb();
+	}
+
+	public static function getPropertyNames()
+	{
+		return self::getSchema()->getPropertyNames();
 	}
 
 	public static function getFields()

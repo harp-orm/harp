@@ -1,11 +1,15 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
-use CL\Luna\Field as F;
-use CL\Luna\Rel as R;
-use CL\Luna\Validator as V;
+use CL\Luna\Schema\Schema;
+use CL\Luna\Schema\SchemaTrait;
+use CL\Luna\Field\Integer;
+use CL\Luna\Field\String;
+use CL\Luna\Field\Password;
+use CL\Luna\Rel\BelongsTo;
+use CL\Luna\Rel\HasMany;
+use CL\Luna\Validator\Present;
+use CL\Luna\Event\ModelEvent;
 
 /**
  * @author     Ivan Kerin
@@ -58,21 +62,26 @@ class User extends Model {
 		return parent::getRel('posts');
 	}
 
-	public static function CL_Luna_Test_User(Schema $config)
+	public static function CL_Luna_Test_User(Schema $schema)
 	{
-		$config
-			->setRels([
-				'posts' => new R\HasMany(Post::getSchema()),
-				'address' => new R\BelongsTo(Address::getSchema()),
-			])
-			->setValidators([
-				'name' => [new V\Present()],
-			])
-			->setFields([
-				'id' => new F\Integer(),
-				'name' => new F\String(),
-				'password' => new F\Password(),
-			]);
+		$schema
+			->getFields()
+				->add(new Integer('id'))
+				->add(new String('name'))
+				->add(new Password('password'));
+
+		$schema
+			->getRels()
+				->add(new BelongsTo('address', Address::getSchema(), ['inverseOf' => 'user']))
+				->add(new HasMany('posts', Post::getSchema()));
+
+		$schema
+			->getValidators()
+				->add(new Present('name'));
+
+		$schema
+			->getEventListeners()
+				->add(ModelEvent::SAVE, 'CL\Luna\Test\User::test');
 	}
 
 }

@@ -17,23 +17,23 @@ class Model {
 	protected $isLoaded = FALSE;
 	protected $unmapped;
 
-	public function __construct(array $attributes = NULL, $loaded = FALSE)
+	public function __construct(array $properties = NULL, $loaded = FALSE)
 	{
 		if ($loaded === TRUE)
 		{
-			$attributes = $attributes !== NULL ? $attributes : $this->getAttributes();
+			$properties = $properties !== NULL ? $properties : $this->getProperties();
 
-			$attributes = Arr::invokeObjects($attributes, static::getFields(), 'load');
+			$properties = $this->getSchema()->getFields()->loadData($properties);
 
-			$this->setAttributes($attributes);
-			$this->setOriginals($attributes);
+			$this->setProperties($properties);
+			$this->setOriginals($properties);
 
 			$this->isLoaded = TRUE;
 		}
 		else
 		{
-			$this->setOriginals($this->getAttributes());
-			$this->setAttributes($attributes);
+			$this->setOriginals($this->getProperties());
+			$this->setProperties($properties);
 		}
 	}
 
@@ -55,7 +55,7 @@ class Model {
 
 	public function getId()
 	{
-		return $this->{static::getPrimaryKey()};
+		return $this->{$this->getSchema()->getPrimaryKey()};
 	}
 
 	public function isLoaded()
@@ -63,12 +63,22 @@ class Model {
 		return $this->isLoaded;
 	}
 
-	public function setAttributes(array $values)
+	public function setProperties(array $values)
 	{
 		foreach ($values as $name => $value)
 		{
 			$this->$name = $value;
 		}
+	}
+
+	public function getProperties()
+	{
+		$properties = [];
+		foreach ($this->getSchema()->getPropertyNames() as $name)
+		{
+			$properties[$name] = $this->{$name};
+		}
+		return $properties;
 	}
 
 	public function save()
@@ -77,25 +87,13 @@ class Model {
 
 		if ($this->getSchema()->dipatchModelEvent(ModelEvent::SAVE, $this) AND $this->isChanged())
 		{
-			$changes = Arr::invokeObjects($this->getChanges(), static::getFields(), 'save');
+			$changes = $this->getSchema()->getFields()->saveData($this->getChanges());
 			$this->insertOrUpdate($changes);
 		}
 
 		$this->getSchema()->dipatchModelEvent(ModelEvent::AFTER_SAVE, $this);
 	}
 
-	public function getAttributes()
-	{
-		$values = array();
-		$fieldNames = array_keys(static::getFields());
-
-		foreach ($fieldNames as $name)
-		{
-			$values[$name] = $this->$name;
-		}
-
-		return $values;
-	}
 
 	public function insertOrUpdate(array $attributes)
 	{
@@ -112,7 +110,7 @@ class Model {
 	{
 		if ( ! isset($this->rels[$name]))
 		{
-			$this->rels[$name] = static::getRels()[$name]->load($this);
+			$this->rels[$name] = $this->getSchema()->getRel($name)->load($this);
 		}
 
 		return $this->rels[$name];
@@ -127,23 +125,18 @@ class Model {
 
 	public function getErrors()
 	{
-		if ( ! $this->errors)
-		{
-			$this->errors = new Errors();
-		}
-
 		return $this->errors;
 	}
 
 	public function validate()
 	{
-		$this->getErrors()->validateChanges($this->getChanges(), static::getValidators());
+		$this->errors = $this->getSchema()->getValidators()->executeArray($this->getChanges());
 
 		return $this->isValid();
 	}
 
 	public function isValid()
 	{
-		return $this->getErrors()->isEmpty();
+		return $$this->getErrors() ? $this->getErrors()->isEmpty() : TRUE;
 	}
 }

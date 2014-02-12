@@ -1,7 +1,7 @@
 <?php namespace CL\Luna\DB;
 
 use CL\Atlas\Query\InsertQuery;
-use CL\Luna\Model\Schema;
+use CL\Luna\Schema\Schema;
 
 /**
  * @author     Ivan Kerin

@@ -2,6 +2,7 @@
 
 use CL\Atlas\SQL\SQL;
 use CL\Atlas\Query\UpdateQuery;
+use CL\Luna\Schema\Schema;
 use CL\Luna\Util\Arr;
 /**
  * @author     Ivan Kerin

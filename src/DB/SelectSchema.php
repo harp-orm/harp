@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\DB;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Schema\Schema;
 use CL\Luna\Rel\EagerLoader;
 use CL\Atlas\Query\SelectQuery;
 
@@ -64,10 +64,9 @@ class SelectSchema extends SelectQuery {
 
 	public function execute()
 	{
-		var_dump($this->humanize());
 		$pdoStatement = parent::execute();
 
-		$pdoStatement->setFetchMode(\PDO::FETCH_CLASS, $this->getSchema()->getModelClass(), array(NULL, TRUE));
+		$pdoStatement->setFetchMode(\PDO::FETCH_CLASS, $this->getSchema()->getModelClass(), [NULL, TRUE]);
 
 		return $pdoStatement;
 	}

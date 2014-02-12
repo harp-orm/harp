@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\Rel;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Schema\Schema;
 use CL\Luna\Model\Model;
 
 /**
@@ -14,17 +14,25 @@ abstract class AbstractRel
 	protected $schema;
 	protected $name;
 
-	public function __construct(Schema $foreign_schema, array $attributes = NULL)
+	public function __construct($name, Schema $foreign_schema, array $properties = NULL)
 	{
 		$this->foreignSchema = $foreign_schema;
+		$this->name = $name;
 
-		if ($attributes)
+		if ($properties)
 		{
-			foreach ($attributes as $name => $value)
+			foreach ($properties as $propertyName => $value)
 			{
-				$this->$name = $value;
+				$this->$propertyName = $value;
 			}
 		}
+	}
+
+	public function setSchema(Schema $schema)
+	{
+		$this->schema = $schema;
+
+		return $this;
 	}
 
 	public function getName()
@@ -42,9 +50,5 @@ abstract class AbstractRel
 		return $this->foreignSchema;
 	}
 
-	function initialize(Schema $schema, $name)
-	{
-		$this->schema = $schema;
-		$this->name = $name;
-	}
+	abstract public function initialize();
 }

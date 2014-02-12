@@ -2,7 +2,6 @@
 
 use CL\Luna\Util\Arr;
 use CL\Luna\Model\Model;
-use CL\Luna\Model\Schema;
 use CL\Luna\Field\Integer;
 use CL\Luna\DB\SelectSchema;
 
@@ -25,18 +24,14 @@ class BelongsTo extends AbstractRel implements SingleInterface
 		return $this->getForeignSchema()->getPrimaryKey();
 	}
 
-	public function initialize(Schema $schema, $name)
+	public function initialize()
 	{
-		parent::initialize($schema, $name);
-
 		if ( ! $this->foreignKey)
 		{
 			$this->foreignKey = $this->getForeignSchema()->getName().'_id';
 		}
 
-		$schema->setFields([
-			$this->foreignKey => new Integer(),
-		]);
+		$this->getSchema()->getFields()->add(new Integer($this->foreignKey));
 	}
 
 	public function load(Model $parent)

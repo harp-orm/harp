@@ -1,27 +1,25 @@
-<?php namespace CL\Luna\Event;
+<?php namespace CL\Luna\Schema;
+
+use CL\Luna\Event\Event;
+use CL\Luna\Util\Collection;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-trait EventDispatcherTrait
-{
-	private $listeners;
+class EventListeners extends Collection {
 
-	public function addListener($event, $listener)
+	public function add($type, $listener)
 	{
-		$this->listeners [$event] []= $listener;
-	}
+		$this->items[$type] []= $listener;
 
-	public function hasEventListener($type)
-	{
-		return ($this->listeners AND isset($this->listenrs[$type]));
+		return $this;
 	}
 
 	public function despatchEvent(Event $event)
 	{
-		foreach ($this->listenrs[$event->getType()] as $listner)
+		foreach ($this->items[$event->getType()] as $listner)
 		{
 			call_user_func($listner, $event->getTarget(), $event);
 

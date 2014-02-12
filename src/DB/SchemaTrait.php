@@ -24,4 +24,8 @@ trait SchemaTrait {
 		return $this->schema;
 	}
 
+	public function whereKey($key)
+	{
+		return $this->where([$this->getSchema()->getPrimaryKey() => $key]);
+	}
 }

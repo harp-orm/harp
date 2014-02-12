@@ -21,11 +21,6 @@ class SelectSchema extends SelectQuery {
 			->from($schema->getTable());
 	}
 
-	public function whereKey($key)
-	{
-		return $this->where([$this->getSchema()->getPrimaryKey() => $key]);
-	}
-
 	public function joinRel($rel, $alias, $type)
 	{
 		$this->getSchema()->getRels()[$rel]->joinRel($alias, $type);

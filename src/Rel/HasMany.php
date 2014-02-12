@@ -82,28 +82,24 @@ class HasMany extends AbstractRel implements SaveManyInterface
 		}
 	}
 
-	public static function setAndSaveChanged(Many $many, array $set)
-	{
-		return array_map(function($item) use ($set) {
-
-			$item->setProperties($set)->save();
-
-			return $item->getId();
-
-		}, $many->getChanged());
-	}
-
 	public function saveMany(Model $parent, Many $many)
 	{
-		$alreadySavedIds = self::setAndSaveChanged($many, [$this->getForeignKey() => $parent->getId()]);
+		$changedIds = $many
+			->getChanged()
+				->setProperties([$this->getForeignKey() => $parent->getId()])
+				->save()
+				->getIds();
 
 		$removeIds = array_diff($many->getOriginalIds(), $many->getIds());
-		$addIds = array_diff($many->getIds(), $many->getOriginalIds(), $alreadySavedIds);
+		$addIds = array_diff($many->getIds(), $many->getOriginalIds(), $changedIds);
 
 		$set = array_fill_keys($removeIds, [$this->getForeignKey() => NULL]) + array_fill_keys($addIds, [$this->getForeignKey() => $parent->getId()]);
 
-		(new UpdateSchema($this->getForeignSchema()))
+		if ($set)
+		{
+			(new UpdateSchema($this->getForeignSchema()))
 			->setMultiple($set)
 			->execute();
+		}
 	}
 }

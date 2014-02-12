@@ -36,40 +36,62 @@ class Many
 
 	public function getIds()
 	{
-		return Arr::invoke($this->items, 'getId');
+		return $this->items ? Arr::invoke($this->items, 'getId') : [];
 	}
 
-	public function hasId($id)
+	public function search(Model $model)
+	{
+		return $this->searchId($model->getId());
+	}
+
+	public function searchId($id)
 	{
 		if ( ! $this->items)
 		{
 			return FALSE;
 		}
 
-		foreach ($this->items as $item)
+		foreach ($this->items as $index => $item)
 		{
 			if ($item->getId() == $id)
 			{
-				return TRUE;
+				return $index;
 			}
 		}
 
 		return FALSE;
 	}
 
-	public function getChangedIds()
+	public function hasId($id)
 	{
-		return array_filter(Arr::invoke($this->getChanged(), 'getId'));
+		return $this->searchId() !== FALSE;
 	}
 
 	public function getChanged()
 	{
-		return Arr::filterInvoke($this->items, 'isChanged');
+		$changedItems = Arr::filterInvoke($this->items, 'isChanged');
+
+		return new Many($changedItems);
 	}
 
-	public function saveChanged()
+	public function setProperties($properties)
 	{
-		Arr::invoke($this->getChanged(), 'save');
+		if ($this->items)
+		{
+			foreach ($this->items as $item)
+			{
+				$item->setProperties($properties);
+			}
+		}
+		return $this;
+	}
+
+	public function save()
+	{
+		if ($this->items)
+		{
+			Arr::invoke($this->items, 'save');
+		}
 
 		return $this;
 	}
@@ -81,7 +103,11 @@ class Many
 
 	public function add(Model $model)
 	{
-		if ( ! $this->has($model))
+		if (($index = $this->search($model)) !== FALSE)
+		{
+			$this->items[$index] = $model;
+		}
+		else
 		{
 			$this->items []= $model;
 		}

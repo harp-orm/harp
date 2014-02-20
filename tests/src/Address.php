@@ -37,7 +37,7 @@ class Address extends Model {
 	 */
 	public function users()
 	{
-		return parent::getRel('users');
+		return parent::getLoadedRel('users');
 	}
 
 	public static function CL_Luna_Test_Address(Schema $schema)

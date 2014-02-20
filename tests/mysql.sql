@@ -1,25 +1,27 @@
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL,
+  `name` varchar(100) NULL,
+  `password` varchar(100) NULL,
   `address_id` int(11) UNSIGNED NULL,
+  `parent_id` int(11) UNSIGNED NULL,
+  `deleted_at` TIMESTAMP NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `zip_code` varchar(100) NOT NULL,
-  `locatoion` varchar(100) NOT NULL,
+  `zip_code` varchar(100) NULL,
+  `locatoion` varchar(100) NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `post`;
 CREATE TABLE `post` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) NOT NULL,
-  `body` varchar(100) NOT NULL,
+  `title` varchar(100) NULL,
+  `body` varchar(100) NULL,
   `user_id` int(11) UNSIGNED NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -38,4 +40,5 @@ VALUES
 INSERT INTO `post` (`id`, `title`, `body`, `user_id`)
 VALUES
   (1,'News', 'Big news on the ship', 1),
-  (2,'New President', 'We will have a new president soon', 4);
+  (2,'New President', 'We will have a new president soon', 4),
+  (3,'Oil Spill', 'BP did it again', 5);

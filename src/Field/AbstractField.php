@@ -7,7 +7,8 @@
  */
 abstract class AbstractField
 {
-	private $name;
+	protected $name;
+	protected $default;
 
 	public function __construct($name, array $properties = NULL)
 	{
@@ -20,6 +21,11 @@ abstract class AbstractField
 				$this->$propertyName = $value;
 			}
 		}
+	}
+
+	public function getDefault()
+	{
+		return $this->default;
 	}
 
 	public function getName()

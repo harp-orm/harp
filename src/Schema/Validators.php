@@ -35,7 +35,6 @@ class Validators extends Collection {
 		array_walk($data, [$this, 'execute']);
 
 		$errorItems = Arr::flatten($data);
-		var_dump($errorItems);
 
 		return new Errors($errorItems);
 	}

@@ -1,6 +1,5 @@
-<?php namespace CL\Luna\Rel;
+<?php namespace CL\Luna\Model;
 
-use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
 
 /**
@@ -8,20 +7,29 @@ use CL\Luna\Util\Arr;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Many
+class ModelCollection
 {
 	protected $items;
-	protected $originalIds;
+	protected $original;
+	protected $compare;
 
 	public function __construct(array $items)
 	{
 		$this->set($items);
-		$this->originalIds = Arr::invoke($items, 'getId');
+		$this->original = $items;
+		$this->compare = function($a, $b) {
+			return $a === $b ? 0 : 1;
+		};
 	}
 
 	public function all()
 	{
 		return $this->items;
+	}
+
+	public function getOriginal()
+	{
+		return $this->original;
 	}
 
 	public function has(Model $model)
@@ -31,12 +39,40 @@ class Many
 
 	public function getOriginalIds()
 	{
-		return $this->originalIds;
+		return Arr::invoke($this->original, 'getId');
 	}
 
 	public function getIds()
 	{
-		return $this->items ? Arr::invoke($this->items, 'getId') : [];
+		return Arr::invoke($this->items, 'getId');
+	}
+
+	public function getAdded()
+	{
+		return array_udiff($this->items, $this->original, $this->compare);
+	}
+
+	public function getRemoved()
+	{
+		return array_udiff($this->original, $this->items, $this->compare);
+	}
+
+	public function getAffected()
+	{
+		return array_merge($this->original, $this->items);
+	}
+
+	public function getChanged()
+	{
+		return Arr::filterInvoke($this->items, 'isChanged');
+	}
+
+	public function save()
+	{
+		foreach ($this->getAffected() as $item)
+		{
+			$item->save();
+		}
 	}
 
 	public function search(Model $model)
@@ -67,35 +103,6 @@ class Many
 		return $this->searchId() !== FALSE;
 	}
 
-	public function getChanged()
-	{
-		$changedItems = Arr::filterInvoke($this->items, 'isChanged');
-
-		return new Many($changedItems);
-	}
-
-	public function setProperties($properties)
-	{
-		if ($this->items)
-		{
-			foreach ($this->items as $item)
-			{
-				$item->setProperties($properties);
-			}
-		}
-		return $this;
-	}
-
-	public function save()
-	{
-		if ($this->items)
-		{
-			Arr::invoke($this->items, 'save');
-		}
-
-		return $this;
-	}
-
 	public function isEmpty()
 	{
 		return empty($this->items);
@@ -111,6 +118,8 @@ class Many
 		{
 			$this->items []= $model;
 		}
+
+		return $this;
 	}
 
 	public function set(array $new_items)

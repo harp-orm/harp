@@ -10,9 +10,13 @@ use CL\Luna\Model\Model;
  */
 abstract class AbstractRel
 {
+	const APPEND = 1;
+	const PREPEND = 2;
+
 	protected $foreignSchema;
 	protected $schema;
 	protected $name;
+	protected $savePriority = self::APPEND;
 
 	public function __construct($name, Schema $foreign_schema, array $properties = NULL)
 	{
@@ -26,6 +30,28 @@ abstract class AbstractRel
 				$this->$propertyName = $value;
 			}
 		}
+	}
+
+	public function getSavePriority()
+	{
+		return $this->savePriority;
+	}
+
+	public function getJoinCondition($table, array $conditions)
+	{
+		$parts = [];
+
+		foreach ($conditions as $foreignColumn => $column)
+		{
+			$parts []= "{$this->getName()}.{$foreignColumn} = {$table}.{$column}";
+		}
+
+		if ($this->getForeignSchema()->getSoftDelete())
+		{
+			$parts []= $this->getName().'.'.Schema::SOFT_DELETE_KEY.' IS NULL';
+		}
+
+		return 'ON '.join(' AND ', $parts);
 	}
 
 	public function setSchema(Schema $schema)
@@ -48,6 +74,26 @@ abstract class AbstractRel
 	public function getForeignSchema()
 	{
 		return $this->foreignSchema;
+	}
+
+	public function getForeignTable()
+	{
+		return $this->getForeignSchema()->getTable();
+	}
+
+	public function getTable()
+	{
+		return $this->getSchema()->getTable();
+	}
+
+	public function getPrimaryKey()
+	{
+		return $this->getSchema()->getPrimaryKey();
+	}
+
+	public function getForeignPrimaryKey()
+	{
+		return $this->getForeignSchema()->getPrimaryKey();
 	}
 
 	abstract public function initialize();

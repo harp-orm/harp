@@ -1,9 +1,9 @@
 <?php namespace CL\Luna\Schema;
 
-use CL\Luna\DB\SelectSchema;
-use CL\Luna\DB\UpdateSchema;
-use CL\Luna\DB\InsertSchema;
-use CL\Luna\DB\DeleteSchema;
+use CL\Luna\Schema\Query\Select;
+use CL\Luna\Schema\Query\Update;
+use CL\Luna\Schema\Query\Insert;
+use CL\Luna\Schema\Query\Delete;
 
 /*
  * @author     Ivan Kerin
@@ -27,6 +27,11 @@ trait SchemaTrait
 	public static function getTable()
 	{
 		return self::getSchema()->getTable();
+	}
+
+	public static function getSoftDelete()
+	{
+		return self::getSchema()->getSoftDelete();
 	}
 
 	public static function getDb()
@@ -73,22 +78,22 @@ trait SchemaTrait
 
 	public static function all()
 	{
-		return new SelectSchema(static::getSchema());
+		return static::getSchema()->getSelectSchema();
 	}
 
-	public static function delete()
+	public static function deleteAll()
 	{
-		return new DeleteSchema(static::getSchema());
+		return static::getSchema()->getDeleteSchema();
 	}
 
 	public static function update()
 	{
-		return new UpdateSchema(static::getSchema());
+		return static::getSchema()->getUpdateSchema();
 	}
 
 	public static function insert()
 	{
-		return new InsertSchema(static::getSchema());
+		return static::getSchema()->getInsertSchema();
 	}
 
 	public static function initializeSchema()

@@ -1,7 +1,8 @@
 <?php namespace CL\Luna\Test;
 
 use Openbuildings\EnvironmentBackup as EB;
-use CL\Luna\DB\DB;
+use CL\Atlas\DB;
+use CL\Luna\Util\Log;
 
 /**
  * @package Jam
@@ -28,16 +29,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase {
 		DB::configuration('default', array(
 			'dsn' => 'mysql:dbname=test-luna;host=127.0.0.1',
 			'username' => 'root',
-			'driver_options' => array(
-				\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-				\PDO::ATTR_STATEMENT_CLASS => array('CL\Luna\DB\PDOStatement')
-			),
 		));
 
-		$this->env->backup_and_set(array(
-			'CL\Luna\DB\DB::$instances' => array(),
-		));
-
+		Log::setEnabled(TRUE);
 	}
 
 	public function tearDown()

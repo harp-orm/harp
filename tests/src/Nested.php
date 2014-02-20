@@ -1,7 +1,7 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Schema\Schema;
-use CL\Luna\Field\String;
+use CL\Luna\Field\Integer;
 
 /**
  * @author     Ivan Kerin
@@ -19,7 +19,7 @@ trait Nested {
 	{
 		$schema
 			->getFields()
-				->add(new String('parent'));
+				->add(new Integer('parent_id'));
 	}
 
 	/**

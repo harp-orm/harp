@@ -56,6 +56,16 @@ class Arr
 		return $result;
 	}
 
+	public static function groupByInvoke(array $arr, $method)
+	{
+		$result = [];
+		foreach ($arr as $item)
+		{
+			$result[$item->{$method}()] []= $item;
+		}
+		return $result;
+	}
+
 	public static function indexGroup(array $arr, $attribute)
 	{
 		$result = [];

@@ -7,4 +7,5 @@
  */
 class String extends AbstractField
 {
+	protected $default = "";
 }

@@ -51,7 +51,7 @@ class User extends Model {
 	 */
 	public function address()
 	{
-		return parent::getRel('address');
+		return parent::getLoadedRel('address');
 	}
 
 	/**
@@ -59,32 +59,34 @@ class User extends Model {
 	 */
 	public function posts()
 	{
-		return parent::getRel('posts');
+		return parent::getLoadedRel('posts');
 	}
 
 	public static function test($model, $event)
 	{
-		var_dump('event');
+		var_dump('User event "test" called');
 	}
 
 	public static function CL_Luna_Test_User(Schema $schema)
 	{
 		$schema
-			->getFields()
-				->add(new Integer('id'))
-				->add(new String('name'))
-				->add(new Password('password'));
+			->setSoftDelete(TRUE)
 
-		$schema
-			->getRels()
-				->add(new BelongsTo('address', Address::getSchema(), ['inverseOf' => 'user']))
-				->add(new HasMany('posts', Post::getSchema()));
+			->setFields([
+				new Integer('id'),
+				new String('name'),
+				new Password('password'),
+			])
 
-		$schema
-			->getValidators()
-				->add(new Present('name'));
+			->setRels([
+				new BelongsTo('address', Address::getSchema(), ['inverseOf' => 'user']),
+				new HasMany('posts', Post::getSchema()),
+			])
 
-		$schema
+			->setValidators([
+				new Present('name')
+			])
+
 			->getEventListeners()
 				->add(ModelEvent::SAVE, 'CL\Luna\Test\User::test');
 	}

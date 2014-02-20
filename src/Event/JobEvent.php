@@ -1,19 +1,17 @@
 <?php namespace CL\Luna\Event;
 
-use CL\Luna\Model\Model;
+use CL\Luna\EntityManager\AbstractJob;
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class ModelEvent extends Event
+class JobEvent extends Event
 {
-	const SAVE = 1;
-	const DELETE = 3;
-	const VALIDATE = 4;
-	const PRESERVE = 5;
+	const EXECUTE = 1;
+	const PROCESS = 2;
 
-	public function __construct($type, Model $target)
+	public function __construct($type, AbstractJob $job)
 	{
 		parent::__construct($type, $target);
 	}

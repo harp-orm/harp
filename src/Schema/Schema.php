@@ -7,6 +7,11 @@ use CL\Luna\Util\Arr;
 use CL\Luna\Event\EventDispatcherTrait;
 use CL\Luna\Event\ModelEvent;
 use CL\Luna\Event\Event;
+use CL\Luna\Schema\Query\Delete;
+use CL\Luna\Schema\Query\Update;
+use CL\Luna\Schema\Query\Select;
+use CL\Luna\Schema\Query\Insert;
+use CL\Atlas\SQL\SQL;
 
 /*
  * @author     Ivan Kerin
@@ -15,9 +20,18 @@ use CL\Luna\Event\Event;
  */
 class Schema
 {
+	const SOFT_DELETE_KEY = 'deleted_at';
+
+	const SELECT = 1;
+	const INSERT = 2;
+	const UPDATE = 3;
+	const DELETE = 4;
+
 	private $name;
 	private $modelClass;
 	private $table;
+	private $softDelete = FALSE;
+	private $batchUpdate = TRUE;
 	private $db = 'default';
 	private $primaryKey = 'id';
 	private $fields;
@@ -52,6 +66,33 @@ class Schema
 		return $this;
 	}
 
+	public function getSoftDelete()
+	{
+		$this->lazyLoadConfiguration();
+
+		return $this->softDelete;
+	}
+
+	public function setSoftDelete($softDelete)
+	{
+		$this->softDelete = $softDelete;
+
+		return $this;
+	}
+
+	public function getBatchUpdate()
+	{
+		$this->lazyLoadConfiguration();
+
+		return $this->batchUpdate;
+	}
+
+	public function setBatchUpdate($batchUpdate)
+	{
+		$this->batchUpdate = $batchUpdate;
+
+		return $this;
+	}
 	public function getTable()
 	{
 		$this->lazyLoadConfiguration();
@@ -157,6 +198,70 @@ class Schema
 		else
 		{
 			return TRUE;
+		}
+	}
+
+	public function getDeleteSchema()
+	{
+		if ($this->getSoftDelete())
+		{
+			$delete = new Update($this);
+			$delete
+				->set([self::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
+				->where([$schema->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
+		}
+		else
+		{
+			$delete = new Delete($schema);
+		}
+
+		return $delete;
+	}
+
+	public function getUpdateSchema()
+	{
+		$update = (new Update($this));
+
+		if ($this->getSoftDelete())
+		{
+			$update->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
+		}
+
+		return $update;
+	}
+
+	public function getSelectSchema()
+	{
+		$select = (new Select($this));
+
+		if ($this->getSoftDelete())
+		{
+			$select->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
+		}
+
+		return $select;
+	}
+
+	public function getInsertSchema()
+	{
+		return new Insert($this);
+	}
+
+	public function getQuerySchema($type)
+	{
+		switch ($type)
+		{
+			case self::SELECT:
+				return $this->getSelectSchema();
+
+			case self::INSERT:
+				return $this->getInsertSchema();
+
+			case self::DELETE:
+				return $this->getDeleteSchema();
+
+			case self::UPDATE:
+				return $this->getUpdateSchema();
 		}
 	}
 

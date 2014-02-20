@@ -34,38 +34,4 @@ class Rels extends Collection {
 			}
 		}
 	}
-
-	public function setArray(Model $subject, array $objects)
-	{
-		foreach ($objects as $name => $object)
-		{
-			$item = $this->get($name);
-
-			if ($item instanceof SetOneInterface)
-			{
-				$item->setOne($subject, $object);
-			}
-			elseif ($item instanceof SetManyInterface)
-			{
-				$item->setMany($subject, $object);
-			}
-		}
-	}
-
-	public function saveArray(Model $subject, array $objects)
-	{
-		foreach ($objects as $name => $object)
-		{
-			$item = $this->get($name);
-
-			if ($item instanceof SaveOneInterface)
-			{
-				$item->saveOne($subject, $object);
-			}
-			elseif ($item instanceof SaveManyInterface)
-			{
-				$item->saveMany($subject, $object);
-			}
-		}
-	}
 }

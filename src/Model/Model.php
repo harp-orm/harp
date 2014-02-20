@@ -2,6 +2,9 @@
 
 use CL\Luna\Util\Arr;
 use CL\Luna\Event\ModelEvent;
+use CL\Luna\EntityManager\EntityManager;
+use CL\Luna\EntityManager\RelContent;
+use CL\Luna\Schema\Query\Update;
 
 /**
  * @author     Ivan Kerin
@@ -11,11 +14,13 @@ use CL\Luna\Event\ModelEvent;
 class Model {
 
 	use DirtyTrackingTrait;
+	use UnmappedPropertiesTrait;
 
 	private $errors;
-	private $rels;
+	private $relContents;
 	private $isLoaded = FALSE;
-	private $unmapped;
+	private $isDeleted = FALSE;
+	private $isSaved = FALSE;
 
 	public function __construct(array $properties = NULL, $loaded = FALSE)
 	{
@@ -37,30 +42,28 @@ class Model {
 		}
 	}
 
-	public function __get($name)
-	{
-		return isset($this->unmapped[$name]) ? $name : NULL;
-	}
-
-	public function __set($name, $value)
-	{
-		$this->unmapped[$name] = $value;
-		return $this;
-	}
-
-	public function __isset($name)
-	{
-		return isset($this->unmapped[$name]);
-	}
-
 	public function getId()
 	{
 		return $this->{$this->getSchema()->getPrimaryKey()};
 	}
 
+	public function setInserted($id)
+	{
+		$this->{$this->getSchema()->getPrimaryKey()} = $id;
+		$this->setOriginals($this->getProperties());
+		$this->isLoaded = TRUE;
+
+		return $this;
+	}
+
 	public function isLoaded()
 	{
 		return $this->isLoaded;
+	}
+
+	public function isDeleted()
+	{
+		return $this->isDeleted;
 	}
 
 	public function setProperties(array $values)
@@ -83,55 +86,67 @@ class Model {
 
 	public function save()
 	{
-		$this->validate();
-
 		if ($this->getSchema()->dipatchModelEvent(ModelEvent::SAVE, $this))
 		{
-			if ($this->rels)
-			{
-				$this->getSchema()->getRels()->setArray($this, $this->rels);
-			}
-
-			if ($this->isChanged())
-			{
-				$changes = $this->getSchema()->getFields()->saveData($this->getChanges());
-				$this->insertOrUpdate($changes);
-			}
-
-			if ($this->rels)
-			{
-				$this->getSchema()->getRels()->saveArray($this, $this->rels);
-			}
+			$this->isSaving = TRUE;
 		}
 
-		$this->getSchema()->dipatchModelEvent(ModelEvent::AFTER_SAVE, $this);
+		return $this;
 	}
 
-
-	public function insertOrUpdate(array $attributes)
+	public function preserve()
 	{
-		$query = $this->isLoaded()
-			? static::update()->whereKey($this->getId())
-			: static::insert();
-
-		$query
-			->set($attributes)
-			->execute();
-	}
-
-	public function getRel($name)
-	{
-		if ( ! isset($this->rels[$name]))
+		if ($this->getSchema()->dipatchModelEvent(ModelEvent::PRESERVE, $this))
 		{
-			$this->rels[$name] = $this->getSchema()->getRel($name)->load($this);
+			$this->setOriginals($this->getProperties());
+			$this->isSaving = FALSE;
 		}
 
-		return $this->rels[$name];
+		return $this;
 	}
 
-	public function setRel($name, $value)
+	public function delete()
 	{
-		$this->rels[$name] = $value;
+		if ($this->getSchema()->dipatchModelEvent(ModelEvent::DELETE, $this))
+		{
+			$this->isDeleted = TRUE;
+		}
+
+		return $this;
+	}
+
+	public function restore()
+	{
+		(new Update($this->getSchema()))
+			->whereKey($this->getId())
+			->set([Schema::SOFT_DELETE_KEY => NULL])
+			->execute();
+
+		return $this;
+	}
+
+	public function getLoadedRel($relName)
+	{
+		if ( ! isset($this->relContents[$relName]))
+		{
+			$rel = $this->getSchema()->getRel($relName);
+			$relContent = new RelContent($rel, $this);
+
+			EntityManager::getInstance()->load($relContent);
+			$this->addRelContent($relContent);
+		}
+
+		return $this->relContents[$relName]->getContent();
+	}
+
+	public function getRelContents()
+	{
+		return $this->relContents;
+	}
+
+	public function addRelContent(RelContent $content)
+	{
+		$this->relContents[$content->getRel()->getName()] = $content;
 
 		return $this;
 	}

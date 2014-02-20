@@ -3,77 +3,58 @@
 use CL\Luna\Util\Arr;
 use CL\Luna\Model\Model;
 use CL\Luna\Field\Integer;
-use CL\Luna\DB\SelectSchema;
-use CL\Luna\Rel\Feature\SetOneInterface;
+use CL\Luna\Rel\Feature\SingleInterface;
+use CL\Luna\Schema\Query\Select;
+use CL\Luna\Schema\Query\JoinRel;
+use CL\Luna\Schema\Schema;
+use CL\Luna\EntityManager\LoadJob;
+use Closure;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsTo extends AbstractEagerLoaded implements SetOneInterface
+class BelongsTo extends AbstractRel implements SingleInterface
 {
-	protected $foreignKey;
-
-	public function getForeignKey()
-	{
-		return $this->foreignKey;
-	}
+	protected $savePriority = self::PREPEND;
+	protected $key;
 
 	public function getKey()
 	{
-		return $this->getForeignSchema()->getPrimaryKey();
+		return $this->key;
+	}
+
+	public function getForeignKey()
+	{
+		return $this->getSchema()->getPrimaryKey();
+	}
+
+	public function getSelect()
+	{
+		return $this->getForeignSchema()->getSelectSchema();
 	}
 
 	public function initialize()
 	{
-		if ( ! $this->foreignKey)
+		if ( ! $this->key)
 		{
-			$this->foreignKey = $this->getForeignSchema()->getName().'_id';
+			$this->key = $this->getForeignSchema()->getName().'_id';
 		}
 
-		$this->getSchema()->getFields()->add(new Integer($this->foreignKey));
+		$this->getSchema()->getFields()->add(new Integer($this->key));
 	}
 
-	public function load(Model $parent)
-	{
-		return (new SelectSchema($this->getForeignSchema()))
-			->where([$this->getKey() => $parent->getId()])
-			->limit(1)
-			->execute()
-				->fetch();
-	}
-
-	public function scopeEagerLoaded(SelectSchema $select, array $parents)
-	{
-		$ids = array_filter(Arr::extract($parents, $this->getForeignKey()));
-
-		if ($ids)
-		{
-			$select->where([$this->getKey() => $ids]);
-			return TRUE;
-		}
-	}
-
-	public function setEagerLoaded(array $parents, array $children)
-	{
-		$parents = Arr::index($parents, $this->getKey());
-		$children = Arr::index($children, $this->getForeignKey());
-
-		foreach ($parents as $id => $parent)
-		{
-			$parent->setRel($this->getName(), isset($children[$id]) ? $children[$id] : NULL);
-		}
-	}
-
-	public function setOne(Model $parent, Model $foreign)
+	public function update(Model $parent, Model $foreign)
 	{
 		$parent->{$this->getForeignKey()} = $foreign->getId();
 	}
 
-	public function joinRel($query, $alias, $type)
+	public function joinRel($query, $parent)
 	{
-		$table = $alias ? [$this->getForeignSchema()->getTable() => $alias] : $this->getForeignSchema()->getTable();
-		$query->join($table, [($alias ? $alias : $table).'.'.$this->getSchema()->getPrimaryKey() => $this->getSchema()->getTable().'.'.$this->getForeignKey()], $type);
+		$table = $parent ?: $this->getTable();
+		$columns = [$this->getForeignPrimaryKey() => $this->getForeignKey()];
+
+		$query->join([$this->getForeignTable() => $this->getName()], $this->getJoinCondition($table, $columns));
 	}
 }

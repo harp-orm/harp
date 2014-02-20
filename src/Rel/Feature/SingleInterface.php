@@ -1,14 +1,17 @@
 <?php namespace CL\Luna\Rel\Feature;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Rel\Many;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-interface SaveManyInterface
+interface SingleInterface
 {
-	public function saveMany(Model $subject, Many $many);
+	public function getKey();
+	public function getForeignKey();
+	public function getSelect();
+
+	public function update(Model $parent, Model $model);
 }

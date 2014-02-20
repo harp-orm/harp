@@ -18,6 +18,16 @@ class Fields extends Collection {
 		return $this;
 	}
 
+	public function getNames()
+	{
+		return array_keys($this->items);
+	}
+
+	public function getDefaults()
+	{
+		return Arr::invoke($this->items, 'getDefault');
+	}
+
 	public function loadData($data)
 	{
 		return Arr::invokeObjects($data, $this->items, 'load');

@@ -1,17 +1,17 @@
 <?php namespace CL\Luna\Rel;
 
 use CL\Luna\Model\Model;
-use CL\Luna\DB\UpdateSchema;
-use CL\Luna\DB\SelectSchema;
+use CL\Luna\Model\ModelCollection;
 use CL\Luna\Util\Arr;
-use CL\Luna\Rel\Feature\SaveManyInterface;
+use CL\Luna\Rel\Feature\MultiInterface;
+use CL\Luna\Schema\Query\Select;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasMany extends AbstractEagerLoaded implements SaveManyInterface
+class HasMany extends AbstractRel implements MultiInterface
 {
 	protected $foreignKey;
 
@@ -33,70 +33,29 @@ class HasMany extends AbstractEagerLoaded implements SaveManyInterface
 		}
 	}
 
-	public function load(Model $parent)
+	public function getSelect()
 	{
-		$query = (new SelectSchema($this->getForeignSchema()))
-			->where([$this->getForeignKey() => $parent->getId()]);
-
-		$items = $query->execute()->fetchAll();
-
-		return new Many($items);
+		return $this->getForeignSchema()->getSelectSchema();
 	}
 
-	public function joinRel($query, $alias, $type)
+	public function joinRel($query, $parent)
 	{
-		$table = $alias ? [$this->getForeignSchema()->getTable() => $alias] : $this->getForeignSchema()->getTable();
+		$table = $parent ?: $this->getTable();
+		$columns = [$this->getForeignKey() => $this->getForeignPrimaryKey()];
 
-		$query->join($table, [($alias ? $alias : $table).'.'.$this->getForeignKey() => $this->getSchema()->getTable().'.'.$this->getSchema()->getPrimaryKey()], $type);
+		$query->join([$this->getForeignTable() => $this->getName()], $this->getJoinCondition($table, $columns));
 	}
 
-	public function getQuery($id)
+	public function update(Model $parent, ModelCollection $foreign)
 	{
-		return (new SelectSchema($this->getForeignSchema()))
-			->where([$this->getForeignKey() => $id]);
-	}
-
-	public function scopeEagerLoaded(SelectSchema $select, array $parents)
-	{
-		$ids = array_filter(Arr::extract($parents, $this->getKey()));
-
-		if ($ids)
+		foreach ($foreign->getAdded() as $item)
 		{
-			$select->where([$this->getForeignKey() => $ids]);
-			return TRUE;
+			$item->{$this->getForeignKey()} = $parent->{$this->getKey()};
 		}
-	}
 
-	public function setEagerLoaded(array $parents, array $children)
-	{
-		$parents = Arr::index($parents, $this->getKey());
-		$children = Arr::indexGroup($children, $this->getForeignKey());
-
-		foreach ($parents as $id => $parent)
+		foreach ($foreign->getRemoved() as $item)
 		{
-			$items = isset($children[$id]) ? $children[$id] : [];
-			$parent->setRel($this->getName(), new Many($items));
-		}
-	}
-
-	public function saveMany(Model $parent, Many $many)
-	{
-		$changedIds = $many
-			->getChanged()
-				->setProperties([$this->getForeignKey() => $parent->getId()])
-				->save()
-				->getIds();
-
-		$removeIds = array_diff($many->getOriginalIds(), $many->getIds());
-		$addIds = array_diff($many->getIds(), $many->getOriginalIds(), $changedIds);
-
-		$set = array_fill_keys($removeIds, [$this->getForeignKey() => NULL]) + array_fill_keys($addIds, [$this->getForeignKey() => $parent->getId()]);
-
-		if ($set)
-		{
-			(new UpdateSchema($this->getForeignSchema()))
-			->setMultiple($set)
-			->execute();
+			$item->{$this->getForeignKey()} = NULL;
 		}
 	}
 }

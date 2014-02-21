@@ -125,30 +125,10 @@ class Model {
 		return $this;
 	}
 
-	public function getLoadedRel($relName)
+	public function getLink($relName)
 	{
-		if ( ! isset($this->relContents[$relName]))
-		{
-			$rel = $this->getSchema()->getRel($relName);
-			$relContent = new RelContent($rel, $this);
-
-			EntityManager::getInstance()->load($relContent);
-			$this->addRelContent($relContent);
-		}
-
-		return $this->relContents[$relName]->getContent();
-	}
-
-	public function getRelContents()
-	{
-		return $this->relContents;
-	}
-
-	public function addRelContent(RelContent $content)
-	{
-		$this->relContents[$content->getRel()->getName()] = $content;
-
-		return $this;
+		$rel = $this->getSchema()->getRel($relName);
+		return EntityManager::getInstance()->loadLink($this, $rel)->getContent();
 	}
 
 	public function getErrors()

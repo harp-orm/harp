@@ -51,7 +51,7 @@ class User extends Model {
 	 */
 	public function address()
 	{
-		return parent::getLoadedRel('address');
+		return parent::getLink('address');
 	}
 
 	/**
@@ -59,7 +59,7 @@ class User extends Model {
 	 */
 	public function posts()
 	{
-		return parent::getLoadedRel('posts');
+		return parent::getLink('posts');
 	}
 
 	public static function test($model, $event)

@@ -9,7 +9,7 @@ use CL\Luna\Util\Arr;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class PreserveJob extends AbstractJob
+class PreserveJob
 {
 	public static function getModelType(Model $model)
 	{
@@ -29,14 +29,19 @@ class PreserveJob extends AbstractJob
 
 	private $models;
 	private $type;
-	private $relContents;
+	private $links;
+	private $schema;
 
 	function __construct(Model $model)
 	{
 		$this->type = self::getModelType($model);
+		$this->schema = $model->getSchema();
 		$this->addModel($model);
+	}
 
-		parent::__construct($model->getSchema()->getQuerySchema($this->type));
+	public function getSchema()
+	{
+		return $this->schema;
 	}
 
 	public function getType()
@@ -56,20 +61,20 @@ class PreserveJob extends AbstractJob
 		return $this;
 	}
 
-	public function addRelContent(RelContent $relContent)
+	public function addLink(Link $link)
 	{
-		$this->relContents []= $relContent;
+		$this->links []= $link;
 
 		return $this;
 	}
 
-	public function updateRelContents()
+	public function updateLinks()
 	{
-		if ($this->relContents)
+		if ($this->links)
 		{
-			foreach ($this->relContents as $relContent)
+			foreach ($this->links as $link)
 			{
-				$relContent->update();
+				$link->update();
 			}
 		}
 	}
@@ -84,13 +89,11 @@ class PreserveJob extends AbstractJob
 
 	public function execute()
 	{
-		$this->getQuery()->setModels($this->models);
-
-		parent::execute();
+		$this->getSchema()->getQuerySchema($this->type)->setModels($this->models)->execute();
 
 		$this->preserveModels();
 
-		$this->updateRelContents();
+		$this->updateLinks();
 
 		return $this;
 	}

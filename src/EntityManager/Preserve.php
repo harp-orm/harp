@@ -45,16 +45,18 @@ class Preserve
 
 			$this->add($job, $type);
 
-			if ($model->getRelContents())
+			if (($linkRels = EntityManager::getInstance()->getLinks($model)))
 			{
-				foreach ($model->getRelContents() as $relContent)
+				foreach ($linkRels as $rel)
 				{
-					foreach ($relContent->getAffected() as $model)
+					$link = $linkRels[$rel];
+
+					foreach ($link->getAffected() as $model)
 					{
-						$this->addModel($model, $relContent->getRel()->getSavePriority());
+						$this->addModel($model, $rel->getSavePriority());
 					}
 
-					$job->addRelContent($relContent);
+					$job->addLink($link);
 				}
 			}
 		}

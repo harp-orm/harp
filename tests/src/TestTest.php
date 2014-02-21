@@ -11,6 +11,7 @@ class TestTest extends AbstractTestCase {
 		Log::setEnabled(TRUE);
 
 		$posts = Post::all()->loadWith(['user' => 'address']);
+
 		var_dump($posts[0]->user()->address());
 
 		$post = Post::get(1);

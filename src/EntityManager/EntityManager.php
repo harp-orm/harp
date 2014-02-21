@@ -3,6 +3,8 @@
 use CL\Luna\Model\Model;
 use CL\Luna\Rel\Feature\SingleInterface;
 use CL\Luna\Rel\Feature\MultiInterface;
+use CL\Luna\Schema\Query\Select;
+use CL\Luna\Schema\Schema;
 use CL\Luna\Rel\AbstractRel;
 use SplObjectStorage;
 
@@ -26,53 +28,108 @@ class EntityManager
 
 	private $jobs;
 	private $items;
+	private $links;
 
-	public function add(Job $job)
+	public function __construct()
 	{
-		$this->jobs []= $job;
-
-		return $this;
+		$this->links = new SplObjectStorage();
 	}
 
-	public function getCanonicalItems(array $items)
+	public function loadModels(Select $select)
 	{
-		foreach ($items as & $item)
-		{
-			$name = $item->getSchema()->getName();
-			$id = (int) $item->getId();
+		$models = $select->execute()->fetchAll();
 
-			if (isset($this->items[$name][$id]))
-			{
-				$item = $this->items[$name][$id];
-			}
-			else
-			{
-				$this->items[$name][$id] = $item;
-			}
+		$schema = $select->getSchema();
+		$name = $schema->getName();
+		$primaryKey = $schema->getPrimaryKey();
+
+		foreach ($models as & $model)
+		{
+			$id = $model->{$primaryKey};
+
+			$model = $this->getCanonicalModel($name, $id, $model);
 		}
 
-		return $items;
+		return $models;
 	}
 
-	public function load(RelContent $content)
+	public function getCanonicalModel($name, $id, $model)
 	{
-		$childJob = new ChildJob($content->getRel());
-		$childJob->addRelContent($content);
-
-		$this
-			->add($childJob)
-			->execute();
-	}
-
-	public function execute()
-	{
-		foreach ($this->jobs as $job)
+		if (isset($this->items[$name][$id]))
 		{
-			$job->execute();
-			$job->setResult($this->getCanonicalItems($job->getResult()));
-			$job->processResult();
+			return $this->items[$name][$id];
 		}
-		$this->jobs = NULL;
+		else
+		{
+			$this->items[$name][$id] = $model;
+			return $model;
+		}
+	}
+
+	public function setCanonicalLink(Model $model, AbstractRel $rel, Link $link)
+	{
+		if ( ! isset($this->links[$model]))
+		{
+			$this->links[$model] = new SplObjectStorage;
+		}
+
+		$this->links[$model][$rel] = $link;
+	}
+
+	public function getCanonicalLink($model, $rel)
+	{
+		return $this->link[$model][$rel];
+	}
+
+	public function loadLink($model, $rel)
+	{
+		if (isset($this->links[$model]) AND isset($this->links[$model][$rel]))
+		{
+			return $this->links[$model][$rel];
+		}
+		else
+		{
+			$link = new Link($model, $rel);
+			$this->setCanonicalLink($model, $rel, $link);
+
+			(new LinkLoader($rel))
+				->add($link)
+				->load();
+
+			return $link;
+		}
+	}
+
+	public function getLinks($model)
+	{
+		if (isset($this->links[$model]))
+		{
+			return $this->links[$model];
+		}
+	}
+
+	public function loadLinks(Schema $schema, array $models, array $rels)
+	{
+		foreach ($rels as $relName => $childRelNames)
+		{
+			$rel = $schema->getRel($relName);
+			$linkLoader = new LinkLoader($rel);
+
+			foreach ($models as $model)
+			{
+				$link = new Link($model, $rel);
+				$linkLoader->add($link);
+
+				$this->setCanonicalLink($model, $rel, $link);
+			}
+
+			$linkLoader->load();
+
+			if ($childRelNames)
+			{
+				$this->loadLinks($rel->getForeignSchema(), $linkLoader->getLinkedModels(), $childRelNames);
+			}
+		}
 
 		return $this;
 	}

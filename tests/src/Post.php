@@ -42,7 +42,7 @@ class Post extends Model {
 	 */
 	public function user()
 	{
-		return parent::getLoadedRel('user');
+		return parent::getLink('user');
 	}
 
 	public static function CL_Luna_Test_Post(Schema $schema)

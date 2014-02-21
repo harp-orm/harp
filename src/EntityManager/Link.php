@@ -9,17 +9,17 @@ use CL\Luna\Model\ModelCollection;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class RelContent
+class Link
 {
 	private $rel;
 	private $content;
 	private $parent;
 
-	function __construct(AbstractRel $rel, Model $parent, $content = NULL)
+	function __construct(Model $parent, AbstractRel $rel, $content = NULL)
 	{
 		$this->parent = $parent;
-		$this->content = $content;
 		$this->rel = $rel;
+		$this->content = $content;
 	}
 
 	public function getRel()

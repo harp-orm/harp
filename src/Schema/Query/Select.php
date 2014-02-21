@@ -29,50 +29,18 @@ class Select extends SelectQuery {
 
 	public function loadWith($rels)
 	{
-		$em = EntityManager::getInstance();
-		$job = new Job($this);
-
-		$em->add($job);
+		$models = $this->load();
 
 		$rels = Arr::toAssoc( (array) $rels);
 
-		self::addLoadJobs($em, $job, $rels);
+		EntityManager::getInstance()->loadLinks($this->getSchema(), $models, $rels);
 
-		$em->execute();
-
-		return $job->getResult();
-	}
-
-	public static function addLoadJobs($em, $job, $rels)
-	{
-		$schema = $job->getSchema();
-
-		foreach ($rels as $relName => $childRels)
-		{
-			$rel = $schema->getRel($relName);
-
-			$childJob = new ChildJob($rel);
-			$job->addChild($childJob);
-
-
-			$em->add($childJob);
-
-			if ($childRels)
-			{
-				self::addLoadJobs($em, $childJob, $childRels);
-			}
-		}
+		return $models;
 	}
 
 	public function load()
 	{
-		$em = EntityManager::getInstance();
-		$job = new Job($this);
-
-		$em->add($job);
-		$em->execute();
-
-		return $job->getResult();
+		return EntityManager::getInstance()->loadModels($this);
 	}
 
 	public function execute()

@@ -4,6 +4,7 @@ use CL\Luna\Model\Model;
 use CL\Luna\Rel\Feature\SingleInterface;
 use CL\Luna\Rel\Feature\MultiInterface;
 use CL\Luna\Rel\AbstractRel;
+use SplObjectStorage;
 
 /*
  * @author     Ivan Kerin
@@ -24,7 +25,6 @@ class EntityManager
 	}
 
 	private $jobs;
-	private $saveJobs;
 	private $items;
 
 	public function add(Job $job)
@@ -39,7 +39,7 @@ class EntityManager
 		foreach ($items as & $item)
 		{
 			$name = $item->getSchema()->getName();
-			$id = $item->getId();
+			$id = (int) $item->getId();
 
 			if (isset($this->items[$name][$id]))
 			{

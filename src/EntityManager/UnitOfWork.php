@@ -2,6 +2,7 @@
 
 use CL\Luna\Schema\Schema;
 use CL\Luna\Model\Model;
+use CL\Luna\Rel\Link;
 use CL\Luna\Util\Arr;
 
 /*
@@ -9,7 +10,7 @@ use CL\Luna\Util\Arr;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class PreserveJob
+class UnitOfWork
 {
 	public static function getModelType(Model $model)
 	{
@@ -29,7 +30,7 @@ class PreserveJob
 
 	private $models;
 	private $type;
-	private $links;
+	private $relNames;
 	private $schema;
 
 	function __construct(Model $model)
@@ -61,20 +62,26 @@ class PreserveJob
 		return $this;
 	}
 
-	public function addLink(Link $link)
+	public function addRelName($relName)
 	{
-		$this->links []= $link;
+		$this->relNames []= $relName;
 
 		return $this;
 	}
 
-	public function updateLinks()
+	public function updateRelated()
 	{
-		if ($this->links)
+		if ($this->models)
 		{
-			foreach ($this->links as $link)
+			foreach ($this->models as $model)
 			{
-				$link->update();
+				if ($model->getRelated())
+				{
+					foreach ($model->getRelated() as $relName => $related)
+					{
+						$model->getSchema()->getRel($relName)->update($model, $related);
+					}
+				}
 			}
 		}
 	}
@@ -93,7 +100,7 @@ class PreserveJob
 
 		$this->preserveModels();
 
-		$this->updateLinks();
+		$this->updateRelated();
 
 		return $this;
 	}

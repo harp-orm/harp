@@ -5,13 +5,14 @@ use CL\Luna\Event\ModelEvent;
 use CL\Luna\EntityManager\EntityManager;
 use CL\Luna\EntityManager\RelContent;
 use CL\Luna\Schema\Query\Update;
+use CL\Luna\Rel\RelatedInterface;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Model {
+class Model implements RelatedInterface {
 
 	use DirtyTrackingTrait;
 	use UnmappedPropertiesTrait;
@@ -21,6 +22,7 @@ class Model {
 	private $isLoaded = FALSE;
 	private $isDeleted = FALSE;
 	private $isSaved = FALSE;
+	private $related;
 
 	public function __construct(array $properties = NULL, $loaded = FALSE)
 	{
@@ -125,10 +127,31 @@ class Model {
 		return $this;
 	}
 
-	public function getLink($relName)
+	public function getOrLoadLink($relName)
 	{
-		$rel = $this->getSchema()->getRel($relName);
-		return EntityManager::getInstance()->loadLink($this, $rel)->getContent();
+		if ( ! isset($this->related[$relName]))
+		{
+			EntityManager::getInstance()->loadLinkArray($this->getSchema()->getRel($relName), [$this]);
+		}
+
+		return $this->related[$relName];
+	}
+
+	public function getRelated()
+	{
+		return $this->related;
+	}
+
+	public function getAffected()
+	{
+		return [$this];
+	}
+
+	public function setRelated($name, RelatedInterface $related)
+	{
+		$this->related[$name] = $related;
+
+		return $this;
 	}
 
 	public function getErrors()

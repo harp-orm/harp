@@ -28,6 +28,9 @@ class TestTest extends AbstractTestCase {
 		$user = new User(['name' => 'newly saved']);
 		$user->save();
 
+		var_dump(
+			$post, $post2, $post3);
+
 		$user->posts()->set([$post, $post2, $post3]);
 
 		EntityManager::getInstance()->preserve($user);

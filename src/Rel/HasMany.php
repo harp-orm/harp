@@ -3,15 +3,13 @@
 use CL\Luna\Model\Model;
 use CL\Luna\Model\ModelCollection;
 use CL\Luna\Util\Arr;
-use CL\Luna\Rel\Feature\MultiInterface;
-use CL\Luna\Schema\Query\Select;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasMany extends AbstractRel implements MultiInterface
+class HasMany extends AbstractRel
 {
 	protected $foreignKey;
 
@@ -33,6 +31,17 @@ class HasMany extends AbstractRel implements MultiInterface
 		}
 	}
 
+	public function setRelated(array $models, array $related)
+	{
+		$related = Arr::indexGroup($related, $this->getForeignKey());
+
+		foreach ($models as $model)
+		{
+			$index = $model->{$this->getKey()};
+			$model->setRelated($this->getName(), new ModelCollection(isset($related[$index]) ? $related[$index] : array()));
+		}
+	}
+
 	public function getSelect()
 	{
 		return $this->getForeignSchema()->getSelectSchema();
@@ -46,14 +55,14 @@ class HasMany extends AbstractRel implements MultiInterface
 		$query->join([$this->getForeignTable() => $this->getName()], $this->getJoinCondition($table, $columns));
 	}
 
-	public function update(Model $parent, ModelCollection $foreign)
+	public function update(Model $model, RelatedInterface $related)
 	{
-		foreach ($foreign->getAdded() as $item)
+		foreach ($related->getAdded() as $item)
 		{
-			$item->{$this->getForeignKey()} = $parent->{$this->getKey()};
+			$item->{$this->getForeignKey()} = $model->{$this->getKey()};
 		}
 
-		foreach ($foreign->getRemoved() as $item)
+		foreach ($related->getRemoved() as $item)
 		{
 			$item->{$this->getForeignKey()} = NULL;
 		}

@@ -3,19 +3,14 @@
 use CL\Luna\Util\Arr;
 use CL\Luna\Model\Model;
 use CL\Luna\Field\Integer;
-use CL\Luna\Rel\Feature\SingleInterface;
-use CL\Luna\Schema\Query\Select;
-use CL\Luna\Schema\Query\JoinRel;
 use CL\Luna\Schema\Schema;
-use CL\Luna\EntityManager\LoadJob;
-use Closure;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsTo extends AbstractRel implements SingleInterface
+class BelongsTo extends AbstractRel
 {
 	protected $savePriority = self::PREPEND;
 	protected $key;
@@ -35,6 +30,21 @@ class BelongsTo extends AbstractRel implements SingleInterface
 		return $this->getForeignSchema()->getSelectSchema();
 	}
 
+	public function setRelated(array $models, array $related)
+	{
+		$related = Arr::index($related, $this->getForeignKey());
+
+		foreach ($models as $model)
+		{
+			$index = $model->{$this->getKey()};
+
+			if (isset($related[$index]))
+			{
+				$model->setRelated($this->getName(), $related[$index]);
+			}
+		}
+	}
+
 	public function initialize()
 	{
 		if ( ! $this->key)
@@ -45,9 +55,9 @@ class BelongsTo extends AbstractRel implements SingleInterface
 		$this->getSchema()->getFields()->add(new Integer($this->key));
 	}
 
-	public function update(Model $parent, Model $foreign)
+	public function update(Model $model, RelatedInterface $related)
 	{
-		$parent->{$this->getForeignKey()} = $foreign->getId();
+		$model->{$this->getForeignKey()} = $related->getId();
 	}
 
 	public function joinRel($query, $parent)

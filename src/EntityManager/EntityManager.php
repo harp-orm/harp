@@ -1,11 +1,11 @@
 <?php namespace CL\Luna\EntityManager;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Rel\Feature\SingleInterface;
-use CL\Luna\Rel\Feature\MultiInterface;
+use CL\Luna\Rel\Link;
 use CL\Luna\Schema\Query\Select;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Rel\AbstractRel;
+use CL\Luna\Util\Arr;
 use SplObjectStorage;
 
 /*
@@ -26,66 +26,26 @@ class EntityManager
 		return self::$instance;
 	}
 
-	private $jobs;
-	private $items;
-	private $links;
+	private $identityMap;
 
 	public function __construct()
 	{
-		$this->links = new LinksRepository($this);
+		$this->identityMap = new IdentityMap();
 	}
 
 	public function loadModels(Select $select)
 	{
 		$models = $select->execute()->fetchAll();
-
-		$schema = $select->getSchema();
-		$name = $schema->getName();
-		$primaryKey = $schema->getPrimaryKey();
-
-		foreach ($models as & $model)
-		{
-			$id = $model->{$primaryKey};
-
-			$model = $this->getCanonicalModel($name, $id, $model);
-		}
-
-		return $models;
+		return $this->identityMap->getModels($models);
 	}
 
-	public function getCanonicalModel($name, $id, $model)
+	public function loadLink(Link $link)
 	{
-		if (isset($this->items[$name][$id]))
-		{
-			return $this->items[$name][$id];
-		}
-		else
-		{
-			$this->items[$name][$id] = $model;
-			return $model;
-		}
-	}
+		$linkArray = new LinkArray($link->getRel(), [$link]);
 
-	public function loadLink($model, $rel)
-	{
-		if ($link = $this->links->getForRel($model, $rel))
-		{
-			return $link;
-		}
-		else
-		{
-			$link = new Link($model, $rel);
-			$linkArray = new LinkArray($rel, [$link]);
+		$this->loadLinkArray($linkArray);
 
-			$this->loadLinkArray($linkArray);
-
-			return $link;
-		}
-	}
-
-	public function getLinks($model)
-	{
-		return $this->links->getForModel($model);
+		return $this;
 	}
 
 	public function loadLinks(Schema $schema, array $models, array $rels)
@@ -94,40 +54,31 @@ class EntityManager
 		{
 			$rel = $schema->getRel($relName);
 
-			$linkArray = new LinkArray($rel);
-
-			foreach ($models as $model)
-			{
-				$linkArray->add(new Link($model, $rel));
-			}
-
-			$this->loadLinkArray($linkArray);
+			$relatedModels = $this->loadLinkArray($rel, $models);
 
 			if ($childRelNames)
 			{
-				$this->loadLinks($rel->getForeignSchema(), $linkArray->getContent(), $childRelNames);
+				$this->loadLinks($rel->getForeignSchema(), $relatedModels, $childRelNames);
 			}
 		}
 
 		return $this;
 	}
 
-	public function loadLinkArray(LinkArray $array)
+	public function loadLinkArray(AbstractRel $rel, array $models)
 	{
-		$select = $array->getContentSelect();
+		$select = $rel->getSelectForModels($models);
 
-		$linkedModels = $this->loadModels($select);
+		$related = $select ? $this->loadModels($select) : array();
 
-		$array->setContent($linkedModels);
+		$rel->setRelated($models, $related);
 
-		$this->links->addArray($array);
-
-		return $this;
+		return $related;
 	}
 
 	public function preserve(Model $model)
 	{
-		$queue = new Preserve();
+		$queue = new WorkQueue();
 
 		foreach (func_get_args() as $model)
 		{

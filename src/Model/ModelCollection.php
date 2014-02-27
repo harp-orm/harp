@@ -1,13 +1,14 @@
 <?php namespace CL\Luna\Model;
 
 use CL\Luna\Util\Arr;
+use CL\Luna\Rel\RelatedInterface;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class ModelCollection
+class ModelCollection implements RelatedInterface
 {
 	protected $items;
 	protected $original;

@@ -32,7 +32,7 @@ class EntityManager
 
 	public function __construct()
 	{
-		$this->links = new SplObjectStorage();
+		$this->links = new LinksRepository($this);
 	}
 
 	public function loadModels(Select $select)
@@ -66,35 +66,18 @@ class EntityManager
 		}
 	}
 
-	public function setCanonicalLink(Model $model, AbstractRel $rel, Link $link)
-	{
-		if ( ! isset($this->links[$model]))
-		{
-			$this->links[$model] = new SplObjectStorage;
-		}
-
-		$this->links[$model][$rel] = $link;
-	}
-
-	public function getCanonicalLink($model, $rel)
-	{
-		return $this->link[$model][$rel];
-	}
-
 	public function loadLink($model, $rel)
 	{
-		if (isset($this->links[$model]) AND isset($this->links[$model][$rel]))
+		if ($link = $this->links->getForRel($model, $rel))
 		{
-			return $this->links[$model][$rel];
+			return $link;
 		}
 		else
 		{
 			$link = new Link($model, $rel);
-			$this->setCanonicalLink($model, $rel, $link);
+			$linkArray = new LinkArray($rel, [$link]);
 
-			(new LinkLoader($rel))
-				->add($link)
-				->load();
+			$this->loadLinkArray($linkArray);
 
 			return $link;
 		}
@@ -102,10 +85,7 @@ class EntityManager
 
 	public function getLinks($model)
 	{
-		if (isset($this->links[$model]))
-		{
-			return $this->links[$model];
-		}
+		return $this->links->getForModel($model);
 	}
 
 	public function loadLinks(Schema $schema, array $models, array $rels)
@@ -113,23 +93,34 @@ class EntityManager
 		foreach ($rels as $relName => $childRelNames)
 		{
 			$rel = $schema->getRel($relName);
-			$linkLoader = new LinkLoader($rel);
+
+			$linkArray = new LinkArray($rel);
 
 			foreach ($models as $model)
 			{
-				$link = new Link($model, $rel);
-				$linkLoader->add($link);
-
-				$this->setCanonicalLink($model, $rel, $link);
+				$linkArray->add(new Link($model, $rel));
 			}
 
-			$linkLoader->load();
+			$this->loadLinkArray($linkArray);
 
 			if ($childRelNames)
 			{
-				$this->loadLinks($rel->getForeignSchema(), $linkLoader->getLinkedModels(), $childRelNames);
+				$this->loadLinks($rel->getForeignSchema(), $linkArray->getContent(), $childRelNames);
 			}
 		}
+
+		return $this;
+	}
+
+	public function loadLinkArray(LinkArray $array)
+	{
+		$select = $array->getContentSelect();
+
+		$linkedModels = $this->loadModels($select);
+
+		$array->setContent($linkedModels);
+
+		$this->links->addArray($array);
 
 		return $this;
 	}

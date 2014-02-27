@@ -3,6 +3,7 @@
 use CL\Luna\Rel\AbstractRel;
 use CL\Luna\Model\Model;
 use CL\Luna\Model\ModelCollection;
+use CL\Luna\Util\Arr;
 
 /*
  * @author     Ivan Kerin
@@ -11,6 +12,18 @@ use CL\Luna\Model\ModelCollection;
  */
 class Link
 {
+	public static function extractParentKeys(array $links)
+	{
+		return array_unique(Arr::invoke($links, 'getParentKey'));
+	}
+
+	public static function newFromModels(AbstractRel $rel, array $models)
+	{
+		return array_map(function($model) use ($rel) {
+			return new Link($model, $rel);
+		}, $models);
+	}
+
 	private $rel;
 	private $content;
 	private $parent;

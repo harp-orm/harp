@@ -1,12 +1,10 @@
 <?php namespace CL\Luna\EntityManager;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Rel\Link;
+use CL\Luna\Model\ModelsGroup;
 use CL\Luna\Schema\Query\Select;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Rel\AbstractRel;
-use CL\Luna\Util\Arr;
-use SplObjectStorage;
 
 /*
  * @author     Ivan Kerin
@@ -39,15 +37,6 @@ class EntityManager
 		return $this->identityMap->getModels($models);
 	}
 
-	public function loadLink(Link $link)
-	{
-		$linkArray = new LinkArray($link->getRel(), [$link]);
-
-		$this->loadLinkArray($linkArray);
-
-		return $this;
-	}
-
 	public function loadLinks(Schema $schema, array $models, array $rels)
 	{
 		foreach ($rels as $relName => $childRelNames)
@@ -71,23 +60,45 @@ class EntityManager
 
 		$related = $select ? $this->loadModels($select) : array();
 
-		$rel->setRelated($models, $related);
+		$rel->setLinks($models, $related);
 
 		return $related;
 	}
 
 	public function preserve(Model $model)
 	{
-		$queue = new WorkQueue();
+		$models = new ModelsGroup();
 
-		foreach (func_get_args() as $model)
+		$models->add($model);
+
+		$deleted = $models->getDeleted()->getSchemaStorage();
+
+		foreach ($deleted as $schema)
 		{
-			$queue->addModel($model);
+			$schema
+				->getDeleteSchema()
+					->setModels($deleted->getInfo())
+					->execute();
 		}
 
-		foreach ($queue->all() as $job)
+		$new = $models->getPending()->getSchemaStorage();
+
+		foreach ($new as $schema)
 		{
-			$job->execute();
+			$schema
+				->getInsertSchema()
+					->setModels($new->getInfo())
+					->execute();
+		}
+
+		$changed = $models->getChanged()->getSchemaStorage();
+
+		foreach ($changed as $schema)
+		{
+			$schema
+				->getUpdateSchema()
+					->setModels($changed->getInfo())
+					->execute();
 		}
 
 		return $this;

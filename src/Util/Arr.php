@@ -139,4 +139,30 @@ class Arr
 
 		return $result;
 	}
+
+	public static function groupBy($array, $callback, $preserve_keys = FALSE)
+	{
+		$grouped = array();
+
+		foreach ($array as $i => $item)
+		{
+			$itemGroup = call_user_func($callback, $item, $i);
+
+			if ( ! isset($grouped[$itemGroup]))
+			{
+				$grouped[$itemGroup] = array();
+			}
+
+			if ($preserve_keys)
+			{
+				$grouped[$itemGroup][$i] = $item;
+			}
+			else
+			{
+				$grouped[$itemGroup][] = $item;
+			}
+		}
+
+		return $grouped;
+	}
 }

@@ -12,7 +12,7 @@ class TestTest extends AbstractTestCase {
 
 		$posts = Post::all()->loadWith(['user' => 'address']);
 
-		var_dump($posts[0]->user()->address());
+		// var_dump($posts[0]->user()->address());
 
 		$post = Post::get(1);
 		$post->temp_stuff = 'asdasd';
@@ -28,10 +28,7 @@ class TestTest extends AbstractTestCase {
 		$user = new User(['name' => 'newly saved']);
 		$user->save();
 
-		var_dump(
-			$post, $post2, $post3);
-
-		$user->posts()->set([$post, $post2, $post3]);
+		$user->posts()->attachArray([$post, $post2, $post3]);
 
 		EntityManager::getInstance()->preserve($user);
 

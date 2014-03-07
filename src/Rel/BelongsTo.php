@@ -2,6 +2,7 @@
 
 use CL\Luna\Util\Arr;
 use CL\Luna\Model\Model;
+use CL\Luna\Model\LinkInterface;
 use CL\Luna\Field\Integer;
 use CL\Luna\Schema\Schema;
 
@@ -12,7 +13,6 @@ use CL\Luna\Schema\Schema;
  */
 class BelongsTo extends AbstractRel
 {
-	protected $savePriority = self::PREPEND;
 	protected $key;
 
 	public function getKey()
@@ -30,7 +30,7 @@ class BelongsTo extends AbstractRel
 		return $this->getForeignSchema()->getSelectSchema();
 	}
 
-	public function setRelated(array $models, array $related)
+	public function setLinks(array $models, array $related)
 	{
 		$related = Arr::index($related, $this->getForeignKey());
 
@@ -40,7 +40,7 @@ class BelongsTo extends AbstractRel
 
 			if (isset($related[$index]))
 			{
-				$model->setRelated($this->getName(), $related[$index]);
+				$model->setLink($this, $related[$index]);
 			}
 		}
 	}
@@ -55,7 +55,7 @@ class BelongsTo extends AbstractRel
 		$this->getSchema()->getFields()->add(new Integer($this->key));
 	}
 
-	public function update(Model $model, RelatedInterface $related)
+	public function update(Model $model, LinkInterface $related)
 	{
 		$model->{$this->getForeignKey()} = $related->getId();
 	}

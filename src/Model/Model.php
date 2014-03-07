@@ -1,28 +1,27 @@
 <?php namespace CL\Luna\Model;
 
 use CL\Luna\Util\Arr;
+use CL\Luna\Rel\AbstractRel;
 use CL\Luna\Event\ModelEvent;
-use CL\Luna\EntityManager\EntityManager;
-use CL\Luna\EntityManager\RelContent;
 use CL\Luna\Schema\Query\Update;
-use CL\Luna\Rel\RelatedInterface;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Model implements RelatedInterface {
+class Model implements LinkInterface {
 
 	use DirtyTrackingTrait;
 	use UnmappedPropertiesTrait;
 
+	const PENDING = 1;
+	const DELETED = 2;
+	const PERSISTED = 3;
+
 	private $errors;
-	private $relContents;
-	private $isLoaded = FALSE;
-	private $isDeleted = FALSE;
-	private $isSaved = FALSE;
-	private $related;
+	private $state = self::PENDING;
+	private $links;
 
 	public function __construct(array $properties = NULL, $loaded = FALSE)
 	{
@@ -35,7 +34,7 @@ class Model implements RelatedInterface {
 			$this->setProperties($properties);
 			$this->setOriginals($properties);
 
-			$this->isLoaded = TRUE;
+			$this->state = self::PERSISTED;
 		}
 		else
 		{
@@ -53,19 +52,18 @@ class Model implements RelatedInterface {
 	{
 		$this->{$this->getSchema()->getPrimaryKey()} = $id;
 		$this->setOriginals($this->getProperties());
-		$this->isLoaded = TRUE;
 
 		return $this;
 	}
 
-	public function isLoaded()
+	public function isPending()
 	{
-		return $this->isLoaded;
+		return $this->state === self::PENDING;
 	}
 
 	public function isDeleted()
 	{
-		return $this->isDeleted;
+		return $this->state === self::DELETED;
 	}
 
 	public function setProperties(array $values)
@@ -90,18 +88,18 @@ class Model implements RelatedInterface {
 	{
 		if ($this->getSchema()->dipatchModelEvent(ModelEvent::SAVE, $this))
 		{
-			$this->isSaving = TRUE;
+			// $this->isSaved = TRUE;
 		}
 
 		return $this;
 	}
 
-	public function preserve()
+	public function persist()
 	{
 		if ($this->getSchema()->dipatchModelEvent(ModelEvent::PRESERVE, $this))
 		{
 			$this->setOriginals($this->getProperties());
-			$this->isSaving = FALSE;
+			// $this->isSaved = FALSE;
 		}
 
 		return $this;
@@ -111,47 +109,50 @@ class Model implements RelatedInterface {
 	{
 		if ($this->getSchema()->dipatchModelEvent(ModelEvent::DELETE, $this))
 		{
-			$this->isDeleted = TRUE;
+			$this->state = self::DELETED;
 		}
 
 		return $this;
 	}
 
-	public function restore()
+	public function setLink(AbstractRel $rel, LinkInterface $link)
 	{
-		(new Update($this->getSchema()))
-			->whereKey($this->getId())
-			->set([Schema::SOFT_DELETE_KEY => NULL])
-			->execute();
-
-		return $this;
+		$this->getLinks()->attach($rel, $link);
 	}
 
-	public function getOrLoadLink($relName)
+	public function isEmptyLinks()
 	{
-		if ( ! isset($this->related[$relName]))
+		return ($this->links === NULL OR empty($this->links));
+	}
+
+	public function getLinks()
+	{
+		if ($this->links === NULL)
 		{
-			EntityManager::getInstance()->loadLinkArray($this->getSchema()->getRel($relName), [$this]);
+			$this->links = new Links($this);
 		}
 
-		return $this->related[$relName];
+		return $this->links;
 	}
 
-	public function getRelated()
+	public function getLinkByName($name)
 	{
-		return $this->related;
+		$rel = $this->getSchema()->getRel($name);
+
+		if ($this->isEmptyLinks() AND ! $this->getLinks()->contains($rel))
+		{
+			$this->getLinks()->load($rel, $this);
+		}
+
+		return $this->links[$rel];
 	}
 
-	public function getAffected()
+	public function updateLinks()
 	{
-		return [$this];
-	}
-
-	public function setRelated($name, RelatedInterface $related)
-	{
-		$this->related[$name] = $related;
-
-		return $this;
+		if ( ! $this->isEmptyLinks())
+		{
+			$this->getLinks()->update($this);
+		}
 	}
 
 	public function getErrors()

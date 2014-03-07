@@ -23,7 +23,7 @@ class IdentityMap
 
 	public function getModel(Model $model)
 	{
-		$name = $model->getSchema()->getName();
+		$name = $model->getSchema()->getTable();
 		$id = $model->getId();
 
 		if (isset($this->map[$name][$id]))

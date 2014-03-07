@@ -51,7 +51,7 @@ class User extends Model {
 	 */
 	public function address()
 	{
-		return parent::getOrLoadLink('address');
+		return parent::getLinkByName('address');
 	}
 
 	/**
@@ -59,7 +59,7 @@ class User extends Model {
 	 */
 	public function posts()
 	{
-		return parent::getOrLoadLink('posts');
+		return parent::getLinkByName('posts');
 	}
 
 	public static function test($model, $event)

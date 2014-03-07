@@ -2,6 +2,7 @@
 
 use CL\Luna\Model\Model;
 use CL\Luna\Model\ModelCollection;
+use CL\Luna\Model\LinkInterface;
 use CL\Luna\Util\Arr;
 
 /**
@@ -31,14 +32,14 @@ class HasMany extends AbstractRel
 		}
 	}
 
-	public function setRelated(array $models, array $related)
+	public function setLinks(array $models, array $related)
 	{
 		$related = Arr::indexGroup($related, $this->getForeignKey());
 
 		foreach ($models as $model)
 		{
 			$index = $model->{$this->getKey()};
-			$model->setRelated($this->getName(), new ModelCollection(isset($related[$index]) ? $related[$index] : array()));
+			$model->setLink($this, new ModelCollection(isset($related[$index]) ? $related[$index] : array()));
 		}
 	}
 
@@ -55,7 +56,7 @@ class HasMany extends AbstractRel
 		$query->join([$this->getForeignTable() => $this->getName()], $this->getJoinCondition($table, $columns));
 	}
 
-	public function update(Model $model, RelatedInterface $related)
+	public function update(Model $model, LinkInterface $related)
 	{
 		foreach ($related->getAdded() as $item)
 		{

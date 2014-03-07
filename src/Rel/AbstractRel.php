@@ -2,6 +2,7 @@
 
 use CL\Luna\Schema\Schema;
 use CL\Luna\Model\Model;
+use CL\Luna\Model\LinkInterface;
 use CL\Luna\Util\Arr;
 
 /**
@@ -11,13 +12,9 @@ use CL\Luna\Util\Arr;
  */
 abstract class AbstractRel
 {
-	const APPEND = 1;
-	const PREPEND = 2;
-
 	protected $foreignSchema;
 	protected $schema;
 	protected $name;
-	protected $savePriority = self::APPEND;
 
 	public function __construct($name, Schema $foreign_schema, array $properties = NULL)
 	{
@@ -31,11 +28,6 @@ abstract class AbstractRel
 				$this->$propertyName = $value;
 			}
 		}
-	}
-
-	public function getSavePriority()
-	{
-		return $this->savePriority;
 	}
 
 	public function getJoinCondition($table, array $conditions)
@@ -115,8 +107,8 @@ abstract class AbstractRel
 	abstract public function getKey();
 	abstract public function getForeignKey();
 	abstract public function getSelect();
-	abstract public function setRelated(array $models, array $related);
-	abstract public function update(Model $model, RelatedInterface $related);
+	abstract public function setLinks(array $models, array $related);
+	abstract public function update(Model $model, LinkInterface $related);
 
 
 

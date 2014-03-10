@@ -3,6 +3,7 @@
 use CL\Atlas\Query\DeleteQuery;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Util\Log;
+use CL\Luna\Util\Arr;
 
 /**
  * @author     Ivan Kerin

@@ -1,4 +1,4 @@
-<?php namespace CL\Luna\EntityManager;
+<?php namespace CL\Luna\Repo;
 
 use CL\Luna\Model\Model;
 use CL\Luna\Model\ModelsGroup;
@@ -11,7 +11,7 @@ use CL\Luna\Rel\AbstractRel;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class EntityManager
+class Repo
 {
 	private static $instance;
 
@@ -19,7 +19,7 @@ class EntityManager
 	{
 		if (self::$instance === NULL)
 		{
-			self::$instance = new EntityManager();
+			self::$instance = new Repo();
 		}
 		return self::$instance;
 	}
@@ -29,6 +29,11 @@ class EntityManager
 	public function __construct()
 	{
 		$this->identityMap = new IdentityMap();
+	}
+
+	public function getModel(Model $model)
+	{
+		$this->identityMap->getModel($model);
 	}
 
 	public function loadModels(Select $select)
@@ -65,6 +70,13 @@ class EntityManager
 		return $related;
 	}
 
+	public function preserveArray(array $models)
+	{
+		array_walk($models, [$this, 'preserve']);
+
+		return $this;
+	}
+
 	public function preserve(Model $model)
 	{
 		$models = new ModelsGroup();
@@ -89,6 +101,11 @@ class EntityManager
 				->getInsertSchema()
 					->setModels($new->getInfo())
 					->execute();
+
+			foreach ($new->getInfo() as $model)
+			{
+				$model->updateLinks();
+			}
 		}
 
 		$changed = $models->getChanged()->getSchemaStorage();
@@ -99,6 +116,11 @@ class EntityManager
 				->getUpdateSchema()
 					->setModels($changed->getInfo())
 					->execute();
+
+			foreach ($changed->getInfo() as $model)
+			{
+				$model->updateLinks();
+			}
 		}
 
 		return $this;

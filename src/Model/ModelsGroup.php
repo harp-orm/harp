@@ -36,7 +36,7 @@ class ModelsGroup extends ObjectStorage
 	public function getChanged()
 	{
 		return $this->filter(function($model) {
-			return ($model->isChanged() AND ! $model->isDeleted());
+			return ($model->isChanged() AND ! $model->isDeleted() AND ! $model->isNotLoaded());
 		});
 	}
 
@@ -48,13 +48,15 @@ class ModelsGroup extends ObjectStorage
 		{
 			$schema = $item->getSchema();
 
-			if (isset($schemaStorage[$schema]))
+			if ($schemaStorage->contains($schema))
 			{
-				array_push($schemaStorage[$schema], $item);
+				$models = $schemaStorage[$schema];
+				array_push($models, $item);
+				$schemaStorage[$schema] = $models;
 			}
 			else
 			{
-				$schemaStorage[$schema] = [$item];
+				$schemaStorage->attach($schema, [$item]);
 			}
 		}
 

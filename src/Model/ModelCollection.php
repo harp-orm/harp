@@ -1,6 +1,8 @@
 <?php namespace CL\Luna\Model;
 
 use CL\Luna\Util\ObjectStorage;
+use CL\Luna\Schema\Schema;
+use CL\Luna\Repo\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -11,13 +13,26 @@ class ModelCollection extends ObjectStorage implements LinkInterface
 {
 	protected $items;
 	protected $original;
-	protected $compare;
 
 	public function __construct(array $items)
 	{
 		$this->attachArray($items);
 
 		$this->original = clone $this;
+	}
+
+	public function massAssignAll(Schema $schema, array $items)
+	{
+		$this->removeAll($this);
+
+		foreach ($items as $properties)
+		{
+			$item = $schema->getModelReflection()->newInstance();
+			Repo::getInstance()->getModel($item->massAssign($properties));
+			$this->attach($item);
+		}
+
+		return $this;
 	}
 
 	public function getOriginal()

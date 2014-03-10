@@ -2,7 +2,7 @@
 
 use CL\Luna\Util\ObjectStorage;
 use CL\Luna\Rel\AbstractRel;
-use CL\Luna\EntityManager\EntityManager;
+use CL\Luna\Repo\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -37,7 +37,7 @@ class Links extends ObjectStorage
 
 	public function load(AbstractRel $rel, Model $parent)
 	{
-		EntityManager::getInstance()->loadLinkArray($rel, [$parent]);
+		Repo::getInstance()->loadLinkArray($rel, [$parent]);
 		return $this;
 	}
 

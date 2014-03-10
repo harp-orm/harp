@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `zip_code` varchar(100) NULL,
-  `locatoion` varchar(100) NULL,
+  `location` varchar(100) NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -33,7 +33,7 @@ VALUES
   (3,'User 3', NULL),
   (4,'User 4', 1);
 
-INSERT INTO `address` (`id`, `zip_code`, `locatoion`)
+INSERT INTO `address` (`id`, `zip_code`, `location`)
 VALUES
   (1,'1000', 'Belvedere');
 

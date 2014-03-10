@@ -29,6 +29,7 @@ class Schema
 
 	private $name;
 	private $modelClass;
+	private $modelReflection;
 	private $table;
 	private $softDelete = FALSE;
 	private $batchUpdate = TRUE;
@@ -50,6 +51,13 @@ class Schema
 	public function getModelClass()
 	{
 		return $this->modelClass;
+	}
+
+	public function getModelReflection()
+	{
+		$this->lazyLoadConfiguration();
+
+		return $this->modelReflection;
 	}
 
 	public function getPrimaryKey()
@@ -208,11 +216,11 @@ class Schema
 			$delete = new Update($this);
 			$delete
 				->set([self::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
-				->where([$schema->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
+				->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
 		}
 		else
 		{
-			$delete = new Delete($schema);
+			$delete = new Delete($this);
 		}
 
 		return $delete;
@@ -281,13 +289,13 @@ class Schema
 			$this->eventListeners = new EventListeners();
 			$this->rels = new Rels();
 
-			$class = new ReflectionClass($this->getModelClass());
-			$this->table = $this->name = strtolower($class->getShortName());
-			$this->propertyNames = Arr::invoke($class->getProperties(ReflectionProperty::IS_PUBLIC), 'getName');
+			$this->modelReflection = new ReflectionClass($this->getModelClass());
+			$this->table = $this->name = strtolower($this->modelReflection->getShortName());
+			$this->propertyNames = Arr::invoke($this->modelReflection->getProperties(ReflectionProperty::IS_PUBLIC), 'getName');
 
-			$this->callInitializeMethod($class);
+			$this->callInitializeMethod($this->modelReflection);
 
-			foreach ($class->getTraits() as $trait)
+			foreach ($this->modelReflection->getTraits() as $trait)
 			{
 				$this->callInitializeMethod($trait);
 			}

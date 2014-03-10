@@ -18,14 +18,17 @@ class Model implements LinkInterface {
 	const PENDING = 1;
 	const DELETED = 2;
 	const PERSISTED = 3;
+	const NOT_LOADED = 4;
 
 	private $errors;
-	private $state = self::PENDING;
+	private $state;
 	private $links;
 
-	public function __construct(array $properties = NULL, $loaded = FALSE)
+	public function __construct(array $properties = NULL, $state = self::PENDING)
 	{
-		if ($loaded === TRUE)
+		$this->state = $state;
+
+		if ($state === self::PERSISTED)
 		{
 			$properties = $properties !== NULL ? $properties : $this->getProperties();
 
@@ -33,13 +36,14 @@ class Model implements LinkInterface {
 
 			$this->setProperties($properties);
 			$this->setOriginals($properties);
-
-			$this->state = self::PERSISTED;
 		}
-		else
+		elseif ($state === self::PENDING)
 		{
 			$this->setOriginals($this->getProperties());
-			$this->setProperties($properties);
+			if ($properties)
+			{
+				$this->setProperties($properties);
+			}
 		}
 	}
 
@@ -64,6 +68,44 @@ class Model implements LinkInterface {
 	public function isDeleted()
 	{
 		return $this->state === self::DELETED;
+	}
+
+	public function isNotLoaded()
+	{
+		return $this->state === self::NOT_LOADED;
+	}
+
+	public function massAssign(array $values)
+	{
+		$schema = $this->getSchema();
+
+		if ($this->state === self::NOT_LOADED)
+		{
+			$this->state = self::PENDING;
+		}
+
+		foreach ($values as $key => $value)
+		{
+			if (($rel = $schema->getRel($key)))
+			{
+				$link = $this->getLink($rel);
+
+				if ($link instanceof ModelCollection)
+				{
+					$link->massAssignAll($rel->getForeignSchema(), $value);
+				}
+				else
+				{
+					$link->massAssign($value);
+				}
+			}
+			else
+			{
+				$this->$key = $value;
+			}
+		}
+
+		return $this;
 	}
 
 	public function setProperties(array $values)
@@ -135,16 +177,30 @@ class Model implements LinkInterface {
 		return $this->links;
 	}
 
-	public function getLinkByName($name)
+	public function getLink(AbstractRel $rel)
 	{
-		$rel = $this->getSchema()->getRel($name);
-
-		if ($this->isEmptyLinks() AND ! $this->getLinks()->contains($rel))
+		if ( ! $this->getLinks()->contains($rel))
 		{
 			$this->getLinks()->load($rel, $this);
 		}
 
-		return $this->links[$rel];
+		return $this->getLinks()->offsetGet($rel);
+	}
+
+	public function getLinkByName($name)
+	{
+		$rel = $this->getSchema()->getRel($name);
+
+		return $this->getLink($rel);
+	}
+
+	public function setLinkByName($name, LinkInterface $link)
+	{
+		$rel = $this->getSchema()->getRel($name);
+
+		$this->setLink($rel, $link);
+
+		return $this;
 	}
 
 	public function updateLinks()

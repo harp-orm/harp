@@ -1,4 +1,4 @@
-<?php namespace CL\Luna\EntityManager;
+<?php namespace CL\Luna\Repo;
 
 use CL\Luna\Model\Model;
 

@@ -40,9 +40,14 @@ class Post extends Model {
 	/**
 	 * @return Post
 	 */
-	public function user()
+	public function getUser()
 	{
 		return parent::getLinkByName('user');
+	}
+
+	public function setUser(User $user)
+	{
+		return parent::setLinkByName('user', $user);
 	}
 
 	public static function CL_Luna_Test_Post(Schema $schema)

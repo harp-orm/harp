@@ -33,7 +33,7 @@ class Insert extends InsertQuery implements SetModelsInterface {
 
 		foreach ($values as $value)
 		{
-			$this->values(array_merge($defaultValues, $value));
+			$this->values(array_values(array_merge($defaultValues, $value)));
 		}
 
 		return $this;

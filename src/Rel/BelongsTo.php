@@ -38,10 +38,12 @@ class BelongsTo extends AbstractRel
 		{
 			$index = $model->{$this->getKey()};
 
-			if (isset($related[$index]))
-			{
-				$model->setLink($this, $related[$index]);
-			}
+			$model->setLink(
+				$this,
+				isset($related[$index])
+					? $related[$index]
+					: $this->getForeignSchema()->getModelReflection()->newInstance(NULL, Model::NOT_LOADED)
+			);
 		}
 	}
 

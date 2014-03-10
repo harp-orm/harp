@@ -1,10 +1,8 @@
 <?php namespace CL\Luna\Schema\Query;
 
 use CL\Luna\Schema\Schema;
-use CL\Luna\EntityManager\EntityManager;
-use CL\Luna\EntityManager\Job;
-use CL\Luna\EntityManager\ChildJob;
-use CL\Luna\EntityManager\RelLink;
+use CL\Luna\Repo\Repo;
+use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Log;
 use CL\Atlas\Query\SelectQuery;
@@ -33,14 +31,14 @@ class Select extends SelectQuery {
 
 		$rels = Arr::toAssoc( (array) $rels);
 
-		EntityManager::getInstance()->loadLinks($this->getSchema(), $models, $rels);
+		Repo::getInstance()->loadLinks($this->getSchema(), $models, $rels);
 
 		return $models;
 	}
 
 	public function load()
 	{
-		return EntityManager::getInstance()->loadModels($this);
+		return Repo::getInstance()->loadModels($this);
 	}
 
 	public function execute()
@@ -52,7 +50,7 @@ class Select extends SelectQuery {
 
 		$pdoStatement = parent::execute();
 
-		$pdoStatement->setFetchMode(PDO::FETCH_CLASS, $this->getSchema()->getModelClass(), [NULL, TRUE]);
+		$pdoStatement->setFetchMode(PDO::FETCH_CLASS, $this->getSchema()->getModelClass(), [NULL, Model::PERSISTED]);
 
 		return $pdoStatement;
 	}

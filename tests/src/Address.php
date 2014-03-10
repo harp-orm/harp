@@ -30,7 +30,7 @@ class Address extends Model {
 	/**
 	 * @var string
 	 */
-	public $locatoion;
+	public $location;
 
 	/**
 	 * @return Post
@@ -47,7 +47,7 @@ class Address extends Model {
 				new HasMany('users', User::getSchema()),
 			])
 			->setValidators([
-				new Present('locatoion'),
+				new Present('location'),
 			])
 			->setFields([
 				new Integer('id'),

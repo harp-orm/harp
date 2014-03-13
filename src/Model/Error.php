@@ -10,23 +10,23 @@ use CL\Luna\Util\Arr;
  */
 class Error{
 
-	protected $identifier;
+    protected $identifier;
 
-	protected $attribute;
+    protected $attribute;
 
-	protected $parameters;
+    protected $parameters;
 
-	public function __construct($identifier, $attribute, array $parameters = NULL)
-	{
-		$this->identifier = $identifier;
-		$this->attribute = $attribute;
-		$this->parameters = $parameters;
-	}
+    public function __construct($identifier, $attribute, array $parameters = NULL)
+    {
+        $this->identifier = $identifier;
+        $this->attribute = $attribute;
+        $this->parameters = $parameters;
+    }
 
-	public function __toString()
-	{
-		$text = dgettext('luna', $this->identifier);
+    public function __toString()
+    {
+        $text = dgettext('luna', $this->identifier);
 
-		return $this->parameters ? vsprintf($text, $this->parameters) : $text;
-	}
+        return $this->parameters ? vsprintf($text, $this->parameters) : $text;
+    }
 }

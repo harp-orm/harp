@@ -10,52 +10,52 @@ use Closure;
  */
 class ObjectStorage extends SplObjectStorage
 {
-	public function map(Closure $function)
-	{
-		$mapped = [];
+    public function map(Closure $function)
+    {
+        $mapped = [];
 
-		foreach ($this as $index => $object)
-		{
-			$mapped[$index] = $function($object);
-		}
+        foreach ($this as $index => $object)
+        {
+            $mapped[$index] = $function($object);
+        }
 
-		return $mapped;
-	}
+        return $mapped;
+    }
 
-	public function attachArray(array $array)
-	{
-		foreach ($array as $item)
-		{
-			$this->attach($item);
-		}
+    public function attachArray(array $array)
+    {
+        foreach ($array as $item)
+        {
+            $this->attach($item);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function invoke($function_name)
-	{
-		$mapped = [];
+    public function invoke($function_name)
+    {
+        $mapped = [];
 
-		foreach ($this as $index => $object)
-		{
-			$mapped[$index] = $object->$function_name();
-		}
+        foreach ($this as $index => $object)
+        {
+            $mapped[$index] = $object->$function_name();
+        }
 
-		return $mapped;
-	}
+        return $mapped;
+    }
 
-	public function filter(Closure $filter)
-	{
-		$filtered = clone $this;
+    public function filter(Closure $filter)
+    {
+        $filtered = clone $this;
 
-		foreach ($this as $object)
-		{
-			if ( ! $filter($object))
-			{
-				$filtered->detach($object);
-			}
-		}
+        foreach ($this as $object)
+        {
+            if ( ! $filter($object))
+            {
+                $filtered->detach($object);
+            }
+        }
 
-		return $filtered;
-	}
+        return $filtered;
+    }
 }

@@ -10,62 +10,62 @@ use CL\Luna\Schema\Schema;
  */
 class IdentityMap
 {
-	private $map;
+    private $map;
 
-	public function getAll(array $models)
-	{
-		return array_map([$this, 'get'], $models);
-	}
+    public function getAll(array $models)
+    {
+        return array_map([$this, 'get'], $models);
+    }
 
-	public static function modelUnqiueKey(Model $model)
-	{
-		return self::getUniqueKey($model->getSchema(), $model->getId());
-	}
+    public static function modelUnqiueKey(Model $model)
+    {
+        return self::getUniqueKey($model->getSchema(), $model->getId());
+    }
 
-	public static function getUniqueKey(Schema $shema, $id)
-	{
-		return $shema->getTable().'|'.$id;
-	}
+    public static function getUniqueKey(Schema $shema, $id)
+    {
+        return $shema->getTable().'|'.$id;
+    }
 
-	public function get(Model $model)
-	{
-		$key = self::modelUnqiueKey($model);
+    public function get(Model $model)
+    {
+        $key = self::modelUnqiueKey($model);
 
-		if ($this->hasKey($key))
-		{
-			return $this->getKey($key);
-		}
-		else
-		{
-			$this->setKey($key, $model);
-			return $model;
-		}
+        if ($this->hasKey($key))
+        {
+            return $this->getKey($key);
+        }
+        else
+        {
+            $this->setKey($key, $model);
+            return $model;
+        }
 
-		return $model;
-	}
+        return $model;
+    }
 
-	public function hasKey($key)
-	{
-		return isset($this->map[$key]);
-	}
+    public function hasKey($key)
+    {
+        return isset($this->map[$key]);
+    }
 
-	public function getKey($key)
-	{
-		return $this->map[$key];
-	}
+    public function getKey($key)
+    {
+        return $this->map[$key];
+    }
 
-	public function setKey($key, Model $model)
-	{
-		return isset($this->map[$key]);
-	}
+    public function setKey($key, Model $model)
+    {
+        return isset($this->map[$key]);
+    }
 
-	public function set(Model $model)
-	{
-		$this->setKey(self::modelUnqiueKey($model), $Model);
-	}
+    public function set(Model $model)
+    {
+        $this->setKey(self::modelUnqiueKey($model), $Model);
+    }
 
-	public function has(Model $model)
-	{
-		return $this->hasKey(self::modelUnqiueKey($model));
-	}
+    public function has(Model $model)
+    {
+        return $this->hasKey(self::modelUnqiueKey($model));
+    }
 }

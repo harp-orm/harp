@@ -11,58 +11,58 @@ use CL\Atlas\DB;
  */
 trait QueryTrait {
 
-	protected $schema;
+    protected $schema;
 
-	public function setSchema(Schema $schema)
-	{
-		$this->schema = $schema;
-		$this->db = DB::instance($schema->getDb());
+    public function setSchema(Schema $schema)
+    {
+        $this->schema = $schema;
+        $this->db = DB::instance($schema->getDb());
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getSchema()
-	{
-		return $this->schema;
-	}
+    public function getSchema()
+    {
+        return $this->schema;
+    }
 
-	public function getRel($name)
-	{
-		return $this->schema->getRel($name);
-	}
+    public function getRel($name)
+    {
+        return $this->schema->getRel($name);
+    }
 
-	public function scope($scope)
-	{
-		call_user_func(array($this->getSchema()->getModelClass(), 'scope'.ucfirst($scope)), $this);
+    public function scope($scope)
+    {
+        call_user_func(array($this->getSchema()->getModelClass(), 'scope'.ucfirst($scope)), $this);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function whereKey($key)
-	{
-		return $this->where([$this->getSchema()->getPrimaryKey() => $key]);
-	}
+    public function whereKey($key)
+    {
+        return $this->where([$this->getSchema()->getPrimaryKey() => $key]);
+    }
 
-	public function joinRels($rels)
-	{
-		$rels = Arr::toAssoc( (array) $rels);
+    public function joinRels($rels)
+    {
+        $rels = Arr::toAssoc( (array) $rels);
 
-		$this->joinNestedRels($this->getSchema(), $rels);
+        $this->joinNestedRels($this->getSchema(), $rels);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function joinNestedRels($schema, array $rels, $parent = NULL)
-	{
-		foreach ($rels as $name => $childRels)
-		{
-			$rel = $schema->getRel($name);
-			$rel->joinRel($this, $parent);
+    public function joinNestedRels($schema, array $rels, $parent = NULL)
+    {
+        foreach ($rels as $name => $childRels)
+        {
+            $rel = $schema->getRel($name);
+            $rel->joinRel($this, $parent);
 
-			if ($childRels)
-			{
-				$this->joinNestedRels($rel->getForeignSchema(), $childRels, $name);
-			}
-		}
-	}
+            if ($childRels)
+            {
+                $this->joinNestedRels($rel->getForeignSchema(), $childRels, $name);
+            }
+        }
+    }
 }

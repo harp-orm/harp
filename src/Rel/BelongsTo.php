@@ -14,60 +14,60 @@ use CL\Luna\Schema\Schema;
  */
 class BelongsTo extends AbstractRel
 {
-	protected $key;
+    protected $key;
 
-	public function getKey()
-	{
-		return $this->key;
-	}
+    public function getKey()
+    {
+        return $this->key;
+    }
 
-	public function getForeignKey()
-	{
-		return $this->getSchema()->getPrimaryKey();
-	}
+    public function getForeignKey()
+    {
+        return $this->getSchema()->getPrimaryKey();
+    }
 
-	public function getSelect()
-	{
-		return $this->getForeignSchema()->getSelectSchema();
-	}
+    public function getSelect()
+    {
+        return $this->getForeignSchema()->getSelectSchema();
+    }
 
-	public function setLinks(array $models, array $related)
-	{
-		$related = Arr::index($related, $this->getForeignKey());
+    public function setLinks(array $models, array $related)
+    {
+        $related = Arr::index($related, $this->getForeignKey());
 
-		foreach ($models as $model)
-		{
-			$index = $model->{$this->getKey()};
+        foreach ($models as $model)
+        {
+            $index = $model->{$this->getKey()};
 
-			$foreginModel = $this->getForeignSchema()->getModelInstance(isset($related[$index]) ? $related[$index] : NULL);
+            $foreginModel = $this->getForeignSchema()->getModelInstance(isset($related[$index]) ? $related[$index] : NULL);
 
-			$model->setLink($this, new LinkOne($foreginModel));
-		}
-	}
+            $model->setLink($this, new LinkOne($foreginModel));
+        }
+    }
 
-	public function initialize()
-	{
-		if ( ! $this->key)
-		{
-			$this->key = $this->getForeignSchema()->getName().'_id';
-		}
+    public function initialize()
+    {
+        if ( ! $this->key)
+        {
+            $this->key = $this->getForeignSchema()->getName().'_id';
+        }
 
-		$this->getSchema()->getFields()->add(new Integer($this->key));
-	}
+        $this->getSchema()->getFields()->add(new Integer($this->key));
+    }
 
-	public function update(Model $model, LinkInterface $related)
-	{
-		if ($related->get()->isPersisted())
-		{
-			$model->{$this->getKey()} = $related->get()->getId();
-		}
-	}
+    public function update(Model $model, LinkInterface $related)
+    {
+        if ($related->get()->isPersisted())
+        {
+            $model->{$this->getKey()} = $related->get()->getId();
+        }
+    }
 
-	public function joinRel($query, $parent)
-	{
-		$table = $parent ?: $this->getTable();
-		$columns = [$this->getForeignPrimaryKey() => $this->getForeignKey()];
+    public function joinRel($query, $parent)
+    {
+        $table = $parent ?: $this->getTable();
+        $columns = [$this->getForeignPrimaryKey() => $this->getForeignKey()];
 
-		$query->join([$this->getForeignTable() => $this->getName()], $this->getJoinCondition($table, $columns));
-	}
+        $query->join([$this->getForeignTable() => $this->getName()], $this->getJoinCondition($table, $columns));
+    }
 }

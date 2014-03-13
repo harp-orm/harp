@@ -15,50 +15,50 @@ use PDO;
  */
 class Select extends SelectQuery {
 
-	use QueryTrait;
+    use QueryTrait;
 
-	public function __construct(Schema $schema)
-	{
-		$this
-			->setSchema($schema)
-			->from($schema->getTable())
-			->columns($schema->getTable().'.*');
-	}
+    public function __construct(Schema $schema)
+    {
+        $this
+            ->setSchema($schema)
+            ->from($schema->getTable())
+            ->columns($schema->getTable().'.*');
+    }
 
-	public function loadWith($rels)
-	{
-		$models = $this->load();
+    public function loadWith($rels)
+    {
+        $models = $this->load();
 
-		$rels = Arr::toAssoc( (array) $rels);
+        $rels = Arr::toAssoc( (array) $rels);
 
-		Repo::getInstance()->loadLinks($this->getSchema(), $models, $rels);
+        Repo::getInstance()->loadLinks($this->getSchema(), $models, $rels);
 
-		return $models;
-	}
+        return $models;
+    }
 
-	public function load()
-	{
-		return Repo::getInstance()->loadModels($this);
-	}
+    public function load()
+    {
+        return Repo::getInstance()->loadModels($this);
+    }
 
-	public function first()
-	{
-		$items = $this->limit(1)->load();
+    public function first()
+    {
+        $items = $this->limit(1)->load();
 
-		return $this->schema->getModelInstance(reset($items));
-	}
+        return $this->schema->getModelInstance(reset($items));
+    }
 
-	public function execute()
-	{
-		if (Log::getEnabled())
-		{
-			Log::add($this->humanize());
-		}
+    public function execute()
+    {
+        if (Log::getEnabled())
+        {
+            Log::add($this->humanize());
+        }
 
-		$pdoStatement = parent::execute();
+        $pdoStatement = parent::execute();
 
-		$pdoStatement->setFetchMode(PDO::FETCH_CLASS, $this->getSchema()->getModelClass(), [NULL, Model::PERSISTED]);
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS, $this->getSchema()->getModelClass(), [NULL, Model::PERSISTED]);
 
-		return $pdoStatement;
-	}
+        return $pdoStatement;
+    }
 }

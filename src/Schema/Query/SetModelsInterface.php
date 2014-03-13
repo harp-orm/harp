@@ -7,5 +7,5 @@
  */
 interface SetModelsInterface
 {
-	public function setModels(array $models);
+    public function setModels(array $models);
 }

@@ -14,7 +14,7 @@
         "clippings/atlas": "dev-master"
     },
     "require-dev": {
-        "openbuildings/environment-backup": "0.1.*"
+        "clippings/env-backup": "dev-master"
     },
     "autoload": {
         "psr-4": {"CL\\Luna\\": "src/"}

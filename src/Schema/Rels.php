@@ -15,23 +15,23 @@ use CL\Luna\Rel\Feature\SaveManyInterface;
  */
 class Rels extends Collection {
 
-	public function add(AbstractRel $item)
-	{
-		$this->items[$item->getName()] = $item;
+    public function add(AbstractRel $item)
+    {
+        $this->items[$item->getName()] = $item;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function initialize(Schema $schema)
-	{
-		if ($this->items)
-		{
-			foreach ($this->items as $item)
-			{
-				$item
-					->setSchema($schema)
-					->initialize();
-			}
-		}
-	}
+    public function initialize(Schema $schema)
+    {
+        if ($this->items)
+        {
+            foreach ($this->items as $item)
+            {
+                $item
+                    ->setSchema($schema)
+                    ->initialize();
+            }
+        }
+    }
 }

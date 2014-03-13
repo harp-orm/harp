@@ -10,23 +10,23 @@ use CL\Luna\Field\Integer;
  */
 trait Nested {
 
-	/**
-	 * @var string
-	 */
-	public $parent;
+    /**
+     * @var string
+     */
+    public $parent;
 
-	public static function CL_Luna_Test_Nested(Schema $schema)
-	{
-		$schema
-			->getFields()
-				->add(new Integer('parent_id'));
-	}
+    public static function CL_Luna_Test_Nested(Schema $schema)
+    {
+        $schema
+            ->getFields()
+                ->add(new Integer('parent_id'));
+    }
 
-	/**
-	 * @event save
-	 */
-	public function applyNested()
-	{
-		echo 'do stuff';
-	}
+    /**
+     * @event save
+     */
+    public function applyNested()
+    {
+        echo 'do stuff';
+    }
 }

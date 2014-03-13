@@ -10,24 +10,24 @@ use CL\Luna\Util\Collection;
  */
 class EventListeners extends Collection {
 
-	public function add($type, $listener)
-	{
-		$this->items[$type] []= $listener;
+    public function add($type, $listener)
+    {
+        $this->items[$type] []= $listener;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function dispatchEvent(Event $event)
-	{
-		foreach ($this->items[$event->getType()] as $listner)
-		{
-			call_user_func($listner, $event->getTarget(), $event);
+    public function dispatchEvent(Event $event)
+    {
+        foreach ($this->items[$event->getType()] as $listner)
+        {
+            call_user_func($listner, $event->getTarget(), $event);
 
-			if ($event->isStopped())
-			{
-				break;
-			}
-		}
-		return ! $event->isDefaultPrevented();
-	}
+            if ($event->isStopped())
+            {
+                break;
+            }
+        }
+        return ! $event->isDefaultPrevented();
+    }
 }

@@ -15,45 +15,45 @@ use CL\Luna\Validator\Present;
  */
 class Address extends Model {
 
-	use SchemaTrait;
+    use SchemaTrait;
 
-	/**
-	 * @var integer
-	 */
-	public $id;
+    /**
+     * @var integer
+     */
+    public $id;
 
-	/**
-	 * @var string
-	 */
-	public $zip_code;
+    /**
+     * @var string
+     */
+    public $zip_code;
 
-	/**
-	 * @var string
-	 */
-	public $location;
+    /**
+     * @var string
+     */
+    public $location;
 
-	/**
-	 * @return Post
-	 */
-	public function users()
-	{
-		return parent::getLinkByName('users');
-	}
+    /**
+     * @return Post
+     */
+    public function users()
+    {
+        return parent::getLinkByName('users');
+    }
 
-	public static function CL_Luna_Test_Address(Schema $schema)
-	{
-		$schema
-			->setRels([
-				new HasMany('users', User::getSchema()),
-			])
-			->setValidators([
-				new Present('location'),
-			])
-			->setFields([
-				new Integer('id'),
-				new String('zip_code'),
-				new String('location'),
-			]);
-	}
+    public static function CL_Luna_Test_Address(Schema $schema)
+    {
+        $schema
+            ->setRels([
+                new HasMany('users', User::getSchema()),
+            ])
+            ->setValidators([
+                new Present('location'),
+            ])
+            ->setFields([
+                new Integer('id'),
+                new String('zip_code'),
+                new String('location'),
+            ]);
+    }
 
 }

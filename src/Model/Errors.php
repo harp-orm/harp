@@ -9,8 +9,8 @@ use CL\Luna\Util\Collection;
  */
 class Errors extends Collection {
 
-	public function add(Error $error)
-	{
-		$this->items[] = $error;
-	}
+    public function add(Error $error)
+    {
+        $this->items[] = $error;
+    }
 }

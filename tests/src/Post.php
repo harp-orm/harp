@@ -15,59 +15,59 @@ use CL\Luna\Validator\Present;
  */
 class Post extends Model {
 
-	use SchemaTrait;
+    use SchemaTrait;
 
-	/**
-	 * @var integer
-	 */
-	public $id;
+    /**
+     * @var integer
+     */
+    public $id;
 
-	/**
-	 * @var integer
-	 */
-	public $user_id;
+    /**
+     * @var integer
+     */
+    public $user_id;
 
-	/**
-	 * @var string
-	 */
-	public $title;
+    /**
+     * @var string
+     */
+    public $title;
 
-	/**
-	 * @var string
-	 */
-	public $body;
+    /**
+     * @var string
+     */
+    public $body;
 
-	/**
-	 * @return Post
-	 */
-	public function getUser()
-	{
-		return parent::getLinkByName('user');
-	}
+    /**
+     * @return Post
+     */
+    public function getUser()
+    {
+        return parent::getLinkByName('user');
+    }
 
-	public function setUser(User $user)
-	{
-		return parent::setLinkByName('user', $user);
-	}
+    public function setUser(User $user)
+    {
+        return parent::setLinkByName('user', $user);
+    }
 
-	public static function CL_Luna_Test_Post(Schema $schema)
-	{
-		$schema
-			->setRels([
-				new BelongsTo('user', User::getSchema()),
-			]);
+    public static function CL_Luna_Test_Post(Schema $schema)
+    {
+        $schema
+            ->setRels([
+                new BelongsTo('user', User::getSchema()),
+            ]);
 
-		$schema
-			->setFields([
-				new Integer('id'),
-				new String('title'),
-				new String('body'),
-			]);
+        $schema
+            ->setFields([
+                new Integer('id'),
+                new String('title'),
+                new String('body'),
+            ]);
 
-		$schema
-			->setValidators([
-				new Present('title'),
-			]);
-	}
+        $schema
+            ->setValidators([
+                new Present('title'),
+            ]);
+    }
 
 }

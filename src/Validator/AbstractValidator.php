@@ -7,26 +7,26 @@
  */
 abstract class AbstractValidator {
 
-	private $name;
+    private $name;
 
-	public function __construct($name, array $properties = NULL)
-	{
-		$this->name = $name;
+    public function __construct($name, array $properties = NULL)
+    {
+        $this->name = $name;
 
-		if ($properties)
-		{
-			foreach ($properties as $propertyName => $value)
-			{
-				$this->$propertyName = $value;
-			}
-		}
-	}
+        if ($properties)
+        {
+            foreach ($properties as $propertyName => $value)
+            {
+                $this->$propertyName = $value;
+            }
+        }
+    }
 
-	public function getName()
-	{
-		return $this->name;
-	}
+    public function getName()
+    {
+        return $this->name;
+    }
 
-	abstract public function getError($attribute, $value);
+    abstract public function getError($attribute, $value);
 
 }

@@ -12,30 +12,30 @@ use CL\Luna\Model\Errors;
  */
 class Validators extends Collection {
 
-	public function add(AbstractValidator $item)
-	{
-		$this->items[$item->getName()] []= $item;
+    public function add(AbstractValidator $item)
+    {
+        $this->items[$item->getName()] []= $item;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function execute( & $value, $name)
-	{
-		$validators = $this->get($name);
+    public function execute( & $value, $name)
+    {
+        $validators = $this->get($name);
 
-		$value = array_filter(array_map(function($validator) use ($name, $value) {
-			return $validator->getError($name, $value);
-		}, $validators));
-	}
+        $value = array_filter(array_map(function($validator) use ($name, $value) {
+            return $validator->getError($name, $value);
+        }, $validators));
+    }
 
-	public function executeArray(array $data)
-	{
-		$data = array_intersect_key($data, $this->items);
+    public function executeArray(array $data)
+    {
+        $data = array_intersect_key($data, $this->items);
 
-		array_walk($data, [$this, 'execute']);
+        array_walk($data, [$this, 'execute']);
 
-		$errorItems = Arr::flatten($data);
+        $errorItems = Arr::flatten($data);
 
-		return new Errors($errorItems);
-	}
+        return new Errors($errorItems);
+    }
 }

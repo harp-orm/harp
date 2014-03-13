@@ -11,38 +11,38 @@ use CL\Luna\Repo\Repo;
  */
 class LinkOne implements LinkInterface
 {
-	protected $model;
-	protected $original;
+    protected $model;
+    protected $original;
 
-	public function __construct(Model $model)
-	{
-		$this->model = $model;
-		$this->original = $model;
-	}
+    public function __construct(Model $model)
+    {
+        $this->model = $model;
+        $this->original = $model;
+    }
 
-	public function set(Model $model)
-	{
-		$this->model = $model;
+    public function set(Model $model)
+    {
+        $this->model = $model;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function get()
-	{
-		return $this->model;
-	}
+    public function get()
+    {
+        return $this->model;
+    }
 
-	public function getOriginal()
-	{
-		return $this->original;
-	}
+    public function getOriginal()
+    {
+        return $this->original;
+    }
 
-	public function getAll()
-	{
-		$all = new ObjectStorage();
-		$all->attach($this->model);
-		$all->attach($this->original);
+    public function getAll()
+    {
+        $all = new ObjectStorage();
+        $all->attach($this->model);
+        $all->attach($this->original);
 
-		return $all;
-	}
+        return $all;
+    }
 }

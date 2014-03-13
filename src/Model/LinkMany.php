@@ -11,49 +11,49 @@ use CL\Luna\Repo\Repo;
  */
 class LinkMany extends ObjectStorage implements LinkInterface
 {
-	protected $items;
-	protected $original;
+    protected $items;
+    protected $original;
 
-	public function __construct(array $items)
-	{
-		$this->attachArray($items);
+    public function __construct(array $items)
+    {
+        $this->attachArray($items);
 
-		$this->original = clone $this;
-	}
+        $this->original = clone $this;
+    }
 
-	public function getOriginal()
-	{
-		return $this->original;
-	}
+    public function getOriginal()
+    {
+        return $this->original;
+    }
 
-	public function getOriginalIds()
-	{
-		return $this->original->invoke('getId');
-	}
+    public function getOriginalIds()
+    {
+        return $this->original->invoke('getId');
+    }
 
-	public function getIds()
-	{
-		return $this->invoke('getId');
-	}
+    public function getIds()
+    {
+        return $this->invoke('getId');
+    }
 
-	public function getAdded()
-	{
-		$current = clone $this;
-		$current->removeAll($this->original);
-		return $current;
-	}
+    public function getAdded()
+    {
+        $current = clone $this;
+        $current->removeAll($this->original);
+        return $current;
+    }
 
-	public function getRemoved()
-	{
-		$current = clone $this->original;
-		$current->removeAll($this);
-		return $current;
-	}
+    public function getRemoved()
+    {
+        $current = clone $this->original;
+        $current->removeAll($this);
+        return $current;
+    }
 
-	public function getAll()
-	{
-		$current = clone $this;
-		$current->addAll($this->original);
-		return $current;
-	}
+    public function getAll()
+    {
+        $current = clone $this;
+        $current->addAll($this->original);
+        return $current;
+    }
 }

@@ -20,302 +20,302 @@ use CL\Atlas\SQL\SQL;
  */
 class Schema
 {
-	const SOFT_DELETE_KEY = 'deleted_at';
-
-	const SELECT = 1;
-	const INSERT = 2;
-	const UPDATE = 3;
-	const DELETE = 4;
-
-	private $name;
-	private $modelClass;
-	private $modelReflection;
-	private $table;
-	private $softDelete = FALSE;
-	private $batchUpdate = TRUE;
-	private $db = 'default';
-	private $primaryKey = 'id';
-	private $fields;
-	private $propertyNames;
-	private $rels;
-	private $validators;
-	private $configurationLoaded;
+    const SOFT_DELETE_KEY = 'deleted_at';
+
+    const SELECT = 1;
+    const INSERT = 2;
+    const UPDATE = 3;
+    const DELETE = 4;
+
+    private $name;
+    private $modelClass;
+    private $modelReflection;
+    private $table;
+    private $softDelete = FALSE;
+    private $batchUpdate = TRUE;
+    private $db = 'default';
+    private $primaryKey = 'id';
+    private $fields;
+    private $propertyNames;
+    private $rels;
+    private $validators;
+    private $configurationLoaded;
 
-	public function getName()
-	{
-		$this->lazyLoadConfiguration();
+    public function getName()
+    {
+        $this->lazyLoadConfiguration();
 
-		return $this->name;
-	}
+        return $this->name;
+    }
 
-	public function getModelClass()
-	{
-		return $this->modelClass;
-	}
+    public function getModelClass()
+    {
+        return $this->modelClass;
+    }
 
-	public function getModelReflection()
-	{
-		$this->lazyLoadConfiguration();
+    public function getModelReflection()
+    {
+        $this->lazyLoadConfiguration();
 
-		return $this->modelReflection;
-	}
+        return $this->modelReflection;
+    }
 
-	public function getPrimaryKey()
-	{
-		$this->lazyLoadConfiguration();
+    public function getPrimaryKey()
+    {
+        $this->lazyLoadConfiguration();
 
-		return $this->primaryKey;
-	}
+        return $this->primaryKey;
+    }
 
-	public function setPrimaryKey($primaryKey)
-	{
-		$this->primaryKey = $primaryKey;
+    public function setPrimaryKey($primaryKey)
+    {
+        $this->primaryKey = $primaryKey;
 
-		return $this;
-	}
-
-	public function getSoftDelete()
-	{
-		$this->lazyLoadConfiguration();
-
-		return $this->softDelete;
-	}
+        return $this;
+    }
+
+    public function getSoftDelete()
+    {
+        $this->lazyLoadConfiguration();
+
+        return $this->softDelete;
+    }
 
-	public function setSoftDelete($softDelete)
-	{
-		$this->softDelete = $softDelete;
+    public function setSoftDelete($softDelete)
+    {
+        $this->softDelete = $softDelete;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getBatchUpdate()
-	{
-		$this->lazyLoadConfiguration();
+    public function getBatchUpdate()
+    {
+        $this->lazyLoadConfiguration();
 
-		return $this->batchUpdate;
-	}
+        return $this->batchUpdate;
+    }
 
-	public function setBatchUpdate($batchUpdate)
-	{
-		$this->batchUpdate = $batchUpdate;
+    public function setBatchUpdate($batchUpdate)
+    {
+        $this->batchUpdate = $batchUpdate;
 
-		return $this;
-	}
-	public function getTable()
-	{
-		$this->lazyLoadConfiguration();
+        return $this;
+    }
+    public function getTable()
+    {
+        $this->lazyLoadConfiguration();
 
-		return $this->table;
-	}
-
-	public function setTable($table)
-	{
-		$this->table = (string) $table;
-
-		return $this;
-	}
-
-	public function getDb()
-	{
-		$this->lazyLoadConfiguration();
-
-		return $this->db;
-	}
-
-	public function setDb($db)
-	{
-		$this->db = (string) $db;
-
-		return $this;
-	}
-
-	public function getPropertyNames()
-	{
-		$this->lazyLoadConfiguration();
-
-		return $this->propertyNames;
-	}
-
-	public function getFields()
-	{
-		$this->lazyLoadConfiguration();
-
-		return $this->fields;
-	}
-
-	public function setFields(array $items)
-	{
-		$this->getFields()->set($items);
-
-		return $this;
-	}
-
-	public function getField($name)
-	{
-		return $this->getFields()->get($name);
-	}
-
-	public function getRels()
-	{
-		$this->lazyLoadConfiguration();
-
-		return $this->rels;
-	}
-
-	public function setRels(array $rels)
-	{
-		$this->getRels()->set($rels);
-
-		return $this;
-	}
-
-	public function getRel($name)
-	{
-		return $this->getRels()->get($name);
-	}
-
-	public function getValidators()
-	{
-		$this->lazyLoadConfiguration();
-
-		return $this->validators;
-	}
-
-	public function setValidators(array $validators)
-	{
-		$this->lazyLoadConfiguration();
-
-		$this->getValidators()->set($validators);
-
-		return $this;
-	}
-
-	public function getEventListeners()
-	{
-		$this->lazyLoadConfiguration();
-
-		return $this->eventListeners;
-	}
-
-	public function dipatchModelEvent($type, Model $target)
-	{
-		if ($this->getEventListeners()->has($type))
-		{
-			return $this->getEventListeners()->dispatchEvent(new ModelEvent($type, $target));
-		}
-		else
-		{
-			return TRUE;
-		}
-	}
-
-	public function getDeleteSchema()
-	{
-		if ($this->getSoftDelete())
-		{
-			$delete = new Update($this);
-			$delete
-				->set([self::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
-				->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
-		}
-		else
-		{
-			$delete = new Delete($this);
-		}
-
-		return $delete;
-	}
-
-	public function getUpdateSchema()
-	{
-		$update = (new Update($this));
-
-		if ($this->getSoftDelete())
-		{
-			$update->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
-		}
-
-		return $update;
-	}
-
-	public function getSelectSchema()
-	{
-		$select = (new Select($this));
-
-		if ($this->getSoftDelete())
-		{
-			$select->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
-		}
-
-		return $select;
-	}
-
-	public function getInsertSchema()
-	{
-		return new Insert($this);
-	}
-
-	public function getQuerySchema($type)
-	{
-		switch ($type)
-		{
-			case self::SELECT:
-				return $this->getSelectSchema();
-
-			case self::INSERT:
-				return $this->getInsertSchema();
-
-			case self::DELETE:
-				return $this->getDeleteSchema();
-
-			case self::UPDATE:
-				return $this->getUpdateSchema();
-		}
-	}
-
-	public function getModelInstance($model)
-	{
-		return $model !== NULL ? $model : $this->modelReflection->newInstance(NULL, Model::NOT_LOADED);
-	}
-
-	function __construct($class_name)
-	{
-		$this->modelClass = $class_name;
-	}
-
-	public function lazyLoadConfiguration()
-	{
-		if ($this->configurationLoaded === NULL)
-		{
-			$this->configurationLoaded = TRUE;
-
-			$this->validators = new Validators();
-			$this->fields = new Fields();
-			$this->eventListeners = new EventListeners();
-			$this->rels = new Rels();
-
-			$this->modelReflection = new ReflectionClass($this->getModelClass());
-			$this->table = $this->name = strtolower($this->modelReflection->getShortName());
-			$this->propertyNames = Arr::invoke($this->modelReflection->getProperties(ReflectionProperty::IS_PUBLIC), 'getName');
-
-			$this->callInitializeMethod($this->modelReflection);
-
-			foreach ($this->modelReflection->getTraits() as $trait)
-			{
-				$this->callInitializeMethod($trait);
-			}
-
-			$this->rels->initialize($this);
-		}
-	}
-
-	private function callInitializeMethod(ReflectionClass $class)
-	{
-		$name = str_replace('\\', '_', $class->getName());
-
-		if ($class->hasMethod($name))
-		{
-			call_user_func($class->getName().'::'.$name, $this);
-		}
-	}
+        return $this->table;
+    }
+
+    public function setTable($table)
+    {
+        $this->table = (string) $table;
+
+        return $this;
+    }
+
+    public function getDb()
+    {
+        $this->lazyLoadConfiguration();
+
+        return $this->db;
+    }
+
+    public function setDb($db)
+    {
+        $this->db = (string) $db;
+
+        return $this;
+    }
+
+    public function getPropertyNames()
+    {
+        $this->lazyLoadConfiguration();
+
+        return $this->propertyNames;
+    }
+
+    public function getFields()
+    {
+        $this->lazyLoadConfiguration();
+
+        return $this->fields;
+    }
+
+    public function setFields(array $items)
+    {
+        $this->getFields()->set($items);
+
+        return $this;
+    }
+
+    public function getField($name)
+    {
+        return $this->getFields()->get($name);
+    }
+
+    public function getRels()
+    {
+        $this->lazyLoadConfiguration();
+
+        return $this->rels;
+    }
+
+    public function setRels(array $rels)
+    {
+        $this->getRels()->set($rels);
+
+        return $this;
+    }
+
+    public function getRel($name)
+    {
+        return $this->getRels()->get($name);
+    }
+
+    public function getValidators()
+    {
+        $this->lazyLoadConfiguration();
+
+        return $this->validators;
+    }
+
+    public function setValidators(array $validators)
+    {
+        $this->lazyLoadConfiguration();
+
+        $this->getValidators()->set($validators);
+
+        return $this;
+    }
+
+    public function getEventListeners()
+    {
+        $this->lazyLoadConfiguration();
+
+        return $this->eventListeners;
+    }
+
+    public function dipatchModelEvent($type, Model $target)
+    {
+        if ($this->getEventListeners()->has($type))
+        {
+            return $this->getEventListeners()->dispatchEvent(new ModelEvent($type, $target));
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+
+    public function getDeleteSchema()
+    {
+        if ($this->getSoftDelete())
+        {
+            $delete = new Update($this);
+            $delete
+                ->set([self::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
+                ->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
+        }
+        else
+        {
+            $delete = new Delete($this);
+        }
+
+        return $delete;
+    }
+
+    public function getUpdateSchema()
+    {
+        $update = (new Update($this));
+
+        if ($this->getSoftDelete())
+        {
+            $update->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
+        }
+
+        return $update;
+    }
+
+    public function getSelectSchema()
+    {
+        $select = (new Select($this));
+
+        if ($this->getSoftDelete())
+        {
+            $select->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
+        }
+
+        return $select;
+    }
+
+    public function getInsertSchema()
+    {
+        return new Insert($this);
+    }
+
+    public function getQuerySchema($type)
+    {
+        switch ($type)
+        {
+            case self::SELECT:
+                return $this->getSelectSchema();
+
+            case self::INSERT:
+                return $this->getInsertSchema();
+
+            case self::DELETE:
+                return $this->getDeleteSchema();
+
+            case self::UPDATE:
+                return $this->getUpdateSchema();
+        }
+    }
+
+    public function getModelInstance($model)
+    {
+        return $model !== NULL ? $model : $this->modelReflection->newInstance(NULL, Model::NOT_LOADED);
+    }
+
+    function __construct($class_name)
+    {
+        $this->modelClass = $class_name;
+    }
+
+    public function lazyLoadConfiguration()
+    {
+        if ($this->configurationLoaded === NULL)
+        {
+            $this->configurationLoaded = TRUE;
+
+            $this->validators = new Validators();
+            $this->fields = new Fields();
+            $this->eventListeners = new EventListeners();
+            $this->rels = new Rels();
+
+            $this->modelReflection = new ReflectionClass($this->getModelClass());
+            $this->table = $this->name = strtolower($this->modelReflection->getShortName());
+            $this->propertyNames = Arr::invoke($this->modelReflection->getProperties(ReflectionProperty::IS_PUBLIC), 'getName');
+
+            $this->callInitializeMethod($this->modelReflection);
+
+            foreach ($this->modelReflection->getTraits() as $trait)
+            {
+                $this->callInitializeMethod($trait);
+            }
+
+            $this->rels->initialize($this);
+        }
+    }
+
+    private function callInitializeMethod(ReflectionClass $class)
+    {
+        $name = str_replace('\\', '_', $class->getName());
+
+        if ($class->hasMethod($name))
+        {
+            call_user_func($class->getName().'::'.$name, $this);
+        }
+    }
 }

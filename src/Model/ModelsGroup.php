@@ -9,57 +9,57 @@ use CL\Luna\Util\ObjectStorage;
  */
 class ModelsGroup extends ObjectStorage
 {
-	public function add(Model $model)
-	{
-		$this->attach($model);
+    public function add(Model $model)
+    {
+        $this->attach($model);
 
-		if ( ! $model->isEmptyLinks())
-		{
-			$this->addAll($model->getLinks()->getAllModels());
-		}
-	}
+        if ( ! $model->isEmptyLinks())
+        {
+            $this->addAll($model->getLinks()->getAllModels());
+        }
+    }
 
-	public function getDeleted()
-	{
-		return $this->filter(function($model) {
-			return $model->isDeleted();
-		});
-	}
+    public function getDeleted()
+    {
+        return $this->filter(function($model) {
+            return $model->isDeleted();
+        });
+    }
 
-	public function getPending()
-	{
-		return $this->filter(function($model) {
-			return $model->isPending();
-		});
-	}
+    public function getPending()
+    {
+        return $this->filter(function($model) {
+            return $model->isPending();
+        });
+    }
 
-	public function getChanged()
-	{
-		return $this->filter(function($model) {
-			return ($model->isChanged() AND ! $model->isDeleted() AND ! $model->isNotLoaded());
-		});
-	}
+    public function getChanged()
+    {
+        return $this->filter(function($model) {
+            return ($model->isChanged() AND ! $model->isDeleted() AND ! $model->isNotLoaded());
+        });
+    }
 
-	public function getSchemaStorage()
-	{
-		$schemaStorage = new ObjectStorage();
+    public function getSchemaStorage()
+    {
+        $schemaStorage = new ObjectStorage();
 
-		foreach ($this as $item)
-		{
-			$schema = $item->getSchema();
+        foreach ($this as $item)
+        {
+            $schema = $item->getSchema();
 
-			if ($schemaStorage->contains($schema))
-			{
-				$models = $schemaStorage[$schema];
-				$models []= $item;
-				$schemaStorage[$schema] = $models;
-			}
-			else
-			{
-				$schemaStorage->attach($schema, [$item]);
-			}
-		}
+            if ($schemaStorage->contains($schema))
+            {
+                $models = $schemaStorage[$schema];
+                $models []= $item;
+                $schemaStorage[$schema] = $models;
+            }
+            else
+            {
+                $schemaStorage->attach($schema, [$item]);
+            }
+        }
 
-		return $schemaStorage;
-	}
+        return $schemaStorage;
+    }
 }

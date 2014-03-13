@@ -12,63 +12,63 @@ use CL\Luna\Util\Arr;
  */
 class Insert extends InsertQuery implements SetModelsInterface {
 
-	use QueryTrait;
+    use QueryTrait;
 
-	private $insertModels;
+    private $insertModels;
 
-	public function __construct(Schema $schema)
-	{
-		$this
-			->setSchema($schema)
-			->into($schema->getTable());
-	}
+    public function __construct(Schema $schema)
+    {
+        $this
+            ->setSchema($schema)
+            ->into($schema->getTable());
+    }
 
-	public function setMultiple(array $values)
-	{
-		$columns = $this->schema->getFields()->getNames();
+    public function setMultiple(array $values)
+    {
+        $columns = $this->schema->getFields()->getNames();
 
-		$this->columns($columns);
+        $this->columns($columns);
 
-		$defaultValues = $this->schema->getFields()->getDefaults();
+        $defaultValues = $this->schema->getFields()->getDefaults();
 
-		foreach ($values as $value)
-		{
-			$this->values(array_values(array_merge($defaultValues, $value)));
-		}
+        foreach ($values as $value)
+        {
+            $this->values(array_values(array_merge($defaultValues, $value)));
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function setModels(array $models)
-	{
-		$this->insertModels = $models;
-		$changes = Arr::invoke($models, 'getChanges');
-		$this->setMultiple($changes);
+    public function setModels(array $models)
+    {
+        $this->insertModels = $models;
+        $changes = Arr::invoke($models, 'getChanges');
+        $this->setMultiple($changes);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function execute()
-	{
-		if (Log::getEnabled())
-		{
-			Log::add($this->humanize());
-		}
+    public function execute()
+    {
+        if (Log::getEnabled())
+        {
+            Log::add($this->humanize());
+        }
 
-		$result = parent::execute();
+        $result = parent::execute();
 
-		if ($this->insertModels)
-		{
-			$lastInsertId = $this->db()->lastInsertId();
+        if ($this->insertModels)
+        {
+            $lastInsertId = $this->db()->lastInsertId();
 
-			foreach ($this->insertModels as $model)
-			{
-				$model->setInserted($lastInsertId);
-				$lastInsertId += 1;
-			}
-			$this->insertModels = NULL;
-		}
+            foreach ($this->insertModels as $model)
+            {
+                $model->setInserted($lastInsertId);
+                $lastInsertId += 1;
+            }
+            $this->insertModels = NULL;
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 }

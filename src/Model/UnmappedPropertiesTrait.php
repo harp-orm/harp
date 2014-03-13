@@ -7,26 +7,26 @@
  */
 trait UnmappedPropertiesTrait
 {
-	private $unmapped;
+    private $unmapped;
 
-	public function __get($name)
-	{
-		return isset($this->unmapped[$name]) ? $name : NULL;
-	}
+    public function __get($name)
+    {
+        return isset($this->unmapped[$name]) ? $name : NULL;
+    }
 
-	public function __set($name, $value)
-	{
-		$this->unmapped[$name] = $value;
-		return $this;
-	}
+    public function __set($name, $value)
+    {
+        $this->unmapped[$name] = $value;
+        return $this;
+    }
 
-	public function __isset($name)
-	{
-		return isset($this->unmapped[$name]);
-	}
+    public function __isset($name)
+    {
+        return isset($this->unmapped[$name]);
+    }
 
-	public function getUnmapped()
-	{
-		return $this->unmapped;
-	}
+    public function getUnmapped()
+    {
+        return $this->unmapped;
+    }
 }

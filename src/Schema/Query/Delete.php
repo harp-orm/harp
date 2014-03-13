@@ -12,31 +12,31 @@ use CL\Luna\Util\Arr;
  */
 class Delete extends DeleteQuery implements SetModelsInterface{
 
-	use QueryTrait;
+    use QueryTrait;
 
-	public function __construct(Schema $schema)
-	{
-		$this
-			->setSchema($schema)
-			->from($schema->getTable());
-	}
+    public function __construct(Schema $schema)
+    {
+        $this
+            ->setSchema($schema)
+            ->from($schema->getTable());
+    }
 
-	public function execute()
-	{
-		if (Log::getEnabled())
-		{
-			Log::add($this->humanize());
-		}
+    public function execute()
+    {
+        if (Log::getEnabled())
+        {
+            Log::add($this->humanize());
+        }
 
-		return parent::execute();
-	}
+        return parent::execute();
+    }
 
-	public function setModels(array $models)
-	{
-		$ids = Arr::invoke($models, 'getId');
-		$this->whereKey($ids);
+    public function setModels(array $models)
+    {
+        $ids = Arr::invoke($models, 'getId');
+        $this->whereKey($ids);
 
-		return $this;
-	}
+        return $this;
+    }
 
 }

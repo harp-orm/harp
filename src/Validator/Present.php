@@ -9,13 +9,13 @@ use CL\Luna\Model\Error;
  */
 class Present extends AbstractValidator
 {
-	const IDENTIFIER = 'present';
+    const IDENTIFIER = 'present';
 
-	public function getError($attribute, $value)
-	{
-		if ( ! $value)
-		{
-			return new Error(self::IDENTIFIER, $attribute);
-		}
-	}
+    public function getError($attribute, $value)
+    {
+        if ( ! $value)
+        {
+            return new Error(self::IDENTIFIER, $attribute);
+        }
+    }
 }

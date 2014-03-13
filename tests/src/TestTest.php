@@ -3,16 +3,17 @@
 use CL\Luna\Util\Log;
 use CL\Atlas\Query\InsertQuery;
 use CL\Luna\Repo\Repo;
+use CL\Luna\Repo\MassAssign;
 
 class TestTest extends AbstractTestCase {
 
-	public function testPreserve()
+	public function testMassAssign()
 	{
 		Log::setEnabled(TRUE);
 
 		$user3 = User::get(3);
 
-		$user3->massAssign([
+		$assign = new MassAssign([
 			'posts' => [
 				[
 					'title' => 'my title',
@@ -26,12 +27,25 @@ class TestTest extends AbstractTestCase {
 			'address' => [
 				'id' => 1,
 				'zip_code' => 2222,
-			]
-		]);
+			],
+			'name' => 'new name!!',
+		], MassAssign::UNSAFE);
+
+		$assign->on($user3);
 
 		Repo::getInstance()->preserve($user3);
 
-		var_dump(Log::all());
+		$this->assertEquals(
+			[
+				'SELECT user.* FROM user WHERE (user.deleted_at IS NULL) AND (id = 3) LIMIT 1',
+				'SELECT post.* FROM post WHERE (user_id IN ("3"))',
+				'SELECT address.* FROM address WHERE (id = 1) LIMIT 1',
+				'INSERT INTO post (id, title, body, user_id) VALUES (NULL, "my title", "my body", "3"), (NULL, "my title 2", "my body 2", "3")',
+				'UPDATE user SET name = "new name!!", address_id = 1 WHERE (user.deleted_at IS NULL) AND (id IN (3))',
+				'UPDATE address SET zip_code = 2222 WHERE (id IN (1))',
+			],
+			Log::all()
+		);
 	}
 
 	public function testLoadWith()
@@ -40,11 +54,11 @@ class TestTest extends AbstractTestCase {
 
 		$posts = Post::all()->loadWith(['user' => 'address']);
 
-		$user1 = $posts[0]->getUser();
-		$user2 = $posts[1]->getUser();
+		$user1 = $posts[0]->getUser()->get();
+		$user2 = $posts[1]->getUser()->get();
 
-		$address1 = $posts[0]->getUser()->address();
-		$address2 = $posts[1]->getUser()->address();
+		$address1 = $posts[0]->getUser()->get()->getAddress()->get();
+		$address2 = $posts[1]->getUser()->get()->getAddress()->get();
 
 		$this->assertEquals(
 			[

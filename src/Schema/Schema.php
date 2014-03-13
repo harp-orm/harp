@@ -273,6 +273,11 @@ class Schema
 		}
 	}
 
+	public function getModelInstance($model)
+	{
+		return $model !== NULL ? $model : $this->modelReflection->newInstance(NULL, Model::NOT_LOADED);
+	}
+
 	function __construct($class_name)
 	{
 		$this->modelClass = $class_name;

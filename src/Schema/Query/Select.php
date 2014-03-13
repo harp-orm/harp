@@ -41,6 +41,13 @@ class Select extends SelectQuery {
 		return Repo::getInstance()->loadModels($this);
 	}
 
+	public function first()
+	{
+		$items = $this->limit(1)->load();
+
+		return $this->schema->getModelInstance(reset($items));
+	}
+
 	public function execute()
 	{
 		if (Log::getEnabled())

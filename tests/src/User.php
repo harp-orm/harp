@@ -49,7 +49,7 @@ class User extends Model {
 	/**
 	 * @return Post
 	 */
-	public function address()
+	public function getAddress()
 	{
 		return parent::getLinkByName('address');
 	}
@@ -57,7 +57,7 @@ class User extends Model {
 	/**
 	 * @return Collection
 	 */
-	public function posts()
+	public function getPosts()
 	{
 		return parent::getLinkByName('posts');
 	}
@@ -79,7 +79,7 @@ class User extends Model {
 			])
 
 			->setRels([
-				new BelongsTo('address', Address::getSchema(), ['inverseOf' => 'user']),
+				new BelongsTo('address', Address::getSchema()),
 				new HasMany('posts', Post::getSchema()),
 			])
 

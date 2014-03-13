@@ -15,7 +15,7 @@ class ModelsGroup extends ObjectStorage
 
 		if ( ! $model->isEmptyLinks())
 		{
-			$this->addAll($model->getLinks()->getItems());
+			$this->addAll($model->getLinks()->getAllModels());
 		}
 	}
 
@@ -51,7 +51,7 @@ class ModelsGroup extends ObjectStorage
 			if ($schemaStorage->contains($schema))
 			{
 				$models = $schemaStorage[$schema];
-				array_push($models, $item);
+				$models []= $item;
 				$schemaStorage[$schema] = $models;
 			}
 			else

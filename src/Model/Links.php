@@ -11,24 +11,15 @@ use CL\Luna\Repo\Repo;
  */
 class Links extends ObjectStorage
 {
-	public function getItems()
+	public function getAllModels()
 	{
 		$items = new ModelsGroup();
 
 		foreach ($this as $rel)
 		{
-			$link = $this->getInfo();
-
-			if ($link instanceof Model)
+			foreach ($this->getInfo()->getAll() as $model)
 			{
-				$items->add($link);
-			}
-			elseif ($link instanceof ModelCollection)
-			{
-				foreach ($link->getAll() as $item)
-				{
-					$items->add($item);
-				}
+				$items->add($model);
 			}
 		}
 

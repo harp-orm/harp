@@ -1,6 +1,7 @@
 <?php namespace CL\Luna\Repo;
 
 use CL\Luna\Model\Model;
+use CL\Luna\Schema\Schema;
 
 /*
  * @author     Ivan Kerin
@@ -11,30 +12,60 @@ class IdentityMap
 {
 	private $map;
 
-	public function getModels(array $models)
+	public function getAll(array $models)
 	{
-		foreach ($models as & $model)
-		{
-			$model = $this->getModel($model);
-		}
-
-		return $models;
+		return array_map([$this, 'get'], $models);
 	}
 
-	public function getModel(Model $model)
+	public static function modelUnqiueKey(Model $model)
 	{
-		$name = $model->getSchema()->getTable();
-		$id = $model->getId();
+		return self::getUniqueKey($model->getSchema(), $model->getId());
+	}
 
-		if (isset($this->map[$name][$id]))
+	public static function getUniqueKey(Schema $shema, $id)
+	{
+		return $shema->getTable().'|'.$id;
+	}
+
+	public function get(Model $model)
+	{
+		$key = self::modelUnqiueKey($model);
+
+		if ($this->hasKey($key))
 		{
-			$model = $this->map[$name][$id];
+			return $this->getKey($key);
 		}
 		else
 		{
-			$this->map[$name][$id] = $model;
+			$this->setKey($key, $model);
+			return $model;
 		}
 
 		return $model;
+	}
+
+	public function hasKey($key)
+	{
+		return isset($this->map[$key]);
+	}
+
+	public function getKey($key)
+	{
+		return $this->map[$key];
+	}
+
+	public function setKey($key, Model $model)
+	{
+		return isset($this->map[$key]);
+	}
+
+	public function set(Model $model)
+	{
+		$this->setKey(self::modelUnqiueKey($model), $Model);
+	}
+
+	public function has(Model $model)
+	{
+		return $this->hasKey(self::modelUnqiueKey($model));
 	}
 }

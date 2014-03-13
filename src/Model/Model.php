@@ -10,7 +10,7 @@ use CL\Luna\Schema\Query\Update;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Model implements LinkInterface {
+class Model {
 
 	use DirtyTrackingTrait;
 	use UnmappedPropertiesTrait;
@@ -45,6 +45,10 @@ class Model implements LinkInterface {
 				$this->setProperties($properties);
 			}
 		}
+		else
+		{
+			$this->setOriginals($this->getProperties());
+		}
 	}
 
 	public function getId()
@@ -56,8 +60,21 @@ class Model implements LinkInterface {
 	{
 		$this->{$this->getSchema()->getPrimaryKey()} = $id;
 		$this->setOriginals($this->getProperties());
+		$this->state = self::PERSISTED;
 
 		return $this;
+	}
+
+	public function setStateLoaded()
+	{
+		$this->state = $this->getId() ? self::PERSISTED : self::PENDING;
+
+		return $this;
+	}
+
+	public function isPersisted()
+	{
+		return $this->state === self::PERSISTED;
 	}
 
 	public function isPending()
@@ -73,39 +90,6 @@ class Model implements LinkInterface {
 	public function isNotLoaded()
 	{
 		return $this->state === self::NOT_LOADED;
-	}
-
-	public function massAssign(array $values)
-	{
-		$schema = $this->getSchema();
-
-		if ($this->state === self::NOT_LOADED)
-		{
-			$this->state = self::PENDING;
-		}
-
-		foreach ($values as $key => $value)
-		{
-			if (($rel = $schema->getRel($key)))
-			{
-				$link = $this->getLink($rel);
-
-				if ($link instanceof ModelCollection)
-				{
-					$link->massAssignAll($rel->getForeignSchema(), $value);
-				}
-				else
-				{
-					$link->massAssign($value);
-				}
-			}
-			else
-			{
-				$this->$key = $value;
-			}
-		}
-
-		return $this;
 	}
 
 	public function setProperties(array $values)

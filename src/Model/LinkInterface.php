@@ -7,4 +7,5 @@
  */
 interface LinkInterface
 {
+	public function getAll();
 }

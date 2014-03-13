@@ -1,7 +1,7 @@
 <?php namespace CL\Luna\Rel;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\ModelCollection;
+use CL\Luna\Model\LinkMany;
 use CL\Luna\Model\LinkInterface;
 use CL\Luna\Util\Arr;
 
@@ -39,7 +39,7 @@ class HasMany extends AbstractRel
 		foreach ($models as $model)
 		{
 			$index = $model->{$this->getKey()};
-			$model->setLink($this, new ModelCollection(isset($related[$index]) ? $related[$index] : array()));
+			$model->setLink($this, new LinkMany(isset($related[$index]) ? $related[$index] : array()));
 		}
 	}
 

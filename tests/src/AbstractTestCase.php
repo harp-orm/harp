@@ -22,21 +22,29 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase {
 	{
 		parent::setUp();
 
-		$this->env = new EB\Environment(array(
+		Log::setEnabled(TRUE);
+
+		$this->env = new EB\Environment([
 			'static' => new EB\Environment_Group_Static,
-		));
+		]);
+
+		$this->env->backup_and_set([
+			'CL\Luna\Util\Log::$items' => []
+		]);
 
 		DB::configuration('default', array(
 			'dsn' => 'mysql:dbname=test-luna;host=127.0.0.1',
 			'username' => 'root',
 		));
 
-		Log::setEnabled(TRUE);
+		DB::instance()->beginTransaction();
 	}
 
 	public function tearDown()
 	{
 		$this->env->restore();
+
+		DB::instance()->rollback();
 
 		parent::tearDown();
 	}

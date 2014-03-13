@@ -68,12 +68,9 @@ trait SchemaTrait
 
 	public static function get($id)
 	{
-		$result = static::all()
+		return static::all()
 			->whereKey($id)
-			->limit(1)
-			->execute();
-
-		return $result->fetch();
+			->first();
 	}
 
 	public static function all()

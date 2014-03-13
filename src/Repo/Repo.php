@@ -24,22 +24,38 @@ class Repo
 		return self::$instance;
 	}
 
-	private $identityMap;
+	private $map;
 
 	public function __construct()
 	{
-		$this->identityMap = new IdentityMap();
+		$this->map = new IdentityMap();
 	}
 
 	public function getModel(Model $model)
 	{
-		$this->identityMap->getModel($model);
+		$this->map->get($model);
 	}
 
 	public function loadModels(Select $select)
 	{
 		$models = $select->execute()->fetchAll();
-		return $this->identityMap->getModels($models);
+		return $this->map->getAll($models);
+	}
+
+	public function loadModel(Schema $schema, $id)
+	{
+		$key = $this->map->getUniqueKey($schema, $id);
+
+		if ($this->map->hasKey($key))
+		{
+			return $this->map->getKey($key);
+		}
+		else
+		{
+			return $this->map->get(
+				$schema->getSelectSchema()->whereKey($id)->first()
+			);
+		}
 	}
 
 	public function loadLinks(Schema $schema, array $models, array $rels)
@@ -95,17 +111,22 @@ class Repo
 
 		$new = $models->getPending()->getSchemaStorage();
 
+		foreach ($models as $model)
+		{
+			$model->updateLinks();
+		}
+
 		foreach ($new as $schema)
 		{
 			$schema
 				->getInsertSchema()
 					->setModels($new->getInfo())
 					->execute();
+		}
 
-			foreach ($new->getInfo() as $model)
-			{
-				$model->updateLinks();
-			}
+		foreach ($models as $model)
+		{
+			$model->updateLinks();
 		}
 
 		$changed = $models->getChanged()->getSchemaStorage();
@@ -116,11 +137,6 @@ class Repo
 				->getUpdateSchema()
 					->setModels($changed->getInfo())
 					->execute();
-
-			foreach ($changed->getInfo() as $model)
-			{
-				$model->updateLinks();
-			}
 		}
 
 		return $this;

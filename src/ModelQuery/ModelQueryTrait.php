@@ -1,7 +1,8 @@
-<?php namespace CL\Luna\Schema\Query;
+<?php namespace CL\Luna\ModelQuery;
 
 use CL\Luna\Schema\Schema;
 use CL\Luna\Util\Arr;
+use CL\Luna\Util\Log;
 use CL\Atlas\DB;
 
 /**
@@ -9,7 +10,7 @@ use CL\Atlas\DB;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-trait QueryTrait {
+trait ModelQueryTrait {
 
     protected $schema;
 
@@ -29,6 +30,14 @@ trait QueryTrait {
     public function getRel($name)
     {
         return $this->schema->getRel($name);
+    }
+
+    public function addToLog()
+    {
+        if (Log::getEnabled())
+        {
+            Log::add($this->humanize());
+        }
     }
 
     public function scope($scope)

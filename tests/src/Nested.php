@@ -15,7 +15,7 @@ trait Nested {
      */
     public $parent;
 
-    public static function CL_Luna_Test_Nested(Schema $schema)
+    public static function initialize(Schema $schema)
     {
         $schema
             ->getFields()

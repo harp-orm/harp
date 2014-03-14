@@ -9,7 +9,7 @@ use CL\Luna\Field\Password;
 use CL\Luna\Rel\BelongsTo;
 use CL\Luna\Rel\HasMany;
 use CL\Luna\Validator\Present;
-use CL\Luna\Event\ModelEvent;
+use CL\Luna\Model\ModelEvent;
 
 /**
  * @author     Ivan Kerin
@@ -62,12 +62,12 @@ class User extends Model {
         return parent::getLinkByName('posts');
     }
 
-    public static function test($model, $event)
+    public static function test($model)
     {
         var_dump('User event "test" called');
     }
 
-    public static function CL_Luna_Test_User(Schema $schema)
+    public static function initialize(Schema $schema)
     {
         $schema
             ->setSoftDelete(TRUE)
@@ -88,7 +88,7 @@ class User extends Model {
             ])
 
             ->getEventListeners()
-                ->add(ModelEvent::SAVE, 'CL\Luna\Test\User::test');
+                ->add(ModelEvent::PERSIST, 'CL\Luna\Test\User::test');
     }
 
 }

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "9ea3ab1fceb5a821b81ca0ce82ce1c67",
+    "hash": "6ea729b2053862f440b822cb376dbf64",
     "packages": [
         {
             "name": "clippings/atlas",
@@ -57,16 +57,16 @@
     "packages-dev": [
         {
             "name": "clippings/env-backup",
-            "version": "dev-master",
+            "version": "0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/env-backup.git",
-                "reference": "ce94afffe43c41a6b3519e654509c5414a03f338"
+                "reference": "1c0f8a2547bf0d1bbc7ff0142c40155180a3754e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/env-backup/zipball/ce94afffe43c41a6b3519e654509c5414a03f338",
-                "reference": "ce94afffe43c41a6b3519e654509c5414a03f338",
+                "url": "https://api.github.com/repos/clippings/env-backup/zipball/1c0f8a2547bf0d1bbc7ff0142c40155180a3754e",
+                "reference": "1c0f8a2547bf0d1bbc7ff0142c40155180a3754e",
                 "shasum": ""
             },
             "type": "library",
@@ -88,7 +88,7 @@
                 }
             ],
             "description": "Backup/restore environment variables: globals, static vars, configs",
-            "time": "2014-03-13 12:44:41"
+            "time": "2014-03-14 08:33:51"
         }
     ],
     "aliases": [
@@ -96,8 +96,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "clippings/atlas": 20,
-        "clippings/env-backup": 20
+        "clippings/atlas": 20
     },
     "platform": {
         "php": ">=5.4.0"

@@ -10,6 +10,26 @@ use Closure;
  */
 class ObjectStorage extends SplObjectStorage
 {
+    public function __construct(array $items = NULL)
+    {
+        if ($items)
+        {
+            $this->attachArray($items);
+        }
+    }
+
+    public function toArray()
+    {
+        $items = [];
+
+        foreach ($this as $item)
+        {
+            $items []= $item;
+        }
+
+        return $items;
+    }
+
     public function map(Closure $function)
     {
         $mapped = [];
@@ -42,6 +62,27 @@ class ObjectStorage extends SplObjectStorage
         }
 
         return $mapped;
+    }
+
+    public function groupBy(Closure $get_object)
+    {
+        $groups = new ObjectStorage();
+
+        foreach ($this as $item)
+        {
+            $key = $get_object($item);
+
+            if ($groups->contains($key))
+            {
+                $groups[$key]->attach($item);
+            }
+            else
+            {
+                $groups[$key] = new ObjectStorage([$item]);
+            }
+        }
+
+        return $groups;
     }
 
     public function filter(Closure $filter)

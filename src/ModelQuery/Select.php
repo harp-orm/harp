@@ -1,10 +1,9 @@
-<?php namespace CL\Luna\Schema\Query;
+<?php namespace CL\Luna\ModelQuery;
 
 use CL\Luna\Schema\Schema;
 use CL\Luna\Repo\Repo;
 use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
-use CL\Luna\Util\Log;
 use CL\Atlas\Query\SelectQuery;
 use PDO;
 
@@ -15,7 +14,7 @@ use PDO;
  */
 class Select extends SelectQuery {
 
-    use QueryTrait;
+    use ModelQueryTrait;
 
     public function __construct(Schema $schema)
     {
@@ -45,15 +44,12 @@ class Select extends SelectQuery {
     {
         $items = $this->limit(1)->load();
 
-        return $this->schema->getModelInstance(reset($items));
+        return reset($items) ?: $this->schema->newNotLoadedModel();
     }
 
     public function execute()
     {
-        if (Log::getEnabled())
-        {
-            Log::add($this->humanize());
-        }
+        $this->addToLog();
 
         $pdoStatement = parent::execute();
 

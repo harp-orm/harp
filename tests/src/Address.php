@@ -40,7 +40,7 @@ class Address extends Model {
         return parent::getLinkByName('users');
     }
 
-    public static function CL_Luna_Test_Address(Schema $schema)
+    public static function initialize(Schema $schema)
     {
         $schema
             ->setRels([

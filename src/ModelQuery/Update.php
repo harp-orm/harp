@@ -1,19 +1,19 @@
-<?php namespace CL\Luna\Schema\Query;
+<?php namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\SQL\SQL;
 use CL\Atlas\Query\UpdateQuery;
 use CL\Luna\Schema\Schema;
+use CL\Luna\Model\ModelEvent;
 use CL\Luna\Util\Arr;
-use CL\Luna\Util\Log;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Update extends UpdateQuery implements SetModelsInterface{
+class Update extends UpdateQuery implements SetInterface {
 
-    use QueryTrait;
+    use ModelQueryTrait;
 
     public function __construct(Schema $schema)
     {
@@ -21,6 +21,8 @@ class Update extends UpdateQuery implements SetModelsInterface{
             ->setSchema($schema)
             ->table($schema->getTable());
     }
+
+    protected $models;
 
     public function setMultiple(array $values)
     {
@@ -62,6 +64,7 @@ class Update extends UpdateQuery implements SetModelsInterface{
 
     public function setModels(array $models)
     {
+        $this->models = $models;
         $models = Arr::index($models, $this->schema->getPrimaryKey());
         $changes = Arr::invoke($models, 'getChanges');
         $this->setMultiple($changes);
@@ -71,11 +74,18 @@ class Update extends UpdateQuery implements SetModelsInterface{
 
     public function execute()
     {
-        if (Log::getEnabled())
+        $this->addToLog();
+
+        $result = parent::execute();
+
+        foreach ($this->models as $model)
         {
-            Log::add($this->humanize());
+            $model
+                ->resetOriginals()
+                ->dispatchEvent(ModelEvent::UPDATE)
+                ->dispatchEvent(ModelEvent::PERSIST);
         }
 
-        return parent::execute();
+        return $result;
     }
 }

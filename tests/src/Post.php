@@ -38,7 +38,7 @@ class Post extends Model {
     public $body;
 
     /**
-     * @return Post
+     * @return LinkOne
      */
     public function getUser()
     {
@@ -50,7 +50,7 @@ class Post extends Model {
         return parent::setLinkByName('user', $user);
     }
 
-    public static function CL_Luna_Test_Post(Schema $schema)
+    public static function initialize(Schema $schema)
     {
         $schema
             ->setRels([

@@ -1,8 +1,7 @@
 <?php namespace CL\Luna\Repo;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\ModelsGroup;
-use CL\Luna\Schema\Query\Select;
+use CL\Luna\ModelQuery\Select;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Rel\AbstractRel;
 
@@ -53,7 +52,7 @@ class Repo
         else
         {
             return $this->map->get(
-                $schema->getSelectSchema()->whereKey($id)->first()
+                $schema->getSelectQuery()->whereKey($id)->first()
             );
         }
     }
@@ -97,47 +96,13 @@ class Repo
     {
         $models = new ModelsGroup();
 
-        $models->add($model);
-
-        $deleted = $models->getDeleted()->getSchemaStorage();
-
-        foreach ($deleted as $schema)
-        {
-            $schema
-                ->getDeleteSchema()
-                    ->setModels($deleted->getInfo())
-                    ->execute();
-        }
-
-        $new = $models->getPending()->getSchemaStorage();
-
-        foreach ($models as $model)
-        {
-            $model->updateLinks();
-        }
-
-        foreach ($new as $schema)
-        {
-            $schema
-                ->getInsertSchema()
-                    ->setModels($new->getInfo())
-                    ->execute();
-        }
-
-        foreach ($models as $model)
-        {
-            $model->updateLinks();
-        }
-
-        $changed = $models->getChanged()->getSchemaStorage();
-
-        foreach ($changed as $schema)
-        {
-            $schema
-                ->getUpdateSchema()
-                    ->setModels($changed->getInfo())
-                    ->execute();
-        }
+        $models
+            ->add($model)
+            ->persistDeleted()
+            ->updateLinks()
+            ->persistPending()
+            ->updateLinks()
+            ->persistChanged();
 
         return $this;
     }

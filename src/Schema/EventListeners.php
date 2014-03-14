@@ -2,6 +2,7 @@
 
 use CL\Luna\Event\Event;
 use CL\Luna\Util\Collection;
+use CL\Luna\Model\Model;
 
 /**
  * @author     Ivan Kerin
@@ -17,17 +18,14 @@ class EventListeners extends Collection {
         return $this;
     }
 
-    public function dispatchEvent(Event $event)
+    public function dispatchEvent($type, Model $target)
     {
-        foreach ($this->items[$event->getType()] as $listner)
+        if (isset($this->items[$type]))
         {
-            call_user_func($listner, $event->getTarget(), $event);
-
-            if ($event->isStopped())
+            foreach ($this->items[$type] as $listner)
             {
-                break;
+                call_user_func($listner, $target);
             }
         }
-        return ! $event->isDefaultPrevented();
     }
 }

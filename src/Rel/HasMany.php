@@ -45,7 +45,7 @@ class HasMany extends AbstractRel
 
     public function getSelect()
     {
-        return $this->getForeignSchema()->getSelectSchema();
+        return $this->getForeignSchema()->getSelectQuery();
     }
 
     public function joinRel($query, $parent)

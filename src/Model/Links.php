@@ -11,21 +11,6 @@ use CL\Luna\Repo\Repo;
  */
 class Links extends ObjectStorage
 {
-    public function getAllModels()
-    {
-        $items = new ModelsGroup();
-
-        foreach ($this as $rel)
-        {
-            foreach ($this->getInfo()->getAll() as $model)
-            {
-                $items->add($model);
-            }
-        }
-
-        return $items;
-    }
-
     public function load(AbstractRel $rel, Model $parent)
     {
         Repo::getInstance()->loadLinkArray($rel, [$parent]);

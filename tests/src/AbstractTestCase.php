@@ -24,10 +24,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase {
 
         Log::setEnabled(TRUE);
 
-        $this->env = new EB\Env([new EB\StaticParams]);
-
-        $this->env->backupAndSet([
-            'CL\Luna\Util\Log::$items' => []
+        $this->env = new EB\Env([
+            new EB\StaticParam('CL\Luna\Util\Log', 'items', [])
         ]);
 
         DB::configuration('default', array(

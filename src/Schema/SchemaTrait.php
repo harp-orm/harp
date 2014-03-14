@@ -1,10 +1,5 @@
 <?php namespace CL\Luna\Schema;
 
-use CL\Luna\Schema\Query\Select;
-use CL\Luna\Schema\Query\Update;
-use CL\Luna\Schema\Query\Insert;
-use CL\Luna\Schema\Query\Delete;
-
 /*
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -75,22 +70,22 @@ trait SchemaTrait
 
     public static function all()
     {
-        return static::getSchema()->getSelectSchema();
+        return static::getSchema()->getSelectQuery();
     }
 
-    public static function deleteAll()
+    public static function deleteQuery()
     {
-        return static::getSchema()->getDeleteSchema();
+        return static::getSchema()->getDeleteQuery();
     }
 
-    public static function update()
+    public static function updateQuery()
     {
-        return static::getSchema()->getUpdateSchema();
+        return static::getSchema()->getUpdateQuery();
     }
 
-    public static function insert()
+    public static function insertQuery()
     {
-        return static::getSchema()->getInsertSchema();
+        return static::getSchema()->getInsertQuery();
     }
 
     public static function initializeSchema()

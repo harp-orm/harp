@@ -28,7 +28,7 @@ class BelongsTo extends AbstractRel
 
     public function getSelect()
     {
-        return $this->getForeignSchema()->getSelectSchema();
+        return $this->getForeignSchema()->getSelectQuery();
     }
 
     public function setLinks(array $models, array $related)
@@ -39,7 +39,7 @@ class BelongsTo extends AbstractRel
         {
             $index = $model->{$this->getKey()};
 
-            $foreginModel = $this->getForeignSchema()->getModelInstance(isset($related[$index]) ? $related[$index] : NULL);
+            $foreginModel = isset($related[$index]) ? $related[$index] : $this->getForeignSchema()->newNotLoadedModel();
 
             $model->setLink($this, new LinkOne($foreginModel));
         }

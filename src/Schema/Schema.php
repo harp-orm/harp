@@ -7,10 +7,10 @@ use CL\Luna\Util\Arr;
 use CL\Luna\Event\EventDispatcherTrait;
 use CL\Luna\Event\ModelEvent;
 use CL\Luna\Event\Event;
-use CL\Luna\Schema\Query\Delete;
-use CL\Luna\Schema\Query\Update;
-use CL\Luna\Schema\Query\Select;
-use CL\Luna\Schema\Query\Insert;
+use CL\Luna\ModelQuery\Delete;
+use CL\Luna\ModelQuery\Update;
+use CL\Luna\ModelQuery\Select;
+use CL\Luna\ModelQuery\Insert;
 use CL\Atlas\SQL\SQL;
 
 /*
@@ -32,7 +32,6 @@ class Schema
     private $modelReflection;
     private $table;
     private $softDelete = FALSE;
-    private $batchUpdate = TRUE;
     private $db = 'default';
     private $primaryKey = 'id';
     private $fields;
@@ -88,19 +87,6 @@ class Schema
         return $this;
     }
 
-    public function getBatchUpdate()
-    {
-        $this->lazyLoadConfiguration();
-
-        return $this->batchUpdate;
-    }
-
-    public function setBatchUpdate($batchUpdate)
-    {
-        $this->batchUpdate = $batchUpdate;
-
-        return $this;
-    }
     public function getTable()
     {
         $this->lazyLoadConfiguration();
@@ -197,19 +183,12 @@ class Schema
         return $this->eventListeners;
     }
 
-    public function dipatchModelEvent($type, Model $target)
+    public function dispatchEvent($type, Model $target)
     {
-        if ($this->getEventListeners()->has($type))
-        {
-            return $this->getEventListeners()->dispatchEvent(new ModelEvent($type, $target));
-        }
-        else
-        {
-            return TRUE;
-        }
+        return $this->getEventListeners()->dispatchEvent($type, $target);
     }
 
-    public function getDeleteSchema()
+    public function getDeleteQuery()
     {
         if ($this->getSoftDelete())
         {
@@ -226,7 +205,7 @@ class Schema
         return $delete;
     }
 
-    public function getUpdateSchema()
+    public function getUpdateQuery()
     {
         $update = (new Update($this));
 
@@ -238,7 +217,7 @@ class Schema
         return $update;
     }
 
-    public function getSelectSchema()
+    public function getSelectQuery()
     {
         $select = (new Select($this));
 
@@ -250,32 +229,32 @@ class Schema
         return $select;
     }
 
-    public function getInsertSchema()
+    public function getInsertQuery()
     {
         return new Insert($this);
     }
 
-    public function getQuerySchema($type)
+    public function getQuery($type)
     {
         switch ($type)
         {
             case self::SELECT:
-                return $this->getSelectSchema();
+                return $this->getSelectQuery();
 
             case self::INSERT:
-                return $this->getInsertSchema();
+                return $this->getInsertQuery();
 
             case self::DELETE:
-                return $this->getDeleteSchema();
+                return $this->getDeleteQuery();
 
             case self::UPDATE:
-                return $this->getUpdateSchema();
+                return $this->getUpdateQuery();
         }
     }
 
-    public function getModelInstance($model)
+    public function newNotLoadedModel()
     {
-        return $model !== NULL ? $model : $this->modelReflection->newInstance(NULL, Model::NOT_LOADED);
+        return $this->modelReflection->newInstance(NULL, Model::NOT_LOADED);
     }
 
     function __construct($class_name)
@@ -298,24 +277,17 @@ class Schema
             $this->table = $this->name = strtolower($this->modelReflection->getShortName());
             $this->propertyNames = Arr::invoke($this->modelReflection->getProperties(ReflectionProperty::IS_PUBLIC), 'getName');
 
-            $this->callInitializeMethod($this->modelReflection);
+            $this->modelReflection->getMethod('initialize')->invoke(NULL, $this);
 
             foreach ($this->modelReflection->getTraits() as $trait)
             {
-                $this->callInitializeMethod($trait);
+                if ($trait->hasMethod('initialize'))
+                {
+                    $trait->getMethod('initialize')->invoke(NULL, $this);
+                }
             }
 
             $this->rels->initialize($this);
-        }
-    }
-
-    private function callInitializeMethod(ReflectionClass $class)
-    {
-        $name = str_replace('\\', '_', $class->getName());
-
-        if ($class->hasMethod($name))
-        {
-            call_user_func($class->getName().'::'.$name, $this);
         }
     }
 }

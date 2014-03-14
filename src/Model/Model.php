@@ -56,6 +56,13 @@ class Model {
         return $this->{$this->getSchema()->getPrimaryKey()};
     }
 
+    public function setId($id)
+    {
+        $this->{$this->getSchema()->getPrimaryKey()} = $id;
+
+        return $this;
+    }
+
     public function setInserted($id)
     {
         $this->{$this->getSchema()->getPrimaryKey()} = $id;
@@ -68,6 +75,20 @@ class Model {
     public function setStateLoaded()
     {
         $this->state = $this->getId() ? self::PERSISTED : self::PENDING;
+
+        return $this;
+    }
+
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    public function resetOriginals()
+    {
+        $this->setOriginals($this->getProperties());
 
         return $this;
     }
@@ -110,33 +131,16 @@ class Model {
         return $properties;
     }
 
-    public function save()
-    {
-        if ($this->getSchema()->dipatchModelEvent(ModelEvent::SAVE, $this))
-        {
-            // $this->isSaved = TRUE;
-        }
-
-        return $this;
-    }
-
-    public function persist()
-    {
-        if ($this->getSchema()->dipatchModelEvent(ModelEvent::PRESERVE, $this))
-        {
-            $this->setOriginals($this->getProperties());
-            // $this->isSaved = FALSE;
-        }
-
-        return $this;
-    }
-
     public function delete()
     {
-        if ($this->getSchema()->dipatchModelEvent(ModelEvent::DELETE, $this))
-        {
-            $this->state = self::DELETED;
-        }
+        $this->state = self::DELETED;
+
+        return $this;
+    }
+
+    public function dispatchEvent($type)
+    {
+        $this->getSchema()->dispatchEvent($type, $this);
 
         return $this;
     }
@@ -155,7 +159,7 @@ class Model {
     {
         if ($this->links === NULL)
         {
-            $this->links = new Links($this);
+            $this->links = new Links();
         }
 
         return $this->links;

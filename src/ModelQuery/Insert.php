@@ -30,7 +30,7 @@ class Insert extends InsertQuery implements SetInterface {
 
         $this->columns($columns);
 
-        $defaultValues = $this->schema->getFields()->getDefaults();
+        $defaultValues = $this->schema->getFieldDefaults();
 
         foreach ($values as $value)
         {

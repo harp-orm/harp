@@ -6,7 +6,7 @@ use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field\Integer;
 use CL\Luna\Field\String;
 use CL\Luna\Rel\BelongsTo;
-use CL\Luna\Validator\Present;
+use CL\Carpo\Assert;
 
 /**
  * @author     Ivan Kerin
@@ -25,7 +25,7 @@ class Post extends Model {
     /**
      * @var integer
      */
-    public $user_id;
+    public $userId;
 
     /**
      * @var string
@@ -65,8 +65,8 @@ class Post extends Model {
             ]);
 
         $schema
-            ->setValidators([
-                new Present('title'),
+            ->setAsserts([
+                new Assert\Present('title'),
             ]);
     }
 

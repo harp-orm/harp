@@ -28,7 +28,7 @@ class HasMany extends AbstractRel
     {
         if ( ! $this->foreignKey)
         {
-            $this->foreignKey = $this->getSchema()->getName().'_id';
+            $this->foreignKey = $this->getSchema()->getName().'Id';
         }
     }
 

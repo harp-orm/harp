@@ -24,30 +24,30 @@ class Model {
     private $state;
     private $links;
 
-    public function __construct(array $properties = NULL, $state = self::PENDING)
+    public function __construct(array $fields = NULL, $state = self::PENDING)
     {
         $this->state = $state;
 
         if ($state === self::PERSISTED)
         {
-            $properties = $properties !== NULL ? $properties : $this->getProperties();
+            $fields = $fields !== NULL ? $fields : $this->getFieldValues();
 
-            $properties = $this->getSchema()->getFields()->loadData($properties);
+            $fields = $this->getSchema()->getFields()->loadData($fields);
 
-            $this->setProperties($properties);
-            $this->setOriginals($properties);
+            $this->setFieldValues($fields);
+            $this->setOriginals($fields);
         }
         elseif ($state === self::PENDING)
         {
-            $this->setOriginals($this->getProperties());
-            if ($properties)
+            $this->setOriginals($this->getFieldValues());
+            if ($fields)
             {
-                $this->setProperties($properties);
+                $this->setFieldValues($fields);
             }
         }
         else
         {
-            $this->setOriginals($this->getProperties());
+            $this->setOriginals($this->getFieldValues());
         }
     }
 
@@ -59,15 +59,6 @@ class Model {
     public function setId($id)
     {
         $this->{$this->getSchema()->getPrimaryKey()} = $id;
-
-        return $this;
-    }
-
-    public function setInserted($id)
-    {
-        $this->{$this->getSchema()->getPrimaryKey()} = $id;
-        $this->setOriginals($this->getProperties());
-        $this->state = self::PERSISTED;
 
         return $this;
     }
@@ -88,7 +79,7 @@ class Model {
 
     public function resetOriginals()
     {
-        $this->setOriginals($this->getProperties());
+        $this->setOriginals($this->getFieldValues());
 
         return $this;
     }
@@ -113,7 +104,7 @@ class Model {
         return $this->state === self::NOT_LOADED;
     }
 
-    public function setProperties(array $values)
+    public function setFieldValues(array $values)
     {
         foreach ($values as $name => $value)
         {
@@ -121,14 +112,14 @@ class Model {
         }
     }
 
-    public function getProperties()
+    public function getFieldValues()
     {
-        $properties = [];
-        foreach ($this->getSchema()->getPropertyNames() as $name)
+        $fields = [];
+        foreach ($this->getSchema()->getFieldNames() as $name)
         {
-            $properties[$name] = $this->{$name};
+            $fields[$name] = $this->{$name};
         }
-        return $properties;
+        return $fields;
     }
 
     public function delete()
@@ -206,13 +197,19 @@ class Model {
 
     public function validate()
     {
-        $this->errors = $this->getSchema()->getValidators()->executeArray($this->getChanges());
+        $changes = $this->getChanges();
+
+        if ($this->getUnmapped()) {
+            $changes += $this->getUnmapped();
+        }
+
+        $this->errors = $this->getSchema()->getAsserts()->execute($changes);
 
         return $this->isValid();
     }
 
-    public function isValid()
+    public function isEmptyErrors()
     {
-        return $this->getErrors() ? $this->getErrors()->isEmpty() : TRUE;
+        return $this->errors ? $this->errors->isEmpty() : true;
     }
 }

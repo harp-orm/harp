@@ -5,10 +5,17 @@
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Integer extends AbstractField
+class Boolean extends AbstractField
 {
+    protected $default = false;
+
     public function load($value)
     {
-        return is_numeric($value) ? (int) $value : null;
+        return (bool) $value;
+    }
+
+    public function save($value)
+    {
+        return (bool) $value;
     }
 }

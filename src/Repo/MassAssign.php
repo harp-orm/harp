@@ -5,10 +5,10 @@ use CL\Luna\Model\LinkOne;
 use CL\Luna\Model\LinkMany;
 use CL\Luna\Model\LinkInterface;
 use CL\Luna\Schema\Schema;
+use CL\Luna\Schema\Rels;
 use CL\Luna\Repo\Repo;
 use CL\Luna\Util\Arr;
 use CL\Luna\Rel\AbstractRel;
-use InvalidArgumentException;
 
 /*
  * @author     Ivan Kerin
@@ -17,18 +17,10 @@ use InvalidArgumentException;
  */
 class MassAssign
 {
-    public static function getPropertiesData(Schema $schema, array $data)
+    public function loadFromData(AbstractRel $rel, array $data)
     {
-        return array_diff_key($data, $schema->getRels()->all());
-    }
+        $schema = $rel->getForeignSchema();
 
-    public static function getRelsData(Schema $schema, array $data)
-    {
-        return array_intersect_key($data, $schema->getRels()->all());
-    }
-
-    public static function getModelFromData(Schema $schema, array $data)
-    {
         if (isset($data[$schema->getPrimaryKey()]))
         {
             $id = $data[$schema->getPrimaryKey()];
@@ -40,44 +32,38 @@ class MassAssign
         }
     }
 
-    public static function getModel(Schema $schema, $data, $permitted)
+    public function loadModel(AbstractRel $rel, $data, $permitted)
     {
-        $model = self::getModelFromData($schema, $data);
+        $model = $this->loadFromData($rel, $data);
 
-        (new MassAssign($data, $permitted))
-            ->on($model);
+        new MassAssign($model, $permitted, $data);
 
         return $model;
     }
 
-    protected $permitted;
-    protected $data;
-    const UNSAFE = 'unsafe';
-
-    function __construct(array $data, $permitted)
+    public function __construct(Model $model, array $permitted, array $data)
     {
-        if (is_array($permitted))
-        {
-            $this->permitted = Arr::toAssoc($permitted);
+        $permitted = Arr::toAssoc($permitted);
+        $rels = $model->getSchema()->getRels();
 
-            $this->data = array_intersect_key($data, $this->permitted);
-        }
-        elseif ($permitted === self::UNSAFE)
-        {
-            $this->data = $data;
-            $this->permitted = $permitted;
-        }
-        else
-        {
-            throw new InvalidArgumentException('Permitted can be an array or "MassAssign::UNSAFE"');
+        $data = array_intersect_key($data, $permitted);
+        $model->setFieldValues($this->extractPropertiesData($data, $rels));
+
+        $data = $this->extractRelsData($data, $rels);
+
+        foreach ($data as $relName => $relData) {
+            $rel = $rels->get($relName);
+            $link = $model->getLink($rel);
+
+            $this->setLink($rel, $link, $relData, $this->extractPermitted($permitted, $relName));
         }
     }
 
-    public static function onLink(AbstractRel $rel, LinkInterface $link, $data, $permitted)
+    public function setLink(AbstractRel $rel, LinkInterface $link, $data, $permitted)
     {
         if ($link instanceof LinkOne)
         {
-            $link->set(self::getModel($rel->getForeignSchema(), $data, $permitted));
+            $link->set($this->loadModel($rel, $data, $permitted));
         }
         elseif ($link instanceof LinkMany)
         {
@@ -85,30 +71,23 @@ class MassAssign
 
             foreach ($data as $dataItem)
             {
-                $link->attach(self::getModel($rel->getForeignSchema(), $dataItem, $permitted));
+                $link->attach($this->loadModel($rel, $dataItem, $permitted));
             }
         }
     }
 
-    public function getPermittedFor($relName)
+    public function extractPropertiesData(array $data, Rels $rels)
     {
-        return isset($this->permitted[$relName]) ? $this->permitted[$relName] : self::UNSAFE;
+        return array_diff_key($data, $rels->all());
     }
 
-    public function on(Model $model)
+    public function extractRelsData(array $data, Rels $rels)
     {
-        $schema = $model->getSchema();
+        return array_intersect_key($data, $rels->all());
+    }
 
-        $model->setProperties(self::getPropertiesData($schema, $this->data));
-
-        $relsData = self::getRelsData($schema, $this->data);
-
-        foreach ($relsData as $relName => $data)
-        {
-            $rel = $schema->getRel($relName);
-            $link = $model->getLink($rel);
-
-            self::onLink($rel, $link, $data, $this->getPermittedFor($relName));
-        }
+    public function extractPermitted($permitted, $name)
+    {
+        return isset($permitted[$name]) ? $permitted[$name] : array();
     }
 }

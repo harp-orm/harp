@@ -19,7 +19,7 @@ trait Nested {
     {
         $schema
             ->getFields()
-                ->add(new Integer('parent_id'));
+                ->add(new Integer('parentId'));
     }
 
     /**

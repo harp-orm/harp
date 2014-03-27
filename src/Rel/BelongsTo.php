@@ -49,7 +49,7 @@ class BelongsTo extends AbstractRel
     {
         if ( ! $this->key)
         {
-            $this->key = $this->getForeignSchema()->getName().'_id';
+            $this->key = $this->getForeignSchema()->getName().'Id';
         }
 
         $this->getSchema()->getFields()->add(new Integer($this->key));

@@ -11,7 +11,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "clippings/atlas": "dev-master"
+        "clippings/atlas": "dev-master",
+        "clippings/carpo": "dev-master"
     },
     "require-dev": {
         "clippings/env-backup": "0.2.*"

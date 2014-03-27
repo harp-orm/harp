@@ -54,7 +54,7 @@ trait ModelQueryTrait {
 
     public function joinRels($rels)
     {
-        $rels = Arr::toAssoc( (array) $rels);
+        $rels = Arr::toAssoc((array) $rels);
 
         $this->joinNestedRels($this->getSchema(), $rels);
 

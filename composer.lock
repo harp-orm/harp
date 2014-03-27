@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6ea729b2053862f440b822cb376dbf64",
+    "hash": "404c4f4d97529784d80ac873372359c9",
     "packages": [
         {
             "name": "clippings/atlas",
@@ -52,21 +52,56 @@
             ],
             "description": "SQL Builder for PDO",
             "time": "2014-02-13 12:27:12"
+        },
+        {
+            "name": "clippings/carpo",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/clippings/carpo.git",
+                "reference": "f466f9db5de58fa68380ed62c32204f0561c4658"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/clippings/carpo/zipball/f466f9db5de58fa68380ed62c32204f0561c4658",
+                "reference": "f466f9db5de58fa68380ed62c32204f0561c4658",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CL\\Carpo\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Kerin",
+                    "email": "ikerin@gmail.com",
+                    "homepage": "http://www.openbuildings.com",
+                    "role": "Author"
+                }
+            ],
+            "description": "Object validaiton library",
+            "time": "2014-03-27 13:25:00"
         }
     ],
     "packages-dev": [
         {
             "name": "clippings/env-backup",
-            "version": "0.2.2",
+            "version": "0.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/env-backup.git",
-                "reference": "1c0f8a2547bf0d1bbc7ff0142c40155180a3754e"
+                "reference": "23308787a7acaa0ecafa081d745481aa4328acd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/env-backup/zipball/1c0f8a2547bf0d1bbc7ff0142c40155180a3754e",
-                "reference": "1c0f8a2547bf0d1bbc7ff0142c40155180a3754e",
+                "url": "https://api.github.com/repos/clippings/env-backup/zipball/23308787a7acaa0ecafa081d745481aa4328acd8",
+                "reference": "23308787a7acaa0ecafa081d745481aa4328acd8",
                 "shasum": ""
             },
             "type": "library",
@@ -88,7 +123,7 @@
                 }
             ],
             "description": "Backup/restore environment variables: globals, static vars, configs",
-            "time": "2014-03-14 08:33:51"
+            "time": "2014-03-25 16:55:26"
         }
     ],
     "aliases": [
@@ -96,7 +131,8 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "clippings/atlas": 20
+        "clippings/atlas": 20,
+        "clippings/carpo": 20
     },
     "platform": {
         "php": ">=5.4.0"

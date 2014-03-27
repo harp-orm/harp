@@ -3,12 +3,10 @@
 use CL\Luna\Model\Model;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Schema\SchemaTrait;
-use CL\Luna\Field\Integer;
-use CL\Luna\Field\String;
-use CL\Luna\Field\Password;
+use CL\Luna\Field;
 use CL\Luna\Rel\BelongsTo;
 use CL\Luna\Rel\HasMany;
-use CL\Luna\Validator\Present;
+use CL\Carpo\Assert;
 use CL\Luna\Model\ModelEvent;
 
 /**
@@ -44,7 +42,10 @@ class User extends Model {
     /**
      * @var integer
      */
-    public $address_id;
+    public $addressId;
+
+
+    public $isBlocked = false;
 
     /**
      * @return Post
@@ -73,9 +74,10 @@ class User extends Model {
             ->setSoftDelete(TRUE)
 
             ->setFields([
-                new Integer('id'),
-                new String('name'),
-                new Password('password'),
+                new Field\Integer('id'),
+                new Field\String('name'),
+                new Field\Password('password'),
+                new Field\Boolean('isBlocked'),
             ])
 
             ->setRels([
@@ -83,8 +85,8 @@ class User extends Model {
                 new HasMany('posts', Post::getSchema()),
             ])
 
-            ->setValidators([
-                new Present('name')
+            ->setAsserts([
+                new Assert\Present('name'),
             ])
 
             ->getEventListeners()

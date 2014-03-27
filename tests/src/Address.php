@@ -6,7 +6,7 @@ use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field\String;
 use CL\Luna\Field\Integer;
 use CL\Luna\Rel\HasMany;
-use CL\Luna\Validator\Present;
+use CL\Carpo\Assert;
 
 /**
  * @author     Ivan Kerin
@@ -25,7 +25,7 @@ class Address extends Model {
     /**
      * @var string
      */
-    public $zip_code;
+    public $zipCode;
 
     /**
      * @var string
@@ -46,12 +46,12 @@ class Address extends Model {
             ->setRels([
                 new HasMany('users', User::getSchema()),
             ])
-            ->setValidators([
-                new Present('location'),
+            ->setAsserts([
+                new Assert\Present('location'),
             ])
             ->setFields([
                 new Integer('id'),
-                new String('zip_code'),
+                new String('zipCode'),
                 new String('location'),
             ]);
     }

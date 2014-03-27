@@ -85,14 +85,14 @@ class Repo
         return $related;
     }
 
-    public function preserveArray(array $models)
+    public function persistArray(array $models)
     {
-        array_walk($models, [$this, 'preserve']);
+        array_walk($models, [$this, 'persist']);
 
         return $this;
     }
 
-    public function preserve(Model $model)
+    public function persist(Model $model)
     {
         $models = new ModelsGroup();
 

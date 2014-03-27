@@ -12,6 +12,7 @@ use CL\Luna\ModelQuery\Update;
 use CL\Luna\ModelQuery\Select;
 use CL\Luna\ModelQuery\Insert;
 use CL\Atlas\SQL\SQL;
+use CL\Carpo\Asserts;
 
 /*
  * @author     Ivan Kerin
@@ -20,7 +21,7 @@ use CL\Atlas\SQL\SQL;
  */
 class Schema
 {
-    const SOFT_DELETE_KEY = 'deleted_at';
+    const SOFT_DELETE_KEY = 'deletedAt';
 
     const SELECT = 1;
     const INSERT = 2;
@@ -35,9 +36,9 @@ class Schema
     private $db = 'default';
     private $primaryKey = 'id';
     private $fields;
-    private $propertyNames;
+    private $fieldDefaults;
     private $rels;
-    private $validators;
+    private $asserts;
     private $configurationLoaded;
 
     public function getName()
@@ -115,11 +116,18 @@ class Schema
         return $this;
     }
 
-    public function getPropertyNames()
+    public function getFieldNames()
     {
         $this->lazyLoadConfiguration();
 
-        return $this->propertyNames;
+        return array_keys($this->fields->all());
+    }
+
+    public function getFieldDefaults()
+    {
+        $this->lazyLoadConfiguration();
+
+        return $this->fieldDefaults;
     }
 
     public function getFields()
@@ -160,18 +168,18 @@ class Schema
         return $this->getRels()->get($name);
     }
 
-    public function getValidators()
+    public function getAsserts()
     {
         $this->lazyLoadConfiguration();
 
-        return $this->validators;
+        return $this->asserts;
     }
 
-    public function setValidators(array $validators)
+    public function setAsserts(array $asserts)
     {
         $this->lazyLoadConfiguration();
 
-        $this->getValidators()->set($validators);
+        $this->getAsserts()->set($asserts);
 
         return $this;
     }
@@ -268,14 +276,13 @@ class Schema
         {
             $this->configurationLoaded = TRUE;
 
-            $this->validators = new Validators();
+            $this->asserts = new Asserts();
             $this->fields = new Fields();
             $this->eventListeners = new EventListeners();
             $this->rels = new Rels();
 
             $this->modelReflection = new ReflectionClass($this->getModelClass());
             $this->table = $this->name = strtolower($this->modelReflection->getShortName());
-            $this->propertyNames = Arr::invoke($this->modelReflection->getProperties(ReflectionProperty::IS_PUBLIC), 'getName');
 
             $this->modelReflection->getMethod('initialize')->invoke(NULL, $this);
 
@@ -288,6 +295,12 @@ class Schema
             }
 
             $this->rels->initialize($this);
+
+            $this->fieldDefaults = array_intersect_key(
+                array_replace($this->fields->all(), $this->modelReflection->getDefaultProperties()),
+                $this->fields->all()
+            );
+
         }
     }
 }

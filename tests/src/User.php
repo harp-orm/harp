@@ -47,6 +47,8 @@ class User extends Model {
 
     public $isBlocked = false;
 
+    public $deletedAt;
+
     /**
      * @return Post
      */
@@ -71,7 +73,7 @@ class User extends Model {
     public static function initialize(Schema $schema)
     {
         $schema
-            ->setSoftDelete(TRUE)
+            ->setSoftDelete(true)
 
             ->setFields([
                 new Field\Integer('id'),

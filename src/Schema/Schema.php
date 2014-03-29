@@ -8,10 +8,11 @@ use CL\Luna\Event\EventDispatcherTrait;
 use CL\Luna\Event\ModelEvent;
 use CL\Luna\Event\Event;
 use CL\Luna\ModelQuery\Delete;
+use CL\Luna\ModelQuery\SoftDelete;
 use CL\Luna\ModelQuery\Update;
 use CL\Luna\ModelQuery\Select;
 use CL\Luna\ModelQuery\Insert;
-use CL\Atlas\SQL\SQL;
+use CL\Luna\Field;
 use CL\Carpo\Asserts;
 
 /*
@@ -200,10 +201,7 @@ class Schema
     {
         if ($this->getSoftDelete())
         {
-            $delete = new Update($this);
-            $delete
-                ->set([self::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
-                ->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
+            $delete = new SoftDelete($this);
         }
         else
         {
@@ -295,6 +293,10 @@ class Schema
             }
 
             $this->rels->initialize($this);
+
+            if ($this->softDelete) {
+                $this->fields->add(new Field\Timestamp('deletedAt'));
+            }
 
             $this->fieldDefaults = array_intersect_key(
                 array_replace($this->fields->all(), $this->modelReflection->getDefaultProperties()),

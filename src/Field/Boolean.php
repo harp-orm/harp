@@ -7,8 +7,6 @@
  */
 class Boolean extends AbstractField
 {
-    protected $default = false;
-
     public function load($value)
     {
         return (bool) $value;

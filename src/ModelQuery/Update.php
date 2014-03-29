@@ -57,9 +57,13 @@ class Update extends UpdateQuery implements SetInterface {
             $values = reset($values);
         }
 
-        return $this
-            ->set($values)
-            ->where([$primaryKey => $ids]);
+        if ($values) {
+            $this
+                ->set($values)
+                ->where([$primaryKey => $ids]);
+        }
+
+        return $this;
     }
 
     public function setModels(array $models)

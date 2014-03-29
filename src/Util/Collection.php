@@ -24,7 +24,9 @@ abstract class Collection
 
     public function set(array $items)
     {
-        array_map([$this, 'add'], $items);
+        foreach ($items as $item) {
+            $this->add($item);
+        }
 
         return $this;
     }

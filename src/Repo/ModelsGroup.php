@@ -69,7 +69,7 @@ class ModelsGroup extends ObjectStorage
         {
             $schema
                 ->getDeleteQuery()
-                    ->setModels($deletedSchemas->getInfo()->toArray())
+                    ->setModels($deleted->getInfo()->toArray())
                     ->execute();
         }
 

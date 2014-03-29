@@ -9,17 +9,9 @@ abstract class AbstractField
 {
     protected $name;
 
-    public function __construct($name, array $properties = NULL)
+    public function __construct($name)
     {
         $this->name = $name;
-
-        if ($properties)
-        {
-            foreach ($properties as $propertyName => $value)
-            {
-                $this->$propertyName = $value;
-            }
-        }
     }
 
     public function getName()

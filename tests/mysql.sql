@@ -22,7 +22,12 @@ DROP TABLE IF EXISTS `post`;
 CREATE TABLE `post` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NULL,
-  `body` varchar(100) NULL,
+  `body` MEDIUMTEXT NULL,
+  `price` DECIMAL(10, 2) NULL,
+  `tags` varchar(255) NULL,
+  `createdAt` TIMESTAMP,
+  `updatedAt` TIMESTAMP,
+  `publishedAt` DATETIME,
   `userId` int(11) UNSIGNED NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -38,8 +43,8 @@ INSERT INTO `address` (`id`, `zipCode`, `location`)
 VALUES
   (1,'1000', 'Belvedere');
 
-INSERT INTO `post` (`id`, `title`, `body`, `userId`)
+INSERT INTO `post` (`id`, `title`, `body`,`price`,`tags`, `createdAt`, `updatedAt`, `publishedAt`, `userId`)
 VALUES
-  (1,'News', 'Big news on the ship', 1),
-  (2,'New President', 'We will have a new president soon', 4),
-  (3,'Oil Spill', 'BP did it again', 5);
+  (1,'News', 'Big news on the ship', 10.20, 'big,small,medium', '2014-02-10 12:00:00', '2014-02-20 12:00:00', '2014-03-01 12:00:00', 1),
+  (2,'New President', 'We will have a new president soon', 10.20, 'medium', '2014-01-10 12:00:00', '2014-01-20 12:00:00', '2014-03-02 12:00:00', 4),
+  (3,'Oil Spill', 'BP did it again', 10.20, 'big,medium', '2014-02-20 12:20:00', '2014-02-23 12:00:00', '2014-3-03 12:00:00', 5);

@@ -3,8 +3,7 @@
 use CL\Luna\Model\Model;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Schema\SchemaTrait;
-use CL\Luna\Field\Integer;
-use CL\Luna\Field\String;
+use CL\Luna\Field;
 use CL\Luna\Rel\BelongsTo;
 use CL\Carpo\Assert;
 
@@ -17,25 +16,15 @@ class Post extends Model {
 
     use SchemaTrait;
 
-    /**
-     * @var integer
-     */
     public $id;
-
-    /**
-     * @var integer
-     */
-    public $userId;
-
-    /**
-     * @var string
-     */
     public $title;
-
-    /**
-     * @var string
-     */
     public $body;
+    public $price;
+    public $tags;
+    public $createdAt;
+    public $updatedAt;
+    public $publishedAt;
+    public $userId;
 
     /**
      * @return LinkOne
@@ -59,9 +48,14 @@ class Post extends Model {
 
         $schema
             ->setFields([
-                new Integer('id'),
-                new String('title'),
-                new String('body'),
+                new Field\Integer('id'),
+                new Field\String('title'),
+                new Field\Text('body'),
+                new Field\Decimal('price'),
+                new Field\Serialized('tags', Field\Serialized::CSV),
+                new Field\Timestamp('createdAt'),
+                new Field\Timestamp('updatedAt'),
+                new Field\DateTime('publishedAt'),
             ]);
 
         $schema

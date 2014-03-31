@@ -38,7 +38,7 @@ class TestTest extends AbstractTestCase {
                 'SELECT user.* FROM user WHERE (user.deletedAt IS NULL) AND (id = 3) LIMIT 1',
                 'SELECT post.* FROM post WHERE (userId IN (3))',
                 'SELECT address.* FROM address WHERE (id = 1) LIMIT 1',
-                'INSERT INTO post (id, title, body, userId) VALUES (NULL, "my title", "my body", 3), (NULL, "my title 2", "my body 2", 3)',
+                'INSERT INTO post (id, title, body, price, tags, createdAt, updatedAt, publishedAt, userId) VALUES (NULL, "my title", "my body", NULL, NULL, NULL, NULL, NULL, 3), (NULL, "my title 2", "my body 2", NULL, NULL, NULL, NULL, NULL, 3)',
                 'UPDATE user SET name = "new name!!", addressId = 1 WHERE (user.deletedAt IS NULL) AND (id IN (3))',
                 'UPDATE address SET zipCode = 2222 WHERE (id IN (1))',
             ],
@@ -76,6 +76,7 @@ class TestTest extends AbstractTestCase {
                 'addressId' => 1,
                 'parentId' => null,
                 'isBlocked' => false,
+                'deletedAt' => null,
             ],
             $user1->getFieldValues()
         );
@@ -87,7 +88,8 @@ class TestTest extends AbstractTestCase {
                 'password' => null,
                 'addressId' => 1,
                 'parentId' => null,
-                'isBlocked' => null
+                'isBlocked' => null,
+                'deletedAt' => null,
             ],
             $user2->getFieldValues()
         );

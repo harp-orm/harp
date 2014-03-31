@@ -16,15 +16,7 @@ class ModelsGroup extends ObjectStorage
 
         if ( ! $model->isEmptyLinks())
         {
-            $links = $model->getLinks();
-
-            foreach ($links as $rel)
-            {
-                foreach ($links->getInfo()->getAll() as $model)
-                {
-                    $this->add($model);
-                }
-            }
+            $this->addAll($model->getLinks()->getModels());
         }
 
         return $this;
@@ -47,14 +39,13 @@ class ModelsGroup extends ObjectStorage
     public function getChanged()
     {
         return $this->filter(function($model) {
-            return ($model->isChanged() AND ! $model->isDeleted() AND ! $model->isNotLoaded());
+            return ($model->isChanged() AND $model->isPersisted());
         });
     }
 
     public function updateLinks()
     {
-        foreach ($this as $model)
-        {
+        foreach ($this as $model) {
             $model->updateLinks();
         }
 

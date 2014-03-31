@@ -77,6 +77,11 @@ class Model {
         return $this;
     }
 
+    public function getState()
+    {
+        return $this->state;
+    }
+
     public function resetOriginals()
     {
         $this->setOriginals($this->getFieldValues());

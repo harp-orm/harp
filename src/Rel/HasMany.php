@@ -39,7 +39,8 @@ class HasMany extends AbstractRel
         foreach ($models as $model)
         {
             $index = $model->{$this->getKey()};
-            $model->setLink($this, new LinkMany(isset($related[$index]) ? $related[$index] : array()));
+            $foreginModels = isset($related[$index]) ? $related[$index] : array();
+            $model->setLink($this, new LinkMany($foreginModels));
         }
     }
 
@@ -50,20 +51,21 @@ class HasMany extends AbstractRel
 
     public function joinRel($query, $parent)
     {
-        $table = $parent ?: $this->getTable();
         $columns = [$this->getForeignKey() => $this->getForeignPrimaryKey()];
 
-        $query->join([$this->getForeignTable() => $this->getName()], $this->getJoinCondition($table, $columns));
+        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignSchema());
+
+        $query->join([$this->getForeignTable() => $this->getName()], $condition);
     }
 
-    public function update(Model $model, LinkInterface $related)
+    public function update(Model $model, LinkInterface $link)
     {
-        foreach ($related->getAdded() as $item)
+        foreach ($link->getAdded() as $item)
         {
             $item->{$this->getForeignKey()} = $model->{$this->getKey()};
         }
 
-        foreach ($related->getRemoved() as $item)
+        foreach ($link->getRemoved() as $item)
         {
             $item->{$this->getForeignKey()} = NULL;
         }

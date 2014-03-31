@@ -65,9 +65,10 @@ class BelongsTo extends AbstractRel
 
     public function joinRel($query, $parent)
     {
-        $table = $parent ?: $this->getTable();
-        $columns = [$this->getForeignPrimaryKey() => $this->getForeignKey()];
+        $columns = [$this->getForeignKey() => $this->getKey()];
 
-        $query->join([$this->getForeignTable() => $this->getName()], $this->getJoinCondition($table, $columns));
+        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignSchema());
+
+        $query->join([$this->getForeignTable() => $this->getName()], $condition);
     }
 }

@@ -16,7 +16,7 @@ abstract class AbstractRel
     protected $schema;
     protected $name;
 
-    public function __construct($name, Schema $foreign_schema, array $properties = NULL)
+    public function __construct($name, Schema $foreign_schema, array $properties = null)
     {
         $this->foreignSchema = $foreign_schema;
         $this->name = $name;
@@ -28,23 +28,6 @@ abstract class AbstractRel
                 $this->$propertyName = $value;
             }
         }
-    }
-
-    public function getJoinCondition($table, array $conditions)
-    {
-        $parts = [];
-
-        foreach ($conditions as $foreignColumn => $column)
-        {
-            $parts []= "{$this->getName()}.{$foreignColumn} = {$table}.{$column}";
-        }
-
-        if ($this->getForeignSchema()->getSoftDelete())
-        {
-            $parts []= $this->getName().'.'.Schema::SOFT_DELETE_KEY.' IS NULL';
-        }
-
-        return 'ON '.join(' AND ', $parts);
     }
 
     public function setSchema(Schema $schema)
@@ -99,7 +82,7 @@ abstract class AbstractRel
         }
         else
         {
-            return NULL;
+            return null;
         }
     }
 

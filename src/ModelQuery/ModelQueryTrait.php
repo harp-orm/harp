@@ -56,12 +56,12 @@ trait ModelQueryTrait {
     {
         $rels = Arr::toAssoc((array) $rels);
 
-        $this->joinNestedRels($this->getSchema(), $rels);
+        $this->joinNestedRels($this->getSchema(), $rels, $this->getSchema()->getTable());
 
         return $this;
     }
 
-    public function joinNestedRels($schema, array $rels, $parent = NULL)
+    public function joinNestedRels($schema, array $rels, $parent)
     {
         foreach ($rels as $name => $childRels)
         {

@@ -25,4 +25,16 @@ class Links extends ObjectStorage
         }
         return $this;
     }
+
+    public function getModels()
+    {
+        $models = new ObjectStorage();
+
+        foreach ($this as $rel)
+        {
+            $models->addAll($this->getInfo()->getAll());
+        }
+
+        return $models;
+    }
 }

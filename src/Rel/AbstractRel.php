@@ -2,7 +2,6 @@
 
 use CL\Luna\Schema\Schema;
 use CL\Luna\Model\Model;
-use CL\Luna\Repo\AbstractLink;
 use CL\Luna\Util\Arr;
 
 /**
@@ -90,9 +89,4 @@ abstract class AbstractRel
     abstract public function getKey();
     abstract public function getForeignKey();
     abstract public function getSelect();
-    abstract public function setLinks(array $models, array $related);
-    abstract public function update(Model $model, AbstractLink $related);
-
-
-
 }

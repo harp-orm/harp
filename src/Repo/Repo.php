@@ -83,16 +83,11 @@ class Repo
 
         $related = $select ? $this->loadModels($select) : array();
 
-        $rel->setLinks($models, $related);
+        $rel->setLinks($models, $related, function($model, $link) use ($rel) {
+            $this->links->setLink($model, $rel->getName(), $link);
+        });
 
         return $related;
-    }
-
-    public function setLink(Model $model, $name, AbstractLink $link)
-    {
-        $this->links->setLink($model, $name, $link);
-
-        return $this;
     }
 
     public function getLink(Model $model, $name)

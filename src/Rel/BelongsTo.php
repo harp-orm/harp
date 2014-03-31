@@ -2,10 +2,11 @@
 
 use CL\Luna\Util\Arr;
 use CL\Luna\Model\Model;
-use CL\Luna\Model\LinkInterface;
+use CL\Luna\Model\AbstractLink;
 use CL\Luna\Model\LinkOne;
 use CL\Luna\Field\Integer;
 use CL\Luna\Schema\Schema;
+use CL\Luna\Repo\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -41,7 +42,7 @@ class BelongsTo extends AbstractRel
 
             $foreginModel = isset($related[$index]) ? $related[$index] : $this->getForeignSchema()->newNotLoadedModel();
 
-            $model->setLink($this, new LinkOne($foreginModel));
+            Repo::getInstance()->setLink($model, $this->getName(), new LinkOne($this, $foreginModel));
         }
     }
 
@@ -55,11 +56,11 @@ class BelongsTo extends AbstractRel
         $this->getSchema()->getFields()->add(new Integer($this->key));
     }
 
-    public function update(Model $model, LinkInterface $related)
+    public function update(Model $model, AbstractLink $link)
     {
-        if ($related->get()->isPersisted())
+        if ($link->get()->isPersisted())
         {
-            $model->{$this->getKey()} = $related->get()->getId();
+            $model->{$this->getKey()} = $link->get()->getId();
         }
     }
 

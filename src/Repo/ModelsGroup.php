@@ -2,6 +2,7 @@
 
 use CL\Luna\Util\ObjectStorage;
 use CL\Luna\Model\Model;
+use CL\Luna\Repo\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -10,18 +11,6 @@ use CL\Luna\Model\Model;
  */
 class ModelsGroup extends ObjectStorage
 {
-    public function add(Model $model)
-    {
-        $this->attach($model);
-
-        if ( ! $model->isEmptyLinks())
-        {
-            $this->addAll($model->getLinks()->getModels());
-        }
-
-        return $this;
-    }
-
     public function getDeleted()
     {
         return $this->filter(function($model) {
@@ -46,7 +35,7 @@ class ModelsGroup extends ObjectStorage
     public function updateLinks()
     {
         foreach ($this as $model) {
-            $model->updateLinks();
+            Repo::getInstance()->updateLinks($model);
         }
 
         return $this;

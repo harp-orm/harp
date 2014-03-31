@@ -6,6 +6,7 @@ use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field\String;
 use CL\Luna\Field\Integer;
 use CL\Luna\Rel\HasMany;
+use CL\Luna\Repo\Repo;
 use CL\Carpo\Assert;
 
 /**
@@ -37,7 +38,7 @@ class Address extends Model {
      */
     public function users()
     {
-        return parent::getLinkByName('users');
+        return Repo::getInstance()->getLink($this, 'users');
     }
 
     public static function initialize(Schema $schema)

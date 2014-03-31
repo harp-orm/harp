@@ -4,6 +4,7 @@ use CL\Luna\Model\Model;
 use CL\Luna\ModelQuery\Select;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Rel\AbstractRel;
+use CL\Luna\Model\AbstractLink;
 
 /*
  * @author     Ivan Kerin
@@ -24,10 +25,12 @@ class Repo
     }
 
     private $map;
+    private $links;
 
     public function __construct()
     {
         $this->map = new IdentityMap();
+        $this->links = new LinksMap();
     }
 
     public function getModel(Model $model)
@@ -85,6 +88,30 @@ class Repo
         return $related;
     }
 
+    public function setLink(Model $model, $name, AbstractLink $link)
+    {
+        $this->links->setLink($model, $name, $link);
+
+        return $this;
+    }
+
+    public function getLink(Model $model, $name)
+    {
+        return $this->links->getLink($model, $name);
+    }
+
+    public function getLinks()
+    {
+        return $this->links;
+    }
+
+    public function updateLinks(Model $model)
+    {
+        $this->links->update($model);
+
+        return $this;
+    }
+
     public function persistArray(array $models)
     {
         array_walk($models, [$this, 'persist']);
@@ -96,8 +123,9 @@ class Repo
     {
         $models = new ModelsGroup();
 
+        $models->addAll($this->links->getLinkedModels($model));
+
         $models
-            ->add($model)
             ->persistDeleted()
             ->updateLinks()
             ->persistPending()

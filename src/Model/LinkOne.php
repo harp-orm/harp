@@ -1,21 +1,23 @@
 <?php namespace CL\Luna\Model;
 
-use CL\Luna\Util\ObjectStorage;
-use CL\Luna\Schema\Schema;
-use CL\Luna\Repo\Repo;
+use CL\Luna\Util\Storage;
+use CL\Luna\Rel\AbstractRel;
+use SplObjectStorage;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class LinkOne implements LinkInterface
+class LinkOne extends AbstractLink
 {
     protected $model;
     protected $original;
 
-    public function __construct(Model $model)
+    public function __construct(AbstractRel $rel, Model $model)
     {
+        parent::__construct($rel);
+
         $this->model = $model;
         $this->original = $model;
     }
@@ -39,7 +41,7 @@ class LinkOne implements LinkInterface
 
     public function getAll()
     {
-        $all = new ObjectStorage();
+        $all = new SplObjectStorage();
         $all->attach($this->model);
         $all->attach($this->original);
 

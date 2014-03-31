@@ -1,6 +1,7 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
+use CL\Luna\Repo\Repo;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field;
@@ -31,12 +32,12 @@ class Post extends Model {
      */
     public function getUser()
     {
-        return parent::getLinkByName('user');
+        return Repo::getInstance()->getLink($this, 'user');
     }
 
     public function setUser(User $user)
     {
-        return parent::setLinkByName('user', $user);
+        return Repo::getInstance()->getLink($this, 'user')->set($user);
     }
 
     public static function initialize(Schema $schema)

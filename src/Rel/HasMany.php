@@ -2,8 +2,9 @@
 
 use CL\Luna\Model\Model;
 use CL\Luna\Model\LinkMany;
-use CL\Luna\Model\LinkInterface;
+use CL\Luna\Model\AbstractLink;
 use CL\Luna\Util\Arr;
+use CL\Luna\Repo\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -40,7 +41,9 @@ class HasMany extends AbstractRel
         {
             $index = $model->{$this->getKey()};
             $foreginModels = isset($related[$index]) ? $related[$index] : array();
-            $model->setLink($this, new LinkMany($foreginModels));
+
+            Repo::getInstance()->setLink($model, $this->getName(), new LinkMany($this, $foreginModels));
+
         }
     }
 
@@ -58,7 +61,7 @@ class HasMany extends AbstractRel
         $query->join([$this->getForeignTable() => $this->getName()], $condition);
     }
 
-    public function update(Model $model, LinkInterface $link)
+    public function update(Model $model, AbstractLink $link)
     {
         foreach ($link->getAdded() as $item)
         {

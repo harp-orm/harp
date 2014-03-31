@@ -44,9 +44,19 @@ trait SchemaTrait
         return self::getSchema()->getFields();
     }
 
+    public static function getField($name)
+    {
+        return self::getSchema()->getFields()->get($name);
+    }
+
     public static function getRels()
     {
         return self::getSchema()->getRels();
+    }
+
+    public static function getRel($name)
+    {
+        return self::getSchema()->getRels()->get($name);
     }
 
     public static function getValidators()

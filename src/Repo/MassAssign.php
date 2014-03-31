@@ -3,7 +3,7 @@
 use CL\Luna\Model\Model;
 use CL\Luna\Model\LinkOne;
 use CL\Luna\Model\LinkMany;
-use CL\Luna\Model\LinkInterface;
+use CL\Luna\Model\AbstractLink;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Schema\Rels;
 use CL\Luna\Repo\Repo;
@@ -52,14 +52,13 @@ class MassAssign
         $data = $this->extractRelsData($data, $rels);
 
         foreach ($data as $relName => $relData) {
-            $rel = $rels->get($relName);
-            $link = $model->getLink($rel);
+            $link = Repo::getInstance()->getLink($model, $relName);
 
-            $this->setLink($rel, $link, $relData, $this->extractPermitted($permitted, $relName));
+            $this->setLink($model::getRel($relName), $link, $relData, $this->extractPermitted($permitted, $relName));
         }
     }
 
-    public function setLink(AbstractRel $rel, LinkInterface $link, $data, $permitted)
+    public function setLink(AbstractRel $rel, AbstractLink $link, $data, $permitted)
     {
         if ($link instanceof LinkOne)
         {
@@ -67,11 +66,11 @@ class MassAssign
         }
         elseif ($link instanceof LinkMany)
         {
-            $link->removeAll($link);
+            $link->clear();
 
             foreach ($data as $dataItem)
             {
-                $link->attach($this->loadModel($rel, $dataItem, $permitted));
+                $link->add($this->loadModel($rel, $dataItem, $permitted));
             }
         }
     }

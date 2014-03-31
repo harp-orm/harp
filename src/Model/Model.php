@@ -22,7 +22,7 @@ class Model {
 
     private $errors;
     private $state;
-    private $links;
+    // private $links;
 
     public function __construct(array $fields = NULL, $state = self::PENDING)
     {
@@ -139,60 +139,6 @@ class Model {
         $this->getSchema()->dispatchEvent($type, $this);
 
         return $this;
-    }
-
-    public function setLink(AbstractRel $rel, LinkInterface $link)
-    {
-        $this->getLinks()->attach($rel, $link);
-    }
-
-    public function isEmptyLinks()
-    {
-        return ($this->links === NULL OR empty($this->links));
-    }
-
-    public function getLinks()
-    {
-        if ($this->links === NULL)
-        {
-            $this->links = new Links();
-        }
-
-        return $this->links;
-    }
-
-    public function getLink(AbstractRel $rel)
-    {
-        if ( ! $this->getLinks()->contains($rel))
-        {
-            $this->getLinks()->load($rel, $this);
-        }
-
-        return $this->getLinks()->offsetGet($rel);
-    }
-
-    public function getLinkByName($name)
-    {
-        $rel = $this->getSchema()->getRel($name);
-
-        return $this->getLink($rel);
-    }
-
-    public function setLinkByName($name, LinkInterface $link)
-    {
-        $rel = $this->getSchema()->getRel($name);
-
-        $this->setLink($rel, $link);
-
-        return $this;
-    }
-
-    public function updateLinks()
-    {
-        if ( ! $this->isEmptyLinks())
-        {
-            $this->getLinks()->update($this);
-        }
     }
 
     public function getErrors()

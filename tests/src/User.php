@@ -8,6 +8,7 @@ use CL\Luna\Rel\BelongsTo;
 use CL\Luna\Rel\HasMany;
 use CL\Carpo\Assert;
 use CL\Luna\Model\ModelEvent;
+use CL\Luna\Repo\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -54,7 +55,7 @@ class User extends Model {
      */
     public function getAddress()
     {
-        return parent::getLinkByName('address');
+        return Repo::getInstance()->getLink($this, 'address');
     }
 
     /**
@@ -62,7 +63,7 @@ class User extends Model {
      */
     public function getPosts()
     {
-        return parent::getLinkByName('posts');
+        return Repo::getInstance()->getLink($this, 'posts');
     }
 
     public static function test($model)

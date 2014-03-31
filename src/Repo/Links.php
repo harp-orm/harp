@@ -1,7 +1,6 @@
 <?php namespace CL\Luna\Repo;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\AbstractLink;
 use CL\Luna\Util\Collection;
 use SplObjectStorage;
 

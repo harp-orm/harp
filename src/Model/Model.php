@@ -22,7 +22,6 @@ class Model {
 
     private $errors;
     private $state;
-    // private $links;
 
     public function __construct(array $fields = NULL, $state = self::PENDING)
     {

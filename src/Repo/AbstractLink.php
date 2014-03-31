@@ -1,8 +1,9 @@
-<?php namespace CL\Luna\Model;
+<?php namespace CL\Luna\Repo;
 
 use CL\Luna\Util\ObjectStorage;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Rel\AbstractRel;
+use CL\Luna\Model\Model;
 
 /**
  * @author     Ivan Kerin

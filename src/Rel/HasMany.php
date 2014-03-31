@@ -1,8 +1,8 @@
 <?php namespace CL\Luna\Rel;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\LinkMany;
-use CL\Luna\Model\AbstractLink;
+use CL\Luna\Repo\LinkMany;
+use CL\Luna\Repo\AbstractLink;
 use CL\Luna\Util\Arr;
 use CL\Luna\Repo\Repo;
 

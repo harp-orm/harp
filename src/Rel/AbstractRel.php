@@ -2,7 +2,7 @@
 
 use CL\Luna\Schema\Schema;
 use CL\Luna\Model\Model;
-use CL\Luna\Model\AbstractLink;
+use CL\Luna\Repo\AbstractLink;
 use CL\Luna\Util\Arr;
 
 /**

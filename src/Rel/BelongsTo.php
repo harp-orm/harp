@@ -2,8 +2,8 @@
 
 use CL\Luna\Util\Arr;
 use CL\Luna\Model\Model;
-use CL\Luna\Model\AbstractLink;
-use CL\Luna\Model\LinkOne;
+use CL\Luna\Repo\AbstractLink;
+use CL\Luna\Repo\LinkOne;
 use CL\Luna\Field\Integer;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Repo\Repo;

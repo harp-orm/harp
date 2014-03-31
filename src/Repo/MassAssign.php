@@ -1,9 +1,6 @@
 <?php namespace CL\Luna\Repo;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\LinkOne;
-use CL\Luna\Model\LinkMany;
-use CL\Luna\Model\AbstractLink;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Schema\Rels;
 use CL\Luna\Repo\Repo;

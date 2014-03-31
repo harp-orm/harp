@@ -4,7 +4,7 @@ use CL\Luna\Model\Model;
 use CL\Luna\ModelQuery\Select;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Rel\AbstractRel;
-use CL\Luna\Model\AbstractLink;
+use CL\Luna\Repo\AbstractLink;
 
 /*
  * @author     Ivan Kerin

@@ -87,7 +87,10 @@ class Repo
     public static function loadModels(Select $select)
     {
         $models = $select->execute()->fetchAll();
-        return self::getMap()->getAll($models);
+
+        $loadedModels = self::getMap()->getAll($models);
+
+        return $loadedModels;
     }
 
     public static function loadModel(Schema $schema, $id)

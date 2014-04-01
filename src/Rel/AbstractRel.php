@@ -3,6 +3,7 @@
 use CL\Luna\Schema\Schema;
 use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
+use Closure;
 
 /**
  * @author     Ivan Kerin
@@ -71,22 +72,13 @@ abstract class AbstractRel
         return $this->getForeignSchema()->getPrimaryKey();
     }
 
-    public function getSelectForModels(array $models)
+    public function getKeysFrom(array $models)
     {
-        $parentKeys = array_filter(array_unique(Arr::extract($models, $this->getKey())));
-
-        if ($parentKeys)
-        {
-            return $this->getSelect()->where([$this->getForeignKey() => $parentKeys]);
-        }
-        else
-        {
-            return null;
-        }
+        return array_filter(array_unique(Arr::extract($models, $this->getKey())));
     }
 
     abstract public function initialize();
     abstract public function getKey();
     abstract public function getForeignKey();
-    abstract public function getSelect();
+    abstract public function groupForeignModels(array $models, array $related, Closure $set_link);
 }

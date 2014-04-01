@@ -27,23 +27,27 @@ class BelongsTo extends AbstractRel implements LinkOneInterface
         return $this->getSchema()->getPrimaryKey();
     }
 
-    public function getSelect()
+    public function loadForeignModels(array $models)
     {
-        return $this->getForeignSchema()->getSelectQuery();
+        $keys = $this->getKeysFrom($models);
+
+        return $keys ? $this->getForeignSchema()->getSelectQuery()->where([$this->getForeignKey() => $keys])->execute()->fetchAll() : array();
     }
 
-    public function setLinks(array $models, array $related, Closure $set_link)
+    public function groupForeignModels(array $models, array $foreign, Closure $yield)
     {
-        $related = Arr::index($related, $this->getForeignKey());
+        $foreign = Arr::index($foreign, $this->getForeignKey());
 
         foreach ($models as $model)
         {
             $index = $model->{$this->getKey()};
 
-            $foreginModel = isset($related[$index]) ? $related[$index] : $this->getForeignSchema()->newNotLoadedModel();
+            $foreginModel = isset($foreign[$index]) ? $foreign[$index] : $this->getForeignSchema()->newNotLoadedModel();
 
-            $set_link($model, new LinkOne($this, $foreginModel));
+            $yield($model, new LinkOne($this, $foreginModel));
         }
+
+        return $this;
     }
 
     public function initialize()

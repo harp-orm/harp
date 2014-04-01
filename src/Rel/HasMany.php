@@ -22,7 +22,7 @@ class HasMany extends AbstractRel implements LinkManyInterface
 
     public function getKey()
     {
-        return $this->getSchema()->getPrimaryKey();
+        return $this->getPrimaryKey();
     }
 
     public function initialize()
@@ -33,14 +33,21 @@ class HasMany extends AbstractRel implements LinkManyInterface
         }
     }
 
-    public function setLinks(array $models, array $related, Closure $set_link)
+    public function loadForeignModels(array $models)
     {
-        $related = Arr::indexGroup($related, $this->getForeignKey());
+        $keys = $this->getKeysFrom($models);
+
+        return $keys ? $this->getForeignSchema()->getSelectQuery()->where([$this->getForeignKey() => $keys])->execute()->fetchAll() : array();
+    }
+
+    public function groupForeignModels(array $models, array $foreign, Closure $set_link)
+    {
+        $foreign = Arr::indexGroup($foreign, $this->getForeignKey());
 
         foreach ($models as $model)
         {
             $index = $model->{$this->getKey()};
-            $foreginModels = isset($related[$index]) ? $related[$index] : array();
+            $foreginModels = isset($foreign[$index]) ? $foreign[$index] : array();
 
             $set_link($model, new LinkMany($this, $foreginModels));
         }

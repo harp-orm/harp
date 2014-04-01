@@ -12,6 +12,4 @@ use Closure;
 interface LinkOneInterface
 {
     public function update(Model $model, LinkOne $link);
-
-    public function setLinks(array $models, array $related, Closure $set_link);
 }

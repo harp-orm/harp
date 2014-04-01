@@ -126,14 +126,14 @@ class Repo
 
     public static function loadLinks(AbstractRel $rel, array $models)
     {
-        $select = $rel->getSelectForModels($models);
+        $foreign = $rel->loadForeignModels($models);
 
-        $related = $select ? self::loadModels($select) : array();
+        $foreign = self::getMap()->getAll($foreign);
 
-        $rel->setLinks($models, $related, function($model, $link) use ($rel) {
+        $rel->groupForeignModels($models, $foreign, function($model, $link) use ($rel) {
             self::getLinks()->setLink($model, $rel->getName(), $link);
         });
 
-        return $related;
+        return $foreign;
     }
 }

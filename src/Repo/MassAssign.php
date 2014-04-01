@@ -21,7 +21,7 @@ class MassAssign
         if (isset($data[$schema->getPrimaryKey()]))
         {
             $id = $data[$schema->getPrimaryKey()];
-            return Repo::getInstance()->loadModel($schema, $id);
+            return Repo::loadModel($schema, $id);
         }
         else
         {
@@ -49,7 +49,7 @@ class MassAssign
         $data = $this->extractRelsData($data, $rels);
 
         foreach ($data as $relName => $relData) {
-            $link = Repo::getInstance()->getLink($model, $relName);
+            $link = Repo::getLink($model, $relName);
 
             $this->setLink($model::getRel($relName), $link, $relData, $this->extractPermitted($permitted, $relName));
         }

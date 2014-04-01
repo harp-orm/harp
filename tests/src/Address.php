@@ -38,7 +38,7 @@ class Address extends Model {
      */
     public function users()
     {
-        return Repo::getInstance()->getLink($this, 'users');
+        return Repo::getLink($this, 'users');
     }
 
     public static function initialize(Schema $schema)

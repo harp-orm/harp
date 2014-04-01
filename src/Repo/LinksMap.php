@@ -2,6 +2,7 @@
 
 use CL\Luna\Model\Model;
 use CL\Luna\Schema\Schema;
+use CL\Luna\Util\Storage;
 use SplObjectStorage;
 
 /*
@@ -13,7 +14,7 @@ class LinksMap
 {
     private $links;
 
-    public function __construct()
+    function __construct()
     {
         $this->links = new SplObjectStorage();
     }
@@ -23,15 +24,13 @@ class LinksMap
         if ($this->links->contains($model)) {
             return $this->links[$model];
         } else {
-            $links = new Links();
-            $this->links[$model] = $links;
-            return $links;
+            return $this->links[$model] = new Links();
         }
     }
 
     public function isEmpty(Model $model)
     {
-        return (! $this->has($model) or $this->get($model)->isEmpty());
+        return (! $this->links->contains($model) or $this->links[$model]->isEmpty());
     }
 
     public function has(Model $model)
@@ -45,8 +44,7 @@ class LinksMap
 
         if ( ! $links->has($name))
         {
-            Repo::getInstance()->loadLinkArray($model::getRel($name), [$model]);
-
+            Repo::loadLinks($model->getSchema()->getRel($name), [$model]);
         }
 
         return $links->get($name);
@@ -59,10 +57,13 @@ class LinksMap
         return $this;
     }
 
-    public function update(Model $model)
+    public function updateAll(SplObjectStorage $models)
     {
-        if ( ! $this->isEmpty($model))
-        {
+        $models = Storage::filter($models, function($model){
+            return ! $this->isEmpty($model);
+        });
+
+        foreach ($models as $model) {
             $this->get($model)->updateAll($model);
         }
     }
@@ -75,27 +76,11 @@ class LinksMap
 
         if ( ! $this->isEmpty($model))
         {
-            $linkedModels = $this->get($model)->getAllModels();
+            $linkedModels = $this->get($model)->getModelsRecursive();
 
             $models->addAll($linkedModels);
         }
 
         return $models;
-    }
-
-    public function dump()
-    {
-        echo "\n";
-        foreach ($this->links as $model) {
-            echo get_class($model).' ('.$model->getId().")\n";
-
-            $links = $this->links->getInfo();
-
-            if ( ! $links->isEmpty()) {
-                foreach ($links->all() as $name => $link) {
-                    echo '  - '.$name.': '.get_class($link)."\n";
-                }
-            }
-        }
     }
 }

@@ -32,12 +32,12 @@ class Post extends Model {
      */
     public function getUser()
     {
-        return Repo::getInstance()->getLink($this, 'user');
+        return Repo::getLink($this, 'user')->get();
     }
 
     public function setUser(User $user)
     {
-        return Repo::getInstance()->getLink($this, 'user')->set($user);
+        return Repo::getLink($this, 'user')->set($user);
     }
 
     public static function initialize(Schema $schema)

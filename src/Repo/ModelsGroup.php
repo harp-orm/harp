@@ -1,94 +1,50 @@
 <?php namespace CL\Luna\Repo;
 
-use CL\Luna\Util\ObjectStorage;
-use CL\Luna\Model\Model;
-use CL\Luna\Repo\Repo;
+use CL\Luna\Util\Storage;
+use SplObjectStorage;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class ModelsGroup extends ObjectStorage
+class ModelsGroup
 {
-    public function getDeleted()
+    public static function filterDeleted(SplObjectStorage $models)
     {
-        return $this->filter(function($model) {
+        return Storage::filter($models, function($model) {
             return $model->isDeleted();
         });
     }
 
-    public function getPending()
+    public static function filterPending(SplObjectStorage $models)
     {
-        return $this->filter(function($model) {
+        return Storage::filter($models, function($model) {
             return $model->isPending();
         });
     }
 
-    public function getChanged()
+    public static function filterChanged(SplObjectStorage $models)
     {
-        return $this->filter(function($model) {
+        return Storage::filter($models, function($model) {
             return ($model->isChanged() AND $model->isPersisted());
         });
     }
 
-    public function updateLinks()
+    public static function persist(SplObjectStorage $models, $query_type)
     {
-        foreach ($this as $model) {
-            Repo::getInstance()->updateLinks($model);
-        }
-
-        return $this;
-    }
-
-    public function persistDeleted()
-    {
-        $deleted = $this->getDeleted()->groupBySchema();
-
-        foreach ($deleted as $schema)
-        {
-            $schema
-                ->getDeleteQuery()
-                    ->setModels($deleted->getInfo()->toArray())
-                    ->execute();
-        }
-
-        return $this;
-    }
-
-    public function persistChanged()
-    {
-        $changed = $this->getChanged()->groupBySchema();
-
-        foreach ($changed as $schema)
-        {
-            $schema
-                ->getUpdateQuery()
-                    ->setModels($changed->getInfo()->toArray())
-                    ->execute();
-        }
-
-        return $this;
-    }
-
-    public function persistPending()
-    {
-        $new = $this->getPending()->groupBySchema();
-
-        foreach ($new as $schema)
-        {
-            $schema
-                ->getInsertQuery()
-                    ->setModels($new->getInfo()->toArray())
-                    ->execute();
-        }
-        return $this;
-    }
-
-    public function groupBySchema()
-    {
-        return $this->groupBy(function($item) {
-            return $item->getSchema();
+        $groups = Storage::groupBy($models, function($model) {
+            return $model->getSchema();
         });
+
+        foreach ($groups as $schema) {
+
+            $models = Storage::toArray($groups->getInfo());
+
+            $schema
+                ->getQuery($query_type)
+                ->setModels($models)
+                ->execute();
+        }
     }
 }

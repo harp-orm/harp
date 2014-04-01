@@ -4,7 +4,7 @@ use CL\Luna\Model\Model;
 use CL\Luna\ModelQuery\Select;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Rel\AbstractRel;
-use CL\Luna\Repo\AbstractLink;
+use SplObjectStorage;
 
 /*
  * @author     Ivan Kerin
@@ -13,120 +13,130 @@ use CL\Luna\Repo\AbstractLink;
  */
 class Repo
 {
-    private static $instance;
+    private static $links;
+    private static $map;
 
-    public static function getInstance()
+    public static function getLinks()
     {
-        if (self::$instance === NULL)
-        {
-            self::$instance = new Repo();
+        if (self::$links === null) {
+            self::$links = new LinksMap();
         }
-        return self::$instance;
+
+        return self::$links;
     }
 
-    private $map;
-    private $links;
-
-    public function __construct()
+    public static function getMap()
     {
-        $this->map = new IdentityMap();
-        $this->links = new LinksMap();
+        if (self::$map === null) {
+            self::$map = new IdentityMap();
+        }
+
+        return self::$map;
     }
 
-    public function getModel(Model $model)
+    public static function persistArray(array $models)
     {
-        $this->map->get($model);
+        $models = new SplObjectStorage();
+
+        foreach ($models as $model) {
+            $models->addAll(self::getLinks()->getLinkedModels($model));
+        }
+
+        self::persistModels($models);
     }
 
-    public function loadModels(Select $select)
+    public static function persist(Model $model)
+    {
+        $models = self::getLinks()->getLinkedModels($model);
+
+        self::persistModels($models);
+    }
+
+    public static function persistModels(SplObjectStorage $models)
+    {
+        ModelsGroup::persist(
+            ModelsGroup::filterDeleted($models),
+            Schema::DELETE
+        );
+
+        self::getLinks()->updateAll($models);
+
+        ModelsGroup::persist(
+            ModelsGroup::filterPending($models),
+            Schema::INSERT
+        );
+
+        self::getLinks()->updateAll($models);
+
+        ModelsGroup::persist(
+            ModelsGroup::filterChanged($models),
+            Schema::UPDATE
+        );
+    }
+
+    public static function getModel(Model $model)
+    {
+        return self::getMap()->get($model);
+    }
+
+    public static function getLink(Model $model, $name)
+    {
+        return self::getLinks()->getLink($model, $name);
+    }
+
+    public static function loadModels(Select $select)
     {
         $models = $select->execute()->fetchAll();
-        return $this->map->getAll($models);
+        return self::getMap()->getAll($models);
     }
 
-    public function loadModel(Schema $schema, $id)
+    public static function loadModel(Schema $schema, $id)
     {
-        $key = $this->map->getUniqueKey($schema, $id);
+        $key = IdentityMap::getUniqueKey($schema, $id);
 
-        if ($this->map->hasKey($key))
+        if (self::getMap()->hasKey($key))
         {
-            return $this->map->getKey($key);
+            return self::getMap()->getKey($key);
         }
         else
         {
-            return $this->map->get(
+            return self::getMap()->get(
                 $schema->getSelectQuery()->whereKey($id)->first()
             );
         }
     }
 
-    public function loadLinks(Schema $schema, array $models, array $rels)
+    public static function loadRels(Schema $schema, array $models, array $rels)
     {
         foreach ($rels as $relName => $childRelNames)
         {
             $rel = $schema->getRel($relName);
 
-            $relatedModels = $this->loadLinkArray($rel, $models);
+            $relatedModels = self::loadLinks($rel, $models);
 
             if ($childRelNames)
             {
-                $this->loadLinks($rel->getForeignSchema(), $relatedModels, $childRelNames);
+                self::loadRels($rel->getForeignSchema(), $relatedModels, $childRelNames);
             }
         }
-
-        return $this;
     }
 
-    public function loadLinkArray(AbstractRel $rel, array $models)
+    public static function loadLinks(AbstractRel $rel, array $models)
     {
         $select = $rel->getSelectForModels($models);
 
-        $related = $select ? $this->loadModels($select) : array();
+        $related = $select ? self::loadModels($select) : array();
 
         $rel->setLinks($models, $related, function($model, $link) use ($rel) {
-            $this->links->setLink($model, $rel->getName(), $link);
+            self::getLinks()->setLink($model, $rel->getName(), $link);
         });
 
         return $related;
     }
 
-    public function getLink(Model $model, $name)
+    public static function updateLinks(Model $model)
     {
-        return $this->links->getLink($model, $name);
+        self::getLinks()->update($model);
     }
 
-    public function getLinks()
-    {
-        return $this->links;
-    }
-
-    public function updateLinks(Model $model)
-    {
-        $this->links->update($model);
-
-        return $this;
-    }
-
-    public function persistArray(array $models)
-    {
-        array_walk($models, [$this, 'persist']);
-
-        return $this;
-    }
-
-    public function persist(Model $model)
-    {
-        $models = new ModelsGroup();
-
-        $models->addAll($this->links->getLinkedModels($model));
-
-        $models
-            ->persistDeleted()
-            ->updateLinks()
-            ->persistPending()
-            ->updateLinks()
-            ->persistChanged();
-
-        return $this;
-    }
 }

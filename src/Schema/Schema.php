@@ -213,7 +213,7 @@ class Schema
 
     public function getUpdateQuery()
     {
-        $update = (new Update($this));
+        $update = new Update($this);
 
         if ($this->getSoftDelete())
         {
@@ -225,7 +225,7 @@ class Schema
 
     public function getSelectQuery()
     {
-        $select = (new Select($this));
+        $select = new Select($this);
 
         if ($this->getSoftDelete())
         {

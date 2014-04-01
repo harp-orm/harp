@@ -31,7 +31,7 @@ class TestTest extends AbstractTestCase {
             'name' => 'new name!!',
         ]);
 
-        Repo::getInstance()->persist($user3);
+        Repo::persist($user3);
 
         $this->assertEquals(
             [
@@ -52,11 +52,11 @@ class TestTest extends AbstractTestCase {
 
         $posts = Post::all()->loadWith(['user' => 'address']);
 
-        $user1 = $posts[0]->getUser()->get();
-        $user2 = $posts[1]->getUser()->get();
+        $user1 = $posts[0]->getUser();
+        $user2 = $posts[1]->getUser();
 
-        $address1 = $posts[0]->getUser()->get()->getAddress()->get();
-        $address2 = $posts[1]->getUser()->get()->getAddress()->get();
+        $address1 = $posts[0]->getUser()->getAddress();
+        $address2 = $posts[1]->getUser()->getAddress();
 
         $this->assertEquals(
             [

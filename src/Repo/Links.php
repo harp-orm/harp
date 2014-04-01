@@ -29,7 +29,7 @@ class Links extends Collection
         return $this;
     }
 
-    public function getAllModels()
+    public function getModelsRecursive()
     {
         $models = new SplObjectStorage();
 

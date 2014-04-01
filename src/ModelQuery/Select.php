@@ -30,14 +30,14 @@ class Select extends SelectQuery {
 
         $rels = Arr::toAssoc( (array) $rels);
 
-        Repo::getInstance()->loadLinks($this->getSchema(), $models, $rels);
+        Repo::loadRels($this->getSchema(), $models, $rels);
 
         return $models;
     }
 
     public function load()
     {
-        return Repo::getInstance()->loadModels($this);
+        return Repo::loadModels($this);
     }
 
     public function first()

@@ -51,11 +51,19 @@ class User extends Model {
     public $deletedAt;
 
     /**
-     * @return Post
+     * @return Address
      */
     public function getAddress()
     {
-        return Repo::getInstance()->getLink($this, 'address');
+        return Repo::getLink($this, 'address')->get();
+    }
+
+    /**
+     * @return Address
+     */
+    public function setAddress(Address $address)
+    {
+        return Repo::getLink($this, 'address')->set($address);
     }
 
     /**
@@ -63,7 +71,7 @@ class User extends Model {
      */
     public function getPosts()
     {
-        return Repo::getInstance()->getLink($this, 'posts');
+        return Repo::getLink($this, 'posts');
     }
 
     public static function test($model)

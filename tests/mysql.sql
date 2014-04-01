@@ -32,12 +32,26 @@ CREATE TABLE `post` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `profile`;
+CREATE TABLE `profile` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(100) NULL,
+  `lastName` varchar(100) NULL,
+  `userId` int(11) UNSIGNED NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 INSERT INTO `user` (`id`, `name`, `addressId`, `isBlocked`)
 VALUES
   (1,'User 1', 1, 0),
   (2,'User 2', NULL, 1),
   (3,'User 3', NULL, 1),
   (4,'User 4', 1, NULL);
+
+INSERT INTO `profile` (`id`, `firstName`, `lastName`, `userId`)
+VALUES
+  (1,'John', 'Doe', 1),
+  (2,'Foo', 'Bar', 2);
 
 INSERT INTO `address` (`id`, `zipCode`, `location`)
 VALUES

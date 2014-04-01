@@ -4,8 +4,7 @@ use CL\Luna\Model\Model;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field;
-use CL\Luna\Rel\BelongsTo;
-use CL\Luna\Rel\HasMany;
+use CL\Luna\Rel;
 use CL\Carpo\Assert;
 use CL\Luna\Model\ModelEvent;
 use CL\Luna\Repo\Repo;
@@ -67,6 +66,22 @@ class User extends Model {
     }
 
     /**
+     * @return Profile
+     */
+    public function getProfile()
+    {
+        return Repo::getLink($this, 'profile')->get();
+    }
+
+    /**
+     * @return Profile
+     */
+    public function setProfile(Profile $profile)
+    {
+        return Repo::getLink($this, 'profile')->set($profile);
+    }
+
+    /**
      * @return Collection
      */
     public function getPosts()
@@ -92,8 +107,9 @@ class User extends Model {
             ])
 
             ->setRels([
-                new BelongsTo('address', Address::getSchema()),
-                new HasMany('posts', Post::getSchema()),
+                new Rel\BelongsTo('address', Address::getSchema()),
+                new Rel\HasMany('posts', Post::getSchema()),
+                new Rel\HasOne('profile', Profile::getSchema()),
             ])
 
             ->setAsserts([

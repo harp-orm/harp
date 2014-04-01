@@ -40,6 +40,11 @@ class LinkOne extends AbstractLink
         return $this->original;
     }
 
+    public function isChanged()
+    {
+        return $this->model !== $this->original;
+    }
+
     public function getAll()
     {
         $all = new SplObjectStorage();

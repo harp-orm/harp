@@ -41,5 +41,4 @@ class Links extends Collection
 
         return $models;
     }
-
 }

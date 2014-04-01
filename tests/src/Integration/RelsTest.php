@@ -12,9 +12,10 @@ class RelsTest extends AbstractTestCase {
     {
         Log::setEnabled(TRUE);
 
-        $user = Post::all()->joinRels(['user' => 'address']);
+        $users = User::all()->loadWith(['profile', 'posts']);
 
-        $user->load();
+        var_dump($users[0]->getProfile());
+        var_dump($users[3]->getProfile());
 
         var_dump(Log::all());
     }

@@ -4,6 +4,7 @@ use CL\Luna\Schema\Schema;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Log;
 use CL\Atlas\DB;
+use InvalidArgumentException;
 
 /**
  * @author     Ivan Kerin
@@ -66,6 +67,12 @@ trait ModelQueryTrait {
         foreach ($rels as $name => $childRels)
         {
             $rel = $schema->getRel($name);
+
+            if (! $rel) {
+                throw new InvalidArgumentException(
+                    sprintf('Relation %s does not exist on %s when joining', $name, $schema->getName())
+                );
+            }
             $rel->joinRel($this, $parent);
 
             if ($childRels)

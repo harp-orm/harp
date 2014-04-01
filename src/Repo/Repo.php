@@ -133,10 +133,4 @@ class Repo
 
         return $related;
     }
-
-    public static function updateLinks(Model $model)
-    {
-        self::getLinks()->update($model);
-    }
-
 }

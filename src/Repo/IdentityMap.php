@@ -29,16 +29,18 @@ class IdentityMap
 
     public function get(Model $model)
     {
-        $key = self::modelUnqiueKey($model);
+        if ($model->isPersisted()) {
+            $key = self::modelUnqiueKey($model);
 
-        if ($this->hasKey($key))
-        {
-            return $this->getKey($key);
-        }
-        else
-        {
-            $this->setKey($key, $model);
-            return $model;
+            if ($this->hasKey($key))
+            {
+                return $this->getKey($key);
+            }
+            else
+            {
+                $this->setKey($key, $model);
+                return $model;
+            }
         }
 
         return $model;

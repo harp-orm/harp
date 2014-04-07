@@ -133,9 +133,9 @@ class Model {
         return $this;
     }
 
-    public function dispatchEvent($type)
+    public function dispatchEvent($event)
     {
-        $this->getSchema()->dispatchEvent($type, $this);
+        $this->getSchema()->dispatchEvent($event, $this);
 
         return $this;
     }

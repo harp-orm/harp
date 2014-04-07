@@ -11,6 +11,18 @@ use SplObjectStorage;
  */
 class Links extends Collection
 {
+    protected $model;
+
+    function __construct(Model $model)
+    {
+        $this->model = $model;
+    }
+
+    public function getModel()
+    {
+        return $this->model;
+    }
+
     public function add($name, AbstractLink $link)
     {
         $this->items[$name] = $link;
@@ -18,11 +30,11 @@ class Links extends Collection
         return $this;
     }
 
-    public function updateAll(Model $parent)
+    public function updateAll()
     {
         if ($this->items) {
             foreach ($this->items as $link) {
-                $link->update($parent);
+                $link->getRel()->update($this->model, $link);
             }
         }
 

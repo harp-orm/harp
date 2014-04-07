@@ -107,9 +107,13 @@ class User extends Model {
             ])
 
             ->setRels([
-                new Rel\BelongsTo('address', Address::getSchema()),
-                new Rel\HasMany('posts', Post::getSchema()),
-                new Rel\HasOne('profile', Profile::getSchema()),
+                (new Rel\BelongsTo('address', Address::getSchema())),
+
+                (new Rel\HasMany('posts', Post::getSchema()))
+                    ->setCascade(Rel\AbstractRel::UNLINK),
+
+                (new Rel\HasOne('profile', Profile::getSchema()))
+                    ->setCascade(Rel\AbstractRel::DELETE),
             ])
 
             ->setAsserts([
@@ -117,7 +121,7 @@ class User extends Model {
             ])
 
             ->getEventListeners()
-                ->add(ModelEvent::PERSIST, 'CL\Luna\Test\User::test');
+                ->add(ModelEvent::BEFORE_PERSIST, 'CL\Luna\Test\User::test');
     }
 
 }

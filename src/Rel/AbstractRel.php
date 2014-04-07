@@ -4,6 +4,7 @@ use CL\Luna\Schema\Schema;
 use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
 use Closure;
+use InvalidArgumentException;
 
 /**
  * @author     Ivan Kerin
@@ -12,22 +13,23 @@ use Closure;
  */
 abstract class AbstractRel
 {
+    protected static $allowedCascade = array(
+        self::UNLINK,
+        self::DELETE,
+    );
+
+    const UNLINK = 1;
+    const DELETE = 2;
+
     protected $foreignSchema;
     protected $schema;
     protected $name;
+    protected $cascade;
 
-    public function __construct($name, Schema $foreign_schema, array $properties = null)
+    public function __construct($name, Schema $foreign_schema)
     {
         $this->foreignSchema = $foreign_schema;
         $this->name = $name;
-
-        if ($properties)
-        {
-            foreach ($properties as $propertyName => $value)
-            {
-                $this->$propertyName = $value;
-            }
-        }
     }
 
     public function setSchema(Schema $schema)
@@ -45,6 +47,22 @@ abstract class AbstractRel
     public function getSchema()
     {
         return $this->schema;
+    }
+
+    public function getCascade()
+    {
+        return $this->cascade;
+    }
+
+    public function setCascade($cascade)
+    {
+        if (! in_array($cascade, self::$allowedCascade)) {
+            throw new InvalidArgumentException('Not a valid cascade option');
+        }
+
+        $this->cascade = $cascade;
+
+        return $this;
     }
 
     public function getForeignSchema()
@@ -75,6 +93,26 @@ abstract class AbstractRel
     public function getKeysFrom(array $models)
     {
         return array_filter(array_unique(Arr::extract($models, $this->getKey())));
+    }
+
+    public function loadForeignModels(array $models)
+    {
+        $keys = $this->getKeysFrom($models);
+
+        if (empty($keys)) {
+            return array();
+        } else {
+            $query = $this
+                ->getForeignSchema()
+                    ->getSelectQuery();
+
+            $models = $query
+                ->where([$this->getForeignKey() => $keys])
+                ->execute()
+                ->fetchAll();
+
+            return $models;
+        }
     }
 
     abstract public function initialize();

@@ -4,6 +4,7 @@ use CL\Luna\Model\Model;
 use CL\Luna\Repo\LinkMany;
 use CL\Luna\Util\Arr;
 use CL\Luna\Repo\Repo;
+use SplObjectStorage;
 use Closure;
 
 /**
@@ -11,9 +12,22 @@ use Closure;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasMany extends AbstractRel implements LinkManyInterface
+class HasMany extends AbstractMany
 {
     protected $foreignKey;
+    protected $deleteOnRemove;
+
+    public function getDeleteOnRemove()
+    {
+        return $this->deleteOnRemove;
+    }
+
+    public function setDeleteOnRemove($delete_on_remove)
+    {
+        $this->deleteOnRemove = (bool) $delete_on_remove;
+
+        return $this;
+    }
 
     public function getForeignKey()
     {
@@ -31,13 +45,6 @@ class HasMany extends AbstractRel implements LinkManyInterface
         {
             $this->foreignKey = $this->getSchema()->getName().'Id';
         }
-    }
-
-    public function loadForeignModels(array $models)
-    {
-        $keys = $this->getKeysFrom($models);
-
-        return $keys ? $this->getForeignSchema()->getSelectQuery()->where([$this->getForeignKey() => $keys])->execute()->fetchAll() : array();
     }
 
     public function groupForeignModels(array $models, array $foreign, Closure $set_link)
@@ -64,19 +71,40 @@ class HasMany extends AbstractRel implements LinkManyInterface
 
         $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignSchema());
 
-        $query->join([$this->getForeignTable() => $this->getName()], $condition);
+        $query->joinAliased($this->getForeignTable(), $this->getName(), $condition);
+    }
+
+    public function deleteModels(SplObjectStorage $models)
+    {
+        foreach ($models as $model) {
+            $model->delete();
+        }
+    }
+
+    public function setModels(SplObjectStorage $models, $key)
+    {
+        foreach ($models as $model) {
+            $model->{$this->getForeignKey()} = $key;
+        }
+    }
+
+    public function cascadeDelete(Model $model, LinkMany $link)
+    {
+        if ($this->getCascade() === AbstractRel::NULLIFY) {
+            $this->setModels($link->all(), null);
+        } elseif ($this->getCascade() === AbstractRel::DELETE) {
+            $this->deleteModels($link->all());
+        }
     }
 
     public function update(Model $model, LinkMany $link)
     {
-        foreach ($link->getAdded() as $item)
-        {
-            $item->{$this->getForeignKey()} = $model->{$this->getKey()};
-        }
+        $this->setModels($link->getAdded(), $model->{$this->getKey()});
 
-        foreach ($link->getRemoved() as $item)
-        {
-            $item->{$this->getForeignKey()} = NULL;
+        if ($this->getDeleteOnRemove()) {
+            $this->deleteModels($link->getRemoved());
+        } else {
+            $this->setModels($link->getRemoved(), null);
         }
     }
 }

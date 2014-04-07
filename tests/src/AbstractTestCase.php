@@ -3,12 +3,13 @@
 use CL\EnvBackup as EB;
 use CL\Atlas\DB;
 use CL\Luna\Util\Log;
+use PHPUnit_Framework_TestCase;
 
 /**
  * @package Jam
  * @author Ivan Kerin
  */
-abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase {
+abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
 
     public $env;
 
@@ -22,19 +23,19 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase {
             new EB\StaticParam('CL\Luna\Util\Log', 'items', [])
         ]);
 
-        DB::configuration('default', array(
+        DB::setConfig('default', array(
             'dsn' => 'mysql:dbname=test-luna;host=127.0.0.1',
             'username' => 'root',
         ));
 
-        DB::instance()->beginTransaction();
+        DB::get()->beginTransaction();
     }
 
     public function tearDown()
     {
         $this->env->restore();
 
-        DB::instance()->rollback();
+        DB::get()->rollback();
 
         parent::tearDown();
     }

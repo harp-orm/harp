@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\ModelQuery;
 
-use CL\Atlas\Query\DeleteQuery;
+use CL\Atlas\Query;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Model\ModelEvent;
 use CL\Luna\Util\Arr;
@@ -10,7 +10,7 @@ use CL\Luna\Util\Arr;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Delete extends DeleteQuery implements SetInterface {
+class Delete extends Query\Delete implements SetInterface {
 
     use ModelQueryTrait;
 
@@ -25,18 +25,7 @@ class Delete extends DeleteQuery implements SetInterface {
     {
         $this->addToLog();
 
-        $result = parent::execute();
-
-        if ($this->models)
-        {
-            foreach ($this->models as $model)
-            {
-                $model
-                    ->dispatchEvent(ModelEvent::DELETE);
-            }
-        }
-
-        return $result;
+        return parent::execute();
     }
 
     protected $models;

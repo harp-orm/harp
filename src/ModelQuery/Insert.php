@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\ModelQuery;
 
-use CL\Atlas\Query\InsertQuery;
+use CL\Atlas\Query;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Model\Model;
 use CL\Luna\Model\ModelEvent;
@@ -11,7 +11,7 @@ use CL\Luna\Util\Arr;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Insert extends InsertQuery implements SetInterface {
+class Insert extends Query\Insert implements SetInterface {
 
     use ModelQueryTrait;
 
@@ -57,16 +57,14 @@ class Insert extends InsertQuery implements SetInterface {
 
         if ($this->insertModels)
         {
-            $lastInsertId = $this->db()->lastInsertId();
+            $lastInsertId = $this->getDb()->lastInsertId();
 
             foreach ($this->insertModels as $model)
             {
                 $model
                     ->setId($lastInsertId)
                     ->resetOriginals()
-                    ->setState(Model::PERSISTED)
-                    ->dispatchEvent(ModelEvent::INSERT)
-                    ->dispatchEvent(ModelEvent::PERSIST);
+                    ->setState(Model::PERSISTED);
 
                 $lastInsertId += 1;
             }

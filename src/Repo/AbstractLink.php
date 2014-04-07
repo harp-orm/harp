@@ -20,14 +20,7 @@ abstract class AbstractLink
 
     public function getRel()
     {
-        return $this->rel();
-    }
-
-    public function update(Model $parent)
-    {
-        $this->rel->update($parent, $this);
-
-        return $this;
+        return $this->rel;
     }
 
     abstract public function getAll();

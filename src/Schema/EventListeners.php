@@ -11,18 +11,23 @@ use CL\Luna\Model\Model;
  */
 class EventListeners extends Collection {
 
-    public function add($type, $listener)
+    public function add($event, $listener)
     {
-        $this->items[$type] []= $listener;
+        $this->items[$event] []= $listener;
 
         return $this;
     }
 
-    public function dispatchEvent($type, Model $target)
+    public function hasEvent($event)
     {
-        if (isset($this->items[$type]))
+        return isset($this->items[$event]);
+    }
+
+    public function dispatchEvent($event, Model $target)
+    {
+        if ($this->hasEvent($event))
         {
-            foreach ($this->items[$type] as $listner)
+            foreach ($this->items[$event] as $listner)
             {
                 call_user_func($listner, $target);
             }

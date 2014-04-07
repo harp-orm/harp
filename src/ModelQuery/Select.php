@@ -4,7 +4,7 @@ use CL\Luna\Schema\Schema;
 use CL\Luna\Repo\Repo;
 use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
-use CL\Atlas\Query\SelectQuery;
+use CL\Atlas\Query;
 use PDO;
 
 /**
@@ -12,7 +12,7 @@ use PDO;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Select extends SelectQuery {
+class Select extends Query\Select {
 
     use ModelQueryTrait;
 
@@ -21,14 +21,14 @@ class Select extends SelectQuery {
         $this
             ->setSchema($schema)
             ->from($schema->getTable())
-            ->columns($schema->getTable().'.*');
+            ->column($schema->getTable().'.*');
     }
 
     public function loadWith($rels)
     {
         $models = $this->load();
 
-        $rels = Arr::toAssoc( (array) $rels);
+        $rels = Arr::toAssoc((array) $rels);
 
         Repo::loadRels($this->getSchema(), $models, $rels);
 

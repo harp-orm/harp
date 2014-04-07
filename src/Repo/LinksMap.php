@@ -24,7 +24,7 @@ class LinksMap
         if ($this->links->contains($model)) {
             return $this->links[$model];
         } else {
-            return $this->links[$model] = new Links();
+            return $this->links[$model] = new Links($model);
         }
     }
 
@@ -57,14 +57,30 @@ class LinksMap
         return $this;
     }
 
+    public function getLinksForModels(SplObjectStorage $models)
+    {
+        $links = clone $this->links;
+        $links->removeAllExcept($models);
+
+        return $links;
+    }
+
     public function updateAll(SplObjectStorage $models)
     {
-        $models = Storage::filter($models, function($model){
-            return ! $this->isEmpty($model);
-        });
+        $links = $this->getLinksForModels($models);
 
+        foreach ($links as $model) {
+            $links->getInfo()->updateAll();
+        }
+    }
+
+    public function cascadeDeleteAll(SplObjectStorage $models)
+    {
         foreach ($models as $model) {
-            $this->get($model)->updateAll($model);
+            foreach ($model->getSchema()->getCascadeRels() as $rel) {
+                $link = $this->getLink($model, $rel->getName());
+                $rel->cascadeDelete($model, $link);
+            }
         }
     }
 

@@ -4,7 +4,6 @@ use ReflectionClass;
 use ReflectionProperty;
 use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
-use CL\Luna\Event\EventDispatcherTrait;
 use CL\Luna\Event\ModelEvent;
 use CL\Luna\Event\Event;
 use CL\Luna\ModelQuery\Delete;
@@ -41,6 +40,7 @@ class Schema
     private $rels;
     private $asserts;
     private $configurationLoaded;
+    private $cascadeRels;
 
     public function getName()
     {
@@ -192,9 +192,14 @@ class Schema
         return $this->eventListeners;
     }
 
-    public function dispatchEvent($type, Model $target)
+    public function dispatchEvent($event, Model $target)
     {
-        return $this->getEventListeners()->dispatchEvent($type, $target);
+        return $this->getEventListeners()->dispatchEvent($event, $target);
+    }
+
+    public function hasEvent($event)
+    {
+        return $this->getEventListeners()->hasEvent($event);
     }
 
     public function getDeleteQuery()
@@ -263,6 +268,13 @@ class Schema
         return $this->modelReflection->newInstance(NULL, Model::NOT_LOADED);
     }
 
+    public function getCascadeRels()
+    {
+        $this->lazyLoadConfiguration();
+
+        return $this->cascadeRels;
+    }
+
     function __construct($class_name)
     {
         $this->modelClass = $class_name;
@@ -303,6 +315,7 @@ class Schema
                 $this->fields->all()
             );
 
+            $this->cascadeRels = Arr::filterInvoke($this->rels->all(), 'getCascade');
         }
     }
 }

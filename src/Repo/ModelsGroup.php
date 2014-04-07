@@ -31,11 +31,51 @@ class ModelsGroup
         });
     }
 
-    public static function persist(SplObjectStorage $models, $query_type)
+    public static function groupBySchema(SplObjectStorage $models)
     {
-        $groups = Storage::groupBy($models, function($model) {
+        return Storage::groupBy($models, function($model) {
             return $model->getSchema();
         });
+    }
+
+    public static function getSchemas(SplObjectStorage $models)
+    {
+        $schemas = new SplObjectStorage();
+
+        foreach ($models as $model) {
+            $schemas->attach($model->getSchema());
+        }
+
+        return $schemas;
+    }
+
+    public static function hasCascadeRels(SplObjectStorage $models)
+    {
+        $schemas = self::getSchemas($models);
+
+        foreach ($schemas as $schema) {
+            if ($schema->getCascadeRels()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function dispatchEvents(SplObjectStorage $models, array $events)
+    {
+        foreach ($events as $event) {
+            foreach ($models as $model) {
+                $model->dispatchEvent($event);
+            }
+        }
+
+        return $models;
+    }
+
+    public static function persist(SplObjectStorage $models, $query_type)
+    {
+        $groups = self::groupBySchema($models);
 
         foreach ($groups as $schema) {
 
@@ -46,5 +86,7 @@ class ModelsGroup
                 ->setModels($models)
                 ->execute();
         }
+
+        return $models;
     }
 }

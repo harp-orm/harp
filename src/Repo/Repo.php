@@ -1,6 +1,7 @@
 <?php namespace CL\Luna\Repo;
 
 use CL\Luna\Model\Model;
+use CL\Luna\Model\ModelEvent;
 use CL\Luna\ModelQuery\Select;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Rel\AbstractRel;
@@ -54,24 +55,24 @@ class Repo
 
     public static function persistModels(SplObjectStorage $models)
     {
-        ModelsGroup::persist(
-            ModelsGroup::filterDeleted($models),
-            Schema::DELETE
-        );
+        $deleted = ModelsGroup::filterDeleted($models);
+        ModelsGroup::dispatchEvents($deleted, [ModelEvent::BEFORE_DELETE]);
+        ModelsGroup::persist($deleted, Schema::DELETE);
+        ModelsGroup::dispatchEvents($deleted, [ModelEvent::AFTER_DELETE]);
 
         self::getLinks()->updateAll($models);
 
-        ModelsGroup::persist(
-            ModelsGroup::filterPending($models),
-            Schema::INSERT
-        );
+        $pending = ModelsGroup::filterPending($models);
+        ModelsGroup::dispatchEvents($pending, [ModelEvent::BEFORE_INSERT, ModelEvent::BEFORE_PERSIST]);
+        ModelsGroup::persist($pending, Schema::INSERT);
+        ModelsGroup::dispatchEvents($pending, [ModelEvent::AFTER_INSERT, ModelEvent::AFTER_PERSIST]);
 
         self::getLinks()->updateAll($models);
 
-        ModelsGroup::persist(
-            ModelsGroup::filterChanged($models),
-            Schema::UPDATE
-        );
+        $changed = ModelsGroup::filterChanged($models);
+        ModelsGroup::dispatchEvents($changed, [ModelEvent::BEFORE_UPDATE, ModelEvent::BEFORE_PERSIST]);
+        ModelsGroup::persist($changed, Schema::UPDATE);
+        ModelsGroup::dispatchEvents($changed, [ModelEvent::AFTER_UPDATE, ModelEvent::AFTER_PERSIST]);
     }
 
     public static function getModel(Model $model)

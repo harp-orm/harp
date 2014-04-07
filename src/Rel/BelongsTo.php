@@ -13,7 +13,7 @@ use Closure;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsTo extends AbstractRel implements LinkOneInterface
+class BelongsTo extends AbstractOne
 {
     protected $key;
 
@@ -25,13 +25,6 @@ class BelongsTo extends AbstractRel implements LinkOneInterface
     public function getForeignKey()
     {
         return $this->getSchema()->getPrimaryKey();
-    }
-
-    public function loadForeignModels(array $models)
-    {
-        $keys = $this->getKeysFrom($models);
-
-        return $keys ? $this->getForeignSchema()->getSelectQuery()->where([$this->getForeignKey() => $keys])->execute()->fetchAll() : array();
     }
 
     public function groupForeignModels(array $models, array $foreign, Closure $yield)
@@ -74,6 +67,6 @@ class BelongsTo extends AbstractRel implements LinkOneInterface
 
         $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignSchema());
 
-        $query->join([$this->getForeignTable() => $this->getName()], $condition);
+        $query->joinAliased($this->getForeignTable(), $this->getName(), $condition);
     }
 }

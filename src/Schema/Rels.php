@@ -2,6 +2,7 @@
 
 use CL\Luna\Rel\AbstractRel;
 use CL\Luna\Util\Collection;
+use CL\Luna\Util\Arr;
 
 
 /**
@@ -28,6 +29,15 @@ class Rels extends Collection {
                     ->setSchema($schema)
                     ->initialize();
             }
+        }
+    }
+
+    public function filterOnDelete()
+    {
+        if ($this->items) {
+            return Arr::filterInvoke($this->items, 'getOnDelete');
+        } else {
+            return $items;
         }
     }
 }

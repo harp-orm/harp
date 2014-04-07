@@ -10,7 +10,7 @@ use Closure;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasOne extends AbstractRel implements LinkOneInterface
+class HasOne extends AbstractOne
 {
     protected $foreignKey;
 
@@ -30,13 +30,6 @@ class HasOne extends AbstractRel implements LinkOneInterface
         {
             $this->foreignKey = $this->getSchema()->getName().'Id';
         }
-    }
-
-    public function loadForeignModels(array $models)
-    {
-        $keys = $this->getKeysFrom($models);
-
-        return $keys ? $this->getForeignSchema()->getSelectQuery()->where([$this->getForeignKey() => $keys])->execute()->fetchAll() : array();
     }
 
     public function groupForeignModels(array $models, array $foreign, Closure $set_link)

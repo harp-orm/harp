@@ -18,7 +18,7 @@ trait ModelQueryTrait {
     public function setSchema(Schema $schema)
     {
         $this->schema = $schema;
-        $this->db = DB::instance($schema->getDb());
+        $this->db = DB::get($schema->getDb());
 
         return $this;
     }

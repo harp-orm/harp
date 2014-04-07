@@ -122,8 +122,20 @@ class Arr
     }
 
     /**
-     * I'm sure this opration has some proper math name.
-     * Something like transpose maybe ...
+     * Transpose 2 dimensional array:
+     *
+     * <pre>
+     * array (                   |    |  array (
+     *    1 => array(            |    |      'name' => array(
+     *        'name' => 'val1',  |    |          1 => 'val1',
+     *        'email' => 'val2', |    |          2 => 'val3',
+     *    ),                     | to |      ),
+     *    2 => array(            |    |      'email' => array(
+     *        'name' => 'val3',  |    |          1 => 'val2',
+     *        'email' => 'val4', |    |          2 => 'val4',
+     *    ),                     |    |      )
+     * )                         |    |  )
+     * </pre>
      */
     public static function flipNested(array $arr)
     {

@@ -1,7 +1,7 @@
 <?php namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\SQL\SQL;
-use CL\Atlas\Query\UpdateQuery;
+use CL\Atlas\Query;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Model\ModelEvent;
 use CL\Luna\Util\Arr;
@@ -11,7 +11,7 @@ use CL\Luna\Util\Arr;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Update extends UpdateQuery implements SetInterface {
+class Update extends Query\Update implements SetInterface {
 
     use ModelQueryTrait;
 
@@ -80,16 +80,6 @@ class Update extends UpdateQuery implements SetInterface {
     {
         $this->addToLog();
 
-        $result = parent::execute();
-
-        foreach ($this->models as $model)
-        {
-            $model
-                ->resetOriginals()
-                ->dispatchEvent(ModelEvent::UPDATE)
-                ->dispatchEvent(ModelEvent::PERSIST);
-        }
-
-        return $result;
+        return parent::execute();
     }
 }

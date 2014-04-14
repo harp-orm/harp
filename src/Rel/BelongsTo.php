@@ -2,10 +2,8 @@
 
 use CL\Luna\Util\Arr;
 use CL\Luna\Model\Model;
-use CL\Luna\Repo\LinkOne;
-use CL\Luna\Field\Integer;
+use CL\Luna\Mapper;
 use CL\Luna\Schema\Schema;
-use CL\Luna\Repo\Repo;
 use Closure;
 
 /**
@@ -17,6 +15,13 @@ class BelongsTo extends AbstractOne
 {
     protected $key;
 
+    public function __construct($name, Schema $schema, Schema $foreignSchema, array $options = array())
+    {
+        $this->key = $name.'Id';
+
+        parent::__construct($name, $schema, $foreignSchema, $options);
+    }
+
     public function getKey()
     {
         return $this->key;
@@ -27,33 +32,17 @@ class BelongsTo extends AbstractOne
         return $this->getSchema()->getPrimaryKey();
     }
 
-    public function groupForeignModels(array $models, array $foreign, Closure $yield)
+    public function linkForeignKey(Mapper\AbstractNode $foreign)
     {
-        $foreign = Arr::index($foreign, $this->getForeignKey());
-
-        foreach ($models as $model)
-        {
-            $index = $model->{$this->getKey()};
-
-            $foreginModel = isset($foreign[$index]) ? $foreign[$index] : $this->getForeignSchema()->newNotLoadedModel();
-
-            $yield($model, new LinkOne($this, $foreginModel));
-        }
-
-        return $this;
+        return $foreign->{$this->getForeignKey()};
     }
 
-    public function initialize()
+    public function linkKey(Mapper\AbstractNode $model)
     {
-        if ( ! $this->key)
-        {
-            $this->key = $this->getForeignSchema()->getName().'Id';
-        }
-
-        $this->getSchema()->getFields()->add(new Integer($this->key));
+        return $model->{$this->getKey()};
     }
 
-    public function update(Model $model, LinkOne $link)
+    public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
         if ($link->get()->isPersisted())
         {

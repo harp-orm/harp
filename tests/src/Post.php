@@ -1,7 +1,7 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Repo\Repo;
+use CL\Luna\Mapper\Repo;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field;
@@ -32,19 +32,19 @@ class Post extends Model {
      */
     public function getUser()
     {
-        return Repo::getLink($this, 'user')->get();
+        return Repo::get()->loadLink($this, 'user')->get();
     }
 
     public function setUser(User $user)
     {
-        return Repo::getLink($this, 'user')->set($user);
+        return Repo::get()->loadLink($this, 'user')->set($user);
     }
 
     public static function initialize(Schema $schema)
     {
         $schema
             ->setRels([
-                new BelongsTo('user', User::getSchema()),
+                new BelongsTo('user', $schema, User::getSchema()),
             ]);
 
         $schema
@@ -57,6 +57,7 @@ class Post extends Model {
                 new Field\Timestamp('createdAt'),
                 new Field\Timestamp('updatedAt'),
                 new Field\DateTime('publishedAt'),
+                new Field\Integer('userId'),
             ]);
 
         $schema

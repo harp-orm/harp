@@ -1,31 +1,22 @@
 <?php namespace CL\Luna\Model;
 
-use CL\Luna\Util\Arr;
-use CL\Luna\Rel\AbstractRel;
-use CL\Luna\Event\ModelEvent;
-use CL\Luna\Schema\Query\Update;
+use CL\Luna\Mapper\AbstractNode;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Model {
+abstract class Model extends AbstractNode {
 
     use DirtyTrackingTrait;
     use UnmappedPropertiesTrait;
 
-    const PENDING = 1;
-    const DELETED = 2;
-    const PERSISTED = 3;
-    const NOT_LOADED = 4;
-
     private $errors;
-    private $state;
 
     public function __construct(array $fields = NULL, $state = self::PENDING)
     {
-        $this->state = $state;
+        parent::__construct($state);
 
         if ($state === self::PERSISTED)
         {
@@ -33,7 +24,7 @@ class Model {
 
             $fields = $this->getSchema()->getFields()->loadData($fields);
 
-            $this->setFieldValues($fields);
+            $this->setProperties($fields);
             $this->setOriginals($fields);
         }
         elseif ($state === self::PENDING)
@@ -41,7 +32,7 @@ class Model {
             $this->setOriginals($this->getFieldValues());
             if ($fields)
             {
-                $this->setFieldValues($fields);
+                $this->setProperties($fields);
             }
         }
         else
@@ -62,25 +53,6 @@ class Model {
         return $this;
     }
 
-    public function setStateLoaded()
-    {
-        $this->state = $this->getId() ? self::PERSISTED : self::PENDING;
-
-        return $this;
-    }
-
-    public function setState($state)
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    public function getState()
-    {
-        return $this->state;
-    }
-
     public function resetOriginals()
     {
         $this->setOriginals($this->getFieldValues());
@@ -88,27 +60,7 @@ class Model {
         return $this;
     }
 
-    public function isPersisted()
-    {
-        return $this->state === self::PERSISTED;
-    }
-
-    public function isPending()
-    {
-        return $this->state === self::PENDING;
-    }
-
-    public function isDeleted()
-    {
-        return $this->state === self::DELETED;
-    }
-
-    public function isNotLoaded()
-    {
-        return $this->state === self::NOT_LOADED;
-    }
-
-    public function setFieldValues(array $values)
+    public function setProperties(array $values)
     {
         foreach ($values as $name => $value)
         {

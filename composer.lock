@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/atlas.git",
-                "reference": "b0af845fa3b6aa879aa81520f6a035f4f43b1e1c"
+                "reference": "dc8a437c81a791dc233097454a2cef43f8a9f15b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/atlas/zipball/b0af845fa3b6aa879aa81520f6a035f4f43b1e1c",
-                "reference": "b0af845fa3b6aa879aa81520f6a035f4f43b1e1c",
+                "url": "https://api.github.com/repos/clippings/atlas/zipball/dc8a437c81a791dc233097454a2cef43f8a9f15b",
+                "reference": "dc8a437c81a791dc233097454a2cef43f8a9f15b",
                 "shasum": ""
             },
             "require": {
@@ -51,7 +51,7 @@
                 }
             ],
             "description": "SQL Builder for PDO",
-            "time": "2014-04-07 08:29:47"
+            "time": "2014-04-10 10:15:10"
         },
         {
             "name": "clippings/carpo",

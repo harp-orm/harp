@@ -1,8 +1,8 @@
 <?php namespace CL\Luna\ModelQuery;
 
 use CL\Luna\Schema\Schema;
-use CL\Luna\Repo\Repo;
-use CL\Luna\Model\Model;
+use CL\Luna\Mapper\Repo;
+use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Util\Arr;
 use CL\Atlas\Query;
 use PDO;
@@ -30,21 +30,36 @@ class Select extends Query\Select {
 
         $rels = Arr::toAssoc((array) $rels);
 
-        Repo::loadRels($this->getSchema(), $models, $rels);
+        self::loadRels($this->getSchema(), $models, $rels);
 
         return $models;
     }
 
+    protected static function loadRels($schema, $models, $rels)
+    {
+        foreach ($rels as $relName => $childRels) {
+            $rel = $schema->getRel($relName);
+
+            $foreign = Repo::get()->loadRel($rel, $models);
+
+            if ($childRels) {
+                self::loadRels($rel->getForeignSchema(), $foreign, $childRels);
+            }
+        }
+    }
+
     public function load()
     {
-        return Repo::loadModels($this);
+        $models = $this->execute()->fetchAll();
+
+        return Repo::get()->getCanonicalArray($models);
     }
 
     public function first()
     {
         $items = $this->limit(1)->load();
 
-        return reset($items) ?: $this->schema->newNotLoadedModel();
+        return reset($items) ?: $this->schema->newInstance(null, AbstractNode::NOT_LOADED);
     }
 
     public function execute()
@@ -53,7 +68,11 @@ class Select extends Query\Select {
 
         $pdoStatement = parent::execute();
 
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS, $this->getSchema()->getModelClass(), [NULL, Model::PERSISTED]);
+        $pdoStatement->setFetchMode(
+            PDO::FETCH_CLASS,
+            $this->getSchema()->getModelClass(),
+            [null, AbstractNode::PERSISTED]
+        );
 
         return $pdoStatement;
     }

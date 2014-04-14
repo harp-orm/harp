@@ -1,6 +1,7 @@
 <?php namespace CL\Luna\Test;
 
-use CL\EnvBackup as EB;
+use CL\EnvBackup\Env;
+use CL\EnvBackup\StaticParam;
 use CL\Atlas\DB;
 use CL\Luna\Util\Log;
 use PHPUnit_Framework_TestCase;
@@ -19,9 +20,12 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
 
         Log::setEnabled(TRUE);
 
-        $this->env = new EB\Env([
-            new EB\StaticParam('CL\Luna\Util\Log', 'items', [])
+        $this->env = new Env([
+            new StaticParam('CL\Luna\Util\Log', 'items', []),
+            new StaticParam('CL\Luna\Mapper\Repo', 'repo', null),
         ]);
+
+        $this->env->apply();
 
         DB::setConfig('default', array(
             'dsn' => 'mysql:dbname=test-luna;host=127.0.0.1',

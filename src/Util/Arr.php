@@ -46,22 +46,14 @@ class Arr
         }, $arr);
     }
 
-    public static function index(array $arr, $attribute)
+    public static function index(array $arr, $yield)
     {
         $result = [];
         foreach ($arr as $item)
         {
-            $result[$item->{$attribute}] = $item;
-        }
-        return $result;
-    }
+            $key = call_user_func($yield, $item);
 
-    public static function groupByInvoke(array $arr, $method)
-    {
-        $result = [];
-        foreach ($arr as $item)
-        {
-            $result[$item->{$method}()] []= $item;
+            $result[$key] = $item;
         }
         return $result;
     }
@@ -90,19 +82,6 @@ class Arr
         });
     }
 
-    public static function disassociate(array $arr)
-    {
-        $result = [];
-
-        foreach ($arr as $key => $value)
-        {
-            $result []= $key;
-            $result []= $value;
-        }
-
-        return $result;
-    }
-
     public static function flatten(array $array)
     {
         $result = array();
@@ -121,57 +100,28 @@ class Arr
         return $result;
     }
 
-    /**
-     * Transpose 2 dimensional array:
-     *
-     * <pre>
-     * array (                   |    |  array (
-     *    1 => array(            |    |      'name' => array(
-     *        'name' => 'val1',  |    |          1 => 'val1',
-     *        'email' => 'val2', |    |          2 => 'val3',
-     *    ),                     | to |      ),
-     *    2 => array(            |    |      'email' => array(
-     *        'name' => 'val3',  |    |          1 => 'val2',
-     *        'email' => 'val4', |    |          2 => 'val4',
-     *    ),                     |    |      )
-     * )                         |    |  )
-     * </pre>
-     */
-    public static function flipNested(array $arr)
+    public static function pluck(array $array, $attribute)
     {
-        $result = [];
-
-        foreach ($arr as $key => $values)
-        {
-            foreach ($values as $innerKey => $value)
-            {
-                $result[$innerKey][$key] = $value;
-            }
-        }
-
-        return $result;
+        return array_map(function ($item) use ($attribute) {
+            return $item[$attribute];
+        }, $array);
     }
 
-    public static function groupBy($array, $callback, $preserve_keys = FALSE)
+    public static function groupBy($array, $callback, $preserve_keys = false)
     {
         $grouped = array();
 
-        foreach ($array as $i => $item)
-        {
+        foreach ($array as $i => $item) {
             $itemGroup = call_user_func($callback, $item, $i);
 
-            if ( ! isset($grouped[$itemGroup]))
-            {
+            if (! isset($grouped[$itemGroup])) {
                 $grouped[$itemGroup] = array();
             }
 
-            if ($preserve_keys)
-            {
+            if ($preserve_keys) {
                 $grouped[$itemGroup][$i] = $item;
-            }
-            else
-            {
-                $grouped[$itemGroup][] = $item;
+            } else {
+                $grouped[$itemGroup] []= $item;
             }
         }
 

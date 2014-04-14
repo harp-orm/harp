@@ -53,6 +53,11 @@ trait ModelQueryTrait {
         return $this->where([$this->getSchema()->getPrimaryKey() => $key]);
     }
 
+    public function whereKeys(array $keys)
+    {
+        return $this->where([$this->getSchema()->getPrimaryKey() => $keys]);
+    }
+
     public function joinRels($rels)
     {
         $rels = Arr::toAssoc((array) $rels);

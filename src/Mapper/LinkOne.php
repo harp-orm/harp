@@ -1,8 +1,5 @@
-<?php namespace CL\Luna\Repo;
+<?php namespace CL\Luna\Mapper;
 
-use CL\Luna\Util\Storage;
-use CL\Luna\Rel\AbstractRel;
-use CL\Luna\Model\Model;
 use SplObjectStorage;
 
 /**
@@ -12,27 +9,27 @@ use SplObjectStorage;
  */
 class LinkOne extends AbstractLink
 {
-    protected $model;
+    protected $current;
     protected $original;
 
-    public function __construct(AbstractRel $rel, Model $model)
+    public function __construct(RelInterface $rel, AbstractNode $current)
     {
         parent::__construct($rel);
 
-        $this->model = $model;
-        $this->original = $model;
+        $this->current = $current;
+        $this->original = $current;
     }
 
-    public function set(Model $model)
+    public function set(AbstractNode $current)
     {
-        $this->model = $model;
+        $this->current = $current;
 
         return $this;
     }
 
     public function get()
     {
-        return $this->model;
+        return $this->current;
     }
 
     public function getOriginal()
@@ -42,13 +39,13 @@ class LinkOne extends AbstractLink
 
     public function isChanged()
     {
-        return $this->model !== $this->original;
+        return $this->current !== $this->original;
     }
 
     public function getAll()
     {
         $all = new SplObjectStorage();
-        $all->attach($this->model);
+        $all->attach($this->current);
         $all->attach($this->original);
 
         return $all;

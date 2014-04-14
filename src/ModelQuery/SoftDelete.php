@@ -4,7 +4,8 @@ use CL\Atlas\SQL\SQL;
 use CL\Atlas\Query;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Model\ModelEvent;
-use CL\Luna\Util\Arr;
+use CL\Luna\Util\Storage;
+use SplObjectStorage;
 
 /**
  * @author     Ivan Kerin
@@ -24,12 +25,9 @@ class SoftDelete extends Query\Update implements SetInterface {
             ->where([$schema->getTable().'.'.Schema::SOFT_DELETE_KEY => NULL]);
     }
 
-    protected $models;
-
-    public function setModels(array $models)
+    public function setModels(SplObjectStorage $models)
     {
-        $this->models = $models;
-        $ids = Arr::invoke($models, 'getId');
+        $ids = Storage::invoke($models, 'getId');
         $this->whereKey($ids);
 
         return $this;

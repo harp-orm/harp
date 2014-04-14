@@ -2,8 +2,8 @@
 
 use CL\Luna\Util\Log;
 use CL\Atlas\Query\InsertQuery;
-use CL\Luna\Repo\Repo;
-use CL\Luna\Repo\MassAssign;
+use CL\Luna\Mapper\Repo;
+use CL\Luna\MassAssign\UnsafeData;
 
 class TestTest extends AbstractTestCase {
 
@@ -13,7 +13,7 @@ class TestTest extends AbstractTestCase {
 
         $user3 = User::get(3);
 
-        new MassAssign($user3, ['name', 'posts' => ['title', 'body'], 'address' => ['id', 'zipCode']], [
+        $data = new UnsafeData([
             'posts' => [
                 [
                     'title' => 'my title',
@@ -25,13 +25,15 @@ class TestTest extends AbstractTestCase {
                 ]
             ],
             'address' => [
-                'id' => 1,
+                '_id' => 1,
                 'zipCode' => 2222,
             ],
             'name' => 'new name!!',
         ]);
 
-        Repo::persist($user3);
+        $data->assign($user3);
+
+        Repo::get()->persist($user3);
 
         $this->assertEquals(
             [
@@ -39,8 +41,8 @@ class TestTest extends AbstractTestCase {
                 'SELECT post.* FROM post WHERE (userId IN (3))',
                 'SELECT address.* FROM address WHERE (id = 1) LIMIT 1',
                 'INSERT INTO post (id, title, body, price, tags, createdAt, updatedAt, publishedAt, userId) VALUES (NULL, "my title", "my body", NULL, NULL, NULL, NULL, NULL, 3), (NULL, "my title 2", "my body 2", NULL, NULL, NULL, NULL, NULL, 3)',
-                'UPDATE user SET name = "new name!!", addressId = 1 WHERE (user.deletedAt IS NULL) AND (id IN (3))',
-                'UPDATE address SET zipCode = 2222 WHERE (id IN (1))',
+                'UPDATE user SET name = "new name!!", addressId = 1 WHERE (user.deletedAt IS NULL) AND (id = 3)',
+                'UPDATE address SET zipCode = 2222 WHERE (id = 1)',
             ],
             Log::all()
         );

@@ -1,17 +1,13 @@
 <?php namespace CL\Luna\Schema;
 
+use CL\Luna\Mapper\SchemaInterface;
+use CL\Luna\Mapper\AbstractNode;
 use ReflectionClass;
 use ReflectionProperty;
+use SplObjectStorage;
 use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
-use CL\Luna\Event\ModelEvent;
-use CL\Luna\Event\Event;
-use CL\Luna\ModelQuery\Delete;
-use CL\Luna\ModelQuery\SoftDelete;
-use CL\Luna\ModelQuery\Update;
-use CL\Luna\ModelQuery\Select;
-use CL\Luna\ModelQuery\Insert;
-use CL\Luna\Field;
+use CL\Luna\ModelQuery;
 use CL\Carpo\Asserts;
 
 /*
@@ -19,14 +15,9 @@ use CL\Carpo\Asserts;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Schema
+class Schema implements SchemaInterface
 {
     const SOFT_DELETE_KEY = 'deletedAt';
-
-    const SELECT = 1;
-    const INSERT = 2;
-    const UPDATE = 3;
-    const DELETE = 4;
 
     private $name;
     private $modelClass;
@@ -206,11 +197,11 @@ class Schema
     {
         if ($this->getSoftDelete())
         {
-            $delete = new SoftDelete($this);
+            $delete = new ModelQuery\SoftDelete($this);
         }
         else
         {
-            $delete = new Delete($this);
+            $delete = new ModelQuery\Delete($this);
         }
 
         return $delete;
@@ -218,7 +209,7 @@ class Schema
 
     public function getUpdateQuery()
     {
-        $update = new Update($this);
+        $update = new ModelQuery\Update($this);
 
         if ($this->getSoftDelete())
         {
@@ -230,7 +221,7 @@ class Schema
 
     public function getSelectQuery()
     {
-        $select = new Select($this);
+        $select = new ModelQuery\Select($this);
 
         if ($this->getSoftDelete())
         {
@@ -242,30 +233,60 @@ class Schema
 
     public function getInsertQuery()
     {
-        return new Insert($this);
+        return new ModelQuery\Insert($this);
     }
 
-    public function getQuery($type)
+    public function update(SplObjectStorage $models)
     {
-        switch ($type)
-        {
-            case self::SELECT:
-                return $this->getSelectQuery();
-
-            case self::INSERT:
-                return $this->getInsertQuery();
-
-            case self::DELETE:
-                return $this->getDeleteQuery();
-
-            case self::UPDATE:
-                return $this->getUpdateQuery();
-        }
+        return $this
+            ->getUpdateQuery()
+            ->setModels($models)
+            ->execute();
     }
 
-    public function newNotLoadedModel()
+    public function delete(SplObjectStorage $models)
     {
-        return $this->modelReflection->newInstance(NULL, Model::NOT_LOADED);
+        return $this
+            ->getDeleteQuery()
+            ->setModels($models)
+            ->execute();
+    }
+
+    public function insert(SplObjectStorage $models)
+    {
+        return $this
+            ->getInsertQuery()
+            ->setModels($models)
+            ->execute();
+    }
+
+    public function select(array $conditions)
+    {
+        return $this
+            ->getSelectQuery()
+            ->where($conditions)
+            ->load();
+    }
+
+    public function dispatchBeforeEvent(SplObjectStorage $models, $event)
+    {
+        $this->lazyLoadConfiguration();
+
+        $this->getEventListeners()->dispatchBeforeEvent($models, $event);
+    }
+
+    public function dispatchAfterEvent(SplObjectStorage $models, $event)
+    {
+        $this->lazyLoadConfiguration();
+
+        $this->getEventListeners()->dispatchAfterEvent($models, $event);
+    }
+
+    public function newInstance($fields = null, $status = AbstractNode::PENDING)
+    {
+        $this->lazyLoadConfiguration();
+
+        return $this->modelReflection->newInstance($fields, $status);
     }
 
     public function getCascadeRels()
@@ -302,12 +323,6 @@ class Schema
                 {
                     $trait->getMethod('initialize')->invoke(NULL, $this);
                 }
-            }
-
-            $this->rels->initialize($this);
-
-            if ($this->softDelete) {
-                $this->fields->add(new Field\Timestamp('deletedAt'));
             }
 
             $this->fieldDefaults = array_intersect_key(

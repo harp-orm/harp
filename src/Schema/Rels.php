@@ -19,19 +19,6 @@ class Rels extends Collection {
         return $this;
     }
 
-    public function initialize(Schema $schema)
-    {
-        if ($this->items)
-        {
-            foreach ($this->items as $item)
-            {
-                $item
-                    ->setSchema($schema)
-                    ->initialize();
-            }
-        }
-    }
-
     public function filterOnDelete()
     {
         if ($this->items) {

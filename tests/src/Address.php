@@ -6,7 +6,7 @@ use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field\String;
 use CL\Luna\Field\Integer;
 use CL\Luna\Rel\HasMany;
-use CL\Luna\Repo\Repo;
+use CL\Luna\Mapper\Repo;
 use CL\Carpo\Assert;
 
 /**
@@ -38,14 +38,14 @@ class Address extends Model {
      */
     public function users()
     {
-        return Repo::getLink($this, 'users');
+        return Repo::get()->loadLink($this, 'users');
     }
 
     public static function initialize(Schema $schema)
     {
         $schema
             ->setRels([
-                new HasMany('users', User::getSchema()),
+                new HasMany('users', $schema, User::getSchema()),
             ])
             ->setAsserts([
                 new Assert\Present('location'),

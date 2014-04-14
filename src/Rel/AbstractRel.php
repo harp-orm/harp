@@ -1,23 +1,17 @@
 <?php namespace CL\Luna\Rel;
 
 use CL\Luna\Schema\Schema;
-use CL\Luna\Model\Model;
+use CL\Luna\Mapper\RelInterface;
 use CL\Luna\Util\Arr;
 use Closure;
-use InvalidArgumentException;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-abstract class AbstractRel
+abstract class AbstractRel implements RelInterface
 {
-    protected static $allowedCascade = array(
-        self::UNLINK,
-        self::DELETE,
-    );
-
     const UNLINK = 1;
     const DELETE = 2;
 
@@ -26,17 +20,15 @@ abstract class AbstractRel
     protected $name;
     protected $cascade;
 
-    public function __construct($name, Schema $foreign_schema)
+    public function __construct($name, Schema $schema, Schema $foreignSchema, array $options = array())
     {
-        $this->foreignSchema = $foreign_schema;
+        $this->foreignSchema = $foreignSchema;
         $this->name = $name;
-    }
-
-    public function setSchema(Schema $schema)
-    {
         $this->schema = $schema;
 
-        return $this;
+        foreach ($options as $name => $value) {
+            $this->$name = $value;
+        }
     }
 
     public function getName()
@@ -52,17 +44,6 @@ abstract class AbstractRel
     public function getCascade()
     {
         return $this->cascade;
-    }
-
-    public function setCascade($cascade)
-    {
-        if (! in_array($cascade, self::$allowedCascade)) {
-            throw new InvalidArgumentException('Not a valid cascade option');
-        }
-
-        $this->cascade = $cascade;
-
-        return $this;
     }
 
     public function getForeignSchema()
@@ -90,33 +71,26 @@ abstract class AbstractRel
         return $this->getForeignSchema()->getPrimaryKey();
     }
 
-    public function getKeysFrom(array $models)
+    public function getKeysFrom(array $models, $key)
     {
-        return array_filter(array_unique(Arr::extract($models, $this->getKey())));
+        return array_filter(array_unique(Arr::extract($models, $key)));
     }
 
-    public function loadForeignModels(array $models)
+    public function loadForeignNodes(array $models)
     {
-        $keys = $this->getKeysFrom($models);
+        $keys = $this->getKeysFrom($models, $this->getKey());
 
-        if (empty($keys)) {
-            return array();
-        } else {
-            $query = $this
+        if ($keys) {
+            return $this
                 ->getForeignSchema()
-                    ->getSelectQuery();
-
-            $models = $query
-                ->where([$this->getForeignKey() => $keys])
-                ->execute()
-                ->fetchAll();
-
-            return $models;
+                    ->select([
+                        $this->getForeignKey() => $keys
+                    ]);
+        } else {
+            return array();
         }
     }
 
-    abstract public function initialize();
     abstract public function getKey();
     abstract public function getForeignKey();
-    abstract public function groupForeignModels(array $models, array $related, Closure $set_link);
 }

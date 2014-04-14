@@ -1,7 +1,7 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Util\Log;
-use CL\Luna\Repo\Repo;
+use CL\Luna\Mapper\Repo;
 
 /**
  * @group integration
@@ -16,7 +16,7 @@ class FieldsTest extends AbstractTestCase {
 
         $user->delete();
 
-        Repo::persist($user);
+        Repo::get()->persist($user);
 
         var_dump(Log::all());
     }

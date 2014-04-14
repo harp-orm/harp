@@ -6,8 +6,8 @@ use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
-use CL\Luna\Model\ModelEvent;
-use CL\Luna\Repo\Repo;
+use CL\Luna\Mapper\NodeEvent;
+use CL\Luna\Mapper\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -48,13 +48,14 @@ class User extends Model {
     public $isBlocked = false;
 
     public $deletedAt;
+    public $test;
 
     /**
      * @return Address
      */
     public function getAddress()
     {
-        return Repo::getLink($this, 'address')->get();
+        return Repo::get()->loadLink($this, 'address')->get();
     }
 
     /**
@@ -62,7 +63,7 @@ class User extends Model {
      */
     public function setAddress(Address $address)
     {
-        return Repo::getLink($this, 'address')->set($address);
+        return Repo::get()->loadLink($this, 'address')->set($address);
     }
 
     /**
@@ -70,7 +71,7 @@ class User extends Model {
      */
     public function getProfile()
     {
-        return Repo::getLink($this, 'profile')->get();
+        return Repo::get()->loadLink($this, 'profile')->get();
     }
 
     /**
@@ -78,7 +79,7 @@ class User extends Model {
      */
     public function setProfile(Profile $profile)
     {
-        return Repo::getLink($this, 'profile')->set($profile);
+        return Repo::get()->loadLink($this, 'profile')->set($profile);
     }
 
     /**
@@ -86,7 +87,7 @@ class User extends Model {
      */
     public function getPosts()
     {
-        return Repo::getLink($this, 'posts');
+        return Repo::get()->loadLink($this, 'posts');
     }
 
     public static function test($model)
@@ -104,16 +105,20 @@ class User extends Model {
                 new Field\String('name'),
                 new Field\Password('password'),
                 new Field\Boolean('isBlocked'),
+                new Field\Integer('addressId'),
+                new Field\Timestamp('deletedAt'),
             ])
 
             ->setRels([
-                (new Rel\BelongsTo('address', Address::getSchema())),
+                new Rel\BelongsTo('address', $schema, Address::getSchema()),
 
-                (new Rel\HasMany('posts', Post::getSchema()))
-                    ->setCascade(Rel\AbstractRel::UNLINK),
+                new Rel\HasMany('posts', $schema, Post::getSchema(), [
+                    'cascade' => Rel\AbstractRel::UNLINK
+                ]),
 
-                (new Rel\HasOne('profile', Profile::getSchema()))
-                    ->setCascade(Rel\AbstractRel::DELETE),
+                new Rel\HasOne('profile', $schema, Profile::getSchema(), [
+                    'cascade' => Rel\AbstractRel::DELETE
+                ]),
             ])
 
             ->setAsserts([
@@ -121,7 +126,7 @@ class User extends Model {
             ])
 
             ->getEventListeners()
-                ->add(ModelEvent::BEFORE_PERSIST, 'CL\Luna\Test\User::test');
+                ->addBefore(NodeEvent::SAVE, 'CL\Luna\Test\User::test');
     }
 
 }

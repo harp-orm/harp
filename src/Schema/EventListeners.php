@@ -1,36 +1,74 @@
 <?php namespace CL\Luna\Schema;
 
-use CL\Luna\Event\Event;
-use CL\Luna\Util\Collection;
 use CL\Luna\Model\Model;
+use SplObjectStorage;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class EventListeners extends Collection {
+class EventListeners {
 
-    public function add($event, $listener)
+    public static function dispatchEvent($listeners, $event, Model $target)
     {
-        $this->items[$event] []= $listener;
+        if (isset($listeners[$event]))
+        {
+            foreach ($listeners[$event] as $listner)
+            {
+                call_user_func($listner, $target);
+            }
+        }
+    }
+
+    protected $before;
+    protected $after;
+
+    public function getBefore()
+    {
+        return $this->before;
+    }
+
+    public function getAfter()
+    {
+        return $this->after;
+    }
+
+    public function addBefore($event, $listener)
+    {
+        $this->before[$event] []= $listener;
 
         return $this;
     }
 
-    public function hasEvent($event)
+    public function addAfter($event, $listener)
     {
-        return isset($this->items[$event]);
+        $this->after[$event] []= $listener;
+
+        return $this;
     }
 
-    public function dispatchEvent($event, Model $target)
+    public function hasBeforeEvent($event)
     {
-        if ($this->hasEvent($event))
-        {
-            foreach ($this->items[$event] as $listner)
-            {
-                call_user_func($listner, $target);
-            }
+        return isset($this->before[$event]);
+    }
+
+    public function hasAfterEvent($event)
+    {
+        return isset($this->after[$event]);
+    }
+
+    public function dispatchAfterEvent(SplObjectStorage $models, $event)
+    {
+        foreach ($models as $model) {
+            self::dispatchEvent($this->after, $event, $model);
+        }
+    }
+
+    public function dispatchBeforeEvent(SplObjectStorage $models, $event)
+    {
+        foreach ($models as $model) {
+            self::dispatchEvent($this->before, $event, $model);
         }
     }
 }

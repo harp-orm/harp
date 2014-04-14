@@ -1,7 +1,7 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Util\Log;
-use CL\Luna\Repo\Repo;
+use CL\Luna\Mapper\Repo;
 
 /**
  * @group integration
@@ -13,9 +13,6 @@ class RelsTest extends AbstractTestCase {
         Log::setEnabled(TRUE);
 
         $users = User::all()->loadWith(['profile', 'posts']);
-
-        var_dump($users[0]->getProfile());
-        var_dump($users[3]->getProfile());
 
         var_dump(Log::all());
     }

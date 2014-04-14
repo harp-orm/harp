@@ -1,9 +1,9 @@
 <?php namespace CL\Luna\Rel;
 
+use CL\Luna\Mapper;
 use CL\Luna\Model\Model;
-use CL\Luna\Repo\LinkMany;
 use CL\Luna\Util\Arr;
-use CL\Luna\Repo\Repo;
+use CL\Luna\Schema\Schema;
 use SplObjectStorage;
 use Closure;
 
@@ -16,6 +16,13 @@ class HasMany extends AbstractMany
 {
     protected $foreignKey;
     protected $deleteOnRemove;
+
+    public function __construct($name, Schema $schema, Schema $foreign_schema, array $options = array())
+    {
+        $this->foreignKey = $schema->getName().'Id';
+
+        parent::__construct($name, $schema, $foreign_schema, $options);
+    }
 
     public function getDeleteOnRemove()
     {
@@ -39,30 +46,14 @@ class HasMany extends AbstractMany
         return $this->getPrimaryKey();
     }
 
-    public function initialize()
+    public function linkForeignKey(Mapper\AbstractNode $foreign)
     {
-        if ( ! $this->foreignKey)
-        {
-            $this->foreignKey = $this->getSchema()->getName().'Id';
-        }
+        return $foreign->{$this->getForeignKey()};
     }
 
-    public function groupForeignModels(array $models, array $foreign, Closure $set_link)
+    public function linkKey(Mapper\AbstractNode $model)
     {
-        $foreign = Arr::indexGroup($foreign, $this->getForeignKey());
-
-        foreach ($models as $model)
-        {
-            $index = $model->{$this->getKey()};
-            $foreginModels = isset($foreign[$index]) ? $foreign[$index] : array();
-
-            $set_link($model, new LinkMany($this, $foreginModels));
-        }
-    }
-
-    public function getSelect()
-    {
-        return $this->getForeignSchema()->getSelectQuery();
+        return $model->{$this->getKey()};
     }
 
     public function joinRel($query, $parent)
@@ -88,16 +79,7 @@ class HasMany extends AbstractMany
         }
     }
 
-    public function cascadeDelete(Model $model, LinkMany $link)
-    {
-        if ($this->getCascade() === AbstractRel::NULLIFY) {
-            $this->setModels($link->all(), null);
-        } elseif ($this->getCascade() === AbstractRel::DELETE) {
-            $this->deleteModels($link->all());
-        }
-    }
-
-    public function update(Model $model, LinkMany $link)
+    public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
         $this->setModels($link->getAdded(), $model->{$this->getKey()});
 

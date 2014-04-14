@@ -1,8 +1,9 @@
 <?php namespace CL\Luna\Rel;
 
+use CL\Luna\Mapper;
 use CL\Luna\Util\Arr;
 use CL\Luna\Model\Model;
-use CL\Luna\Repo\LinkOne;
+use CL\Luna\Schema\Schema;
 use Closure;
 
 /**
@@ -14,6 +15,13 @@ class HasOne extends AbstractOne
 {
     protected $foreignKey;
 
+    public function __construct($name, Schema $schema, Schema $foreign_schema, array $options = array())
+    {
+        $this->foreignKey = $schema->getName().'Id';
+
+        parent::__construct($name, $schema, $foreign_schema, $options);
+    }
+
     public function getForeignKey()
     {
         return $this->foreignKey;
@@ -24,29 +32,17 @@ class HasOne extends AbstractOne
         return $this->getPrimaryKey();
     }
 
-    public function initialize()
+    public function linkForeignKey(Mapper\AbstractNode $foreign)
     {
-        if ( ! $this->foreignKey)
-        {
-            $this->foreignKey = $this->getSchema()->getName().'Id';
-        }
+        return $foreign->{$this->getForeignKey()};
     }
 
-    public function groupForeignModels(array $models, array $foreign, Closure $set_link)
+    public function linkKey(Mapper\AbstractNode $model)
     {
-        $foreign = Arr::index($foreign, $this->getForeignKey());
-
-        foreach ($models as $model)
-        {
-            $index = $model->{$this->getKey()};
-
-            $foreginModel = isset($foreign[$index]) ? $foreign[$index] : $this->getForeignSchema()->newNotLoadedModel();
-
-            $set_link($model, new LinkOne($this, $foreginModel));
-        }
+        return $model->{$this->getKey()};
     }
 
-    public function update(Model $model, LinkOne $link)
+    public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
         if ($link->isChanged())
         {

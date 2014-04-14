@@ -3,7 +3,8 @@
 use CL\Atlas\Query;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Model\ModelEvent;
-use CL\Luna\Util\Arr;
+use CL\Luna\Util\Storage;
+use SplObjectStorage;
 
 /**
  * @author     Ivan Kerin
@@ -30,10 +31,10 @@ class Delete extends Query\Delete implements SetInterface {
 
     protected $models;
 
-    public function setModels(array $models)
+    public function setModels(SplObjectStorage $models)
     {
         $this->models = $models;
-        $ids = Arr::invoke($models, 'getId');
+        $ids = Storage::invoke($models, 'getId');
         $this->whereKey($ids);
 
         return $this;

@@ -1,5 +1,7 @@
 <?php namespace CL\Luna\ModelQuery;
 
+use SplObjectStorage;
+
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -7,5 +9,5 @@
  */
 interface SetInterface
 {
-    public function setModels(array $models);
+    public function setModels(SplObjectStorage $models);
 }

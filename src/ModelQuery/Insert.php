@@ -4,7 +4,8 @@ use CL\Atlas\Query;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Model\Model;
 use CL\Luna\Model\ModelEvent;
-use CL\Luna\Util\Arr;
+use CL\Luna\Util\Storage;
+use SplObjectStorage;
 
 /**
  * @author     Ivan Kerin
@@ -40,10 +41,10 @@ class Insert extends Query\Insert implements SetInterface {
         return $this;
     }
 
-    public function setModels(array $models)
+    public function setModels(SplObjectStorage $models)
     {
         $this->insertModels = $models;
-        $changes = Arr::invoke($models, 'getChanges');
+        $changes = Storage::invoke($models, 'getChanges');
         $this->setMultiple($changes);
 
         return $this;

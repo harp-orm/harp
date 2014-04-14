@@ -1,7 +1,10 @@
 <?php namespace CL\Luna\Rel;
 
-use CL\Luna\Repo\LinkOne;
-use CL\Luna\Model\Model;
+use CL\Luna\Mapper\AbstractNode;
+use CL\Luna\Mapper\LinkOne;
+use CL\Luna\Util\Arr;
+use Closure;
+
 
 /**
  * @author     Ivan Kerin
@@ -10,15 +13,29 @@ use CL\Luna\Model\Model;
  */
 abstract class AbstractOne extends AbstractRel
 {
-    // abstract public function update(Model $model, LinkOne $link);
-    // abstract public function unlinkModel(Model $model);
+    abstract function linkForeignKey(AbstractNode $model);
+    abstract function linkKey(AbstractNode $model);
 
-    // public function cascadeDelete(Model $model, LinkOne $link)
-    // {
-    //     if ($this->getCascade() === AbstractRel::UNLINK) {
-    //         $this->unlinkModels($link->all());
-    //     } elseif ($this->getCascade() === AbstractRel::DELETE) {
-    //         $this->deleteModels($link->all());
-    //     }
-    // }
+    public function newForeignNotLoaded()
+    {
+        return $this->getForeignSchema()->newInstance(null, AbstractNode::NOT_LOADED);
+    }
+
+    public function loadForeignLinks(array $models, array $foreign, Closure $yield)
+    {
+        $foreign = Arr::index($foreign, [$this, 'linkForeignKey']);
+
+        foreach ($models as $model)
+        {
+            $index = $this->linkKey($model);
+
+            $foreginModel = isset($foreign[$index])
+                ? $foreign[$index]
+                : $this->newForeignNotLoaded();
+
+            $yield($model, new LinkOne($this, $foreginModel));
+        }
+
+        return $foreign;
+    }
 }

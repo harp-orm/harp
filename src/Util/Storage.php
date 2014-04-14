@@ -10,6 +10,16 @@ use Closure;
  */
 class Storage
 {
+    public static function index(SplObjectStorage $storage, $property)
+    {
+        $result = [];
+        foreach ($storage as $item)
+        {
+            $result[$item->{$property}] = $item;
+        }
+        return $result;
+    }
+
     public static function invoke(SplObjectStorage $storage, $function_name)
     {
         $mapped = [];

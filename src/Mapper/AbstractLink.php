@@ -1,8 +1,4 @@
-<?php namespace CL\Luna\Repo;
-
-use CL\Luna\Schema\Schema;
-use CL\Luna\Rel\AbstractRel;
-use CL\Luna\Model\Model;
+<?php namespace CL\Luna\Mapper;
 
 /**
  * @author     Ivan Kerin
@@ -13,7 +9,7 @@ abstract class AbstractLink
 {
     protected $rel;
 
-    public function __construct(AbstractRel $rel)
+    public function __construct(RelInterface $rel)
     {
         $this->rel = $rel;
     }

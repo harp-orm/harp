@@ -1,8 +1,10 @@
 <?php namespace CL\Luna\Rel;
 
-use CL\Luna\Repo\LinkMany;
-use CL\Luna\Model\Model;
-use SplObjectStorage;
+use CL\Luna\Mapper\AbstractNode;
+use CL\Luna\Mapper\LinkMany;
+use CL\Luna\Util\Arr;
+use Closure;
+
 
 /**
  * @author     Ivan Kerin
@@ -11,22 +13,21 @@ use SplObjectStorage;
  */
 abstract class AbstractMany extends AbstractRel
 {
-    // abstract public function update(Model $model, LinkMany $link);
-    // abstract public function unlinkModels(Model $model, LinkMany $link);
+    abstract function linkForeignKey(AbstractNode $model);
+    abstract function linkKey(AbstractNode $model);
 
-    // public function deleteModels(SplObjectStorage $models)
-    // {
-    //     foreach ($models as $model) {
-    //         $model->delete();
-    //     }
-    // }
+    public function loadForeignLinks(array $models, array $foreign, Closure $yield)
+    {
+        $foreign = Arr::groupBy($foreign, [$this, 'linkForeignKey']);
 
-    // public function cascadeDelete(Model $model, LinkMany $link)
-    // {
-    //     if ($this->getCascade() === AbstractRel::UNLINK) {
-    //         $this->unlinkModels($link->all());
-    //     } elseif ($this->getCascade() === AbstractRel::DELETE) {
-    //         $this->deleteModels($link->all());
-    //     }
-    // }
+        foreach ($models as $model)
+        {
+            $index = $this->linkKey($model);
+
+            $foreginModels = isset($foreign[$index]) ? $foreign[$index] : array();
+
+            $yield($model, new LinkMany($this, $foreginModels));
+        }
+    }
+
 }

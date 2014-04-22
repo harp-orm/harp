@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
+DROP TABLE IF EXISTS `User`;
+CREATE TABLE `User` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NULL,
   `password` varchar(100) NULL,
@@ -10,16 +10,16 @@ CREATE TABLE `user` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `address`;
-CREATE TABLE `address` (
+DROP TABLE IF EXISTS `Address`;
+CREATE TABLE `Address` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `zipCode` varchar(100) NULL,
   `location` varchar(100) NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `post`;
-CREATE TABLE `post` (
+DROP TABLE IF EXISTS `Post`;
+CREATE TABLE `Post` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NULL,
   `body` MEDIUMTEXT NULL,
@@ -32,8 +32,8 @@ CREATE TABLE `post` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `profile`;
-CREATE TABLE `profile` (
+DROP TABLE IF EXISTS `Profile`;
+CREATE TABLE `Profile` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `firstName` varchar(100) NULL,
   `lastName` varchar(100) NULL,
@@ -41,24 +41,50 @@ CREATE TABLE `profile` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `user` (`id`, `name`, `addressId`, `isBlocked`)
+DROP TABLE IF EXISTS `Tag`;
+CREATE TABLE `Tag` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `PostTag`;
+CREATE TABLE `PostTag` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `postId` int(11) UNSIGNED NULL,
+  `tagId` int(11) UNSIGNED NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `User` (`id`, `name`, `addressId`, `isBlocked`)
 VALUES
   (1,'User 1', 1, 0),
   (2,'User 2', NULL, 1),
   (3,'User 3', NULL, 1),
   (4,'User 4', 1, NULL);
 
-INSERT INTO `profile` (`id`, `firstName`, `lastName`, `userId`)
+INSERT INTO `Profile` (`id`, `firstName`, `lastName`, `userId`)
 VALUES
   (1,'John', 'Doe', 1),
   (2,'Foo', 'Bar', 2);
 
-INSERT INTO `address` (`id`, `zipCode`, `location`)
+INSERT INTO `Address` (`id`, `zipCode`, `location`)
 VALUES
   (1,'1000', 'Belvedere');
 
-INSERT INTO `post` (`id`, `title`, `body`,`price`,`tags`, `createdAt`, `updatedAt`, `publishedAt`, `userId`)
+INSERT INTO `Post` (`id`, `title`, `body`,`price`,`tags`, `createdAt`, `updatedAt`, `publishedAt`, `userId`)
 VALUES
   (1,'News', 'Big news on the ship', 10.20, 'big,small,medium', '2014-02-10 12:00:00', '2014-02-20 12:00:00', '2014-03-01 12:00:00', 1),
   (2,'New President', 'We will have a new president soon', 10.20, 'medium', '2014-01-10 12:00:00', '2014-01-20 12:00:00', '2014-03-02 12:00:00', 4),
   (3,'Oil Spill', 'BP did it again', 10.20, 'big,medium', '2014-02-20 12:20:00', '2014-02-23 12:00:00', '2014-3-03 12:00:00', 5);
+
+INSERT INTO `Tag` (`id`, `name`)
+VALUES
+  (1, 'buzzword'),
+  (2, 'green');
+
+INSERT INTO `PostTag` (`id`, `postId`, `tagId`)
+VALUES
+  (1, 1, 1),
+  (2, 1, 2),
+  (3, 3, 2);

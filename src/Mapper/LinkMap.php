@@ -44,13 +44,6 @@ class LinkMap
         }
     }
 
-    public function getRecursive(AbstractNode $node)
-    {
-        $all = new SplObjectStorage();
-
-        return $this->addAllRecursive($all, $node);
-    }
-
     public function updateNodes(SplObjectStorage $nodes)
     {
         $nodes = clone $this->map;
@@ -63,15 +56,13 @@ class LinkMap
 
     public function addAllRecursive(SplObjectStorage $all, AbstractNode $node)
     {
-        if (! $all->contains($node)) {
-            $all->attach($node);
+        $all->attach($node);
 
-            if (! $this->isEmpty($node)) {
+        if (! $this->isEmpty($node)) {
 
-                $linkedNodes = $this->get($node)->getNodes();
-                foreach ($linkedNodes as $node) {
-                    $this->addAllRecursive($all, $node);
-                }
+            $linkedNodes = $this->get($node)->getNodes();
+            foreach ($linkedNodes as $node) {
+                $this->addAllRecursive($all, $node);
             }
         }
 

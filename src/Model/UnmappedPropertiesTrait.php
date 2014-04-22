@@ -11,7 +11,7 @@ trait UnmappedPropertiesTrait
 
     public function __get($name)
     {
-        return isset($this->unmapped[$name]) ? $name : NULL;
+        return isset($this->unmapped[$name]) ? $this->unmapped[$name] : null;
     }
 
     public function __set($name, $value)

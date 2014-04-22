@@ -5,7 +5,7 @@ use CL\Luna\Mapper\Repo;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field;
-use CL\Luna\Rel\BelongsTo;
+use CL\Luna\Rel;
 use CL\Carpo\Assert;
 
 /**
@@ -27,12 +27,19 @@ class Post extends Model {
     public $publishedAt;
     public $userId;
 
-    /**
-     * @return LinkOne
-     */
     public function getUser()
     {
         return Repo::get()->loadLink($this, 'user')->get();
+    }
+
+    public function getTags()
+    {
+        return Repo::get()->loadLink($this, 'tags');
+    }
+
+    public function getPostTags()
+    {
+        return Repo::get()->loadLink($this, 'postTags');
     }
 
     public function setUser(User $user)
@@ -44,7 +51,9 @@ class Post extends Model {
     {
         $schema
             ->setRels([
-                new BelongsTo('user', $schema, User::getSchema()),
+                new Rel\BelongsTo('user', $schema, User::getSchema()),
+                new Rel\HasMany('postTags', $schema, PostTag::getSchema()),
+                new Rel\HasManyThrough('tags', $schema, Tag::getSchema(), 'postTags'),
             ]);
 
         $schema

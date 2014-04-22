@@ -78,6 +78,7 @@ trait ModelQueryTrait {
                     sprintf('Relation %s does not exist on %s when joining', $name, $schema->getName())
                 );
             }
+
             $rel->joinRel($this, $parent);
 
             if ($childRels)

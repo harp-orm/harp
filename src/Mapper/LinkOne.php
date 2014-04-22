@@ -12,7 +12,7 @@ class LinkOne extends AbstractLink
     protected $current;
     protected $original;
 
-    public function __construct(RelInterface $rel, AbstractNode $current)
+    public function __construct(AbstractRel $rel, AbstractNode $current)
     {
         parent::__construct($rel);
 

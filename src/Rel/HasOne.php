@@ -2,7 +2,10 @@
 
 use CL\Luna\Mapper;
 use CL\Luna\Util\Arr;
+use CL\Luna\Util\Storage;
 use CL\Luna\Model\Model;
+use CL\Luna\ModelQuery\RelJoinInterface;
+use CL\Atlas\Query\AbstractQuery;
 use CL\Luna\Schema\Schema;
 use Closure;
 
@@ -11,15 +14,17 @@ use Closure;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasOne extends AbstractOne
+class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 {
     protected $foreignKey;
+    protected $foreignSchema;
 
-    public function __construct($name, Schema $schema, Schema $foreign_schema, array $options = array())
+    public function __construct($name, Schema $schema, Schema $foreignSchema, array $options = array())
     {
         $this->foreignKey = $schema->getName().'Id';
+        $this->foreignSchema = $foreignSchema;
 
-        parent::__construct($name, $schema, $foreign_schema, $options);
+        parent::__construct($name, $schema, $options);
     }
 
     public function getForeignKey()
@@ -32,14 +37,35 @@ class HasOne extends AbstractOne
         return $this->getPrimaryKey();
     }
 
-    public function linkForeignKey(Mapper\AbstractNode $foreign)
+    public function getForeignSchema()
     {
-        return $foreign->{$this->getForeignKey()};
+        return $this->foreignSchema;
     }
 
-    public function linkKey(Mapper\AbstractNode $model)
+    public function hasForeign(array $models)
     {
-        return $model->{$this->getKey()};
+        return ! empty(Arr::extractUnique($models, $this->foreignKey));
+    }
+
+    public function loadForeign(array $models)
+    {
+        return $this
+            ->getForeignSchema()
+            ->select([
+                $this->getKey() => Arr::extractUnique($models, $this->foreignKey)
+            ]);
+    }
+
+    public function linkToForeign(array $models, array $foreign)
+    {
+        return Storage::combineArrays($models, $foreign, function($model, $foreign){
+            return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
+        });
+    }
+
+    public function newForeignNotLoaded()
+    {
+        return $this->foreignSchema->newInstance(null, Mapper\AbstractNode::NOT_LOADED);
     }
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
@@ -51,12 +77,12 @@ class HasOne extends AbstractOne
         }
     }
 
-    public function joinRel($query, $parent)
+    public function joinRel(AbstractQuery $query, $parent)
     {
-        $columns = [$this->getForeignKey() => $this->getForeignPrimaryKey()];
+        $columns = [$this->getForeignKey() => $this->getForeignSchema()->getPrimaryKey()];
 
         $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignSchema());
 
-        $query->join([$this->getForeignTable() => $this->getName()], $condition);
+        $query->joinAliased($this->getForeignTable(), $this->getName(), $condition);
     }
 }

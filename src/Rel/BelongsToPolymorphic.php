@@ -23,7 +23,7 @@ class BelongsToPlymorphic extends AbstractOne
         $this->schemaKey = $name.'Schema';
         $this->foreignSchemas = $foreignSchemas;
 
-        parent::__construct($name, $schema, $foreignSchema, $options);
+        parent::__construct($name, $schema, $options);
     }
 
     public function getKey()
@@ -36,42 +36,55 @@ class BelongsToPlymorphic extends AbstractOne
         return $this->schemaKey;
     }
 
-    public function getForeignSchemaName(Schema $schema)
-    {
-        return array_search($schema, $this->foreignSchemas);
-    }
-
     public function getForeignKey()
     {
         return $this->getSchema()->getPrimaryKey();
     }
 
-    public function loadForeignNodes(array $models)
+    public function getForeignSchemaName(Schema $schema)
+    {
+        return array_search($schema, $this->foreignSchemas);
+    }
+
+    public function getForeignSchema($name)
+    {
+        return $this->foreignSchemas[$schemaName];
+    }
+
+    public function hasForeign(array $models)
+    {
+        return true;
+    }
+
+    public function loadForeign(array $models)
     {
         $groups = Arr::groupBy($models, function($model){
             return $model->{$this->schemaKey};
         });
 
-        foreach ($groups as $group => & $models) {
-            $schema = $this->foreignSchemas[$group];
-            $conditions = [
-                $this->getForeignKey() => $this->getKeysFrom($models)
-            ];
+        foreach ($groups as $schemaName => & $models) {
 
-            $models = $this->loadSchemaNodes($schema, $conditions);
+            $keys = Arr::extractUnique($models, $this->key);
+
+            if ($keys) {
+                $models = $this->getForeignSchema($schemaName)
+                    ->select([
+                        $this->getForeignKey() => $keys
+                    ]);
+            }
         }
 
         return Arr::flatten($groups);
     }
 
-    public function linkForeignKey(Mapper\AbstractNode $foreign)
+    public function linkToForeign(array $models, array $foreign)
     {
-        return $this->getForeignSchemaName($foreign->getSchema()).'|'.$foreign->{$this->getForeignKey()};
-    }
-
-    public function linkKey(Mapper\AbstractNode $model)
-    {
-        return $model->{$this->getForeignKey()}.'|'.$model->{$this->getKey()};
+        return Storage::combineArrays($models, $foreign, function($model, $foreign){
+            return (
+                $model->{$this->key} == $foreign->{$this->getForeignKey()}
+                and $model->{$this->schemaKey} == $this->getForeignSchemaName($foreign)
+            );
+        });
     }
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)

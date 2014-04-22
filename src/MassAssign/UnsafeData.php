@@ -3,7 +3,7 @@
 use CL\Luna\Model\Model;
 use CL\Luna\Mapper\LinkOne;
 use CL\Luna\Mapper\Repo;
-use CL\Luna\Rel\AbstractRel;
+use CL\Luna\Mapper\AbstractRel;
 
 /*
  * @author     Ivan Kerin

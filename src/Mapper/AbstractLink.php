@@ -9,7 +9,7 @@ abstract class AbstractLink
 {
     protected $rel;
 
-    public function __construct(RelInterface $rel)
+    public function __construct(AbstractRel $rel)
     {
         $this->rel = $rel;
     }

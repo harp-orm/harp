@@ -34,6 +34,13 @@ class IdentityMap
         return $node;
     }
 
+    public function getArray(array $nodes)
+    {
+        return array_map(function($node){
+            return $this->get($node);
+        }, $nodes);
+    }
+
     public function hasKey($key)
     {
         return isset($this->nodes[$key]);
@@ -46,7 +53,7 @@ class IdentityMap
 
     public function setKey($key, AbstractNode $node)
     {
-        return isset($this->nodes[$key]);
+        return $this->nodes[$key] = $node;
     }
 
     public function set(AbstractNode $model)

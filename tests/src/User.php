@@ -113,11 +113,11 @@ class User extends Model {
                 new Rel\BelongsTo('address', $schema, Address::getSchema()),
 
                 new Rel\HasMany('posts', $schema, Post::getSchema(), [
-                    'cascade' => Rel\AbstractRel::UNLINK
+                    // 'cascade' => Rel\AbstractRel::UNLINK
                 ]),
 
                 new Rel\HasOne('profile', $schema, Profile::getSchema(), [
-                    'cascade' => Rel\AbstractRel::DELETE
+                    // 'cascade' => Rel\AbstractRel::DELETE
                 ]),
             ])
 

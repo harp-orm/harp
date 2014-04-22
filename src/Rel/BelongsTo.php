@@ -1,9 +1,12 @@
 <?php namespace CL\Luna\Rel;
 
 use CL\Luna\Util\Arr;
+use CL\Luna\Util\Storage;
 use CL\Luna\Model\Model;
 use CL\Luna\Mapper;
 use CL\Luna\Schema\Schema;
+use CL\Luna\ModelQuery\RelJoinInterface;
+use CL\Atlas\Query\AbstractQuery;
 use Closure;
 
 /**
@@ -11,15 +14,38 @@ use Closure;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsTo extends AbstractOne
+class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
 {
     protected $key;
+    protected $foreignSchema;
 
     public function __construct($name, Schema $schema, Schema $foreignSchema, array $options = array())
     {
         $this->key = $name.'Id';
+        $this->foreignSchema = $foreignSchema;
 
-        parent::__construct($name, $schema, $foreignSchema, $options);
+        parent::__construct($name, $schema, $options);
+    }
+
+    public function hasForeign(array $models)
+    {
+        return ! empty(Arr::extractUnique($models, $this->key));
+    }
+
+    public function loadForeign(array $models)
+    {
+        return $this
+            ->getForeignSchema()
+            ->select([
+                $this->getForeignKey() => Arr::extractUnique($models, $this->key)
+            ]);
+    }
+
+    public function linkToForeign(array $models, array $foreign)
+    {
+        return Storage::combineArrays($models, $foreign, function($model, $foreign){
+            return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
+        });
     }
 
     public function getKey()
@@ -27,19 +53,19 @@ class BelongsTo extends AbstractOne
         return $this->key;
     }
 
+    public function getForeignSchema()
+    {
+        return $this->foreignSchema;
+    }
+
+    public function newForeignNotLoaded()
+    {
+        return $this->foreignSchema->newInstance(null, Mapper\AbstractNode::NOT_LOADED);
+    }
+
     public function getForeignKey()
     {
         return $this->getSchema()->getPrimaryKey();
-    }
-
-    public function linkForeignKey(Mapper\AbstractNode $foreign)
-    {
-        return $foreign->{$this->getForeignKey()};
-    }
-
-    public function linkKey(Mapper\AbstractNode $model)
-    {
-        return $model->{$this->getKey()};
     }
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
@@ -50,7 +76,7 @@ class BelongsTo extends AbstractOne
         }
     }
 
-    public function joinRel($query, $parent)
+    public function joinRel(AbstractQuery $query, $parent)
     {
         $columns = [$this->getForeignKey() => $this->getKey()];
 

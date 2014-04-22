@@ -1,6 +1,7 @@
 <?php namespace CL\Luna\Mapper;
 
 use CL\Luna\Util\Storage;
+use Countable;
 use SplObjectStorage;
 
 /**
@@ -8,12 +9,12 @@ use SplObjectStorage;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class LinkMany extends AbstractLink
+class LinkMany extends AbstractLink implements Countable
 {
     protected $current;
     protected $original;
 
-    public function __construct(RelInterface $rel, array $current)
+    public function __construct(AbstractRel $rel, array $current)
     {
         parent::__construct($rel);
 
@@ -61,6 +62,11 @@ class LinkMany extends AbstractLink
     public function has(AbstractNode $node)
     {
         return $this->current->contains($node);
+    }
+
+    public function hasId($id)
+    {
+        return array_search($id, $this->getIds()) !== false;
     }
 
     public function all()

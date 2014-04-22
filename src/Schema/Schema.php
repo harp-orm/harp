@@ -313,7 +313,7 @@ class Schema implements SchemaInterface
             $this->rels = new Rels();
 
             $this->modelReflection = new ReflectionClass($this->getModelClass());
-            $this->table = $this->name = strtolower($this->modelReflection->getShortName());
+            $this->table = $this->name = $this->modelReflection->getShortName();
 
             $this->modelReflection->getMethod('initialize')->invoke(NULL, $this);
 
@@ -330,7 +330,7 @@ class Schema implements SchemaInterface
                 $this->fields->all()
             );
 
-            $this->cascadeRels = Arr::filterInvoke($this->rels->all(), 'getCascade');
+            // $this->cascadeRels = Arr::filterInvoke($this->rels->all(), 'getCascade');
         }
     }
 }

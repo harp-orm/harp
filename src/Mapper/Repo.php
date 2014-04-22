@@ -27,17 +27,11 @@ class Repo
     {
         $this->identityMap = new IdentityMap();
         $this->linkMap = new LinkMap();
-        $this->persist = new PersistQueue($this->linkMap);
     }
 
     public function getIdentityMap()
     {
         return $this->identityMap;
-    }
-
-    public function getPersist()
-    {
-        return $this->persist;
     }
 
     public function getLinkMap()
@@ -53,21 +47,16 @@ class Repo
     public function getCanonicalArray(array $nodes)
     {
         return array_map(function($node){
-            return $this->identityMap->get($node);
+            return $this->getCanonicalNode($node);
         }, $nodes);
     }
 
     public function persist(AbstractNode $node)
     {
-        $nodes = $this->linkMap->getRecursive($node);
+        $nodes = new LinkedNodes($this->linkMap);
+        $nodes->add($node);
 
-        $this->linkMap->updateNodes($nodes);
-
-        $nodes->addAll($this->linkMap->getRecursive($node));
-
-        $this->persist
-            ->add($nodes)
-            ->flush();
+        Persist::nodes($nodes);
     }
 
     public function loadLink(AbstractNode $node, $linkName)
@@ -83,19 +72,21 @@ class Repo
         return $links->get($linkName);
     }
 
-    public function loadRel(RelInterface $rel, array $nodes)
+    public function loadRel(AbstractRel $rel, array $nodes)
     {
-        $foreign = $rel->loadForeignNodes($nodes);
+        $foreign = $rel->loadForeignForNodes($nodes);
 
-        $foreign = $this->getCanonicalArray($foreign);
+        $linked = $rel->linkToForeign($nodes, $foreign);
 
-        $rel->loadForeignLinks(
-            $nodes,
-            $foreign,
-            function($model, $link) use ($rel) {
-                $this->linkMap->get($model)->add($rel->getName(), $link);
+        foreach ($nodes as $node) {
+            if ($linked->contains($node)) {
+                $link = $rel->newLink($linked[$node], $this->identityMap);
+            } else {
+                $link = $rel->newEmptyLink();
             }
-        );
+
+            $this->linkMap->get($node)->add($rel->getName(), $link);
+        }
 
         return $foreign;
     }

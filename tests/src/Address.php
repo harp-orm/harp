@@ -34,7 +34,7 @@ class Address extends Model {
     public $location;
 
     /**
-     * @return Post
+     * @return Users
      */
     public function users()
     {

@@ -75,6 +75,15 @@ class Arr
         }, $arr);
     }
 
+    public static function extractUnique(array $arr, $attribute)
+    {
+        return array_filter(
+            array_unique(
+                self::extract($arr, $attribute)
+            )
+        );
+    }
+
     public static function filterInvoke(array $arr, $method)
     {
         return array_filter($arr, function($item) use ($method) {

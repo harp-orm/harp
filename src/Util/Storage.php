@@ -10,6 +10,49 @@ use Closure;
  */
 class Storage
 {
+    public static function combineArrays(array $arr, array $arr2, Closure $yield)
+    {
+        $items = new SplObjectStorage();
+
+        foreach ($arr as $item) {
+            foreach ($arr2 as $item2) {
+                if ($yield($item, $item2)) {
+                    $items->attach($item, $item2);
+                }
+            }
+        }
+
+        return $items;
+    }
+
+    public static function groupCombineArrays(array $arr, array $arr2, Closure $yield)
+    {
+        $groups = new SplObjectStorage();
+
+        foreach ($arr as $item) {
+            foreach ($arr2 as $item2) {
+                if ($yield($item, $item2)) {
+                    Storage::addNested($groups, $item, $item2);
+                }
+            }
+        }
+
+        return $groups;
+    }
+
+    public static function addNested(SplObjectStorage $storage, $parent, $child)
+    {
+        $current = $storage->contains($parent)
+            ? $storage[$parent]
+            : array();
+
+        array_push($current, $child);
+
+        $storage[$parent] = $current;
+
+        return $storage;
+    }
+
     public static function index(SplObjectStorage $storage, $property)
     {
         $result = [];
@@ -20,12 +63,12 @@ class Storage
         return $result;
     }
 
-    public static function invoke(SplObjectStorage $storage, $function_name)
+    public static function invoke(SplObjectStorage $storage, $method)
     {
         $mapped = [];
 
         foreach ($storage as $object) {
-            $mapped []= $object->$function_name();
+            $mapped []= $object->$method();
         }
 
         return $mapped;
@@ -43,6 +86,18 @@ class Storage
 
         return $filtered;
     }
+
+    public static function setEach(SplObjectStorage $storage, array $properties)
+    {
+        foreach ($storage as $object) {
+            foreach ($properties as $name => $value) {
+                $object->$name = $value;
+            }
+        }
+
+        return $storage;
+    }
+
 
     public static function toArray(SplObjectStorage $storage)
     {

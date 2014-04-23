@@ -17,14 +17,12 @@ use Closure;
 class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
 {
     protected $key;
-    protected $foreignSchema;
 
     public function __construct($name, Schema $schema, Schema $foreignSchema, array $options = array())
     {
         $this->key = $name.'Id';
-        $this->foreignSchema = $foreignSchema;
 
-        parent::__construct($name, $schema, $options);
+        parent::__construct($name, $schema, $foreignSchema, $options);
     }
 
     public function hasForeign(array $models)
@@ -53,16 +51,6 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
         return $this->key;
     }
 
-    public function getForeignSchema()
-    {
-        return $this->foreignSchema;
-    }
-
-    public function newForeignNotLoaded()
-    {
-        return $this->foreignSchema->newInstance(null, Mapper\AbstractNode::NOT_LOADED);
-    }
-
     public function getForeignKey()
     {
         return $this->getSchema()->getPrimaryKey();
@@ -84,4 +72,5 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
 
         $query->joinAliased($this->getForeignTable(), $this->getName(), $condition);
     }
+
 }

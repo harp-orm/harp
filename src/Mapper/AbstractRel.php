@@ -10,6 +10,7 @@ namespace CL\Luna\Mapper;
 abstract class AbstractRel
 {
     protected $name;
+    protected $foreignSchema;
     protected $schema;
 
     abstract public function update(AbstractNode $parent, AbstractLink $link);
@@ -17,9 +18,10 @@ abstract class AbstractRel
     abstract public function loadForeign(array $nodes);
     abstract public function linkToForeign(array $nodes, array $foreign);
 
-    public function __construct($name, SchemaInterface $schema, array $options = array())
+    public function __construct($name, SchemaInterface $schema, SchemaInterface $foreignSchema, array $options = array())
     {
         $this->name = $name;
+        $this->foreignSchema = $foreignSchema;
         $this->schema = $schema;
 
         foreach ($options as $name => $value) {
@@ -35,6 +37,11 @@ abstract class AbstractRel
     public function getSchema()
     {
         return $this->schema;
+    }
+
+    public function getForeignSchema()
+    {
+        return $this->foreignSchema;
     }
 
     public function loadForeignForNodes(array $nodes)

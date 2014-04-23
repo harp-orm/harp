@@ -31,7 +31,7 @@ class TestTest extends AbstractTestCase {
             'name' => 'new name!!',
         ]);
 
-        $data->assign($user3);
+        $data->assignTo($user3);
 
         Repo::get()->persist($user3);
 

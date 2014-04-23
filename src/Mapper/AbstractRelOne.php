@@ -9,7 +9,10 @@ namespace CL\Luna\Mapper;
  */
 abstract class AbstractRelOne extends AbstractRel
 {
-    abstract public function newForeignNotLoaded();
+    public function newForeignNotLoaded()
+    {
+        return $this->getForeignSchema()->newInstance(null, AbstractNode::NOT_LOADED);
+    }
 
     public function newLink(AbstractNode $foreign, IdentityMap $map)
     {

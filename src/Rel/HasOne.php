@@ -17,14 +17,12 @@ use Closure;
 class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 {
     protected $foreignKey;
-    protected $foreignSchema;
 
     public function __construct($name, Schema $schema, Schema $foreignSchema, array $options = array())
     {
         $this->foreignKey = $schema->getName().'Id';
-        $this->foreignSchema = $foreignSchema;
 
-        parent::__construct($name, $schema, $options);
+        parent::__construct($name, $schema, $foreignSchema, $options);
     }
 
     public function getForeignKey()
@@ -61,11 +59,6 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
         return Storage::combineArrays($models, $foreign, function($model, $foreign){
             return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
         });
-    }
-
-    public function newForeignNotLoaded()
-    {
-        return $this->foreignSchema->newInstance(null, Mapper\AbstractNode::NOT_LOADED);
     }
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)

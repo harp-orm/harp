@@ -18,17 +18,15 @@ use Closure;
 class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
 {
     protected $foreignKey;
-    protected $foreignSchema;
     protected $through;
 
     public function __construct($name, Schema $schema, Schema $foreignSchema, $through, array $options = array())
     {
         $this->through = $through;
-        $this->foreignSchema = $foreignSchema;
         $this->foreignKey = $foreignSchema->getName().'Id';
         $this->key = $schema->getName().'Id';
 
-        parent::__construct($name, $schema, $options);
+        parent::__construct($name, $schema, $foreignSchema, $options);
     }
 
     public function getForeignKey()
@@ -39,11 +37,6 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
     public function getThroughRel()
     {
         return $this->getSchema()->getRel($this->through);
-    }
-
-    public function getForeignSchema()
-    {
-        return $this->foreignSchema;
     }
 
     public function getKey()

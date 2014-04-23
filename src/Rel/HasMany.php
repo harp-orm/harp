@@ -18,25 +18,18 @@ use Closure;
 class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
 {
     protected $foreignKey;
-    protected $foreignSchema;
     protected $deleteOnRemove;
 
     public function __construct($name, Schema $schema, Schema $foreignSchema, array $options = array())
     {
         $this->foreignKey = lcfirst($schema->getName()).'Id';
-        $this->foreignSchema = $foreignSchema;
 
-        parent::__construct($name, $schema, $options);
+        parent::__construct($name, $schema, $foreignSchema, $options);
     }
 
     public function getDeleteOnRemove()
     {
         return $this->deleteOnRemove;
-    }
-
-    public function getForeignSchema()
-    {
-        return $this->foreignSchema;
     }
 
     public function getForeignKey()

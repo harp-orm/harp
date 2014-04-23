@@ -23,7 +23,7 @@ class BelongsToPlymorphic extends AbstractOne
         $this->schemaKey = $name.'Schema';
         $this->foreignSchemas = $foreignSchemas;
 
-        parent::__construct($name, $schema, $options);
+        parent::__construct($name, $schema, reset($foreignSchemas), $options);
     }
 
     public function getKey()
@@ -46,7 +46,7 @@ class BelongsToPlymorphic extends AbstractOne
         return array_search($schema, $this->foreignSchemas);
     }
 
-    public function getForeignSchema($name)
+    public function getForeignSchemaForName($name)
     {
         return $this->foreignSchemas[$schemaName];
     }
@@ -67,7 +67,7 @@ class BelongsToPlymorphic extends AbstractOne
             $keys = Arr::extractUnique($models, $this->key);
 
             if ($keys) {
-                $models = $this->getForeignSchema($schemaName)
+                $models = $this->getForeignSchemaForName($schemaName)
                     ->select([
                         $this->getForeignKey() => $keys
                     ]);
@@ -94,10 +94,5 @@ class BelongsToPlymorphic extends AbstractOne
             $model->{$this->key} = $link->get()->getId();
             $model->{$this->schemaKey} = $link->get()->getSchema()->getName();
         }
-    }
-
-    public function joinRel($query, $parent)
-    {
-
     }
 }

@@ -11,10 +11,11 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "clippings/atlas": "dev-master"
+        "clippings/atlas": "dev-master",
+        "clippings/carpo": "dev-master"
     },
     "require-dev": {
-        "openbuildings/environment-backup": "0.1.*"
+        "clippings/env-backup": "0.2.*"
     },
     "autoload": {
         "psr-4": {"CL\\Luna\\": "src/"}

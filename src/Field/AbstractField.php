@@ -7,39 +7,25 @@
  */
 abstract class AbstractField
 {
-	protected $name;
-	protected $default;
+    protected $name;
 
-	public function __construct($name, array $properties = NULL)
-	{
-		$this->name = $name;
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
 
-		if ($properties)
-		{
-			foreach ($properties as $propertyName => $value)
-			{
-				$this->$propertyName = $value;
-			}
-		}
-	}
+    public function getName()
+    {
+        return $this->name;
+    }
 
-	public function getDefault()
-	{
-		return $this->default;
-	}
+    public function load($value)
+    {
+        return $value;
+    }
 
-	public function getName()
-	{
-		return $this->name;
-	}
-
-	public function load($value)
-	{
-		return $value;
-	}
-
-	public function save($value)
-	{
-		return $value;
-	}
+    public function save($value)
+    {
+        return $value;
+    }
 }

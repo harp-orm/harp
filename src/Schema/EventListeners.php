@@ -1,33 +1,74 @@
 <?php namespace CL\Luna\Schema;
 
-use CL\Luna\Event\Event;
-use CL\Luna\Util\Collection;
+use CL\Luna\Model\Model;
+use SplObjectStorage;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class EventListeners extends Collection {
+class EventListeners {
 
-	public function add($type, $listener)
-	{
-		$this->items[$type] []= $listener;
+    public static function dispatchEvent($listeners, $event, Model $target)
+    {
+        if (isset($listeners[$event]))
+        {
+            foreach ($listeners[$event] as $listner)
+            {
+                call_user_func($listner, $target);
+            }
+        }
+    }
 
-		return $this;
-	}
+    protected $before;
+    protected $after;
 
-	public function dispatchEvent(Event $event)
-	{
-		foreach ($this->items[$event->getType()] as $listner)
-		{
-			call_user_func($listner, $event->getTarget(), $event);
+    public function getBefore()
+    {
+        return $this->before;
+    }
 
-			if ($event->isStopped())
-			{
-				break;
-			}
-		}
-		return ! $event->isDefaultPrevented();
-	}
+    public function getAfter()
+    {
+        return $this->after;
+    }
+
+    public function addBefore($event, $listener)
+    {
+        $this->before[$event] []= $listener;
+
+        return $this;
+    }
+
+    public function addAfter($event, $listener)
+    {
+        $this->after[$event] []= $listener;
+
+        return $this;
+    }
+
+    public function hasBeforeEvent($event)
+    {
+        return isset($this->before[$event]);
+    }
+
+    public function hasAfterEvent($event)
+    {
+        return isset($this->after[$event]);
+    }
+
+    public function dispatchAfterEvent(SplObjectStorage $models, $event)
+    {
+        foreach ($models as $model) {
+            self::dispatchEvent($this->after, $event, $model);
+        }
+    }
+
+    public function dispatchBeforeEvent(SplObjectStorage $models, $event)
+    {
+        foreach ($models as $model) {
+            self::dispatchEvent($this->before, $event, $model);
+        }
+    }
 }

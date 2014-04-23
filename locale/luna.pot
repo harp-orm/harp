@@ -1,5 +1,0 @@
- #. TRANSLATORS: Please leave %s as it is, because it is needed by the program.
- #. Thank you for contributing to this project.
- #: src/Model/Errors.php:13
- msgid "Field must be present"
- msgstr ""

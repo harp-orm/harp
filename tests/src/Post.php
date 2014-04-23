@@ -1,12 +1,12 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
+use CL\Luna\Mapper\Repo;
 use CL\Luna\Schema\Schema;
 use CL\Luna\Schema\SchemaTrait;
-use CL\Luna\Field\Integer;
-use CL\Luna\Field\String;
-use CL\Luna\Rel\BelongsTo;
-use CL\Luna\Validator\Present;
+use CL\Luna\Field;
+use CL\Luna\Rel;
+use CL\Carpo\Assert;
 
 /**
  * @author     Ivan Kerin
@@ -15,54 +15,69 @@ use CL\Luna\Validator\Present;
  */
 class Post extends Model {
 
-	use SchemaTrait;
+    use SchemaTrait;
 
-	/**
-	 * @var integer
-	 */
-	public $id;
+    public $id;
+    public $title;
+    public $body;
+    public $price;
+    public $tags;
+    public $createdAt;
+    public $updatedAt;
+    public $publishedAt;
+    public $userId;
+    public $schemaClass;
 
-	/**
-	 * @var integer
-	 */
-	public $user_id;
+    public function getUser()
+    {
+        return Repo::get()->loadLink($this, 'user')->get();
+    }
 
-	/**
-	 * @var string
-	 */
-	public $title;
+    public function getTags()
+    {
+        return Repo::get()->loadLink($this, 'tags');
+    }
 
-	/**
-	 * @var string
-	 */
-	public $body;
+    public function getPostTags()
+    {
+        return Repo::get()->loadLink($this, 'postTags');
+    }
 
-	/**
-	 * @return Post
-	 */
-	public function user()
-	{
-		return parent::getLoadedRel('user');
-	}
+    public function setUser(User $user)
+    {
+        return Repo::get()->loadLink($this, 'user')->set($user);
+    }
 
-	public static function CL_Luna_Test_Post(Schema $schema)
-	{
-		$schema
-			->setRels([
-				new BelongsTo('user', User::getSchema()),
-			]);
+    public static function initialize(Schema $schema)
+    {
+        $schema
+            ->setPolymorphic(true);
 
-		$schema
-			->setFields([
-				new Integer('id'),
-				new String('title'),
-				new String('body'),
-			]);
+        $schema
+            ->setRels([
+                new Rel\BelongsTo('user', $schema, User::getSchema()),
+                new Rel\HasMany('postTags', $schema, PostTag::getSchema()),
+                new Rel\HasManyThrough('tags', $schema, Tag::getSchema(), 'postTags'),
+            ]);
 
-		$schema
-			->setValidators([
-				new Present('title'),
-			]);
-	}
+        $schema
+            ->setFields([
+                new Field\Integer('id'),
+                new Field\String('title'),
+                new Field\Text('body'),
+                new Field\Decimal('price'),
+                new Field\Serialized('tags', Field\Serialized::CSV),
+                new Field\Timestamp('createdAt'),
+                new Field\Timestamp('updatedAt'),
+                new Field\DateTime('publishedAt'),
+                new Field\Integer('userId'),
+                new Field\String('schemaClass'),
+            ]);
+
+        $schema
+            ->setAsserts([
+                new Assert\Present('title'),
+            ]);
+    }
 
 }

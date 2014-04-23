@@ -7,43 +7,45 @@
  */
 abstract class Collection
 {
-	protected $items;
+    protected $items;
 
-	public function __construct(array $items = NULL)
-	{
-		if ($items)
-		{
-			$this->set($items);
-		}
-	}
+    public function __construct(array $items = NULL)
+    {
+        if ($items)
+        {
+            $this->set($items);
+        }
+    }
 
-	public function all()
-	{
-		return $this->items;
-	}
+    public function all()
+    {
+        return $this->items;
+    }
 
-	public function set(array $items)
-	{
-		array_map([$this, 'add'], $items);
+    public function set(array $items)
+    {
+        foreach ($items as $item) {
+            $this->add($item);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function has($name)
-	{
-		return isset($this->items[$name]);
-	}
+    public function has($name)
+    {
+        return isset($this->items[$name]);
+    }
 
-	public function get($name)
-	{
-		if ($this->has($name))
-		{
-			return $this->items[$name];
-		}
-	}
+    public function get($name)
+    {
+        if ($this->has($name))
+        {
+            return $this->items[$name];
+        }
+    }
 
-	public function isEmpty()
-	{
-		return empty($this->items);
-	}
+    public function isEmpty()
+    {
+        return empty($this->items);
+    }
 }

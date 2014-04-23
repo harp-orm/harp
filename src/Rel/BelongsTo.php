@@ -1,13 +1,12 @@
 <?php namespace CL\Luna\Rel;
 
 use CL\Luna\Util\Arr;
+use CL\Luna\Util\Storage;
 use CL\Luna\Model\Model;
-use CL\Luna\Field\Integer;
-use CL\Luna\Rel\Feature\SingleInterface;
-use CL\Luna\Schema\Query\Select;
-use CL\Luna\Schema\Query\JoinRel;
+use CL\Luna\Mapper;
 use CL\Luna\Schema\Schema;
-use CL\Luna\EntityManager\LoadJob;
+use CL\Luna\ModelQuery\RelJoinInterface;
+use CL\Atlas\Query\AbstractQuery;
 use Closure;
 
 /**
@@ -15,46 +14,63 @@ use Closure;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsTo extends AbstractRel implements SingleInterface
+class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
 {
-	protected $savePriority = self::PREPEND;
-	protected $key;
+    protected $key;
 
-	public function getKey()
-	{
-		return $this->key;
-	}
+    public function __construct($name, Schema $schema, Schema $foreignSchema, array $options = array())
+    {
+        $this->key = $name.'Id';
 
-	public function getForeignKey()
-	{
-		return $this->getSchema()->getPrimaryKey();
-	}
+        parent::__construct($name, $schema, $foreignSchema, $options);
+    }
 
-	public function getSelect()
-	{
-		return $this->getForeignSchema()->getSelectSchema();
-	}
+    public function hasForeign(array $models)
+    {
+        return ! empty(Arr::extractUnique($models, $this->key));
+    }
 
-	public function initialize()
-	{
-		if ( ! $this->key)
-		{
-			$this->key = $this->getForeignSchema()->getName().'_id';
-		}
+    public function loadForeign(array $models)
+    {
+        return $this
+            ->getForeignSchema()
+            ->select([
+                $this->getForeignKey() => Arr::extractUnique($models, $this->key)
+            ]);
+    }
 
-		$this->getSchema()->getFields()->add(new Integer($this->key));
-	}
+    public function linkToForeign(array $models, array $foreign)
+    {
+        return Storage::combineArrays($models, $foreign, function($model, $foreign){
+            return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
+        });
+    }
 
-	public function update(Model $parent, Model $foreign)
-	{
-		$parent->{$this->getForeignKey()} = $foreign->getId();
-	}
+    public function getKey()
+    {
+        return $this->key;
+    }
 
-	public function joinRel($query, $parent)
-	{
-		$table = $parent ?: $this->getTable();
-		$columns = [$this->getForeignPrimaryKey() => $this->getForeignKey()];
+    public function getForeignKey()
+    {
+        return $this->getSchema()->getPrimaryKey();
+    }
 
-		$query->join([$this->getForeignTable() => $this->getName()], $this->getJoinCondition($table, $columns));
-	}
+    public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
+    {
+        if ($link->get()->isPersisted())
+        {
+            $model->{$this->getKey()} = $link->get()->getId();
+        }
+    }
+
+    public function joinRel(AbstractQuery $query, $parent)
+    {
+        $columns = [$this->getForeignKey() => $this->getKey()];
+
+        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignSchema());
+
+        $query->joinAliased($this->getForeignTable(), $this->getName(), $condition);
+    }
+
 }

@@ -12,6 +12,14 @@ use CL\Luna\Mapper\AbstractRel;
  */
 class UnsafeData
 {
+    public static function assign(array $data, Model $model)
+    {
+        $data = new UnsafeData($data);
+        $data->assignTo($model);
+
+        return $model;
+    }
+
     protected $data;
 
     public function getData()
@@ -24,7 +32,7 @@ class UnsafeData
         $this->data = $data;
     }
 
-    public function assign(Model $model)
+    public function assignTo(Model $model)
     {
         $rels = $model->getSchema()->getRels()->all();
 
@@ -38,14 +46,14 @@ class UnsafeData
 
             if ($link instanceof LinkOne) {
                 $relModel = self::isLoaded($data) ? self::load($link->getRel(), $data) : $link->get();
-                (new UnsafeData($data))->assign($relModel);
+                UnsafeData::assign($data, $relModel);
                 $link->set($relModel);
             } else {
                 $updatedItems = [];
 
                 foreach ($data as $offset => $itemData) {
                     $relModel = self::isLoaded($itemData) ? self::load($link->getRel(), $itemData) : $link->getRel()->getForeignSchema()->newInstance();
-                    (new UnsafeData($itemData))->assign($relModel);
+                    UnsafeData::assign($itemData, $relModel);
                     $updatedItems []= $relModel;
                 }
 

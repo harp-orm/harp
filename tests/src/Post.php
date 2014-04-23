@@ -26,6 +26,7 @@ class Post extends Model {
     public $updatedAt;
     public $publishedAt;
     public $userId;
+    public $schemaClass;
 
     public function getUser()
     {
@@ -50,6 +51,9 @@ class Post extends Model {
     public static function initialize(Schema $schema)
     {
         $schema
+            ->setPolymorphic(true);
+
+        $schema
             ->setRels([
                 new Rel\BelongsTo('user', $schema, User::getSchema()),
                 new Rel\HasMany('postTags', $schema, PostTag::getSchema()),
@@ -67,6 +71,7 @@ class Post extends Model {
                 new Field\Timestamp('updatedAt'),
                 new Field\DateTime('publishedAt'),
                 new Field\Integer('userId'),
+                new Field\String('schemaClass'),
             ]);
 
         $schema

@@ -5,6 +5,7 @@ use CL\Luna\Mapper\Repo;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Util\Arr;
 use CL\Atlas\Query;
+use CL\Atlas\SQL\Aliased;
 use PDO;
 
 /**
@@ -64,15 +65,24 @@ class Select extends Query\Select {
 
     public function execute()
     {
+        if ($this->getSchema()->getPolymorphic()) {
+            array_unshift($this->columns, new Aliased($this->getSchema()->getTable().'.schemaClass'));
+        }
+
         $this->addToLog();
 
         $pdoStatement = parent::execute();
 
-        $pdoStatement->setFetchMode(
-            PDO::FETCH_CLASS,
-            $this->getSchema()->getModelClass(),
-            [null, AbstractNode::PERSISTED]
-        );
+        if ($this->getSchema()->getPolymorphic()) {
+            $pdoStatement->setFetchMode(
+                PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE
+            );
+        } else {
+            $pdoStatement->setFetchMode(
+                PDO::FETCH_CLASS,
+                $this->getSchema()->getModelClass()
+            );
+        }
 
         return $pdoStatement;
     }

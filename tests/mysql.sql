@@ -29,6 +29,8 @@ CREATE TABLE `Post` (
   `updatedAt` TIMESTAMP,
   `publishedAt` DATETIME,
   `userId` int(11) UNSIGNED NULL,
+  `schemaClass` varchar(255) NULL,
+  `isPublished` int(1) UNSIGNED NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -72,11 +74,12 @@ INSERT INTO `Address` (`id`, `zipCode`, `location`)
 VALUES
   (1,'1000', 'Belvedere');
 
-INSERT INTO `Post` (`id`, `title`, `body`,`price`,`tags`, `createdAt`, `updatedAt`, `publishedAt`, `userId`)
+INSERT INTO `Post` (`id`, `title`, `body`,`price`,`tags`, `createdAt`, `updatedAt`, `publishedAt`, `userId`, `schemaClass`, `isPublished`)
 VALUES
-  (1,'News', 'Big news on the ship', 10.20, 'big,small,medium', '2014-02-10 12:00:00', '2014-02-20 12:00:00', '2014-03-01 12:00:00', 1),
-  (2,'New President', 'We will have a new president soon', 10.20, 'medium', '2014-01-10 12:00:00', '2014-01-20 12:00:00', '2014-03-02 12:00:00', 4),
-  (3,'Oil Spill', 'BP did it again', 10.20, 'big,medium', '2014-02-20 12:20:00', '2014-02-23 12:00:00', '2014-3-03 12:00:00', 5);
+  (1,'News', 'Big news on the ship', 10.20, 'big,small,medium', '2014-02-10 12:00:00', '2014-02-20 12:00:00', '2014-03-01 12:00:00', 1, 'CL\\Luna\\Test\\Post', NULL),
+  (2,'New President', 'We will have a new president soon', 10.20, 'medium', '2014-01-10 12:00:00', '2014-01-20 12:00:00', '2014-03-02 12:00:00', 4, 'CL\\Luna\\Test\\Post', NULL),
+  (3,'Oil Spill', 'BP did it again', 10.20, 'big,medium', '2014-02-20 12:20:00', '2014-02-23 12:00:00', '2014-3-03 12:00:00', 5, 'CL\\Luna\\Test\\Post', NULL),
+  (4,'Blog News', 'DHH Does not like TDD', 1.20, 'small', '2014-04-20 12:20:00', '2014-07-23 12:00:00', '2014-3-04 12:00:00', 3, 'CL\\Luna\\Test\\BlogPost', 1);
 
 INSERT INTO `Tag` (`id`, `name`)
 VALUES

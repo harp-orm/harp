@@ -32,6 +32,7 @@ class Schema implements SchemaInterface
     private $asserts;
     private $configurationLoaded;
     private $cascadeRels;
+    private $polymorphic;
 
     public function getName()
     {
@@ -62,6 +63,20 @@ class Schema implements SchemaInterface
     public function setPrimaryKey($primaryKey)
     {
         $this->primaryKey = $primaryKey;
+
+        return $this;
+    }
+
+    public function getPolymorphic()
+    {
+        $this->lazyLoadConfiguration();
+
+        return $this->polymorphic;
+    }
+
+    public function setPolymorphic($polymorphic)
+    {
+        $this->polymorphic = (bool) $polymorphic;
 
         return $this;
     }
@@ -314,6 +329,13 @@ class Schema implements SchemaInterface
 
             $this->modelReflection = new ReflectionClass($this->getModelClass());
             $this->table = $this->name = $this->modelReflection->getShortName();
+
+            if ($this->polymorphic) {
+                $class = $this->modelReflection->getParentClass();
+                if ($class !== 'CL\Luna\Model') {
+                    $this->table = $class::getTable();
+                }
+            }
 
             $this->modelReflection->getMethod('initialize')->invoke(NULL, $this);
 

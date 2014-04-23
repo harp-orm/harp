@@ -14,29 +14,32 @@ abstract class Model extends AbstractNode {
 
     private $errors;
 
-    public function __construct(array $fields = NULL, $state = self::PENDING)
+    public function __construct(array $fields = null, $state = null)
     {
+        if ( ! $state) {
+            $state = $this->getId() ? self::PERSISTED : self::PENDING;
+        }
+
         parent::__construct($state);
 
-        if ($state === self::PERSISTED)
-        {
+        if ($state === self::PERSISTED) {
             $fields = $fields !== NULL ? $fields : $this->getFieldValues();
 
             $fields = $this->getSchema()->getFields()->loadData($fields);
 
             $this->setProperties($fields);
             $this->setOriginals($fields);
-        }
-        elseif ($state === self::PENDING)
-        {
+
+        } elseif ($state === self::PENDING) {
             $this->setOriginals($this->getFieldValues());
-            if ($fields)
-            {
+            if ($this->getSchema()->getPolymorphic()) {
+                $this->schemaClass = get_called_class();
+            }
+            if ($fields) {
                 $this->setProperties($fields);
             }
-        }
-        else
-        {
+
+        } else {
             $this->setOriginals($this->getFieldValues());
         }
     }

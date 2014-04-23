@@ -1,170 +1,120 @@
 <?php namespace CL\Luna\Model;
 
-use CL\Luna\Util\Arr;
-use CL\Luna\Event\ModelEvent;
-use CL\Luna\EntityManager\EntityManager;
-use CL\Luna\EntityManager\RelContent;
-use CL\Luna\Schema\Query\Update;
+use CL\Luna\Mapper\AbstractNode;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Model {
+abstract class Model extends AbstractNode {
 
-	use DirtyTrackingTrait;
-	use UnmappedPropertiesTrait;
+    use DirtyTrackingTrait;
+    use UnmappedPropertiesTrait;
 
-	private $errors;
-	private $relContents;
-	private $isLoaded = FALSE;
-	private $isDeleted = FALSE;
-	private $isSaved = FALSE;
+    private $errors;
 
-	public function __construct(array $properties = NULL, $loaded = FALSE)
-	{
-		if ($loaded === TRUE)
-		{
-			$properties = $properties !== NULL ? $properties : $this->getProperties();
+    public function __construct(array $fields = null, $state = null)
+    {
+        if ( ! $state) {
+            $state = $this->getId() ? self::PERSISTED : self::PENDING;
+        }
 
-			$properties = $this->getSchema()->getFields()->loadData($properties);
+        parent::__construct($state);
 
-			$this->setProperties($properties);
-			$this->setOriginals($properties);
+        if ($state === self::PERSISTED) {
+            $fields = $fields !== NULL ? $fields : $this->getFieldValues();
 
-			$this->isLoaded = TRUE;
-		}
-		else
-		{
-			$this->setOriginals($this->getProperties());
-			$this->setProperties($properties);
-		}
-	}
+            $fields = $this->getSchema()->getFields()->loadData($fields);
 
-	public function getId()
-	{
-		return $this->{$this->getSchema()->getPrimaryKey()};
-	}
+            $this->setProperties($fields);
+            $this->setOriginals($fields);
 
-	public function setInserted($id)
-	{
-		$this->{$this->getSchema()->getPrimaryKey()} = $id;
-		$this->setOriginals($this->getProperties());
-		$this->isLoaded = TRUE;
+        } elseif ($state === self::PENDING) {
+            $this->setOriginals($this->getFieldValues());
+            if ($this->getSchema()->getPolymorphic()) {
+                $this->schemaClass = get_called_class();
+            }
+            if ($fields) {
+                $this->setProperties($fields);
+            }
 
-		return $this;
-	}
+        } else {
+            $this->setOriginals($this->getFieldValues());
+        }
+    }
 
-	public function isLoaded()
-	{
-		return $this->isLoaded;
-	}
+    public function getId()
+    {
+        return $this->{$this->getSchema()->getPrimaryKey()};
+    }
 
-	public function isDeleted()
-	{
-		return $this->isDeleted;
-	}
+    public function setId($id)
+    {
+        $this->{$this->getSchema()->getPrimaryKey()} = $id;
 
-	public function setProperties(array $values)
-	{
-		foreach ($values as $name => $value)
-		{
-			$this->$name = $value;
-		}
-	}
+        return $this;
+    }
 
-	public function getProperties()
-	{
-		$properties = [];
-		foreach ($this->getSchema()->getPropertyNames() as $name)
-		{
-			$properties[$name] = $this->{$name};
-		}
-		return $properties;
-	}
+    public function resetOriginals()
+    {
+        $this->setOriginals($this->getFieldValues());
 
-	public function save()
-	{
-		if ($this->getSchema()->dipatchModelEvent(ModelEvent::SAVE, $this))
-		{
-			$this->isSaving = TRUE;
-		}
+        return $this;
+    }
 
-		return $this;
-	}
+    public function setProperties(array $values)
+    {
+        foreach ($values as $name => $value)
+        {
+            $this->$name = $value;
+        }
+    }
 
-	public function preserve()
-	{
-		if ($this->getSchema()->dipatchModelEvent(ModelEvent::PRESERVE, $this))
-		{
-			$this->setOriginals($this->getProperties());
-			$this->isSaving = FALSE;
-		}
+    public function getFieldValues()
+    {
+        $fields = [];
+        foreach ($this->getSchema()->getFieldNames() as $name)
+        {
+            $fields[$name] = $this->{$name};
+        }
+        return $fields;
+    }
 
-		return $this;
-	}
+    public function delete()
+    {
+        $this->state = self::DELETED;
 
-	public function delete()
-	{
-		if ($this->getSchema()->dipatchModelEvent(ModelEvent::DELETE, $this))
-		{
-			$this->isDeleted = TRUE;
-		}
+        return $this;
+    }
 
-		return $this;
-	}
+    public function dispatchEvent($event)
+    {
+        $this->getSchema()->dispatchEvent($event, $this);
 
-	public function restore()
-	{
-		(new Update($this->getSchema()))
-			->whereKey($this->getId())
-			->set([Schema::SOFT_DELETE_KEY => NULL])
-			->execute();
+        return $this;
+    }
 
-		return $this;
-	}
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 
-	public function getLoadedRel($relName)
-	{
-		if ( ! isset($this->relContents[$relName]))
-		{
-			$rel = $this->getSchema()->getRel($relName);
-			$relContent = new RelContent($rel, $this);
+    public function validate()
+    {
+        $changes = $this->getChanges();
 
-			EntityManager::getInstance()->load($relContent);
-			$this->addRelContent($relContent);
-		}
+        if ($this->getUnmapped()) {
+            $changes += $this->getUnmapped();
+        }
 
-		return $this->relContents[$relName]->getContent();
-	}
+        $this->errors = $this->getSchema()->getAsserts()->execute($changes);
 
-	public function getRelContents()
-	{
-		return $this->relContents;
-	}
+        return $this->isValid();
+    }
 
-	public function addRelContent(RelContent $content)
-	{
-		$this->relContents[$content->getRel()->getName()] = $content;
-
-		return $this;
-	}
-
-	public function getErrors()
-	{
-		return $this->errors;
-	}
-
-	public function validate()
-	{
-		$this->errors = $this->getSchema()->getValidators()->executeArray($this->getChanges());
-
-		return $this->isValid();
-	}
-
-	public function isValid()
-	{
-		return $this->getErrors() ? $this->getErrors()->isEmpty() : TRUE;
-	}
+    public function isEmptyErrors()
+    {
+        return $this->errors ? $this->errors->isEmpty() : true;
+    }
 }

@@ -7,5 +7,8 @@
  */
 class String extends AbstractField
 {
-	protected $default = "";
+    public function save($value)
+    {
+        return (string) $value;
+    }
 }

@@ -6,7 +6,8 @@ use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field\String;
 use CL\Luna\Field\Integer;
 use CL\Luna\Rel\HasMany;
-use CL\Luna\Validator\Present;
+use CL\Luna\Mapper\Repo;
+use CL\Carpo\Assert;
 
 /**
  * @author     Ivan Kerin
@@ -15,45 +16,45 @@ use CL\Luna\Validator\Present;
  */
 class Address extends Model {
 
-	use SchemaTrait;
+    use SchemaTrait;
 
-	/**
-	 * @var integer
-	 */
-	public $id;
+    /**
+     * @var integer
+     */
+    public $id;
 
-	/**
-	 * @var string
-	 */
-	public $zip_code;
+    /**
+     * @var string
+     */
+    public $zipCode;
 
-	/**
-	 * @var string
-	 */
-	public $locatoion;
+    /**
+     * @var string
+     */
+    public $location;
 
-	/**
-	 * @return Post
-	 */
-	public function users()
-	{
-		return parent::getLoadedRel('users');
-	}
+    /**
+     * @return Users
+     */
+    public function users()
+    {
+        return Repo::get()->loadLink($this, 'users');
+    }
 
-	public static function CL_Luna_Test_Address(Schema $schema)
-	{
-		$schema
-			->setRels([
-				new HasMany('users', User::getSchema()),
-			])
-			->setValidators([
-				new Present('locatoion'),
-			])
-			->setFields([
-				new Integer('id'),
-				new String('zip_code'),
-				new String('location'),
-			]);
-	}
+    public static function initialize(Schema $schema)
+    {
+        $schema
+            ->setRels([
+                new HasMany('users', $schema, User::getSchema()),
+            ])
+            ->setAsserts([
+                new Assert\Present('location'),
+            ])
+            ->setFields([
+                new Integer('id'),
+                new String('zipCode'),
+                new String('location'),
+            ]);
+    }
 
 }

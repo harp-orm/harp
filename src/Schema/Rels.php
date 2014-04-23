@@ -1,12 +1,9 @@
 <?php namespace CL\Luna\Schema;
 
-use CL\Luna\Rel\AbstractRel;
+use CL\Luna\Mapper\AbstractRel;
 use CL\Luna\Util\Collection;
-use CL\Luna\Model\Model;
-use CL\Luna\Rel\Feature\SetOneInterface;
-use CL\Luna\Rel\Feature\SetManyInterface;
-use CL\Luna\Rel\Feature\SaveOneInterface;
-use CL\Luna\Rel\Feature\SaveManyInterface;
+use CL\Luna\Util\Arr;
+
 
 /**
  * @author     Ivan Kerin
@@ -15,23 +12,19 @@ use CL\Luna\Rel\Feature\SaveManyInterface;
  */
 class Rels extends Collection {
 
-	public function add(AbstractRel $item)
-	{
-		$this->items[$item->getName()] = $item;
+    public function add(AbstractRel $item)
+    {
+        $this->items[$item->getName()] = $item;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function initialize(Schema $schema)
-	{
-		if ($this->items)
-		{
-			foreach ($this->items as $item)
-			{
-				$item
-					->setSchema($schema)
-					->initialize();
-			}
-		}
-	}
+    public function filterOnDelete()
+    {
+        if ($this->items) {
+            return Arr::filterInvoke($this->items, 'getOnDelete');
+        } else {
+            return $items;
+        }
+    }
 }

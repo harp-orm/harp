@@ -11,31 +11,31 @@ use CL\Luna\Util\Collection;
  */
 class Fields extends Collection {
 
-	public function add(AbstractField $item)
-	{
-		$this->items[$item->getName()] = $item;
+    public function add(AbstractField $item)
+    {
+        $this->items[$item->getName()] = $item;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getNames()
-	{
-		return array_keys($this->items);
-	}
+    public function getNames()
+    {
+        return array_keys($this->items);
+    }
 
-	public function getDefaults()
-	{
-		return Arr::invoke($this->items, 'getDefault');
-	}
+    public function getDefaults()
+    {
+        return Arr::invoke($this->items, 'getDefault');
+    }
 
-	public function loadData($data)
-	{
-		return Arr::invokeObjects($data, $this->items, 'load');
-	}
+    public function loadData($data)
+    {
+        return Arr::invokeObjects($data, $this->items, 'load');
+    }
 
-	public function saveData($data)
-	{
-		return Arr::invokeObjects($data, $this->items, 'save');
-	}
+    public function saveData($data)
+    {
+        return Arr::invokeObjects($data, $this->items, 'save');
+    }
 
 }

@@ -1,10 +1,5 @@
 <?php namespace CL\Luna\Schema;
 
-use CL\Luna\Schema\Query\Select;
-use CL\Luna\Schema\Query\Update;
-use CL\Luna\Schema\Query\Insert;
-use CL\Luna\Schema\Query\Delete;
-
 /*
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -12,95 +7,102 @@ use CL\Luna\Schema\Query\Delete;
  */
 trait SchemaTrait
 {
-	private static $schema;
+    private static $schema;
 
-	public static function getName()
-	{
-		return self::getSchema()->getName();
-	}
+    public static function getName()
+    {
+        return self::getSchema()->getName();
+    }
 
-	public static function getPrimaryKey()
-	{
-		return self::getSchema()->getPrimaryKey();
-	}
+    public static function getPrimaryKey()
+    {
+        return self::getSchema()->getPrimaryKey();
+    }
 
-	public static function getTable()
-	{
-		return self::getSchema()->getTable();
-	}
+    public static function getTable()
+    {
+        return self::getSchema()->getTable();
+    }
 
-	public static function getSoftDelete()
-	{
-		return self::getSchema()->getSoftDelete();
-	}
+    public static function getSoftDelete()
+    {
+        return self::getSchema()->getSoftDelete();
+    }
 
-	public static function getDb()
-	{
-		return self::getSchema()->getDb();
-	}
+    public static function getDb()
+    {
+        return self::getSchema()->getDb();
+    }
 
-	public static function getPropertyNames()
-	{
-		return self::getSchema()->getPropertyNames();
-	}
+    public static function getPropertyNames()
+    {
+        return self::getSchema()->getPropertyNames();
+    }
 
-	public static function getFields()
-	{
-		return self::getSchema()->getFields();
-	}
+    public static function getFields()
+    {
+        return self::getSchema()->getFields();
+    }
 
-	public static function getRels()
-	{
-		return self::getSchema()->getRels();
-	}
+    public static function getField($name)
+    {
+        return self::getSchema()->getField($name);
+    }
 
-	public static function getValidators()
-	{
-		return self::getSchema()->getValidators();
-	}
+    public static function getRels()
+    {
+        return self::getSchema()->getRels();
+    }
 
-	public static function getSchema()
-	{
-		self::initializeSchema();
+    public static function getRel($name)
+    {
+        return self::getSchema()->getRel($name);
+    }
 
-		return self::$schema;
-	}
+    public static function getValidators()
+    {
+        return self::getSchema()->getValidators();
+    }
 
-	public static function get($id)
-	{
-		$result = static::all()
-			->whereKey($id)
-			->limit(1)
-			->execute();
+    public static function getSchema()
+    {
+        self::initializeSchema();
 
-		return $result->fetch();
-	}
+        return self::$schema;
+    }
 
-	public static function all()
-	{
-		return static::getSchema()->getSelectSchema();
-	}
+    public static function get($id)
+    {
+        return static::all()
+            ->whereKey($id)
+            ->first();
+    }
 
-	public static function deleteAll()
-	{
-		return static::getSchema()->getDeleteSchema();
-	}
+    public static function all()
+    {
+        return static::getSchema()->getSelectQuery();
+    }
 
-	public static function update()
-	{
-		return static::getSchema()->getUpdateSchema();
-	}
+    public static function deleteQuery()
+    {
+        return static::getSchema()->getDeleteQuery();
+    }
 
-	public static function insert()
-	{
-		return static::getSchema()->getInsertSchema();
-	}
+    public static function updateQuery()
+    {
+        return static::getSchema()->getUpdateQuery();
+    }
 
-	public static function initializeSchema()
-	{
-		if ( ! self::$schema)
-		{
-			self::$schema = new Schema(get_called_class());
-		}
-	}
+    public static function insertQuery()
+    {
+        return static::getSchema()->getInsertQuery();
+    }
+
+    public static function initializeSchema()
+    {
+        if ( ! self::$schema)
+        {
+            self::$schema = new Schema(get_called_class());
+        }
+    }
 }

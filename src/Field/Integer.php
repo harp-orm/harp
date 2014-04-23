@@ -7,4 +7,8 @@
  */
 class Integer extends AbstractField
 {
+    public function load($value)
+    {
+        return is_numeric($value) ? (int) $value : null;
+    }
 }

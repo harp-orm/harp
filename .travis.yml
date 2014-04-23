@@ -4,15 +4,15 @@ php:
   - 5.4
   - 5.5
 
+install:
+  - composer install
+
 before_install:
   # Set the GitHub OAuth token to make use of the 6000 per hour rate limit
   # This is read only token for only public repos
   - "mkdir -p ~/.composer"
   - mv .travis.composer.config.json ~/.composer/config.json
   - composer selfupdate
-
-install:
-  - composer install
 
 before_script:
   - mkdir -p build/logs

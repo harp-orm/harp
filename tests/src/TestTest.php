@@ -88,6 +88,24 @@ class TestTest extends AbstractTestCase {
         );
     }
 
+    public function testLoadIds()
+    {
+        Log::setEnabled(true);
+
+        $ids = Post::findAll()->whereKeys([1,2,3])->loadIds();
+
+        $expected = array(1, 2, 3);
+
+        $this->assertEquals($expected, $ids);
+
+        $this->assertEquals(
+            [
+                'SELECT Post.* FROM Post WHERE (id IN (1, 2, 3))',
+            ],
+            Log::all()
+        );
+    }
+
     public function testEagerLoad()
     {
         Log::setEnabled(TRUE);

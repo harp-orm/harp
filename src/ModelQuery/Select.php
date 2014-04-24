@@ -65,6 +65,14 @@ class Select extends Query\Select {
         return Repo::get()->getCanonicalArray($models);
     }
 
+    public function loadIds()
+    {
+        $this->addToLog();
+
+        return parent::execute()
+            ->fetchAll(PDO::FETCH_COLUMN, $this->getSchema()->getPrimaryKey());
+    }
+
     public function first()
     {
         $items = $this->limit(1)->load();

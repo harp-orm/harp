@@ -45,6 +45,11 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
         return $this->key;
     }
 
+    public function getThroughKey()
+    {
+        return $this->getName().'Key';
+    }
+
     public function hasForeign(array $models)
     {
         return ! empty($models);
@@ -63,7 +68,7 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
         $select = $this
             ->getForeignSchema()
             ->getSelectQuery()
-                ->column($throughKey, $this->getName().'_key')
+                ->column($throughKey, $this->getTHroughKey())
                 ->joinRels($this->through)
                 ->where([
                     $throughForeignKey => Arr::extractUnique($models, $this->getSchema()->getPrimaryKey())
@@ -77,7 +82,7 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
     public function linkToForeign(array $models, array $foreign)
     {
         return Objects::groupCombineArrays($models, $foreign, function ($model, $foreign) {
-            return $model->getId() == $foreign->{$this->getName().'_key'};
+            return $model->getId() == $foreign->{$this->getThroughKey()};
         });
     }
 

@@ -4,6 +4,7 @@ namespace CL\Luna\Model;
 
 use CL\Luna\Mapper\SchemaInterface;
 use CL\Luna\Mapper\AbstractNode;
+use CL\Luna\Mapper\NodeEvent;
 use CL\Luna\Util\Arr;
 use CL\Luna\ModelQuery;
 use CL\Carpo\Asserts;
@@ -197,6 +198,62 @@ class Schema implements SchemaInterface
         $this->lazyLoadConfiguration();
 
         return $this->eventListeners;
+    }
+
+    public function setEventBeforeDelete($callback)
+    {
+        $this->getEventListeners()->addBefore(AbstractNode::DELETE, $callback);
+
+        return $this;
+    }
+
+    public function setEventAfterDelete($callback)
+    {
+        $this->getEventListeners()->addAfter(NodeEvent::DELETE, $callback);
+
+        return $this;
+    }
+
+    public function setEventBeforeSave($callback)
+    {
+        $this->getEventListeners()->addBefore(NodeEvent::SAVE, $callback);
+
+        return $this;
+    }
+
+    public function setEventAfterSave($callback)
+    {
+        $this->getEventListeners()->addAfter(NodeEvent::SAVE, $callback);
+
+        return $this;
+    }
+
+    public function setEventBeforeInsert($callback)
+    {
+        $this->getEventListeners()->addBefore(NodeEvent::INSERT, $callback);
+
+        return $this;
+    }
+
+    public function setEventAfterInsert($callback)
+    {
+        $this->getEventListeners()->addAfter(NodeEvent::INSERT, $callback);
+
+        return $this;
+    }
+
+    public function setEventBeforeUpdate($callback)
+    {
+        $this->getEventListeners()->addBefore(NodeEvent::UPDATE, $callback);
+
+        return $this;
+    }
+
+    public function setEventAfterUpdate($callback)
+    {
+        $this->getEventListeners()->addAfter(NodeEvent::UPDATE, $callback);
+
+        return $this;
     }
 
     public function dispatchEvent($event, Model $target)

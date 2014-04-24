@@ -6,7 +6,6 @@ use CL\Luna\Model\SchemaTrait;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
-use CL\Luna\Mapper\NodeEvent;
 
 /**
  * @author     Ivan Kerin
@@ -106,8 +105,7 @@ class User extends Model {
                 new Assert\Present('name'),
             ])
 
-            ->getEventListeners()
-                ->addBefore(NodeEvent::SAVE, 'CL\Luna\Test\User::test');
+            ->setEventBeforeSave('CL\Luna\Test\User::test');
     }
 
 }

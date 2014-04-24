@@ -82,7 +82,7 @@ class TestTest extends AbstractTestCase {
                 'SELECT Post.polymorphicClass, Post.* FROM Post WHERE (id = 1) LIMIT 1',
                 'SELECT Tag.* FROM Tag WHERE (id = 1) LIMIT 1',
                 'SELECT Tag.* FROM Tag WHERE (id = 2) LIMIT 1',
-                'SELECT Tag.*, postTags.postId AS tags_key FROM Tag JOIN PostTag AS postTags ON postTags.tagId = Tag.id WHERE (postTags.PostId IN (1))',
+                'SELECT Tag.*, postTags.postId AS tagsKey FROM Tag JOIN PostTag AS postTags ON postTags.tagId = Tag.id WHERE (postTags.PostId IN (1))',
            ],
             Log::all()
         );

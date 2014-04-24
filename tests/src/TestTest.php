@@ -3,7 +3,7 @@
 use CL\Luna\Util\Log;
 use CL\Atlas\Query\InsertQuery;
 use CL\Luna\Mapper\Repo;
-use CL\Luna\MassAssign\UnsafeData;
+use CL\Luna\MassAssign\Data;
 
 class TestTest extends AbstractTestCase {
 
@@ -13,7 +13,7 @@ class TestTest extends AbstractTestCase {
 
         $user3 = User::get(3);
 
-        $data = new UnsafeData([
+        $data = new Data([
             'posts' => [
                 [
                     'title' => 'my title',
@@ -29,6 +29,10 @@ class TestTest extends AbstractTestCase {
                 'zipCode' => 2222,
             ],
             'name' => 'new name!!',
+        ], [
+            'posts' => ['title', 'body'],
+            'address' => ['_id', 'zipCode'],
+            'name',
         ]);
 
         $data->assignTo($user3);

@@ -12,4 +12,5 @@ use Closure;
 interface LinkSetDataInterface
 {
     public function setData(array $data, Closure $yeild);
+    public function getRel();
 }

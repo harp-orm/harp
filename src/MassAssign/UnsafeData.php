@@ -1,9 +1,6 @@
-<?php namespace CL\Luna\MassAssign;
+<?php
 
-use CL\Luna\Model\Model;
-use CL\Luna\Mapper\LinkOne;
-use CL\Luna\Mapper\Repo;
-use CL\Luna\Mapper\AbstractRel;
+namespace CL\Luna\MassAssign;
 
 /*
  * @author     Ivan Kerin
@@ -12,12 +9,10 @@ use CL\Luna\Mapper\AbstractRel;
  */
 class UnsafeData
 {
-    public static function assign(array $data, AssignNodeInterface $model)
+    public static function assign(array $data, AssignNodeInterface $node)
     {
         $data = new UnsafeData($data);
-        $data->assignTo($model);
-
-        return $model;
+        $data->assignTo($node);
     }
 
     protected $data;

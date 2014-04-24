@@ -36,6 +36,13 @@ class Select extends Query\Select {
         return $models;
     }
 
+    public function prependColumn($column)
+    {
+        array_unshift($this->columns, new Aliased($column));
+
+        return $this;
+    }
+
     protected static function loadRels($schema, $models, $rels)
     {
         foreach ($rels as $relName => $childRels) {
@@ -66,7 +73,7 @@ class Select extends Query\Select {
     public function execute()
     {
         if ($this->getSchema()->getPolymorphic()) {
-            array_unshift($this->columns, new Aliased($this->getSchema()->getTable().'.polymorphicClass'));
+            $this->prependColumn($this->getSchema()->getTable().'.polymorphicClass');
         }
 
         $this->addToLog();

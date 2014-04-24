@@ -1,8 +1,8 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Util\Log;
-use CL\Atlas\Query\InsertQuery;
 use CL\Luna\Mapper\Repo;
+use CL\Luna\ModelQuery\Union;
 use CL\Luna\MassAssign\Data;
 
 class TestTest extends AbstractTestCase {
@@ -145,5 +145,4 @@ class TestTest extends AbstractTestCase {
             $user2->getFieldValues()
         );
     }
-
 }

@@ -86,17 +86,21 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
         }
     }
 
+    public function loadForeignSchema(array $data)
+    {
+        if (isset($data['_class'])) {
+            $class = $data['_class'];
+            return $class::getSchema();
+        }
+
+        return $this->getForeignSchema();
+    }
+
     public function loadFromData(array $data)
     {
         if (isset($data['_id'])) {
-            $foreignSchema = $this->getForeignSchema();
-
-            if (isset($data['_class'])) {
-                $class = $data['_class'];
-                $foreignSchema = $class::getSchema();
-            }
-
-            return $foreignSchema
+            return $this
+                ->loadForeignSchema($data)
                 ->getSelectQuery()
                 ->whereKey($data['_id'])
                 ->first();

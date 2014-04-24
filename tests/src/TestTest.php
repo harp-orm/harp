@@ -11,7 +11,7 @@ class TestTest extends AbstractTestCase {
     {
         Log::setEnabled(TRUE);
 
-        $user3 = User::get(3);
+        $user3 = User::find(3);
 
         $data = new Data([
             'posts' => [
@@ -55,7 +55,7 @@ class TestTest extends AbstractTestCase {
 
     public function testPolymorphic()
     {
-        $post = Post::get(4);
+        $post = Post::find(4);
 
         $this->assertInstanceOf('CL\Luna\Test\BlogPost', $post);
         $this->assertTrue($post->isPublished);
@@ -67,10 +67,10 @@ class TestTest extends AbstractTestCase {
     {
         Log::setEnabled(TRUE);
 
-        $post = Post::get(1);
+        $post = Post::find(1);
 
-        $tag1 = Tag::get(1);
-        $tag2 = Tag::get(2);
+        $tag1 = Tag::find(1);
+        $tag2 = Tag::find(2);
 
         $tags = $post->getTags();
 
@@ -88,11 +88,11 @@ class TestTest extends AbstractTestCase {
         );
     }
 
-    public function testLoadWith()
+    public function testEagerLoad()
     {
         Log::setEnabled(TRUE);
 
-        $posts = Post::all()->loadWith(['user' => ['address', 'location']]);
+        $posts = Post::findAll()->eagerLoad(['user' => ['address', 'location']]);
 
         $user1 = $posts[0]->getUser();
         $user2 = $posts[1]->getUser();

@@ -4,7 +4,6 @@ namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\Query;
 use CL\Luna\Model\Schema;
-use CL\Luna\Model\ModelEvent;
 use CL\Luna\Util\Objects;
 use SplObjectStorage;
 

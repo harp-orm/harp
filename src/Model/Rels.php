@@ -20,13 +20,4 @@ class Rels extends Collection {
 
         return $this;
     }
-
-    public function filterOnDelete()
-    {
-        if ($this->items) {
-            return Arr::filterInvoke($this->items, 'getOnDelete');
-        } else {
-            return $items;
-        }
-    }
 }

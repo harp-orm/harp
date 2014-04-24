@@ -68,43 +68,37 @@ trait SchemaTrait
 
     public static function getSchema()
     {
-        self::initializeSchema();
+        if (! self::$schema) {
+            self::$schema = new Schema(get_called_class());
+        }
 
         return self::$schema;
     }
 
-    public static function get($id)
+    public static function find($id)
     {
-        return static::all()
+        return static::findAll()
             ->whereKey($id)
             ->first();
     }
 
-    public static function all()
+    public static function findAll()
     {
         return static::getSchema()->getSelectQuery();
     }
 
-    public static function deleteQuery()
+    public static function deleteAll()
     {
         return static::getSchema()->getDeleteQuery();
     }
 
-    public static function updateQuery()
+    public static function updateAll()
     {
         return static::getSchema()->getUpdateQuery();
     }
 
-    public static function insertQuery()
+    public static function insertAll()
     {
         return static::getSchema()->getInsertQuery();
-    }
-
-    public static function initializeSchema()
-    {
-        if ( ! self::$schema)
-        {
-            self::$schema = new Schema(get_called_class());
-        }
     }
 }

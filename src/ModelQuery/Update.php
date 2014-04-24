@@ -39,7 +39,7 @@ class Update extends Query\Update implements SetInterface {
             $model = $models->current();
             $this
                 ->set($model->getChanges())
-                ->where([$this->schema->getPrimaryKey() => $model->getId()]);
+                ->whereKey($model->getId());
         }
 
         return $this;

@@ -27,7 +27,7 @@ class Select extends Query\Select {
             ->column($schema->getTable().'.*');
     }
 
-    public function loadWith($rels)
+    public function eagerLoad($rels)
     {
         $models = $this->load();
 

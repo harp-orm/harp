@@ -12,7 +12,7 @@ class RelsTest extends AbstractTestCase {
     {
         Log::setEnabled(TRUE);
 
-        $users = User::all()->loadWith(['profile', 'posts']);
+        $users = User::findAll()->eagerLoad(['profile', 'posts']);
 
         var_dump(Log::all());
     }

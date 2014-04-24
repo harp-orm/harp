@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Field;
+<?php
+
+namespace CL\Luna\Field;
 
 /**
  * @author     Ivan Kerin
@@ -9,7 +11,7 @@ class Timestamp extends AbstractField
 {
     public function save($value)
     {
-        if ( ! is_numeric($value)) {
+        if (! is_numeric($value)) {
             $value = strtotime($value);
         }
 

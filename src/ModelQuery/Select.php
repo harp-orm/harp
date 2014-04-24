@@ -66,7 +66,7 @@ class Select extends Query\Select {
     public function execute()
     {
         if ($this->getSchema()->getPolymorphic()) {
-            array_unshift($this->columns, new Aliased($this->getSchema()->getTable().'.schemaClass'));
+            array_unshift($this->columns, new Aliased($this->getSchema()->getTable().'.polymorphicClass'));
         }
 
         $this->addToLog();

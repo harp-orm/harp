@@ -17,6 +17,7 @@ abstract class AbstractRel
     abstract public function hasForeign(array $nodes);
     abstract public function loadForeign(array $nodes);
     abstract public function linkToForeign(array $nodes, array $foreign);
+    abstract public function loadFromData(array $data);
 
     public function __construct($name, SchemaInterface $schema, SchemaInterface $foreignSchema, array $options = array())
     {

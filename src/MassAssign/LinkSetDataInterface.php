@@ -1,12 +1,15 @@
-<?php namespace CL\Luna\MassAssign;
+<?php
 
+namespace CL\Luna\MassAssign;
+
+use Closure;
 
 /*
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-interface AssignRelInterface
+interface LinkSetDataInterface
 {
-    public function loadFromData(array $data);
+    public function setData(array $data, Closure $yeild);
 }

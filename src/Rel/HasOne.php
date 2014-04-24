@@ -16,6 +16,8 @@ use Closure;
  */
 class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 {
+    use LoadFromDataTrait;
+
     protected $foreignKey;
 
     public function __construct($name, Schema $schema, Schema $foreignSchema, array $options = array())

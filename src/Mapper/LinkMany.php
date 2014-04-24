@@ -1,7 +1,10 @@
-<?php namespace CL\Luna\Mapper;
+<?php
+
+namespace CL\Luna\Mapper;
 
 use CL\Luna\Util\Storage;
 use Countable;
+use Closure;
 use SplObjectStorage;
 
 /**
@@ -126,5 +129,20 @@ class LinkMany extends AbstractLink implements Countable
         $all = clone $this->current;
         $all->addAll($this->original);
         return $all;
+    }
+
+    public function setData(array $data, Closure $yield)
+    {
+        $this->clear();
+
+        foreach ($data as $itemData) {
+            $model = $this->getRel()->loadFromData($data) ?: $this->getRel()->getForeignSchema()->newInstance();
+
+            $yield($model, $itemData);
+
+            $this->add($model);
+        }
+
+        return $this;
     }
 }

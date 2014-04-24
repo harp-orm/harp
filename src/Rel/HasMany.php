@@ -17,6 +17,8 @@ use Closure;
  */
 class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
 {
+    use LoadFromDataTrait;
+
     protected $foreignKey;
     protected $deleteOnRemove;
 

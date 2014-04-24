@@ -29,7 +29,7 @@ CREATE TABLE `Post` (
   `updatedAt` TIMESTAMP,
   `publishedAt` DATETIME,
   `userId` int(11) UNSIGNED NULL,
-  `schemaClass` varchar(255) NULL,
+  `polymorphicClass` varchar(255) NULL,
   `isPublished` int(1) UNSIGNED NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -74,7 +74,7 @@ INSERT INTO `Address` (`id`, `zipCode`, `location`)
 VALUES
   (1,'1000', 'Belvedere');
 
-INSERT INTO `Post` (`id`, `title`, `body`,`price`,`tags`, `createdAt`, `updatedAt`, `publishedAt`, `userId`, `schemaClass`, `isPublished`)
+INSERT INTO `Post` (`id`, `title`, `body`,`price`,`tags`, `createdAt`, `updatedAt`, `publishedAt`, `userId`, `polymorphicClass`, `isPublished`)
 VALUES
   (1,'News', 'Big news on the ship', 10.20, 'big,small,medium', '2014-02-10 12:00:00', '2014-02-20 12:00:00', '2014-03-01 12:00:00', 1, 'CL\\Luna\\Test\\Post', NULL),
   (2,'New President', 'We will have a new president soon', 10.20, 'medium', '2014-01-10 12:00:00', '2014-01-20 12:00:00', '2014-03-02 12:00:00', 4, 'CL\\Luna\\Test\\Post', NULL),

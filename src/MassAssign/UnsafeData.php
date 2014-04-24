@@ -12,7 +12,7 @@ use CL\Luna\Mapper\AbstractRel;
  */
 class UnsafeData
 {
-    public static function assign(array $data, Model $model)
+    public static function assign(array $data, AssignNodeInterface $model)
     {
         $data = new UnsafeData($data);
         $data->assignTo($model);
@@ -32,43 +32,12 @@ class UnsafeData
         $this->data = $data;
     }
 
-    public function assignTo(Model $model)
+    public function assignTo(AssignNodeInterface $node)
     {
-        $rels = $model->getSchema()->getRels()->all();
-
-        $relsData = array_intersect_key($this->data, $rels);
-        $propertiesData = array_diff_key($this->data, $rels);
-
-        $model->setProperties($propertiesData);
-
-        foreach ($relsData as $relName => $data) {
-            $link = Repo::get()->loadLink($model, $relName);
-
-            if ($link instanceof LinkOne) {
-                $relModel = self::isLoaded($data) ? self::load($link->getRel(), $data) : $link->get();
-                UnsafeData::assign($data, $relModel);
-                $link->set($relModel);
-            } else {
-                $updatedItems = [];
-
-                foreach ($data as $offset => $itemData) {
-                    $relModel = self::isLoaded($itemData) ? self::load($link->getRel(), $itemData) : $link->getRel()->getForeignSchema()->newInstance();
-                    UnsafeData::assign($itemData, $relModel);
-                    $updatedItems []= $relModel;
-                }
-
-                $link->set($updatedItems);
-            }
-        }
-    }
-
-    public static function isLoaded(array $data)
-    {
-        return isset($data['_id']);
-    }
-
-    public static function load(AbstractRel $rel, array $data)
-    {
-        return $rel->getForeignSchema()->getSelectQuery()->whereKey($data['_id'])->first();
+        $node->setData($this->data, function (LinkSetDataInterface $link, array $data) {
+            $link->setData($data, function (AssignNodeInterface $node, array $data) {
+                self::assign($data, $node);
+            });
+        });
     }
 }

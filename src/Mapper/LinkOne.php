@@ -1,6 +1,9 @@
-<?php namespace CL\Luna\Mapper;
+<?php
+
+namespace CL\Luna\Mapper;
 
 use SplObjectStorage;
+use Closure;
 
 /**
  * @author     Ivan Kerin
@@ -49,5 +52,16 @@ class LinkOne extends AbstractLink
         $all->attach($this->original);
 
         return $all;
+    }
+
+    public function setData(array $data, Closure $yield)
+    {
+        $model = $this->getRel()->loadFromData($data) ?: $this->current;
+
+        $yield($model, $data);
+
+        $this->current = $model;
+
+        return $this;
     }
 }

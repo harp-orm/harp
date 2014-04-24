@@ -330,11 +330,11 @@ class Schema implements SchemaInterface
             $this->modelReflection = new ReflectionClass($this->getModelClass());
             $this->table = $this->name = $this->modelReflection->getShortName();
 
-            if ($this->polymorphic) {
-                $class = $this->modelReflection->getParentClass();
-                if ($class !== 'CL\Luna\Model') {
-                    $this->table = $class::getTable();
-                }
+            $parentClass = $this->modelReflection->getParentClass()->getName();
+
+            if ($parentClass !== 'CL\Luna\Model\Model') {
+
+                $this->table = $parentClass::getSchema()->getTable();
             }
 
             $this->modelReflection->getMethod('initialize')->invoke(NULL, $this);

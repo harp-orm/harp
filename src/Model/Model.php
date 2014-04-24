@@ -1,13 +1,18 @@
-<?php namespace CL\Luna\Model;
+<?php
+
+namespace CL\Luna\Model;
 
 use CL\Luna\Mapper\AbstractNode;
+use CL\Luna\Mapper\Repo;
+use CL\Luna\MassAssign\AssignNodeInterface;
+use Closure;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-abstract class Model extends AbstractNode {
+abstract class Model extends AbstractNode implements AssignNodeInterface {
 
     use DirtyTrackingTrait;
     use UnmappedPropertiesTrait;
@@ -49,7 +54,7 @@ abstract class Model extends AbstractNode {
     {
         $this->setOriginals($this->getFieldValues());
         if ($this->getSchema()->getPolymorphic()) {
-            $this->schemaClass = get_called_class();
+            $this->polymorphicClass = get_called_class();
         }
         if ($fields) {
             $this->setProperties($fields);
@@ -142,5 +147,21 @@ abstract class Model extends AbstractNode {
     public function isEmptyErrors()
     {
         return $this->errors ? $this->errors->isEmpty() : true;
+    }
+
+    public function setData(array $data, Closure $yield)
+    {
+        $rels = $this->getSchema()->getRels()->all();
+
+        $relsData = array_intersect_key($data, $rels);
+        $propertiesData = array_diff_key($data, $rels);
+
+        $this->setProperties($propertiesData);
+
+        foreach ($relsData as $relName => $relData) {
+            $link = Repo::get()->loadLink($this, $relName);
+
+            $yield($link, $relData);
+        }
     }
 }

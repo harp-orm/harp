@@ -1,7 +1,7 @@
 <?php namespace CL\Luna\Test;
 
-use CL\Luna\Schema\Schema;
-use CL\Luna\Schema\SchemaTrait;
+use CL\Luna\Model\Schema;
+use CL\Luna\Model\SchemaTrait;
 use CL\Luna\Field;
 
 /**

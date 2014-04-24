@@ -8,7 +8,7 @@ use Closure;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Storage
+class Objects
 {
     public static function combineArrays(array $arr, array $arr2, Closure $yield)
     {
@@ -32,7 +32,7 @@ class Storage
         foreach ($arr as $item) {
             foreach ($arr2 as $item2) {
                 if ($yield($item, $item2)) {
-                    Storage::addNested($groups, $item, $item2);
+                    self::addNested($groups, $item, $item2);
                 }
             }
         }

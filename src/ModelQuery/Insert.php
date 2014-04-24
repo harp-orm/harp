@@ -1,10 +1,12 @@
-<?php namespace CL\Luna\ModelQuery;
+<?php
+
+namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\Query;
-use CL\Luna\Schema\Schema;
+use CL\Luna\Model\Schema;
 use CL\Luna\Model\Model;
 use CL\Luna\Model\ModelEvent;
-use CL\Luna\Util\Storage;
+use CL\Luna\Util\Objects;
 use SplObjectStorage;
 
 /**
@@ -44,7 +46,7 @@ class Insert extends Query\Insert implements SetInterface {
     public function setModels(SplObjectStorage $models)
     {
         $this->insertModels = $models;
-        $changes = Storage::invoke($models, 'getChanges');
+        $changes = Objects::invoke($models, 'getChanges');
         $this->setMultiple($changes);
 
         return $this;

@@ -2,9 +2,10 @@
 
 namespace CL\Luna\Mapper;
 
-use CL\Luna\Util\Storage;
+use CL\Luna\Util\Objects;
 use Countable;
 use Closure;
+use Iterator;
 use SplObjectStorage;
 
 /**
@@ -12,7 +13,7 @@ use SplObjectStorage;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class LinkMany extends AbstractLink implements Countable
+class LinkMany extends AbstractLink implements Countable, Iterator
 {
     protected $current;
     protected $original;
@@ -35,11 +36,6 @@ class LinkMany extends AbstractLink implements Countable
         }
 
         return $this;
-    }
-
-    public function count()
-    {
-        return $this->current->count();
     }
 
     public function clear()
@@ -77,24 +73,6 @@ class LinkMany extends AbstractLink implements Countable
         return $this->current;
     }
 
-    public function rewind()
-    {
-        $this->current->rewind();
-
-        return  $this;
-    }
-
-    public function current()
-    {
-        return $this->current->current();
-    }
-
-    public function next()
-    {
-        $this->current->next();
-        return $this;
-    }
-
     public function getOriginal()
     {
         return $this->original;
@@ -102,12 +80,12 @@ class LinkMany extends AbstractLink implements Countable
 
     public function getOriginalIds()
     {
-        return Storage::invoke($this->original, 'getId');
+        return Objects::invoke($this->original, 'getId');
     }
 
     public function getIds()
     {
-        return Storage::invoke($this->current, 'getId');
+        return Objects::invoke($this->current, 'getId');
     }
 
     public function getAdded()
@@ -144,5 +122,37 @@ class LinkMany extends AbstractLink implements Countable
         }
 
         return $this;
+    }
+
+    public function count()
+    {
+        return $this->current->count();
+    }
+
+    public function current()
+    {
+        return $this->current->current();
+    }
+
+    public function key()
+    {
+        return $this->current->key();
+    }
+
+    public function next()
+    {
+        return $this->current->next();
+    }
+
+    public function rewind()
+    {
+        $this->current->rewind();
+
+        return $this;
+    }
+
+    public function valid()
+    {
+        return $this->current->valid();
     }
 }

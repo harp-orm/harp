@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\Mapper;
 
-use CL\Luna\Util\Storage;
+use CL\Luna\Util\Objects;
 use SplObjectStorage;
 use Closure;
 
@@ -13,7 +13,7 @@ class Persist
 {
     public static function groupBySchema(SplObjectStorage $nodes)
     {
-        return Storage::groupBy($nodes, function($node) {
+        return Objects::groupBy($nodes, function($node) {
             return $node->getSchema();
         });
     }

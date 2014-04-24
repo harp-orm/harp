@@ -1,8 +1,8 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Schema\Schema;
-use CL\Luna\Schema\SchemaTrait;
+use CL\Luna\Model\Schema;
+use CL\Luna\Model\SchemaTrait;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;

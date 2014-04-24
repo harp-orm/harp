@@ -1,13 +1,13 @@
-<?php namespace CL\Luna\Rel;
+<?php
+
+namespace CL\Luna\Rel;
 
 use CL\Luna\Mapper;
 use CL\Luna\Util\Arr;
-use CL\Luna\Util\Storage;
-use CL\Luna\Model\Model;
+use CL\Luna\Util\Objects;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
-use CL\Luna\Schema\Schema;
-use Closure;
+use CL\Luna\Model\Schema;
 
 /**
  * @author     Ivan Kerin
@@ -58,7 +58,7 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 
     public function linkToForeign(array $models, array $foreign)
     {
-        return Storage::combineArrays($models, $foreign, function($model, $foreign){
+        return Objects::combineArrays($models, $foreign, function($model, $foreign){
             return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
         });
     }

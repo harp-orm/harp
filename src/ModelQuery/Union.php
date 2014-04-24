@@ -1,6 +1,8 @@
-<?php namespace CL\Luna\ModelQuery;
+<?php
 
-use CL\Luna\Schema\Schema;
+namespace CL\Luna\ModelQuery;
+
+use CL\Luna\Model\Schema;
 use CL\Luna\Mapper\Repo;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Util\log(§);

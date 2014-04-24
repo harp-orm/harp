@@ -1,14 +1,13 @@
-<?php namespace CL\Luna\Rel;
+<?php
+
+namespace CL\Luna\Rel;
 
 use CL\Luna\Mapper;
-use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
-use CL\Luna\Util\Storage;
-use CL\Luna\Schema\Schema;
+use CL\Luna\Util\Objects;
+use CL\Luna\Model\Schema;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
-use SplObjectStorage;
-use Closure;
 
 /**
  * @author     Ivan Kerin
@@ -60,7 +59,7 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
 
     public function linkToForeign(array $models, array $foreign)
     {
-        $return = Storage::groupCombineArrays($models, $foreign, function ($model, $foreign) {
+        $return = Objects::groupCombineArrays($models, $foreign, function ($model, $foreign) {
             return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
         });
 
@@ -83,7 +82,7 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
         }
 
         if ($this->deleteOnRemove) {
-            Storage::invoke($link->getRemoved(), 'delete');
+            Objects::invoke($link->getRemoved(), 'delete');
         } else {
             foreach ($link->getRemoved() as $added) {
                 $added->{$this->getForeignKey()} = null;

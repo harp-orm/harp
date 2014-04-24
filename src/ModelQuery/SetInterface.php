@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\ModelQuery;
+<?php
+
+namespace CL\Luna\ModelQuery;
 
 use SplObjectStorage;
 

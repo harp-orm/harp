@@ -1,11 +1,10 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Schema\Schema;
-use CL\Luna\Schema\SchemaTrait;
-use CL\Luna\Field\String;
-use CL\Luna\Field\Integer;
-use CL\Luna\Rel\HasMany;
+use CL\Luna\Model\Schema;
+use CL\Luna\Model\SchemaTrait;
+use CL\Luna\Field;
+use CL\Luna\Rel;
 use CL\Carpo\Assert;
 
 /**
@@ -44,15 +43,15 @@ class Address extends Model {
     {
         $schema
             ->setRels([
-                new HasMany('users', $schema, User::getSchema()),
+                new Rel\HasMany('users', $schema, User::getSchema()),
             ])
             ->setAsserts([
                 new Assert\Present('location'),
             ])
             ->setFields([
-                new Integer('id'),
-                new String('zipCode'),
-                new String('location'),
+                new Field\Integer('id'),
+                new Field\String('zipCode'),
+                new Field\String('location'),
             ]);
     }
 

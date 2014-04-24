@@ -1,14 +1,13 @@
-<?php namespace CL\Luna\Rel;
+<?php
+
+namespace CL\Luna\Rel;
 
 use CL\Luna\Mapper;
-use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
-use CL\Luna\Util\Storage;
-use CL\Luna\Schema\Schema;
+use CL\Luna\Util\Objects;
+use CL\Luna\Model\Schema;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
-use SplObjectStorage;
-use Closure;
 
 /**
  * @author     Ivan Kerin
@@ -71,13 +70,13 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
                 ]);
 
         return $select
-                ->execute()
-                ->fetchAll();
+            ->execute()
+            ->fetchAll();
     }
 
     public function linkToForeign(array $models, array $foreign)
     {
-        return Storage::groupCombineArrays($models, $foreign, function ($model, $foreign) {
+        return Objects::groupCombineArrays($models, $foreign, function ($model, $foreign) {
             return $model->getId() == $foreign->{$this->getName().'_key'};
         });
     }
@@ -88,7 +87,8 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
 
         $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignSchema());
 
-        $query->joinAliased($this->getForeignTable(), $this->getName(), $condition);
+        $query
+            ->joinAliased($this->getForeignTable(), $this->getName(), $condition);
     }
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
@@ -97,16 +97,16 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
         $through = $model->{$this->through};
 
         foreach ($link->getAdded() as $added) {
-            $through->add(
-                $throughReflection->newInstance([
-                    $this->getThroughRel()->getForeignKey() => $model->getId(),
-                    $this->foreignKey => $added->getId(),
-                ])
-            );
+            $item = $throughReflection->newInstance([
+                $this->getThroughRel()->getForeignKey() => $model->getId(),
+                $this->foreignKey => $added->getId(),
+            ]);
+
+            $through->add($item);
         }
 
         foreach ($link->getRemoved() as $removed) {
-            foreach ($through->all() as $item) {
+            foreach ($through as $item) {
                 if ($item->{$this->foreignKey} == $removed->getId()) {
                     $through->remove($item);
                 }

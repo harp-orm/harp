@@ -1,10 +1,11 @@
-<?php namespace CL\Luna\ModelQuery;
+<?php
+
+namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\SQL\SQL;
 use CL\Atlas\Query;
-use CL\Luna\Schema\Schema;
-use CL\Luna\Model\ModelEvent;
-use CL\Luna\Util\Storage;
+use CL\Luna\Model\Schema;
+use CL\Luna\Util\Objects;
 use CL\Luna\Util\Arr;
 use SplObjectStorage;
 
@@ -27,7 +28,7 @@ class Update extends Query\Update implements SetInterface {
     public function setModels(SplObjectStorage $models)
     {
         if ($models->count() > 1) {
-            $models = Storage::index($models, $this->getSchema()->getPrimaryKey());
+            $models = Objects::index($models, $this->getSchema()->getPrimaryKey());
             $changes = Arr::invoke($models, 'getChanges');
 
             $this

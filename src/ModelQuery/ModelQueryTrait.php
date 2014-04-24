@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Schema\Schema;
+use CL\Luna\Model\Schema;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Log;
 use CL\Atlas\DB;

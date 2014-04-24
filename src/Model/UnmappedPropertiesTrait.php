@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Model;
+<?php
+
+namespace CL\Luna\Model;
 
 /**
  * @author     Ivan Kerin

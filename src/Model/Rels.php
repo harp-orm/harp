@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Schema;
+<?php
+
+namespace CL\Luna\Model;
 
 use CL\Luna\Mapper\AbstractRel;
 use CL\Luna\Util\Collection;

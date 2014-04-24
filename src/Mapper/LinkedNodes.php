@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\Mapper;
 
-use CL\Luna\Util\Storage;
+use CL\Luna\Util\Objects;
 use SplObjectStorage;
 
 /**
@@ -19,21 +19,21 @@ class LinkedNodes extends SplObjectStorage
 
     public function getDeleted()
     {
-        return Storage::filter($this, function($node) {
+        return Objects::filter($this, function($node) {
             return $node->isDeleted();
         });
     }
 
     public function getPending()
     {
-        return Storage::filter($this, function($node) {
+        return Objects::filter($this, function($node) {
             return $node->isPending();
         });
     }
 
     public function getChanged()
     {
-        return Storage::filter($this, function($node) {
+        return Objects::filter($this, function($node) {
             return ($node->isChanged() AND $node->isPersisted());
         });
     }

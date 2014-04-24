@@ -1,9 +1,11 @@
-<?php namespace CL\Luna\ModelQuery;
+<?php
+
+namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\Query;
-use CL\Luna\Schema\Schema;
+use CL\Luna\Model\Schema;
 use CL\Luna\Model\ModelEvent;
-use CL\Luna\Util\Storage;
+use CL\Luna\Util\Objects;
 use SplObjectStorage;
 
 /**
@@ -34,7 +36,7 @@ class Delete extends Query\Delete implements SetInterface {
     public function setModels(SplObjectStorage $models)
     {
         $this->models = $models;
-        $ids = Storage::invoke($models, 'getId');
+        $ids = Objects::invoke($models, 'getId');
         $this->whereKey($ids);
 
         return $this;

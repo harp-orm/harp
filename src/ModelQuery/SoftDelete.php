@@ -1,10 +1,11 @@
-<?php namespace CL\Luna\ModelQuery;
+<?php
+
+namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\SQL\SQL;
 use CL\Atlas\Query;
-use CL\Luna\Schema\Schema;
-use CL\Luna\Model\ModelEvent;
-use CL\Luna\Util\Storage;
+use CL\Luna\Model\Schema;
+use CL\Luna\Util\Objects;
 use SplObjectStorage;
 
 /**
@@ -27,7 +28,7 @@ class SoftDelete extends Query\Update implements SetInterface {
 
     public function setModels(SplObjectStorage $models)
     {
-        $ids = Storage::invoke($models, 'getId');
+        $ids = Objects::invoke($models, 'getId');
         $this->whereKey($ids);
 
         return $this;

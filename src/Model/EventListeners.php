@@ -1,6 +1,7 @@
-<?php namespace CL\Luna\Schema;
+<?php
 
-use CL\Luna\Model\Model;
+namespace CL\Luna\Model;
+
 use SplObjectStorage;
 
 /**

@@ -1,7 +1,9 @@
-<?php namespace CL\Luna\Rel;
+<?php
+
+namespace CL\Luna\Rel;
 
 use CL\Atlas\SQL\SQL;
-use CL\Luna\Schema\Schema;
+use CL\Luna\Model\Schema;
 
 
 /**

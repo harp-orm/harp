@@ -1,14 +1,15 @@
-<?php namespace CL\Luna\Schema;
+<?php
+
+namespace CL\Luna\Model;
 
 use CL\Luna\Mapper\SchemaInterface;
 use CL\Luna\Mapper\AbstractNode;
-use ReflectionClass;
-use ReflectionProperty;
-use SplObjectStorage;
-use CL\Luna\Model\Model;
 use CL\Luna\Util\Arr;
 use CL\Luna\ModelQuery;
 use CL\Carpo\Asserts;
+use ReflectionClass;
+use ReflectionProperty;
+use SplObjectStorage;
 
 /*
  * @author     Ivan Kerin

@@ -16,32 +16,58 @@ abstract class Model extends AbstractNode {
 
     public function __construct(array $fields = null, $state = null)
     {
-        if ( ! $state) {
-            $state = $this->getId() ? self::PERSISTED : self::PENDING;
-        }
+        $state = $state ?: $this->getDefaultState();
 
         parent::__construct($state);
 
-        if ($state === self::PERSISTED) {
-            $fields = $fields !== NULL ? $fields : $this->getFieldValues();
-
-            $fields = $this->getSchema()->getFields()->loadData($fields);
-
-            $this->setProperties($fields);
-            $this->setOriginals($fields);
-
-        } elseif ($state === self::PENDING) {
-            $this->setOriginals($this->getFieldValues());
-            if ($this->getSchema()->getPolymorphic()) {
-                $this->schemaClass = get_called_class();
-            }
-            if ($fields) {
-                $this->setProperties($fields);
-            }
-
-        } else {
-            $this->setOriginals($this->getFieldValues());
+        switch ($state) {
+            case self::PERSISTED:
+                $this->initializePersisted($fields);
+                break;
+            case self::PENDING:
+                $this->initializePending($fields);
+                break;
+            case self::NOT_LOADED:
+                $this->initializeNotLoaded();
+                break;
         }
+    }
+
+    public function initializePersisted(array $fields = null)
+    {
+        $fields = $fields !== null ? $fields : $this->getFieldValues();
+
+        $fields = $this->getSchema()->getFields()->loadData($fields);
+
+        $this->setProperties($fields);
+        $this->setOriginals($fields);
+
+        return $this;
+    }
+
+    public function initializePending(array $fields = null)
+    {
+        $this->setOriginals($this->getFieldValues());
+        if ($this->getSchema()->getPolymorphic()) {
+            $this->schemaClass = get_called_class();
+        }
+        if ($fields) {
+            $this->setProperties($fields);
+        }
+
+        return $this;
+    }
+
+    public function initializeNotLoaded()
+    {
+        $this->setOriginals($this->getFieldValues());
+
+        return $this;
+    }
+
+    public function getDefaultState()
+    {
+        return $this->getId() ? self::PERSISTED : self::PENDING;
     }
 
     public function getId()

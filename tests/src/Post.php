@@ -30,22 +30,22 @@ class Post extends Model {
 
     public function getUser()
     {
-        return Repo::get()->loadLink($this, 'user')->get();
+        return $this->loadRelLink('user')->get();
     }
 
     public function getTags()
     {
-        return Repo::get()->loadLink($this, 'tags');
+        return $this->loadRelLink('tags');
     }
 
     public function getPostTags()
     {
-        return Repo::get()->loadLink($this, 'postTags');
+        return $this->loadRelLink('postTags');
     }
 
     public function setUser(User $user)
     {
-        return Repo::get()->loadLink($this, 'user')->set($user);
+        return $this->loadRelLink('user')->set($user);
     }
 
     public static function initialize(Schema $schema)

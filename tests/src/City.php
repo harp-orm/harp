@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Test;
+<?php
+
+namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
 use CL\Luna\Schema\Schema;
@@ -12,27 +14,22 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Tag extends Model {
+class City extends Model implements LocationInterface {
 
     use SchemaTrait;
 
     public $id;
     public $name;
+    public $countryId;
 
-    /**
-     * @return User
-     */
-    public function getPostTags()
+    public function getCountry()
     {
-        return $this->loadRelLink('postTags');
+        return $this->loadRelLink('country')->get();
     }
 
-    /**
-     * @return User
-     */
-    public function getPosts()
+    public function setCountry(Country $country)
     {
-        return $this->loadRelLink('posts');
+        return $this->loadRelLink('country')->set($country);
     }
 
     public static function initialize(Schema $schema)
@@ -43,8 +40,7 @@ class Tag extends Model {
                 new Field\String('name'),
             ])
             ->setRels([
-                new Rel\HasMany('postTags', $schema, PostTag::getSchema()),
-                new Rel\HasManyThrough('posts', $schema, Post::getSchema(), 'postTags'),
+                new Rel\BelongsTo('country', $schema, Country::getSchema()),
             ])
             ->setAsserts([
                 new Assert\Present('name'),

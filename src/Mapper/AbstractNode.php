@@ -62,5 +62,8 @@ abstract class AbstractNode
         return $this->state === self::NOT_LOADED;
     }
 
-
+    public function loadRelLink($name)
+    {
+        return Repo::get()->loadLink($this, $name);
+    }
 }

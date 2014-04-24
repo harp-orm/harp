@@ -1,6 +1,7 @@
 <?php namespace CL\Luna\Rel;
 
 use CL\Luna\Util\Arr;
+use CL\Luna\Util\Storage;
 use CL\Luna\Model\Model;
 use CL\Luna\Mapper;
 use CL\Luna\Schema\Schema;
@@ -11,19 +12,17 @@ use Closure;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsToPlymorphic extends AbstractOne
+class BelongsToPolymorphic extends Mapper\AbstractRelOne
 {
     protected $key;
     protected $schemaKey;
-    protected $foreignSchemas;
 
-    public function __construct($name, Schema $schema, array $foreignSchemas, array $options = array())
+    public function __construct($name, Schema $schema, Schema $defaultForeignSchema, array $options = array())
     {
         $this->key = $name.'Id';
-        $this->schemaKey = $name.'Schema';
-        $this->foreignSchemas = $foreignSchemas;
+        $this->schemaKey = $name.'Class';
 
-        parent::__construct($name, $schema, reset($foreignSchemas), $options);
+        parent::__construct($name, $schema, $defaultForeignSchema, $options);
     }
 
     public function getKey()
@@ -41,16 +40,6 @@ class BelongsToPlymorphic extends AbstractOne
         return $this->getSchema()->getPrimaryKey();
     }
 
-    public function getForeignSchemaName(Schema $schema)
-    {
-        return array_search($schema, $this->foreignSchemas);
-    }
-
-    public function getForeignSchemaForName($name)
-    {
-        return $this->foreignSchemas[$schemaName];
-    }
-
     public function hasForeign(array $models)
     {
         return true;
@@ -62,12 +51,13 @@ class BelongsToPlymorphic extends AbstractOne
             return $model->{$this->schemaKey};
         });
 
-        foreach ($groups as $schemaName => & $models) {
+        foreach ($groups as $modelClass => & $models) {
 
             $keys = Arr::extractUnique($models, $this->key);
+            $schema = $modelClass::getSchema();
 
             if ($keys) {
-                $models = $this->getForeignSchemaForName($schemaName)
+                $models = $schema
                     ->select([
                         $this->getForeignKey() => $keys
                     ]);
@@ -82,7 +72,7 @@ class BelongsToPlymorphic extends AbstractOne
         return Storage::combineArrays($models, $foreign, function($model, $foreign){
             return (
                 $model->{$this->key} == $foreign->{$this->getForeignKey()}
-                and $model->{$this->schemaKey} == $this->getForeignSchemaName($foreign)
+                and $model->{$this->schemaKey} == get_class($foreign)
             );
         });
     }
@@ -93,6 +83,23 @@ class BelongsToPlymorphic extends AbstractOne
         {
             $model->{$this->key} = $link->get()->getId();
             $model->{$this->schemaKey} = $link->get()->getSchema()->getName();
+        }
+    }
+
+    public function loadFromData(array $data)
+    {
+        if (isset($data['_id'])) {
+            $foreignSchema = $this->getForeignSchema();
+
+            if (isset($data['_class'])) {
+                $class = $data['_class'];
+                $foreignSchema = $class::getSchema();
+            }
+
+            return $foreignSchema
+                ->getSelectQuery()
+                ->whereKey($data['_id'])
+                ->first();
         }
     }
 }

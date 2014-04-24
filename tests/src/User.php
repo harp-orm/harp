@@ -7,7 +7,6 @@ use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
 use CL\Luna\Mapper\NodeEvent;
-use CL\Luna\Mapper\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -24,70 +23,49 @@ class User extends Model {
         return $query->where('user.address_id != ""');
     }
 
-    /**
-     * @var integer
-     */
     public $id;
-
-    /**
-     * @var string
-     */
     public $name;
-
-    /**
-     * @var string
-     */
     public $password;
-
-    /**
-     * @var integer
-     */
     public $addressId;
-
-
     public $isBlocked = false;
-
     public $deletedAt;
+    public $locationId;
+    public $locationClass;
     public $test;
 
-    /**
-     * @return Address
-     */
     public function getAddress()
     {
-        return Repo::get()->loadLink($this, 'address')->get();
+        return $this->loadRelLink('address')->get();
     }
 
-    /**
-     * @return Address
-     */
     public function setAddress(Address $address)
     {
-        return Repo::get()->loadLink($this, 'address')->set($address);
+        return $this->loadRelLink('address')->set($address);
     }
 
-    /**
-     * @return Profile
-     */
+    public function getLocation()
+    {
+        return $this->loadRelLink('location')->get();
+    }
+
+    public function setLocation(LocationInterface $location)
+    {
+        return $this->loadRelLink('location')->set($location);
+    }
+
     public function getProfile()
     {
-        return Repo::get()->loadLink($this, 'profile')->get();
+        return $this->loadRelLink('profile')->get();
     }
 
-    /**
-     * @return Profile
-     */
     public function setProfile(Profile $profile)
     {
-        return Repo::get()->loadLink($this, 'profile')->set($profile);
+        return $this->loadRelLink('profile')->set($profile);
     }
 
-    /**
-     * @return Collection
-     */
     public function getPosts()
     {
-        return Repo::get()->loadLink($this, 'posts');
+        return $this->loadRelLink('posts');
     }
 
     public static function test($model)
@@ -106,11 +84,14 @@ class User extends Model {
                 new Field\Password('password'),
                 new Field\Boolean('isBlocked'),
                 new Field\Integer('addressId'),
+                new Field\Integer('locationId'),
+                new Field\String('locationClass'),
                 new Field\Timestamp('deletedAt'),
             ])
 
             ->setRels([
                 new Rel\BelongsTo('address', $schema, Address::getSchema()),
+                new Rel\BelongsToPolymorphic('location', $schema, City::getSchema()),
 
                 new Rel\HasMany('posts', $schema, Post::getSchema(), [
                     // 'cascade' => Rel\AbstractRel::UNLINK

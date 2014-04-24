@@ -159,9 +159,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
         $this->setProperties($propertiesData);
 
         foreach ($relsData as $relName => $relData) {
-            $link = Repo::get()->loadLink($this, $relName);
-
-            $yield($link, $relData);
+            $yield($this->loadRelLink($relName), $relData);
         }
     }
 }

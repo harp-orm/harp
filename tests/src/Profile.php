@@ -6,7 +6,6 @@ use CL\Luna\Schema\SchemaTrait;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
-use CL\Luna\Mapper\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -42,7 +41,7 @@ class Profile extends Model {
      */
     public function getUser()
     {
-        return Repo::get()->loadLink($this, 'user')->get();
+        return $this->loadRelLink('user')->get();
     }
 
     /**
@@ -50,7 +49,7 @@ class Profile extends Model {
      */
     public function setUser(User $user)
     {
-        return Repo::get()->loadLink($this, 'user')->set($user);
+        return $this->loadRelLink('user')->set($user);
     }
 
     public static function initialize(Schema $schema)

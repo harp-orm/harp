@@ -92,7 +92,7 @@ class TestTest extends AbstractTestCase {
     {
         Log::setEnabled(TRUE);
 
-        $posts = Post::all()->loadWith(['user' => 'address']);
+        $posts = Post::all()->loadWith(['user' => ['address', 'location']]);
 
         $user1 = $posts[0]->getUser();
         $user2 = $posts[1]->getUser();
@@ -100,11 +100,16 @@ class TestTest extends AbstractTestCase {
         $address1 = $posts[0]->getUser()->getAddress();
         $address2 = $posts[1]->getUser()->getAddress();
 
+        $location1 = $posts[0]->getUser()->getLocation();
+        $location2 = $posts[1]->getUser()->getLocation();
+
         $this->assertEquals(
             [
                 'SELECT Post.polymorphicClass, Post.* FROM Post',
                 'SELECT User.* FROM User WHERE (User.deletedAt IS NULL) AND (id IN (1, 4, 5, 3))',
                 'SELECT Address.* FROM Address WHERE (id IN (1))',
+                'SELECT City.* FROM City WHERE (id IN (1))',
+                'SELECT Country.* FROM Country WHERE (id IN (1, 2))',
             ],
             Log::all()
         );
@@ -119,6 +124,8 @@ class TestTest extends AbstractTestCase {
                 'parentId' => null,
                 'isBlocked' => false,
                 'deletedAt' => null,
+                'locationId' => 1,
+                'locationClass' => 'CL\Luna\Test\City',
             ],
             $user1->getFieldValues()
         );
@@ -130,8 +137,10 @@ class TestTest extends AbstractTestCase {
                 'password' => null,
                 'addressId' => 1,
                 'parentId' => null,
-                'isBlocked' => null,
+                'isBlocked' => false,
                 'deletedAt' => null,
+                'locationId' => 2,
+                'locationClass' => 'CL\Luna\Test\Country',
             ],
             $user2->getFieldValues()
         );

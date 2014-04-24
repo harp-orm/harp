@@ -6,8 +6,25 @@ CREATE TABLE `User` (
   `addressId` int(11) UNSIGNED NULL,
   `parentId` int(11) UNSIGNED NULL,
   `isBlocked` int(1) UNSIGNED NULL,
+  `locationId` int(1) UNSIGNED NULL,
+  `locationClass` varchar(100) NULL,
   `deletedAt` TIMESTAMP NULL,
   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `City`;
+CREATE TABLE `City` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NULL,
+  `countryId` int(11) UNSIGNED NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `Country`;
+CREATE TABLE `Country` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `Address`;
@@ -15,7 +32,7 @@ CREATE TABLE `Address` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `zipCode` varchar(100) NULL,
   `location` varchar(100) NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `Post`;
@@ -31,7 +48,7 @@ CREATE TABLE `Post` (
   `userId` int(11) UNSIGNED NULL,
   `polymorphicClass` varchar(255) NULL,
   `isPublished` int(1) UNSIGNED NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `Profile`;
@@ -40,14 +57,14 @@ CREATE TABLE `Profile` (
   `firstName` varchar(100) NULL,
   `lastName` varchar(100) NULL,
   `userId` int(11) UNSIGNED NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `Tag`;
 CREATE TABLE `Tag` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `PostTag`;
@@ -55,15 +72,15 @@ CREATE TABLE `PostTag` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `postId` int(11) UNSIGNED NULL,
   `tagId` int(11) UNSIGNED NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `User` (`id`, `name`, `addressId`, `isBlocked`)
+INSERT INTO `User` (`id`, `name`, `addressId`, `isBlocked`, `locationId`, `locationClass`)
 VALUES
-  (1,'User 1', 1, 0),
-  (2,'User 2', NULL, 1),
-  (3,'User 3', NULL, 1),
-  (4,'User 4', 1, NULL);
+  (1, 'User 1', 1   , 0   , 1, 'CL\\Luna\\Test\\City'),
+  (2, 'User 2', NULL, 1   , 2, 'CL\\Luna\\Test\\City'),
+  (3, 'User 3', NULL, 1   , 1, 'CL\\Luna\\Test\\Country'),
+  (4, 'User 4', 1   , NULL, 2, 'CL\\Luna\\Test\\Country');
 
 INSERT INTO `Profile` (`id`, `firstName`, `lastName`, `userId`)
 VALUES
@@ -91,3 +108,15 @@ VALUES
   (1, 1, 1),
   (2, 1, 2),
   (3, 3, 2);
+
+INSERT INTO `Country` (`id`, `name`)
+VALUES
+  (1, 'Bulgaria'),
+  (2, 'United Kingdom');
+
+INSERT INTO `City` (`id`, `name`, `countryId`)
+VALUES
+  (1, 'Sofia', 1),
+  (2, 'Pernik', 1),
+  (3, 'London', 2),
+  (4, 'Manchester', 2);

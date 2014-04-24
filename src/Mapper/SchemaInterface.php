@@ -9,6 +9,7 @@ use SplObjectStorage;
  */
 interface SchemaInterface
 {
+    public function getRel($name);
     public function update(SplObjectStorage $nodes);
     public function delete(SplObjectStorage $nodes);
     public function insert(SplObjectStorage $nodes);

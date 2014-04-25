@@ -65,14 +65,6 @@ class Select extends Query\Select {
             ->fetchAll(PDO::FETCH_COLUMN, ''.$this->getSchema()->getPrimaryKey());
     }
 
-    public function loadFirstColumn($column = 0)
-    {
-        return $this
-            ->limit(1)
-            ->execute()
-            ->fetchColumn($column);
-    }
-
     public function loadCount()
     {
         return $this

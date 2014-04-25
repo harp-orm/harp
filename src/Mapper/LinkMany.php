@@ -95,11 +95,21 @@ class LinkMany extends AbstractLink implements Countable, Iterator
         return $added;
     }
 
+    public function getAddedIds()
+    {
+        return Objects::invoke($this->getAdded(), 'getId');
+    }
+
     public function getRemoved()
     {
         $removed = clone $this->original;
         $removed->removeAll($this->current);
         return $removed;
+    }
+
+    public function getRemovedIds()
+    {
+        return Objects::invoke($this->getRemoved(), 'getId');
     }
 
     public function getAll()

@@ -70,7 +70,7 @@ class Select extends Query\Select {
         $this->addToLog();
 
         return parent::execute()
-            ->fetchAll(PDO::FETCH_COLUMN, $this->getSchema()->getPrimaryKey());
+            ->fetchAll(PDO::FETCH_COLUMN, ''.$this->getSchema()->getPrimaryKey());
     }
 
     public function first()

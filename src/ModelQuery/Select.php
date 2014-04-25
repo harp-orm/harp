@@ -7,7 +7,6 @@ use CL\Luna\Mapper\Repo;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Util\Arr;
 use CL\Atlas\Query;
-use CL\Atlas\SQL\Aliased;
 use PDO;
 
 /**
@@ -27,23 +26,6 @@ class Select extends Query\Select {
             ->column($schema->getTable().'.*');
     }
 
-    public function eagerLoad($rels)
-    {
-        $models = $this->load();
-
-        $rels = Arr::toAssoc((array) $rels);
-
-        self::loadRels($this->getSchema(), $models, $rels);
-
-        return $models;
-    }
-
-    public function prependColumn($column)
-    {
-        array_unshift($this->columns, new Aliased($column));
-
-        return $this;
-    }
 
     protected static function loadRels($schema, $models, $rels)
     {
@@ -58,32 +40,49 @@ class Select extends Query\Select {
         }
     }
 
+    public function loadWith($rels)
+    {
+        $models = $this->load();
+
+        $rels = Arr::toAssoc((array) $rels);
+
+        self::loadRels($this->getSchema(), $models, $rels);
+
+        return $models;
+    }
+
     public function load()
     {
-        $models = $this->execute()->fetchAll();
+        $models = $this->loadRaw();
 
         return Repo::get()->getCanonicalArray($models);
     }
 
     public function loadIds()
     {
-        $this->addToLog();
-
-        return parent::execute()
+        return $this
+            ->execute()
             ->fetchAll(PDO::FETCH_COLUMN, ''.$this->getSchema()->getPrimaryKey());
     }
 
-    public function countAll()
+    public function loadFirstColumn($column = 0)
     {
-        $this->columns = [new Aliased("COUNT({$this->getSchema()->getPrimaryKey()})")];
-
-        $this->addToLog();
-
-        return parent::execute()
-            ->fetchColumn();
+        return $this
+            ->limit(1)
+            ->execute()
+            ->fetchColumn($column);
     }
 
-    public function first()
+    public function loadCount()
+    {
+        return $this
+            ->clearColumns()
+            ->column("COUNT({$this->getSchema()->getPrimaryKey()})", 'countAll')
+            ->execute()
+                ->fetchColumn();
+    }
+
+    public function loadFirst()
     {
         $items = $this->limit(1)->load();
 
@@ -92,13 +91,18 @@ class Select extends Query\Select {
 
     public function execute()
     {
+        $this->addToLog();
+
+        return parent::execute();
+    }
+
+    public function loadRaw()
+    {
         if ($this->getSchema()->getPolymorphic()) {
             $this->prependColumn($this->getSchema()->getTable().'.polymorphicClass');
         }
 
-        $this->addToLog();
-
-        $pdoStatement = parent::execute();
+        $pdoStatement = $this->execute();
 
         if ($this->getSchema()->getPolymorphic()) {
             $pdoStatement->setFetchMode(
@@ -111,6 +115,6 @@ class Select extends Query\Select {
             );
         }
 
-        return $pdoStatement;
+        return $pdoStatement->fetchAll();
     }
 }

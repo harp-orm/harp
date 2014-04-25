@@ -59,9 +59,11 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
 
             if ($keys) {
                 $models = $schema
-                    ->select([
+                    ->getSelectQuery()
+                    ->where([
                         $this->getForeignKey() => $keys
-                    ]);
+                    ])
+                    ->loadRaw();
             }
         }
 
@@ -104,7 +106,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
                 ->loadForeignSchema($data)
                 ->getSelectQuery()
                 ->whereKey($data['_id'])
-                ->first();
+                ->loadFirst();
         }
     }
 }

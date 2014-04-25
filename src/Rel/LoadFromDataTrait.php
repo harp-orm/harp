@@ -16,7 +16,7 @@ trait LoadFromDataTrait
                 ->getForeignSchema()
                 ->getSelectQuery()
                 ->whereKey($data['_id'])
-                ->first();
+                ->loadFirst();
         }
     }
 }

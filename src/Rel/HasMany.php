@@ -51,10 +51,12 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
     public function loadForeign(array $models)
     {
         return $this
-            ->foreignSchema
-            ->select([
+            ->getForeignSchema()
+            ->getSelectQuery()
+            ->where([
                 $this->foreignKey => Arr::extractUnique($models, $this->getKey())
-            ]);
+            ])
+            ->loadRaw();
     }
 
     public function linkToForeign(array $models, array $foreign)

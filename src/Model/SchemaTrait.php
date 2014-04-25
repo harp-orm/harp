@@ -79,7 +79,7 @@ trait SchemaTrait
     {
         return static::findAll()
             ->whereKey($id)
-            ->first();
+            ->loadFirst();
     }
 
     public static function findAll()

@@ -333,14 +333,6 @@ class Schema implements SchemaInterface
             ->execute();
     }
 
-    public function select(array $conditions)
-    {
-        return $this
-            ->getSelectQuery()
-            ->where($conditions)
-            ->load();
-    }
-
     public function dispatchBeforeEvent(SplObjectStorage $models, $event)
     {
         $this->lazyLoadConfiguration();

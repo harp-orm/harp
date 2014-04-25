@@ -37,9 +37,11 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
     {
         return $this
             ->getForeignSchema()
-            ->select([
+            ->getSelectQuery()
+            ->where([
                 $this->getForeignKey() => Arr::extractUnique($models, $this->key)
-            ]);
+            ])
+            ->loadRaw();
     }
 
     public function linkToForeign(array $models, array $foreign)

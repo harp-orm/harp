@@ -51,9 +51,11 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
     {
         return $this
             ->getForeignSchema()
-            ->select([
+            ->getSelectQuery()
+            ->where([
                 $this->getKey() => Arr::extractUnique($models, $this->foreignKey)
-            ]);
+            ])
+            ->loadRaw();
     }
 
     public function linkToForeign(array $models, array $foreign)

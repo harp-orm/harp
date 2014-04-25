@@ -74,9 +74,7 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
                     $throughForeignKey => Arr::extractUnique($models, $this->getSchema()->getPrimaryKey())
                 ]);
 
-        return $select
-            ->execute()
-            ->fetchAll();
+        return $select->loadRaw();
     }
 
     public function linkToForeign(array $models, array $foreign)

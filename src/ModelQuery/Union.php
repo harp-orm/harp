@@ -22,20 +22,20 @@ class Union extends Query\Union {
 
     public function load()
     {
-        $models = $this->execute()->fetchAll();
+        $models = $this->loadRaw();
 
         return Repo::get()->getCanonicalArray($models);
     }
 
-    public function execute()
+    public function loadRaw()
     {
         if ($this->getSchema()->getPolymorphic()) {
             $this->prependColumn($this->getSchema()->getTable().'.polymorphicClass');
         }
 
-        $this->addToLog();
-
-        $pdoStatement = parent::execute();
+        $pdoStatement = $this
+            ->addToLog()
+            ->execute();
 
         if ($this->getSchema()->getPolymorphic()) {
             $pdoStatement->setFetchMode(
@@ -48,6 +48,13 @@ class Union extends Query\Union {
             );
         }
 
-        return $pdoStatement;
+        return $pdoStatement->fetchAll();
+    }
+
+    public function execute()
+    {
+        $this->addToLog();
+
+        return parent::execute();
     }
 }

@@ -106,11 +106,11 @@ class TestTest extends AbstractTestCase {
         );
     }
 
-    public function testEagerLoad()
+    public function testLoadWith()
     {
         Log::setEnabled(TRUE);
 
-        $posts = Post::findAll()->eagerLoad(['user' => ['address', 'location']]);
+        $posts = Post::findAll()->loadWith(['user' => ['address', 'location']]);
 
         $user1 = $posts[0]->getUser();
         $user2 = $posts[1]->getUser();

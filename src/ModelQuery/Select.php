@@ -73,6 +73,16 @@ class Select extends Query\Select {
             ->fetchAll(PDO::FETCH_COLUMN, ''.$this->getSchema()->getPrimaryKey());
     }
 
+    public function countAll()
+    {
+        $this->columns = [new Aliased("COUNT({$this->getSchema()->getPrimaryKey()})")];
+
+        $this->addToLog();
+
+        return parent::execute()
+            ->fetchColumn();
+    }
+
     public function first()
     {
         $items = $this->limit(1)->load();

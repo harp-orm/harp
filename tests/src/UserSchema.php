@@ -1,7 +1,6 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -13,12 +12,20 @@ use CL\Carpo\Assert;
  */
 class UserSchema extends Schema {
 
-    use SchemaTrait;
     use NestedSchemaTrait;
 
-    public function __construct()
+    private static $instance;
+
+    /**
+     * @return UserSchema
+     */
+    public static function get()
     {
-        parent::__construct('CL\Luna\Test\User');
+        if (! self::$instance) {
+            self::$instance = new UserSchema('CL\Luna\Test\User');
+        }
+
+        return self::$instance;
     }
 
     public function initialize()

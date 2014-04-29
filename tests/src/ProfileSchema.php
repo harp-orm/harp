@@ -3,7 +3,6 @@
 namespace CL\Luna\Test;
 
 use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -15,11 +14,18 @@ use CL\Carpo\Assert;
  */
 class ProfileSchema extends Schema {
 
-    use SchemaTrait;
+    private static $instance;
 
-    public function __construct()
+    /**
+     * @return ProfileSchema
+     */
+    public static function get()
     {
-        parent::__construct('CL\Luna\Test\Profile');
+        if (! self::$instance) {
+            self::$instance = new ProfileSchema('CL\Luna\Test\Profile');
+        }
+
+        return self::$instance;
     }
 
     public function initialize()

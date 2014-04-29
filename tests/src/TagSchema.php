@@ -1,7 +1,6 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -13,11 +12,18 @@ use CL\Carpo\Assert;
  */
 class TagSchema extends Schema {
 
-    use SchemaTrait;
+    private static $instance;
 
-    public function __construct()
+    /**
+     * @return TagSchema
+     */
+    public static function get()
     {
-        parent::__construct('CL\Luna\Test\Tag');
+        if (! self::$instance) {
+            self::$instance = new TagSchema('CL\Luna\Test\Tag');
+        }
+
+        return self::$instance;
     }
 
     public function initialize()

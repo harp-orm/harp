@@ -3,7 +3,6 @@
 namespace CL\Luna\Test;
 
 use CL\Luna\Field;
-use CL\Luna\Model\SchemaTrait;
 
 /**
  * @author     Ivan Kerin
@@ -12,11 +11,18 @@ use CL\Luna\Model\SchemaTrait;
  */
 class BlogPostSchema extends PostSchema {
 
-    use SchemaTrait;
+    private static $instance;
 
-    public function __construct()
+    /**
+     * @return BlogPostSchema
+     */
+    public static function get()
     {
-        parent::__construct('CL\Luna\Test\BlogPost');
+        if (! self::$instance) {
+            self::$instance = new BlogPostSchema('CL\Luna\Test\BlogPost');
+        }
+
+        return self::$instance;
     }
 
     public function initialize()

@@ -1,7 +1,8 @@
-<?php namespace CL\Luna\Test;
+<?php
+
+namespace CL\Luna\Test;
 
 use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -13,11 +14,18 @@ use CL\Carpo\Assert;
  */
 class PostSchema extends Schema {
 
-    use SchemaTrait;
+    private static $instance;
 
-    public function __construct()
+    /**
+     * @return PostSchema
+     */
+    public static function get()
     {
-        parent::__construct('CL\Luna\Test\Post');
+        if (! self::$instance) {
+            self::$instance = new PostSchema('CL\Luna\Test\Post');
+        }
+
+        return self::$instance;
     }
 
     public function initialize()

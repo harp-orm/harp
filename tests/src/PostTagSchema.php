@@ -3,7 +3,7 @@
 namespace CL\Luna\Test;
 
 use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
+
 use CL\Luna\Field;
 use CL\Luna\Rel;
 
@@ -14,11 +14,18 @@ use CL\Luna\Rel;
  */
 class PostTagSchema extends Schema {
 
-    use SchemaTrait;
+    private static $instance;
 
-    public function __construct()
+    /**
+     * @return PostTagSchema
+     */
+    public static function get()
     {
-        parent::__construct('CL\Luna\Test\PostTag');
+        if (! self::$instance) {
+            self::$instance = new PostTagSchema('CL\Luna\Test\PostTag');
+        }
+
+        return self::$instance;
     }
 
     public function initialize()

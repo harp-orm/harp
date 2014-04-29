@@ -17,6 +17,7 @@ use PDO;
 class Select extends Query\Select {
 
     use ModelQueryTrait;
+    use SoftDeleteTrait;
 
     public function __construct(Schema $schema)
     {
@@ -24,6 +25,8 @@ class Select extends Query\Select {
             ->setSchema($schema)
             ->from($schema->getTable())
             ->column($schema->getTable().'.*');
+
+        $this->setSoftDelete($this->getSchema()->getSoftDelete());
     }
 
 
@@ -94,17 +97,14 @@ class Select extends Query\Select {
             $this->prependColumn($this->getSchema()->getTable().'.polymorphicClass');
         }
 
+        $this->applySoftDelete();
+
         $pdoStatement = $this->execute();
 
         if ($this->getSchema()->getPolymorphic()) {
-            $pdoStatement->setFetchMode(
-                PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE
-            );
+            $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE);
         } else {
-            $pdoStatement->setFetchMode(
-                PDO::FETCH_CLASS,
-                $this->getSchema()->getModelClass()
-            );
+            $pdoStatement->setFetchMode(PDO::FETCH_CLASS, $this->getSchema()->getModelClass());
         }
 
         return $pdoStatement->fetchAll();

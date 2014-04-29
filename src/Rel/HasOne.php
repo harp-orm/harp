@@ -6,6 +6,7 @@ use CL\Luna\Mapper;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
 use CL\Luna\ModelQuery\RelJoinInterface;
+use CL\Luna\ModelQuery\Select;
 use CL\Atlas\Query\AbstractQuery;
 use CL\Luna\Model\Schema;
 
@@ -49,9 +50,9 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 
     public function loadForeign(array $models)
     {
-        return $this
-            ->getForeignSchema()
-            ->getSelectQuery()
+        $schema = $this->getForeignSchema();
+
+        return (new Select($schema))
             ->where([
                 $this->getKey() => Arr::extractUnique($models, $this->foreignKey)
             ])

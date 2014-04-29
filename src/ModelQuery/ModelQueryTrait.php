@@ -41,13 +41,6 @@ trait ModelQueryTrait {
         }
     }
 
-    public function scope($scope)
-    {
-        call_user_func(array($this->getSchema()->getModelClass(), 'scope'.ucfirst($scope)), $this);
-
-        return $this;
-    }
-
     public function whereKey($key)
     {
         return $this->where([$this->getSchema()->getPrimaryKey() => $key]);

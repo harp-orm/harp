@@ -6,6 +6,7 @@ use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
 use CL\Luna\Mapper;
 use CL\Luna\Model\Schema;
+use CL\Luna\ModelQuery\Select;
 use Closure;
 
 /**
@@ -58,8 +59,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
             $schema = $modelClass::getSchema();
 
             if ($keys) {
-                $models = $schema
-                    ->getSelectQuery()
+                $models = (new Select($schema))
                     ->where([
                         $this->getForeignKey() => $keys
                     ])
@@ -102,9 +102,9 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
     public function loadFromData(array $data)
     {
         if (isset($data['_id'])) {
-            return $this
-                ->loadForeignSchema($data)
-                ->getSelectQuery()
+            $schema = $this->loadForeignSchema($data);
+
+            return (new Select($schema))
                 ->whereKey($data['_id'])
                 ->loadFirst();
         }

@@ -2,6 +2,8 @@
 
 namespace CL\Luna\Rel;
 
+use CL\Luna\ModelQuery\Select;
+
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -12,9 +14,9 @@ trait LoadFromDataTrait
     public function loadFromData(array $data)
     {
         if (isset($data['_id'])) {
-            return $this
-                ->getForeignSchema()
-                ->getSelectQuery()
+            $schema = $this->getForeignSchema();
+
+            return (new Select($schema))
                 ->whereKey($data['_id'])
                 ->loadFirst();
         }

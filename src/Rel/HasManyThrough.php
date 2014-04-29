@@ -7,6 +7,7 @@ use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
 use CL\Luna\Model\Schema;
 use CL\Luna\ModelQuery\RelJoinInterface;
+use CL\Luna\ModelQuery\Select;
 use CL\Atlas\Query\AbstractQuery;
 
 /**
@@ -64,15 +65,14 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
     {
         $throughKey = $this->getThroughTable().'.'.$this->getThroughRel()->getForeignKey();
         $throughForeignKey = $this->getThroughTable().'.'.$this->key;
+        $schema = $this->getForeignSchema();
 
-        $select = $this
-            ->getForeignSchema()
-            ->getSelectQuery()
-                ->column($throughKey, $this->getTHroughKey())
-                ->joinRels($this->through)
-                ->where([
-                    $throughForeignKey => Arr::extractUnique($models, $this->getSchema()->getPrimaryKey())
-                ]);
+        $select = (new Select($schema))
+            ->column($throughKey, $this->getTHroughKey())
+            ->joinRels($this->through)
+            ->where([
+                $throughForeignKey => Arr::extractUnique($models, $this->getSchema()->getPrimaryKey())
+            ]);
 
         return $select->loadRaw();
     }

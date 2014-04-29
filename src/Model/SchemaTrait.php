@@ -2,6 +2,11 @@
 
 namespace CL\Luna\Model;
 
+use CL\Luna\ModelQuery\Select;
+use CL\Luna\ModelQuery\Delete;
+use CL\Luna\ModelQuery\Update;
+use CL\Luna\ModelQuery\Insert;
+
 /*
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -84,21 +89,21 @@ trait SchemaTrait
 
     public static function findAll()
     {
-        return static::getSchema()->getSelectQuery();
+        return new Select(self::getSchema());
     }
 
     public static function deleteAll()
     {
-        return static::getSchema()->getDeleteQuery();
+        return new Delete(self::getSchema());
     }
 
     public static function updateAll()
     {
-        return static::getSchema()->getUpdateQuery();
+        return new Update(self::getSchema());
     }
 
     public static function insertAll()
     {
-        return static::getSchema()->getInsertQuery();
+        return new Insert(self::getSchema());
     }
 }

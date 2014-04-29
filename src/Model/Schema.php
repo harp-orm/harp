@@ -5,8 +5,8 @@ namespace CL\Luna\Model;
 use CL\Luna\Mapper\SchemaInterface;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Mapper\NodeEvent;
-use CL\Luna\Util\Arr;
 use CL\Luna\ModelQuery;
+use CL\Luna\Util\Arr;
 use CL\Carpo\Asserts;
 use ReflectionClass;
 use ReflectionProperty;
@@ -266,69 +266,23 @@ class Schema implements SchemaInterface
         return $this->getEventListeners()->hasEvent($event);
     }
 
-    public function getDeleteQuery()
-    {
-        if ($this->getSoftDelete())
-        {
-            $delete = new ModelQuery\SoftDelete($this);
-        }
-        else
-        {
-            $delete = new ModelQuery\Delete($this);
-        }
-
-        return $delete;
-    }
-
-    public function getUpdateQuery()
-    {
-        $update = new ModelQuery\Update($this);
-
-        if ($this->getSoftDelete())
-        {
-            $update->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
-        }
-
-        return $update;
-    }
-
-    public function getSelectQuery()
-    {
-        $select = new ModelQuery\Select($this);
-
-        if ($this->getSoftDelete())
-        {
-            $select->where([$this->getTable().'.'.self::SOFT_DELETE_KEY => NULL]);
-        }
-
-        return $select;
-    }
-
-    public function getInsertQuery()
-    {
-        return new ModelQuery\Insert($this);
-    }
-
     public function update(SplObjectStorage $models)
     {
-        return $this
-            ->getUpdateQuery()
+        return (new ModelQuery\Update($this))
             ->setModels($models)
             ->execute();
     }
 
     public function delete(SplObjectStorage $models)
     {
-        return $this
-            ->getDeleteQuery()
+        return (new ModelQuery\Delete($this))
             ->setModels($models)
             ->execute();
     }
 
     public function insert(SplObjectStorage $models)
     {
-        return $this
-            ->getInsertQuery()
+        return (new ModelQuery\Insert($this))
             ->setModels($models)
             ->execute();
     }

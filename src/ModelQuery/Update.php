@@ -7,6 +7,7 @@ use CL\Atlas\Query;
 use CL\Luna\Model\Schema;
 use CL\Luna\Util\Objects;
 use CL\Luna\Util\Arr;
+use CL\Luna\ModelQuery;
 use SplObjectStorage;
 
 /**
@@ -17,12 +18,15 @@ use SplObjectStorage;
 class Update extends Query\Update implements SetInterface {
 
     use ModelQueryTrait;
+    use SoftDeleteTrait;
 
     public function __construct(Schema $schema)
     {
         $this
             ->setSchema($schema)
             ->table($schema->getTable());
+
+        $this->setSoftDelete($this->getSchema()->getSoftDelete());
     }
 
     public function setModels(SplObjectStorage $models)
@@ -47,6 +51,8 @@ class Update extends Query\Update implements SetInterface {
 
     public function execute()
     {
+        $this->applySoftDelete();
+
         $this->addToLog();
 
         return parent::execute();

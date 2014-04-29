@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Test;
+<?php
+
+namespace CL\Luna\Test;
 
 use CL\Luna\Model\Schema;
 use CL\Luna\Field;
@@ -8,25 +10,12 @@ use CL\Luna\Field;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-trait Nested {
+trait NestedSchemaTrait {
 
-    /**
-     * @var string
-     */
-    public $parentId;
-
-    public static function initialize(Schema $schema)
+    public static function initializeTrait(Schema $schema)
     {
         $schema
             ->getFields()
                 ->add(new Field\Integer('parentId'));
-    }
-
-    /**
-     * @event save
-     */
-    public function applyNested()
-    {
-        echo 'do stuff';
     }
 }

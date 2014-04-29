@@ -11,7 +11,7 @@ class TestTest extends AbstractTestCase {
     {
         Log::setEnabled(TRUE);
 
-        $user3 = User::find(3);
+        $user3 = UserSchema::get()->find(3);
 
         $data = new Data([
             'posts' => [
@@ -55,22 +55,22 @@ class TestTest extends AbstractTestCase {
 
     public function testPolymorphic()
     {
-        $post = Post::find(4);
+        $post = PostSchema::get()->find(4);
 
         $this->assertInstanceOf('CL\Luna\Test\BlogPost', $post);
         $this->assertTrue($post->isPublished);
 
-        $this->assertNotSame(Post::getSchema(), BlogPost::getSchema());
+        $this->assertNotSame(PostSchema::get(), BlogPostSchema::get());
     }
 
     public function testHasManyThrough()
     {
         Log::setEnabled(TRUE);
 
-        $post = Post::find(1);
+        $post = PostSchema::get()->find(1);
 
-        $tag1 = Tag::find(1);
-        $tag2 = Tag::find(2);
+        $tag1 = TagSchema::get()->find(1);
+        $tag2 = TagSchema::get()->find(2);
 
         $tags = $post->getTags();
 
@@ -92,7 +92,7 @@ class TestTest extends AbstractTestCase {
     {
         Log::setEnabled(true);
 
-        $ids = Post::findAll()->whereKeys([1,2,3])->loadIds();
+        $ids = PostSchema::get()->findAll()->whereKeys([1,2,3])->loadIds();
 
         $expected = array(1, 2, 3);
 
@@ -110,7 +110,7 @@ class TestTest extends AbstractTestCase {
     {
         Log::setEnabled(TRUE);
 
-        $posts = Post::findAll()->loadWith(['user' => ['address', 'location']]);
+        $posts = PostSchema::get()->findAll()->loadWith(['user' => ['address', 'location']]);
 
         $user1 = $posts[0]->getUser();
         $user2 = $posts[1]->getUser();

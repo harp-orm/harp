@@ -5,6 +5,10 @@ namespace CL\Luna\Model;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Mapper\Repo;
 use CL\Luna\MassAssign\AssignNodeInterface;
+use CL\Luna\ModelQuery\Select;
+use CL\Luna\ModelQuery\Delete;
+use CL\Luna\ModelQuery\Update;
+use CL\Luna\ModelQuery\Insert;
 use Closure;
 
 /**
@@ -16,6 +20,31 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
 
     use DirtyTrackingTrait;
     use UnmappedPropertiesTrait;
+
+    public static function find($key)
+    {
+        return static::getSchema()->getSelect()->whereKey($key)->loadFirst();
+    }
+
+    public static function findAll()
+    {
+        return static::getSchema()->getSelect();
+    }
+
+    public static function deleteAll()
+    {
+        return static::getSchema()->getDelete();
+    }
+
+    public static function updateAll()
+    {
+        return static::getSchema()->getUpdate();
+    }
+
+    public static function insertAll()
+    {
+        return static::getSchema()->getInsert();
+    }
 
     private $errors;
 

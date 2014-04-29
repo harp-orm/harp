@@ -14,7 +14,10 @@ use CL\Carpo\Assert;
  */
 class Post extends Model {
 
-    use SchemaTrait;
+    public function getSchema()
+    {
+        return PostSchema::get();
+    }
 
     public $id;
     public $title;
@@ -46,37 +49,4 @@ class Post extends Model {
     {
         return $this->loadRelLink('user')->set($user);
     }
-
-    public static function initialize(Schema $schema)
-    {
-        $schema
-            ->setPolymorphic(true);
-
-        $schema
-            ->setRels([
-                new Rel\BelongsTo('user', $schema, User::getSchema()),
-                new Rel\HasMany('postTags', $schema, PostTag::getSchema()),
-                new Rel\HasManyThrough('tags', $schema, Tag::getSchema(), 'postTags'),
-            ]);
-
-        $schema
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('title'),
-                new Field\Text('body'),
-                new Field\Decimal('price'),
-                new Field\Serialized('tags', Field\Serialized::CSV),
-                new Field\Timestamp('createdAt'),
-                new Field\Timestamp('updatedAt'),
-                new Field\DateTime('publishedAt'),
-                new Field\Integer('userId'),
-                new Field\String('polymorphicClass'),
-            ]);
-
-        $schema
-            ->setAsserts([
-                new Assert\Present('title'),
-            ]);
-    }
-
 }

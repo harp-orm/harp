@@ -16,7 +16,10 @@ use CL\Carpo\Assert;
  */
 class City extends Model implements LocationInterface {
 
-    use SchemaTrait;
+    public function getSchema()
+    {
+        return CitySchema::get();
+    }
 
     public $id;
     public $name;
@@ -31,20 +34,4 @@ class City extends Model implements LocationInterface {
     {
         return $this->loadRelLink('country')->set($country);
     }
-
-    public static function initialize(Schema $schema)
-    {
-        $schema
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('name'),
-            ])
-            ->setRels([
-                new Rel\BelongsTo('country', $schema, Country::getSchema()),
-            ])
-            ->setAsserts([
-                new Assert\Present('name'),
-            ]);
-    }
-
 }

@@ -266,23 +266,48 @@ class Schema implements SchemaInterface
         return $this->getEventListeners()->hasEvent($event);
     }
 
+    public function find($key)
+    {
+        return $this->findAll()->whereKey($key)->loadFirst();
+    }
+
+    public function findAll()
+    {
+        return new ModelQuery\Select($this);
+    }
+
+    public function deleteAll()
+    {
+        return new ModelQuery\Delete($this);
+    }
+
+    public function updateAll()
+    {
+        return new ModelQuery\Update($this);
+    }
+
+    public function insertAll()
+    {
+        return new ModelQuery\Insert($this);
+    }
+
     public function update(SplObjectStorage $models)
     {
-        return (new ModelQuery\Update($this))
+        return $this->updateAll()
             ->setModels($models)
             ->execute();
     }
 
     public function delete(SplObjectStorage $models)
     {
-        return (new ModelQuery\Delete($this))
+        return $this->deleteAll()
             ->setModels($models)
             ->execute();
     }
 
     public function insert(SplObjectStorage $models)
     {
-        return (new ModelQuery\Insert($this))
+        return $this->insertAll()
             ->setModels($models)
             ->execute();
     }
@@ -315,9 +340,9 @@ class Schema implements SchemaInterface
         return $this->cascadeRels;
     }
 
-    function __construct($class_name)
+    function __construct($className)
     {
-        $this->modelClass = $class_name;
+        $this->modelClass = $className;
     }
 
     public function lazyLoadConfiguration()
@@ -334,20 +359,12 @@ class Schema implements SchemaInterface
             $this->modelReflection = new ReflectionClass($this->getModelClass());
             $this->table = $this->name = $this->modelReflection->getShortName();
 
-            $parentClass = $this->modelReflection->getParentClass()->getName();
+            $this->initialize();
 
-            if ($parentClass !== 'CL\Luna\Model\Model') {
-
-                $this->table = $parentClass::getSchema()->getTable();
-            }
-
-            $this->modelReflection->getMethod('initialize')->invoke(NULL, $this);
-
-            foreach ($this->modelReflection->getTraits() as $trait)
+            foreach ((new ReflectionClass($this))->getTraits() as $trait)
             {
-                if ($trait->hasMethod('initialize'))
-                {
-                    $trait->getMethod('initialize')->invoke(NULL, $this);
+                if ($trait->hasMethod('initializeTrait')) {
+                    $trait->getMethod('initializeTrait')->invoke(null, $this);
                 }
             }
 

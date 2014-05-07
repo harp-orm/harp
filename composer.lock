@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/atlas.git",
-                "reference": "048b73409a2061fc9654ab5f8aba63084f38eff1"
+                "reference": "a89f249f236c77c609ce00e82bc312f3cd7cc7e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/atlas/zipball/048b73409a2061fc9654ab5f8aba63084f38eff1",
-                "reference": "048b73409a2061fc9654ab5f8aba63084f38eff1",
+                "url": "https://api.github.com/repos/clippings/atlas/zipball/a89f249f236c77c609ce00e82bc312f3cd7cc7e6",
+                "reference": "a89f249f236c77c609ce00e82bc312f3cd7cc7e6",
                 "shasum": ""
             },
             "require": {
@@ -51,7 +51,7 @@
                 }
             ],
             "description": "SQL Builder for PDO",
-            "time": "2014-04-28 10:04:34"
+            "time": "2014-05-07 13:55:48"
         },
         {
             "name": "clippings/carpo",
@@ -92,16 +92,16 @@
     "packages-dev": [
         {
             "name": "clippings/env-backup",
-            "version": "0.2.4",
+            "version": "0.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/env-backup.git",
-                "reference": "23308787a7acaa0ecafa081d745481aa4328acd8"
+                "reference": "b52f0501d525cddcff7ecc28e119c3a3e539c0f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/env-backup/zipball/23308787a7acaa0ecafa081d745481aa4328acd8",
-                "reference": "23308787a7acaa0ecafa081d745481aa4328acd8",
+                "url": "https://api.github.com/repos/clippings/env-backup/zipball/b52f0501d525cddcff7ecc28e119c3a3e539c0f0",
+                "reference": "b52f0501d525cddcff7ecc28e119c3a3e539c0f0",
                 "shasum": ""
             },
             "type": "library",
@@ -123,7 +123,7 @@
                 }
             ],
             "description": "Backup/restore environment variables: globals, static vars, configs",
-            "time": "2014-03-25 16:55:26"
+            "time": "2014-04-30 11:33:23"
         }
     ],
     "aliases": [

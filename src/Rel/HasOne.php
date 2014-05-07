@@ -52,9 +52,10 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
         $schema = $this->getForeignSchema();
 
         return $schema->findAll()
-            ->where([
-                $this->getKey() => Arr::extractUnique($models, $this->foreignKey)
-            ])
+            ->where(
+                $this->getKey(),
+                Arr::extractUnique($models, $this->foreignKey)
+            )
             ->loadRaw();
     }
 

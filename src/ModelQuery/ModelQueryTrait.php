@@ -43,12 +43,12 @@ trait ModelQueryTrait {
 
     public function whereKey($key)
     {
-        return $this->where([$this->getSchema()->getPrimaryKey() => $key]);
+        return $this->where($this->getSchema()->getPrimaryKey(), $key);
     }
 
     public function whereKeys(array $keys)
     {
-        return $this->where([$this->getSchema()->getPrimaryKey() => $keys]);
+        return $this->where($this->getSchema()->getPrimaryKey(), $keys);
     }
 
     public function joinRels($rels)

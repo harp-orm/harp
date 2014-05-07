@@ -52,9 +52,10 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
     {
         return $this->getForeignSchema()
             ->findAll()
-            ->where([
-                $this->foreignKey => Arr::extractUnique($models, $this->getKey())
-            ])
+            ->where(
+                $this->foreignKey,
+                Arr::extractUnique($models, $this->getKey())
+            )
             ->loadRaw();
     }
 

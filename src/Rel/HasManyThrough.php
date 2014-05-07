@@ -69,9 +69,10 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
         $select = $schema->findAll()
             ->column($throughKey, $this->getTHroughKey())
             ->joinRels($this->through)
-            ->where([
-                $throughForeignKey => Arr::extractUnique($models, $this->getSchema()->getPrimaryKey())
-            ]);
+            ->where(
+                $throughForeignKey,
+                Arr::extractUnique($models, $this->getSchema()->getPrimaryKey())
+            );
 
         return $select->loadRaw();
     }

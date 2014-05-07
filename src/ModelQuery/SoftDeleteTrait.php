@@ -26,7 +26,7 @@ trait SoftDeleteTrait {
     public function applySoftDelete()
     {
         if ($this->getSoftDelete()) {
-            $this->where([$this->getSchema()->getTable().'.'.Schema::SOFT_DELETE_KEY => null]);
+            $this->where($this->getSchema()->getTable().'.'.Schema::SOFT_DELETE_KEY, null);
         }
     }
 }

@@ -37,7 +37,7 @@ class Update extends Query\Update implements SetInterface {
 
             $this
                 ->setMultiple($changes, $this->getSchema()->getPrimaryKey())
-                ->where([$this->schema->getPrimaryKey() => array_keys($changes)]);
+                ->where($this->schema->getPrimaryKey(), array_keys($changes));
         } else {
             $models->rewind();
             $model = $models->current();

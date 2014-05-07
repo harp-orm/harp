@@ -59,9 +59,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
 
             if ($keys) {
                 $models = $schema->findAll()
-                    ->where([
-                        $this->getForeignKey() => $keys
-                    ])
+                    ->where($this->getForeignKey(), $keys)
                     ->loadRaw();
             }
         }

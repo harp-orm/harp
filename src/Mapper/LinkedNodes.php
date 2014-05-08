@@ -47,7 +47,14 @@ class LinkedNodes extends SplObjectStorage
 
     public function updateRels()
     {
-        $this->linkMap->updateNodes($this);
+        $this->linkMap->updateRels($this);
+
+        return $this;
+    }
+
+    public function deleteRels()
+    {
+        $this->linkMap->deleteRels($this);
 
         return $this;
     }

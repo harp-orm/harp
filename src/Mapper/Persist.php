@@ -22,7 +22,7 @@ class Persist
     {
         $nodes
             ->expandWithLinked()
-            ->updateRels()
+            ->deleteRels()
             ->expandWithLinked();
 
         self::persist($nodes->getDeleted(), [NodeEvent::DELETE], function ($schema, $nodes) {

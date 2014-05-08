@@ -32,6 +32,8 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
             'username' => 'root',
         ));
 
+        DB::get()->execute('ALTER TABLE Post AUTO_INCREMENT = 5', array());
+
         DB::get()->beginTransaction();
     }
 

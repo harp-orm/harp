@@ -14,7 +14,7 @@ use CL\Atlas\Query\AbstractQuery;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
+class HasManyExclusive extends Mapper\AbstractRelMany implements RelJoinInterface, Mapper\DeleteCascadeInterface
 {
     use LoadFromDataTrait;
 
@@ -71,14 +71,15 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
         $query->joinAliased($this->foreignSchema->getTable(), $this->getName(), $condition);
     }
 
+    public function delete(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
+    {
+        Objects::invoke($link->getRemoved(), 'delete');
+    }
+
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
         foreach ($link->getAdded() as $added) {
             $added->{$this->getForeignKey()} = $model->{$this->getKey()};
-        }
-
-        foreach ($link->getRemoved() as $added) {
-            $added->{$this->getForeignKey()} = null;
         }
     }
 }

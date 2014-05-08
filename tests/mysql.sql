@@ -7,7 +7,7 @@ CREATE TABLE `User` (
   `parentId` int(11) UNSIGNED NULL,
   `isBlocked` int(1) UNSIGNED NULL,
   `locationId` int(1) UNSIGNED NULL,
-  `locationSchema` varchar(100) NULL,
+  `locationClass` varchar(100) NULL,
   `deletedAt` TIMESTAMP NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

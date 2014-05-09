@@ -41,14 +41,14 @@ class TestTest extends AbstractTestCase {
 
         $this->assertEquals(
             [
-                'SELECT User.* FROM User WHERE (id = 3) AND (User.deletedAt IS NULL) LIMIT 1',
+                'SELECT User.* FROM User WHERE (User.id = 3) AND (User.deletedAt IS NULL) LIMIT 1',
                 'SELECT Post.polymorphicClass, Post.* FROM Post WHERE (userId IN (3))',
-                'SELECT Address.* FROM Address WHERE (id = 1) LIMIT 1',
+                'SELECT Address.* FROM Address WHERE (Address.id = 1) LIMIT 1',
                 'INSERT INTO Post (id, title, body, price, tags, createdAt, updatedAt, publishedAt, userId, polymorphicClass) VALUES (NULL, "my title", "my body", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Post"), (NULL, "my title 2", "my body 2", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Post")',
-                'UPDATE User SET name = "new name!!", addressId = 1 WHERE (id = 3) AND (User.deletedAt IS NULL)',
+                'UPDATE User SET name = "new name!!", addressId = 1 WHERE (User.id = 3) AND (User.deletedAt IS NULL)',
                 'UPDATE Post SET userId = CASE id WHEN 5 THEN 3 WHEN 6 THEN 3 ELSE userId END WHERE (id IN (5, 6))',
-                'UPDATE Post SET userId = NULL WHERE (id = 4)',
-                'UPDATE Address SET zipCode = 2222 WHERE (id = 1)',
+                'UPDATE Post SET userId = NULL WHERE (Post.id = 4)',
+                'UPDATE Address SET zipCode = 2222 WHERE (Address.id = 1)',
             ],
             Log::all()
         );
@@ -80,9 +80,9 @@ class TestTest extends AbstractTestCase {
 
         $this->assertEquals(
             [
-                'SELECT Post.polymorphicClass, Post.* FROM Post WHERE (id = 1) LIMIT 1',
-                'SELECT Tag.* FROM Tag WHERE (id = 1) LIMIT 1',
-                'SELECT Tag.* FROM Tag WHERE (id = 2) LIMIT 1',
+                'SELECT Post.polymorphicClass, Post.* FROM Post WHERE (Post.id = 1) LIMIT 1',
+                'SELECT Tag.* FROM Tag WHERE (Tag.id = 1) LIMIT 1',
+                'SELECT Tag.* FROM Tag WHERE (Tag.id = 2) LIMIT 1',
                 'SELECT Tag.*, postTags.postId AS tagsKey FROM Tag JOIN PostTag AS postTags ON postTags.tagId = Tag.id WHERE (postTags.PostId IN (1))',
            ],
             Log::all()
@@ -101,7 +101,7 @@ class TestTest extends AbstractTestCase {
 
         $this->assertEquals(
             [
-                'SELECT Post.* FROM Post WHERE (id IN (1, 2, 3))',
+                'SELECT Post.* FROM Post WHERE (Post.id IN (1, 2, 3))',
             ],
             Log::all()
         );

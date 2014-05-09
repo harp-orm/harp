@@ -55,7 +55,7 @@ class UserSchema extends Schema {
                 new Assert\Present('name'),
             ])
 
-            ->setEventBeforeSave('CL\Luna\Test\UserSchema::test');
+            ->setEventAfterLoad('CL\Luna\Test\UserSchema::test');
     }
 
     public static function test($model)

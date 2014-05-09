@@ -5,6 +5,7 @@ namespace CL\Luna\ModelQuery;
 use CL\Luna\Model\Schema;
 use CL\Luna\Mapper\Repo;
 use CL\Luna\Mapper\AbstractNode;
+use CL\Luna\Mapper\NodeEvent;
 use CL\Luna\Util\Arr;
 use CL\Atlas\Query;
 use PDO;
@@ -107,6 +108,10 @@ class Select extends Query\Select {
             $pdoStatement->setFetchMode(PDO::FETCH_CLASS, $this->getSchema()->getModelClass());
         }
 
-        return $pdoStatement->fetchAll();
+        $models = $pdoStatement->fetchAll();
+
+        $this->getSchema()->dispatchAfterEvent($models, NodeEvent::LOAD);
+
+        return $models;
     }
 }

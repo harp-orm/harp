@@ -7,9 +7,10 @@
  */
 class NodeEvent
 {
-    const INSERT = 1;
+    const LOAD = 1;
+    const INSERT = 2;
     const UPDATE = 3;
-    const DELETE = 3;
-    const SAVE = 4;
-    const VALIDATE = 5;
+    const DELETE = 4;
+    const SAVE = 5;
+    const VALIDATE = 6;
 }

@@ -70,7 +70,9 @@ class LinkMap
 
             $linkedNodes = $this->get($node)->getNodes();
             foreach ($linkedNodes as $node) {
-                $this->addAllRecursive($all, $node);
+                if (! $all->contains($node)) {
+                    $this->addAllRecursive($all, $node);
+                }
             }
         }
 

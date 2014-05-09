@@ -256,6 +256,13 @@ abstract class Schema implements SchemaInterface
         return $this;
     }
 
+    public function setEventAfterLoad($callback)
+    {
+        $this->getEventListeners()->addAfter(NodeEvent::LOAD, $callback);
+
+        return $this;
+    }
+
     public function dispatchEvent($event, Model $target)
     {
         return $this->getEventListeners()->dispatchEvent($event, $target);
@@ -312,14 +319,14 @@ abstract class Schema implements SchemaInterface
             ->execute();
     }
 
-    public function dispatchBeforeEvent(SplObjectStorage $models, $event)
+    public function dispatchBeforeEvent($models, $event)
     {
         $this->lazyLoadConfiguration();
 
         $this->getEventListeners()->dispatchBeforeEvent($models, $event);
     }
 
-    public function dispatchAfterEvent(SplObjectStorage $models, $event)
+    public function dispatchAfterEvent($models, $event)
     {
         $this->lazyLoadConfiguration();
 

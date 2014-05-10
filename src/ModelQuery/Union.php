@@ -2,14 +2,9 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Model\Store;
 use CL\Luna\Mapper\Repo;
-use CL\Luna\Mapper\AbstractNode;
-use CL\Luna\Util\log(§);
 use CL\Luna\Util\Arr;
 use CL\Atlas\Query;
-use CL\Atlas\SQL\SQL;
-use PDO;
 
 /**
  * @author     Ivan Kerin
@@ -19,6 +14,7 @@ use PDO;
 class Union extends Query\Union {
 
     use ModelQueryTrait;
+    use FetchModeTrait;
 
     public function load()
     {
@@ -30,31 +26,15 @@ class Union extends Query\Union {
     public function loadRaw()
     {
         if ($this->getStore()->getPolymorphic()) {
-            $this->prependColumn($this->getStore()->getTable().'.polymorphicClass');
+            foreach ($this->getSelects() as $select) {
+                $select->prependColumn($this->getStore()->getTable().'.polymorphicClass');
+            }
         }
 
-        $pdoStatement = $this
-            ->addToLog()
-            ->execute();
+        $pdoStatement = $this->execute();
 
-        if ($this->getStore()->getPolymorphic()) {
-            $pdoStatement->setFetchMode(
-                PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE
-            );
-        } else {
-            $pdoStatement->setFetchMode(
-                PDO::FETCH_CLASS,
-                $this->getStore()->getModelClass()
-            );
-        }
+        $this->setFetchMode($pdoStatement);
 
         return $pdoStatement->fetchAll();
-    }
-
-    public function execute()
-    {
-        $this->addToLog();
-
-        return parent::execute();
     }
 }

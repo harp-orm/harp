@@ -4,7 +4,6 @@ namespace CL\Luna\ModelQuery;
 
 use CL\Luna\Model\Store;
 use CL\Luna\Util\Arr;
-use CL\Luna\Util\Log;
 use CL\Atlas\DB;
 use InvalidArgumentException;
 
@@ -33,13 +32,6 @@ trait ModelQueryTrait {
     public function getRel($name)
     {
         return $this->store->getRel($name);
-    }
-
-    public function addToLog()
-    {
-        if (Log::getEnabled()) {
-            Log::add($this->humanize());
-        }
     }
 
     public function whereKey($key)

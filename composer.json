@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
+        "psr/log": "~1.0",
         "clippings/atlas": "dev-master",
         "clippings/carpo": "dev-master"
     },

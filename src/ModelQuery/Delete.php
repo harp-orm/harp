@@ -32,8 +32,6 @@ class Delete extends Query\Delete implements SetInterface {
         if ($this->getSoftDelete()) {
             return $this->convertToSoftDelete()->execute();
         } else {
-            $this->addToLog();
-
             return parent::execute();
         }
     }

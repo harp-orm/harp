@@ -34,8 +34,7 @@ class Insert extends Query\Insert implements SetInterface {
 
         $defaultValues = $this->store->getFieldDefaults();
 
-        foreach ($values as $value)
-        {
+        foreach ($values as $value) {
             $this->values(array_values(array_merge($defaultValues, $value)));
         }
 
@@ -53,8 +52,6 @@ class Insert extends Query\Insert implements SetInterface {
 
     public function execute()
     {
-        $this->addToLog();
-
         $result = parent::execute();
 
         if ($this->insertModels) {

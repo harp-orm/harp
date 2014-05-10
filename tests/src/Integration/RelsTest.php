@@ -13,10 +13,8 @@ class RelsTest extends AbstractTestCase {
 
     public function testTest()
     {
-        Log::setEnabled(TRUE);
-
         $users = UserStore::get()->findAll()->loadWith(['profile', 'posts']);
 
-        var_dump(Log::all());
+        var_dump($this->getLogger()->getEntries());
     }
 }

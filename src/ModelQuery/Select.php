@@ -20,6 +20,7 @@ class Select extends Query\Select {
 
     use ModelQueryTrait;
     use SoftDeleteTrait;
+    use FetchModeTrait;
 
     public function __construct(Store $Store)
     {
@@ -86,27 +87,6 @@ class Select extends Query\Select {
         $items = $this->limit(1)->load();
 
         return reset($items) ?: $this->store->newInstance(null, AbstractNode::VOID);
-    }
-
-    public function execute()
-    {
-        $this->addToLog();
-
-        return parent::execute();
-    }
-
-    public function setFetchMode(PDOStatement $statement)
-    {
-        if ($this->getStore()->getPolymorphic()) {
-            $statement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE);
-        } else {
-            $statement->setFetchMode(PDO::FETCH_CLASS, $this->getStore()->getModelClass(), $this->getModelConstructArguments());
-        }
-    }
-
-    public function getModelConstructArguments()
-    {
-        return null;
     }
 
     public function loadRaw()

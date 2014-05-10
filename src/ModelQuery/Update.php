@@ -2,12 +2,10 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Atlas\SQL\SQL;
 use CL\Atlas\Query;
 use CL\Luna\Model\Store;
 use CL\Luna\Util\Objects;
 use CL\Luna\Util\Arr;
-use CL\Luna\ModelQuery;
 use SplObjectStorage;
 
 /**
@@ -52,8 +50,6 @@ class Update extends Query\Update implements SetInterface {
     public function execute()
     {
         $this->applySoftDelete();
-
-        $this->addToLog();
 
         return parent::execute();
     }

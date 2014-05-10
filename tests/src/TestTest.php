@@ -2,7 +2,6 @@
 
 namespace CL\Luna\Test;
 
-use CL\Luna\Util\Log;
 use CL\Luna\Mapper\Repo;
 use CL\Luna\MassAssign\Data;
 use CL\Luna\Test\Store\UserStore;
@@ -14,8 +13,6 @@ class TestTest extends AbstractTestCase {
 
     public function testMassAssign()
     {
-        Log::setEnabled(TRUE);
-
         $user3 = UserStore::get()->find(3);
 
         $data = new Data([
@@ -55,7 +52,7 @@ class TestTest extends AbstractTestCase {
                 'UPDATE Post SET userId = NULL WHERE (Post.id = 4)',
                 'UPDATE Address SET zipCode = 2222 WHERE (Address.id = 1)',
             ],
-            Log::all()
+            $this->getLogger()->getEntries()
         );
     }
 
@@ -71,8 +68,6 @@ class TestTest extends AbstractTestCase {
 
     public function testHasManyThrough()
     {
-        Log::setEnabled(TRUE);
-
         $post = PostStore::get()->find(1);
 
         $tag1 = TagStore::get()->find(1);
@@ -89,15 +84,13 @@ class TestTest extends AbstractTestCase {
                 'SELECT Tag.* FROM Tag WHERE (Tag.id = 1) LIMIT 1',
                 'SELECT Tag.* FROM Tag WHERE (Tag.id = 2) LIMIT 1',
                 'SELECT Tag.*, postTags.postId AS tagsKey FROM Tag JOIN PostTag AS postTags ON postTags.tagId = Tag.id WHERE (postTags.PostId IN (1))',
-           ],
-            Log::all()
+            ],
+            $this->getLogger()->getEntries()
         );
     }
 
     public function testLoadIds()
     {
-        Log::setEnabled(true);
-
         $ids = PostStore::get()->findAll()->whereKeys([1,2,3])->loadIds();
 
         $expected = array(1, 2, 3);
@@ -108,14 +101,12 @@ class TestTest extends AbstractTestCase {
             [
                 'SELECT Post.* FROM Post WHERE (Post.id IN (1, 2, 3))',
             ],
-            Log::all()
+            $this->getLogger()->getEntries()
         );
     }
 
     public function testLoadWith()
     {
-        Log::setEnabled(TRUE);
-
         $posts = PostStore::get()->findAll()->loadWith(['user' => ['address', 'location']]);
 
         $user1 = $posts[0]->getUser();
@@ -135,7 +126,7 @@ class TestTest extends AbstractTestCase {
                 'SELECT City.* FROM City WHERE (id IN (1))',
                 'SELECT Country.* FROM Country WHERE (id IN (1, 2))',
             ],
-            Log::all()
+            $this->getLogger()->getEntries()
         );
 
         $this->assertSame($address1, $address2);

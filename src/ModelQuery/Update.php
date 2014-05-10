@@ -3,7 +3,7 @@
 namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\Query;
-use CL\Luna\Model\Store;
+use CL\Luna\Model\Repo;
 use CL\Luna\Util\Objects;
 use CL\Luna\Util\Arr;
 use SplObjectStorage;
@@ -18,24 +18,24 @@ class Update extends Query\Update implements SetInterface {
     use ModelQueryTrait;
     use SoftDeleteTrait;
 
-    public function __construct(Store $store)
+    public function __construct(Repo $store)
     {
         $this
-            ->setStore($store)
+            ->setRepo($store)
             ->table($store->getTable());
 
-        $this->setSoftDelete($this->getStore()->getSoftDelete());
+        $this->setSoftDelete($this->getRepo()->getSoftDelete());
     }
 
     public function setModels(SplObjectStorage $models)
     {
         if ($models->count() > 1) {
-            $models = Objects::index($models, $this->getStore()->getPrimaryKey());
+            $models = Objects::index($models, $this->getRepo()->getPrimaryKey());
             $changes = Arr::invoke($models, 'getChanges');
 
             $this
-                ->setMultiple($changes, $this->getStore()->getPrimaryKey())
-                ->where($this->getStore()->getPrimaryKey(), array_keys($changes));
+                ->setMultiple($changes, $this->getRepo()->getPrimaryKey())
+                ->where($this->getRepo()->getPrimaryKey(), array_keys($changes));
         } else {
             $models->rewind();
             $model = $models->current();

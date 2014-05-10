@@ -44,7 +44,7 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
 
         $this->env = new Env();
         $this->env
-            ->add(new StaticParam('CL\Luna\Mapper\Repo', 'repo', null))
+            ->add(new StaticParam('CL\Luna\Mapper\MainRepo', 'repo', null))
             ->apply();
 
         $this->logger = new TestLogger();

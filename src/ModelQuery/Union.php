@@ -2,7 +2,7 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Mapper\Repo;
+use CL\Luna\Mapper\MainRepo;
 use CL\Luna\Util\Arr;
 use CL\Atlas\Query;
 
@@ -20,14 +20,14 @@ class Union extends Query\Union {
     {
         $models = $this->loadRaw();
 
-        return Repo::get()->getCanonicalArray($models);
+        return MainRepo::get()->getCanonicalArray($models);
     }
 
     public function loadRaw()
     {
-        if ($this->getStore()->getPolymorphic()) {
+        if ($this->getRepo()->getPolymorphic()) {
             foreach ($this->getSelects() as $select) {
-                $select->prependColumn($this->getStore()->getTable().'.polymorphicClass');
+                $select->prependColumn($this->getRepo()->getTable().'.polymorphicClass');
             }
         }
 

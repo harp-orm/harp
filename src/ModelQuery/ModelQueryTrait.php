@@ -2,7 +2,7 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Model\Store;
+use CL\Luna\Model\Repo;
 use CL\Luna\Util\Arr;
 use CL\Atlas\DB;
 use InvalidArgumentException;
@@ -16,7 +16,7 @@ trait ModelQueryTrait {
 
     protected $store;
 
-    public function setStore(Store $store)
+    public function setRepo(Repo $store)
     {
         $this->store = $store;
         $this->db = DB::get($store->getDb());
@@ -24,7 +24,7 @@ trait ModelQueryTrait {
         return $this;
     }
 
-    public function getStore()
+    public function getRepo()
     {
         return $this->store;
     }
@@ -53,7 +53,7 @@ trait ModelQueryTrait {
         return $this;
     }
 
-    public function joinNestedRels(Store $store, array $rels, $parent)
+    public function joinNestedRels(Repo $store, array $rels, $parent)
     {
         foreach ($rels as $name => $childRels)
         {
@@ -68,7 +68,7 @@ trait ModelQueryTrait {
             $rel->joinRel($this, $parent);
 
             if ($childRels) {
-                $this->joinNestedRels($rel->getForeignStore(), $childRels, $name);
+                $this->joinNestedRels($rel->getForeignRepo(), $childRels, $name);
             }
         }
     }

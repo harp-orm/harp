@@ -2,18 +2,15 @@
 
 namespace CL\Luna\Test;
 
-use CL\Luna\Mapper\Repo;
+use CL\Luna\Mapper\MainRepo;
 use CL\Luna\MassAssign\Data;
-use CL\Luna\Test\Store\UserStore;
-use CL\Luna\Test\Store\PostStore;
-use CL\Luna\Test\Store\BlogPostStore;
-use CL\Luna\Test\Store\TagStore;
+use CL\Luna\Test\Repo;
 
 class TestTest extends AbstractTestCase {
 
     public function testMassAssign()
     {
-        $user3 = UserStore::get()->find(3);
+        $user3 = Repo\User::get()->find(3);
 
         $data = new Data([
             'posts' => [
@@ -39,7 +36,7 @@ class TestTest extends AbstractTestCase {
 
         $data->assignTo($user3);
 
-        Repo::get()->persist($user3);
+        MainRepo::get()->persist($user3);
 
         $this->assertEquals(
             [
@@ -58,20 +55,20 @@ class TestTest extends AbstractTestCase {
 
     public function testPolymorphic()
     {
-        $post = PostStore::get()->find(4);
+        $post = Repo\Post::get()->find(4);
 
         $this->assertInstanceOf('CL\Luna\Test\Model\BlogPost', $post);
         $this->assertTrue($post->isPublished);
 
-        $this->assertNotSame(PostStore::get(), BlogPostStore::get());
+        $this->assertNotSame(Repo\Post::get(), Repo\BlogPost::get());
     }
 
     public function testHasManyThrough()
     {
-        $post = PostStore::get()->find(1);
+        $post = Repo\Post::get()->find(1);
 
-        $tag1 = TagStore::get()->find(1);
-        $tag2 = TagStore::get()->find(2);
+        $tag1 = Repo\Tag::get()->find(1);
+        $tag2 = Repo\Tag::get()->find(2);
 
         $tags = $post->getTags();
 
@@ -91,7 +88,7 @@ class TestTest extends AbstractTestCase {
 
     public function testLoadIds()
     {
-        $ids = PostStore::get()->findAll()->whereKeys([1,2,3])->loadIds();
+        $ids = Repo\Post::get()->findAll()->whereKeys([1,2,3])->loadIds();
 
         $expected = array(1, 2, 3);
 
@@ -107,7 +104,7 @@ class TestTest extends AbstractTestCase {
 
     public function testLoadWith()
     {
-        $posts = PostStore::get()->findAll()->loadWith(['user' => ['address', 'location']]);
+        $posts = Repo\Post::get()->findAll()->loadWith(['user' => ['address', 'location']]);
 
         $user1 = $posts[0]->getUser();
         $user2 = $posts[1]->getUser();

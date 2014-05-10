@@ -1,8 +1,8 @@
 <?php
 
-namespace CL\Luna\Test\Store;
+namespace CL\Luna\Test\Repo;
 
-use CL\Luna\Model\Store;
+use CL\Luna\Model\Repo;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -12,17 +12,17 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class CityStore extends Store {
+class Profile extends Repo {
 
     private static $instance;
 
     /**
-     * @return CityStore
+     * @return Profile
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new CityStore('CL\Luna\Test\Model\City');
+            self::$instance = new Profile('CL\Luna\Test\Model\Profile');
         }
 
         return self::$instance;
@@ -31,16 +31,18 @@ class CityStore extends Store {
     public function initialize()
     {
         $this
-            ->setRels([
-                new Rel\HasMany('users', $this, UserStore::get()),
-            ])
-            ->setAsserts([
-                new Assert\Present('location'),
-            ])
             ->setFields([
                 new Field\Integer('id'),
-                new Field\String('zipCode'),
-                new Field\String('location'),
+                new Field\String('firstName'),
+                new Field\String('lastName'),
+                new Field\Integer('userId'),
+            ])
+            ->setRels([
+                new Rel\BelongsTo('user', $this, User::get()),
+            ])
+            ->setAsserts([
+                new Assert\Present('name'),
             ]);
     }
+
 }

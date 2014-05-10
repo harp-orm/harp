@@ -7,7 +7,7 @@ use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
-use CL\Luna\Model\Store;
+use CL\Luna\Model\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -20,11 +20,11 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 
     protected $foreignKey;
 
-    public function __construct($name, Store $store, Store $foreignStore, array $options = array())
+    public function __construct($name, Repo $store, Repo $foreignRepo, array $options = array())
     {
         $this->foreignKey = $store->getName().'Id';
 
-        parent::__construct($name, $store, $foreignStore, $options);
+        parent::__construct($name, $store, $foreignRepo, $options);
     }
 
     public function getForeignKey()
@@ -37,9 +37,9 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
         return $this->getPrimaryKey();
     }
 
-    public function getForeignStore()
+    public function getForeignRepo()
     {
-        return $this->foreignStore;
+        return $this->foreignRepo;
     }
 
     public function hasForeign(array $models)
@@ -49,7 +49,7 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 
     public function loadForeign(array $models)
     {
-        $store = $this->getForeignStore();
+        $store = $this->getForeignRepo();
 
         return $store->findAll()
             ->where(
@@ -77,9 +77,9 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 
     public function joinRel(AbstractQuery $query, $parent)
     {
-        $columns = [$this->getForeignKey() => $this->getForeignStore()->getPrimaryKey()];
+        $columns = [$this->getForeignKey() => $this->getForeignRepo()->getPrimaryKey()];
 
-        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignStore());
+        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignRepo());
 
         $query->joinAliased($this->getForeignTable(), $this->getName(), $condition);
     }

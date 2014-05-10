@@ -4,7 +4,7 @@ namespace CL\Luna\Rel;
 
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
-use CL\Luna\Model\Store;
+use CL\Luna\Model\Repo;
 use CL\Luna\Mapper;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
@@ -21,11 +21,11 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
 
     protected $key;
 
-    public function __construct($name, Store $store, Store $foreignStore, array $options = array())
+    public function __construct($name, Repo $store, Repo $foreignRepo, array $options = array())
     {
         $this->key = $name.'Id';
 
-        parent::__construct($name, $store, $foreignStore, $options);
+        parent::__construct($name, $store, $foreignRepo, $options);
     }
 
     public function hasForeign(array $models)
@@ -35,7 +35,7 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
 
     public function loadForeign(array $models)
     {
-        return $this->getForeignStore()
+        return $this->getForeignRepo()
             ->findAll()
             ->where(
                 $this->getForeignKey(),
@@ -58,7 +58,7 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
 
     public function getForeignKey()
     {
-        return $this->getStore()->getPrimaryKey();
+        return $this->getRepo()->getPrimaryKey();
     }
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
@@ -70,7 +70,7 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
     {
         $columns = [$this->getForeignKey() => $this->getKey()];
 
-        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignStore());
+        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignRepo());
 
         $query->joinAliased($this->getForeignTable(), $this->getName(), $condition);
     }

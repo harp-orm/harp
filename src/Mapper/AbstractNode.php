@@ -16,7 +16,7 @@ abstract class AbstractNode
 
     abstract public function getId();
     abstract public function isChanged();
-    abstract public function getStore();
+    abstract public function getRepo();
 
     public $state;
 
@@ -73,6 +73,6 @@ abstract class AbstractNode
 
     public function loadRelLink($name)
     {
-        return Repo::get()->loadLink($this, $name);
+        return MainRepo::get()->loadLink($this, $name);
     }
 }

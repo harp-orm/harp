@@ -1,8 +1,8 @@
 <?php
 
-namespace CL\Luna\Test\Store;
+namespace CL\Luna\Test\Repo;
 
-use CL\Luna\Model\Store;
+use CL\Luna\Model\Repo;
 use CL\Luna\Field;
 
 /**
@@ -10,9 +10,9 @@ use CL\Luna\Field;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-trait NestedStoreTrait {
+trait NestedRepoTrait {
 
-    public static function initializeTrait(Store $store)
+    public static function initializeTrait(Repo $store)
     {
         $store
             ->getFields()

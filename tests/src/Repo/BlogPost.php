@@ -1,6 +1,6 @@
 <?php
 
-namespace CL\Luna\Test\Store;
+namespace CL\Luna\Test\Repo;
 
 use CL\Luna\Field;
 
@@ -9,17 +9,17 @@ use CL\Luna\Field;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BlogPostStore extends PostStore {
+class BlogPost extends Post {
 
     private static $instance;
 
     /**
-     * @return BlogPostStore
+     * @return BlogPostRepo
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new BlogPostStore('CL\Luna\Test\Model\BlogPost');
+            self::$instance = new BlogPost('CL\Luna\Test\Model\BlogPost');
         }
 
         return self::$instance;

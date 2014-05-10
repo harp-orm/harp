@@ -3,7 +3,7 @@
 namespace CL\Luna\Test\Model;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Test\Store\AddressStore;
+use CL\Luna\Test\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -12,9 +12,9 @@ use CL\Luna\Test\Store\AddressStore;
  */
 class Address extends Model {
 
-    public function getStore()
+    public function getRepo()
     {
-        return AddressStore::get();
+        return Repo\Address::get();
     }
 
     /**

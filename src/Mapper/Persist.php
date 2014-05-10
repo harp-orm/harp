@@ -13,10 +13,10 @@ use Closure;
  */
 class Persist
 {
-    public static function groupByStore(SplObjectStorage $nodes)
+    public static function groupByRepo(SplObjectStorage $nodes)
     {
         return Objects::groupBy($nodes, function($node) {
-            return $node->getStore();
+            return $node->getRepo();
         });
     }
 
@@ -44,7 +44,7 @@ class Persist
 
     public static function persist(SplObjectStorage $nodes, array $events, Closure $yield)
     {
-        $groups = self::groupByStore($nodes);
+        $groups = self::groupByRepo($nodes);
 
         foreach ($groups as $store) {
             foreach ($events as $event) {

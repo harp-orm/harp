@@ -3,7 +3,7 @@
 namespace CL\Luna\Test\Model;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Test\Store\PostStore;
+use CL\Luna\Test\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -12,9 +12,9 @@ use CL\Luna\Test\Store\PostStore;
  */
 class Post extends Model {
 
-    public function getStore()
+    public function getRepo()
     {
-        return PostStore::get();
+        return Repo\Post::get();
     }
 
     public $id;

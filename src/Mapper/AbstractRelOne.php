@@ -11,7 +11,7 @@ abstract class AbstractRelOne extends AbstractRel
 {
     public function newForeignVoid()
     {
-        return $this->getForeignStore()->newInstance(null, AbstractNode::VOID);
+        return $this->getForeignRepo()->newInstance(null, AbstractNode::VOID);
     }
 
     public function newLink(AbstractNode $foreign, IdentityMap $map)

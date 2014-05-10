@@ -3,7 +3,7 @@
 namespace CL\Luna\Test\Model;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Test\Store\ProfileStore;
+use CL\Luna\Test\Repo;
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -11,9 +11,9 @@ use CL\Luna\Test\Store\ProfileStore;
  */
 class Profile extends Model {
 
-    public function getStore()
+    public function getRepo()
     {
-        return ProfileStore::get();
+        return Repo\Profile::get();
     }
 
     /**

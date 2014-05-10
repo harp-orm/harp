@@ -14,10 +14,10 @@ trait FetchModeTrait {
 
     public function setFetchMode(PDOStatement $statement)
     {
-        if ($this->getStore()->getPolymorphic()) {
+        if ($this->getRepo()->getPolymorphic()) {
             $statement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE);
         } else {
-            $statement->setFetchMode(PDO::FETCH_CLASS, $this->getStore()->getModelClass(), $this->getModelConstructArguments());
+            $statement->setFetchMode(PDO::FETCH_CLASS, $this->getRepo()->getModelClass(), $this->getModelConstructArguments());
         }
     }
 

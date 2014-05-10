@@ -9,14 +9,14 @@ use SplObjectStorage;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Repo
+class MainRepo
 {
     private static $repo;
 
     public static function get()
     {
         if (! self::$repo) {
-            self::$repo = new Repo();
+            self::$repo = new MainRepo();
         }
 
         return self::$repo;
@@ -66,7 +66,7 @@ class Repo
         $links = $this->linkMap->get($node);
 
         if (! $links->has($linkName)) {
-            $rel = $node->getStore()->getRel($linkName);
+            $rel = $node->getRepo()->getRel($linkName);
 
             $this->loadRel($rel, [$node]);
         }

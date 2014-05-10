@@ -3,7 +3,7 @@
 namespace CL\Luna\Test\Model;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Test\Store\CountryStore;
+use CL\Luna\Test\Repo;
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -11,9 +11,9 @@ use CL\Luna\Test\Store\CountryStore;
  */
 class Country extends Model implements LocationInterface {
 
-    public function getStore()
+    public function getRepo()
     {
-        return CountryStore::get();
+        return Repo\Country::get();
     }
 
     public $id;

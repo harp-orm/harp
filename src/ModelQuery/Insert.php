@@ -3,7 +3,7 @@
 namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\Query;
-use CL\Luna\Model\Store;
+use CL\Luna\Model\Repo;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Util\Objects;
 use SplObjectStorage;
@@ -19,10 +19,10 @@ class Insert extends Query\Insert implements SetInterface {
 
     private $insertModels;
 
-    public function __construct(Store $store)
+    public function __construct(Repo $store)
     {
         $this
-            ->setStore($store)
+            ->setRepo($store)
             ->into($store->getTable());
     }
 

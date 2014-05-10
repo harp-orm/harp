@@ -1,8 +1,8 @@
 <?php
 
-namespace CL\Luna\Test\Store;
+namespace CL\Luna\Test\Repo;
 
-use CL\Luna\Model\Store;
+use CL\Luna\Model\Repo;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -12,19 +12,19 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class UserStore extends Store {
+class User extends Repo {
 
-    use NestedStoreTrait;
+    use NestedRepoTrait;
 
     private static $instance;
 
     /**
-     * @return UserStore
+     * @return User
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new UserStore('CL\Luna\Test\Model\User');
+            self::$instance = new User('CL\Luna\Test\Model\User');
         }
 
         return self::$instance;
@@ -47,10 +47,10 @@ class UserStore extends Store {
             ])
 
             ->setRels([
-                new Rel\BelongsTo('address', $this, AddressStore::get()),
-                new Rel\BelongsToPolymorphic('location', $this, CityStore::get()),
-                new Rel\HasMany('posts', $this, PostStore::get()),
-                new Rel\HasOne('profile', $this, ProfileStore::get()),
+                new Rel\BelongsTo('address', $this, Address::get()),
+                new Rel\BelongsToPolymorphic('location', $this, City::get()),
+                new Rel\HasMany('posts', $this, Post::get()),
+                new Rel\HasOne('profile', $this, Profile::get()),
             ])
 
             ->setAsserts([

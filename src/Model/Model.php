@@ -3,7 +3,6 @@
 namespace CL\Luna\Model;
 
 use CL\Luna\Mapper\AbstractNode;
-use CL\Luna\Mapper\Repo;
 use CL\Luna\MassAssign\AssignNodeInterface;
 use CL\Luna\ModelQuery\Select;
 use CL\Luna\ModelQuery\Delete;
@@ -23,27 +22,27 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
 
     public static function find($key)
     {
-        return static::getStore()->getSelect()->whereKey($key)->loadFirst();
+        return static::getRepo()->getSelect()->whereKey($key)->loadFirst();
     }
 
     public static function findAll()
     {
-        return static::getStore()->getSelect();
+        return static::getRepo()->getSelect();
     }
 
     public static function deleteAll()
     {
-        return static::getStore()->getDelete();
+        return static::getRepo()->getDelete();
     }
 
     public static function updateAll()
     {
-        return static::getStore()->getUpdate();
+        return static::getRepo()->getUpdate();
     }
 
     public static function insertAll()
     {
-        return static::getStore()->getInsert();
+        return static::getRepo()->getInsert();
     }
 
     private $errors;
@@ -71,7 +70,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
     {
         $fields = $fields !== null ? $fields : $this->getFieldValues();
 
-        $fields = $this->getStore()->getFields()->loadData($fields);
+        $fields = $this->getRepo()->getFields()->loadData($fields);
 
         $this->setProperties($fields);
         $this->setOriginals($fields);
@@ -83,7 +82,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
     {
         $this->setOriginals($this->getFieldValues());
 
-        if ($this->getStore()->getPolymorphic()) {
+        if ($this->getRepo()->getPolymorphic()) {
             $this->polymorphicClass = get_called_class();
         }
 
@@ -108,12 +107,12 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
 
     public function getId()
     {
-        return $this->{$this->getStore()->getPrimaryKey()};
+        return $this->{$this->getRepo()->getPrimaryKey()};
     }
 
     public function setId($id)
     {
-        $this->{$this->getStore()->getPrimaryKey()} = $id;
+        $this->{$this->getRepo()->getPrimaryKey()} = $id;
 
         return $this;
     }
@@ -137,7 +136,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
     {
         $fields = [];
 
-        foreach ($this->getStore()->getFieldNames() as $name) {
+        foreach ($this->getRepo()->getFieldNames() as $name) {
             $fields[$name] = $this->{$name};
         }
 
@@ -153,7 +152,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
 
     public function dispatchEvent($event)
     {
-        $this->getStore()->dispatchEvent($event, $this);
+        $this->getRepo()->dispatchEvent($event, $this);
 
         return $this;
     }
@@ -171,7 +170,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
             $changes += $this->getUnmapped();
         }
 
-        $this->errors = $this->getStore()->getAsserts()->execute($changes);
+        $this->errors = $this->getRepo()->getAsserts()->execute($changes);
 
         return $this->isValid();
     }
@@ -183,7 +182,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
 
     public function setData(array $data, Closure $yield)
     {
-        $rels = $this->getStore()->getRels()->all();
+        $rels = $this->getRepo()->getRels()->all();
 
         $relsData = array_intersect_key($data, $rels);
         $propertiesData = array_diff_key($data, $rels);

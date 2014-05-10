@@ -3,7 +3,7 @@
 namespace CL\Luna\Test\Model;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Test\Store\PostTagStore;
+use CL\Luna\Test\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -12,9 +12,9 @@ use CL\Luna\Test\Store\PostTagStore;
  */
 class PostTag extends Model {
 
-    public function getStore()
+    public function getRepo()
     {
-        return PostTagStore::get();
+        return Repo\PostTag::get();
     }
 
     public $id;

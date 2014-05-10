@@ -2,8 +2,8 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Model\Store;
-use CL\Luna\Mapper\Repo;
+use CL\Luna\Model\Repo;
+use CL\Luna\Mapper\MainRepo;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Mapper\NodeEvent;
 use CL\Luna\Util\Arr;
@@ -22,26 +22,26 @@ class Select extends Query\Select {
     use SoftDeleteTrait;
     use FetchModeTrait;
 
-    public function __construct(Store $Store)
+    public function __construct(Repo $Repo)
     {
         $this
-            ->setStore($Store)
-            ->from($Store->getTable())
-            ->column($Store->getTable().'.*');
+            ->setRepo($Repo)
+            ->from($Repo->getTable())
+            ->column($Repo->getTable().'.*');
 
-        $this->setSoftDelete($this->getStore()->getSoftDelete());
+        $this->setSoftDelete($this->getRepo()->getSoftDelete());
     }
 
 
-    protected static function loadRels($Store, $models, $rels)
+    protected static function loadRels($Repo, $models, $rels)
     {
         foreach ($rels as $relName => $childRels) {
-            $rel = $Store->getRel($relName);
+            $rel = $Repo->getRel($relName);
 
-            $foreign = Repo::get()->loadRel($rel, $models);
+            $foreign = MainRepo::get()->loadRel($rel, $models);
 
             if ($childRels) {
-                self::loadRels($rel->getForeignStore(), $foreign, $childRels);
+                self::loadRels($rel->getForeignRepo(), $foreign, $childRels);
             }
         }
     }
@@ -52,7 +52,7 @@ class Select extends Query\Select {
 
         $rels = Arr::toAssoc((array) $rels);
 
-        self::loadRels($this->getStore(), $models, $rels);
+        self::loadRels($this->getRepo(), $models, $rels);
 
         return $models;
     }
@@ -61,19 +61,19 @@ class Select extends Query\Select {
     {
         $models = $this->loadRaw();
 
-        return Repo::get()->getCanonicalArray($models);
+        return MainRepo::get()->getCanonicalArray($models);
     }
 
     public function loadIds()
     {
         return $this
             ->execute()
-            ->fetchAll(PDO::FETCH_COLUMN, ''.$this->getStore()->getPrimaryKey());
+            ->fetchAll(PDO::FETCH_COLUMN, ''.$this->getRepo()->getPrimaryKey());
     }
 
     public function loadCount()
     {
-        $store = $this->getStore();
+        $store = $this->getRepo();
 
         return $this
             ->clearColumns()
@@ -91,8 +91,8 @@ class Select extends Query\Select {
 
     public function loadRaw()
     {
-        if ($this->getStore()->getPolymorphic()) {
-            $this->prependColumn($this->getStore()->getTable().'.polymorphicClass');
+        if ($this->getRepo()->getPolymorphic()) {
+            $this->prependColumn($this->getRepo()->getTable().'.polymorphicClass');
         }
 
         $this->applySoftDelete();
@@ -103,7 +103,7 @@ class Select extends Query\Select {
 
         $models = $pdoStatement->fetchAll();
 
-        $this->getStore()->dispatchAfterEvent($models, NodeEvent::LOAD);
+        $this->getRepo()->dispatchAfterEvent($models, NodeEvent::LOAD);
 
         return $models;
     }

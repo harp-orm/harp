@@ -3,7 +3,7 @@
 namespace CL\Luna\Test\Model;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Test\Store\CityStore;
+use CL\Luna\Test\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -12,9 +12,9 @@ use CL\Luna\Test\Store\CityStore;
  */
 class City extends Model implements LocationInterface {
 
-    public function getStore()
+    public function getRepo()
     {
-        return CityStore::get();
+        return Repo\City::get();
     }
 
     public $id;

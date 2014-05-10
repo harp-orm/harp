@@ -1,8 +1,8 @@
 <?php
 
-namespace CL\Luna\Test\Store;
+namespace CL\Luna\Test\Repo;
 
-use CL\Luna\Model\Store;
+use CL\Luna\Model\Repo;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -12,17 +12,17 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class TagStore extends Store {
+class Address extends Repo {
 
     private static $instance;
 
     /**
-     * @return TagStore
+     * @return PostRepo
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new TagStore('CL\Luna\Test\Model\Tag');
+            self::$instance = new Address('CL\Luna\Test\Model\Address');
         }
 
         return self::$instance;
@@ -31,17 +31,16 @@ class TagStore extends Store {
     public function initialize()
     {
         $this
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('name'),
-            ])
             ->setRels([
-                new Rel\HasMany('postTags', $this, PostTagStore::get()),
-                new Rel\HasManyThrough('posts', $this, PostStore::get(), 'postTags'),
+                new Rel\HasMany('users', $this, User::get()),
             ])
             ->setAsserts([
-                new Assert\Present('name'),
+                new Assert\Present('location'),
+            ])
+            ->setFields([
+                new Field\Integer('id'),
+                new Field\String('zipCode'),
+                new Field\String('location'),
             ]);
     }
-
 }

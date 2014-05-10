@@ -5,7 +5,7 @@ namespace CL\Luna\Rel;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
 use CL\Luna\Mapper;
-use CL\Luna\Model\Store;
+use CL\Luna\Model\Repo;
 use Closure;
 
 /**
@@ -18,12 +18,12 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
     protected $key;
     protected $storeKey;
 
-    public function __construct($name, Store $store, Store $defaultForeignStore, array $options = array())
+    public function __construct($name, Repo $store, Repo $defaultForeignRepo, array $options = array())
     {
         $this->key = $name.'Id';
         $this->storeKey = $name.'Class';
 
-        parent::__construct($name, $store, $defaultForeignStore, $options);
+        parent::__construct($name, $store, $defaultForeignRepo, $options);
     }
 
     public function getKey()
@@ -31,14 +31,14 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
         return $this->key;
     }
 
-    public function getStoreKey()
+    public function getRepoKey()
     {
         return $this->storeKey;
     }
 
     public function getForeignKey()
     {
-        return $this->getStore()->getPrimaryKey();
+        return $this->getRepo()->getPrimaryKey();
     }
 
     public function hasForeign(array $models)
@@ -55,7 +55,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
         foreach ($groups as $modelClass => & $models) {
 
             $keys = Arr::extractUnique($models, $this->key);
-            $store = (new $modelClass())->getStore();
+            $store = (new $modelClass())->getRepo();
 
             if ($keys) {
                 $models = $store->findAll()
@@ -80,23 +80,23 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
         $model->{$this->key} = $link->get()->getId();
-        $model->{$this->storeKey} = $link->get()->getStore()->getName();
+        $model->{$this->storeKey} = $link->get()->getRepo()->getName();
     }
 
-    public function loadForeignStore(array $data)
+    public function loadForeignRepo(array $data)
     {
         if (isset($data['_class'])) {
             $class = $data['_class'];
-            return $class::getStore();
+            return $class::getRepo();
         }
 
-        return $this->getForeignStore();
+        return $this->getForeignRepo();
     }
 
     public function loadFromData(array $data)
     {
         if (isset($data['_id'])) {
-            $store = $this->loadForeignStore($data);
+            $store = $this->loadForeignRepo($data);
 
             return $store->find($data['_id']);
         }

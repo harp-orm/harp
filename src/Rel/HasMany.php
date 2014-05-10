@@ -5,7 +5,7 @@ namespace CL\Luna\Rel;
 use CL\Luna\Mapper;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
-use CL\Luna\Model\Store;
+use CL\Luna\Model\Repo;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
 
@@ -20,11 +20,11 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
 
     protected $foreignKey;
 
-    public function __construct($name, Store $store, Store $foreignStore, array $options = array())
+    public function __construct($name, Repo $store, Repo $foreignRepo, array $options = array())
     {
         $this->foreignKey = lcfirst($store->getName()).'Id';
 
-        parent::__construct($name, $store, $foreignStore, $options);
+        parent::__construct($name, $store, $foreignRepo, $options);
     }
 
     public function getForeignKey()
@@ -34,7 +34,7 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
 
     public function getKey()
     {
-        return $this->getStore()->getPrimaryKey();
+        return $this->getRepo()->getPrimaryKey();
     }
 
     public function hasForeign(array $models)
@@ -44,7 +44,7 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
 
     public function loadForeign(array $models)
     {
-        return $this->getForeignStore()
+        return $this->getForeignRepo()
             ->findAll()
             ->where(
                 $this->foreignKey,
@@ -64,11 +64,11 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
 
     public function joinRel(AbstractQuery $query, $parent)
     {
-        $columns = [$this->getForeignKey() => $this->foreignStore->getPrimaryKey()];
+        $columns = [$this->getForeignKey() => $this->foreignRepo->getPrimaryKey()];
 
-        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->foreignStore);
+        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->foreignRepo);
 
-        $query->joinAliased($this->foreignStore->getTable(), $this->getName(), $condition);
+        $query->joinAliased($this->foreignRepo->getTable(), $this->getName(), $condition);
     }
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)

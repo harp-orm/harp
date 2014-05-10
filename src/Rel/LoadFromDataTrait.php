@@ -12,7 +12,7 @@ trait LoadFromDataTrait
     public function loadFromData(array $data)
     {
         if (isset($data['_id'])) {
-            $store = $this->getForeignStore();
+            $store = $this->getForeignRepo();
 
             return $store->find($data['_id']);
         }

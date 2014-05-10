@@ -3,8 +3,8 @@
 namespace CL\Luna\Test;
 
 use CL\Luna\Util\Log;
-use CL\Luna\Mapper\Repo;
-use CL\Luna\Test\Store\UserStore;
+use CL\Luna\Mapper\MainRepo;
+use CL\Luna\Test\Repo;
 
 /**
  * @group integration
@@ -13,11 +13,11 @@ class FieldsTest extends AbstractTestCase {
 
     public function testTest()
     {
-        $user = UserStore::get()->find(1);
+        $user = Repo\User::get()->find(1);
 
         $user->delete();
 
-        Repo::get()->persist($user);
+        MainRepo::get()->persist($user);
 
         var_dump($this->getLogger()->getEntries());
     }

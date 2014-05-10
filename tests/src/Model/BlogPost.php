@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Test\Model;
 
-use CL\Luna\Test\Store\BlogPostStore;
+use CL\Luna\Test\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -11,9 +11,9 @@ use CL\Luna\Test\Store\BlogPostStore;
  */
 class BlogPost extends Post {
 
-    public function getStore()
+    public function getRepo()
     {
-        return BlogPostStore::get();
+        return Repo\BlogPost::get();
     }
 
     public $isPublished = false;

@@ -21,7 +21,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
     public function __construct($name, Store $store, Store $defaultForeignStore, array $options = array())
     {
         $this->key = $name.'Id';
-        $this->StoreKey = $name.'Class';
+        $this->storeKey = $name.'Class';
 
         parent::__construct($name, $store, $defaultForeignStore, $options);
     }
@@ -33,7 +33,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
 
     public function getStoreKey()
     {
-        return $this->StoreKey;
+        return $this->storeKey;
     }
 
     public function getForeignKey()
@@ -49,7 +49,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
     public function loadForeign(array $models)
     {
         $groups = Arr::groupBy($models, function($model){
-            return $model->{$this->StoreKey};
+            return $model->{$this->storeKey};
         });
 
         foreach ($groups as $modelClass => & $models) {
@@ -72,7 +72,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
         return Objects::combineArrays($models, $foreign, function($model, $foreign){
             return (
                 $model->{$this->key} == $foreign->{$this->getForeignKey()}
-                and $model->{$this->StoreKey} == get_class($foreign)
+                and $model->{$this->storeKey} == get_class($foreign)
             );
         });
     }
@@ -82,7 +82,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
         if ($link->get()->isPersisted())
         {
             $model->{$this->key} = $link->get()->getId();
-            $model->{$this->StoreKey} = $link->get()->getStore()->getName();
+            $model->{$this->storeKey} = $link->get()->getStore()->getName();
         }
     }
 

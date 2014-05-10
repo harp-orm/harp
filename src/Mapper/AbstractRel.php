@@ -23,7 +23,7 @@ abstract class AbstractRel
     {
         $this->name = $name;
         $this->foreignStore = $foreignStore;
-        $this->Store = $store;
+        $this->store = $store;
 
         foreach ($options as $name => $value) {
             $this->$name = $value;
@@ -37,7 +37,7 @@ abstract class AbstractRel
 
     public function getStore()
     {
-        return $this->Store;
+        return $this->store;
     }
 
     public function getForeignStore()

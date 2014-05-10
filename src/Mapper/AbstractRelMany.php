@@ -16,7 +16,7 @@ abstract class AbstractRelMany extends AbstractRel
         return new LinkMany($this, $foreign);
     }
 
-    public function newEmptyLink()
+    public function newVoidLink()
     {
         return new LinkMany($this, array());
     }

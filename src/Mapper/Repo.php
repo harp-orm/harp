@@ -82,7 +82,7 @@ class Repo
             if ($linked->contains($node)) {
                 $link = $rel->newLink($linked[$node], $this->identityMap);
             } else {
-                $link = $rel->newEmptyLink();
+                $link = $rel->newVoidLink();
             }
 
             $this->linkMap->get($node)->add($rel->getName(), $link);

@@ -61,8 +61,8 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
             case self::PENDING:
                 $this->initializePending($fields);
                 break;
-            case self::NOT_LOADED:
-                $this->initializeNotLoaded();
+            case self::VOID:
+                $this->initializeEmpty();
                 break;
         }
     }
@@ -92,7 +92,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
         return $this;
     }
 
-    public function initializeNotLoaded()
+    public function initializeEmpty()
     {
         $this->setOriginals($this->getFieldValues());
 

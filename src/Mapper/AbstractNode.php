@@ -10,7 +10,7 @@ abstract class AbstractNode
     const PENDING = 1;
     const DELETED = 2;
     const PERSISTED = 3;
-    const NOT_LOADED = 4;
+    const VOID = 4;
 
     abstract public function getId();
     abstract public function isChanged();
@@ -57,9 +57,9 @@ abstract class AbstractNode
         return $this->state === self::DELETED;
     }
 
-    public function isNotLoaded()
+    public function isVoid()
     {
-        return $this->state === self::NOT_LOADED;
+        return $this->state === self::VOID;
     }
 
     public function loadRelLink($name)

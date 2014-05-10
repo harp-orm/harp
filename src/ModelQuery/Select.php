@@ -72,11 +72,11 @@ class Select extends Query\Select {
 
     public function loadCount()
     {
-        $Store = $this->getStore();
+        $store = $this->getStore();
 
         return $this
             ->clearColumns()
-            ->column("COUNT({$Store->getTable()}.{$Store->getPrimaryKey()})", 'countAll')
+            ->column("COUNT({$store->getTable()}.{$store->getPrimaryKey()})", 'countAll')
             ->execute()
                 ->fetchColumn();
     }
@@ -85,7 +85,7 @@ class Select extends Query\Select {
     {
         $items = $this->limit(1)->load();
 
-        return reset($items) ?: $this->Store->newInstance(null, AbstractNode::NOT_LOADED);
+        return reset($items) ?: $this->store->newInstance(null, AbstractNode::VOID);
     }
 
     public function execute()

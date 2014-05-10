@@ -63,10 +63,7 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
-        if ($link->get()->isPersisted())
-        {
-            $model->{$this->getKey()} = $link->get()->getId();
-        }
+        $model->{$this->getKey()} = $link->get()->getId();
     }
 
     public function joinRel(AbstractQuery $query, $parent)

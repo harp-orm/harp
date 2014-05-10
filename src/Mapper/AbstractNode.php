@@ -30,6 +30,13 @@ abstract class AbstractNode
         return $this;
     }
 
+    public function setStateVoid()
+    {
+        $this->state = self::VOID;
+
+        return $this;
+    }
+
     public function setState($state)
     {
         $this->state = $state;

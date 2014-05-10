@@ -30,6 +30,13 @@ class LinkOne extends AbstractLink
         return $this;
     }
 
+    public function clear()
+    {
+        $this->current->setStateVoid();
+
+        return $this;
+    }
+
     public function get()
     {
         return $this->current;

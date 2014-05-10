@@ -79,11 +79,8 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
-        if ($link->get()->isPersisted())
-        {
-            $model->{$this->key} = $link->get()->getId();
-            $model->{$this->storeKey} = $link->get()->getStore()->getName();
-        }
+        $model->{$this->key} = $link->get()->getId();
+        $model->{$this->storeKey} = $link->get()->getStore()->getName();
     }
 
     public function loadForeignStore(array $data)

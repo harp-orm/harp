@@ -20,11 +20,11 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface
 
     protected $foreignKey;
 
-    public function __construct($name, Store $Store, Store $foreignStore, array $options = array())
+    public function __construct($name, Store $store, Store $foreignStore, array $options = array())
     {
-        $this->foreignKey = lcfirst($Store->getName()).'Id';
+        $this->foreignKey = lcfirst($store->getName()).'Id';
 
-        parent::__construct($name, $Store, $foreignStore, $options);
+        parent::__construct($name, $store, $foreignStore, $options);
     }
 
     public function getForeignKey()

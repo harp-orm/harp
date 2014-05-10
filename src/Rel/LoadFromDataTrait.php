@@ -12,9 +12,9 @@ trait LoadFromDataTrait
     public function loadFromData(array $data)
     {
         if (isset($data['_id'])) {
-            $Store = $this->getForeignStore();
+            $store = $this->getForeignStore();
 
-            return $Store->find($data['_id']);
+            return $store->find($data['_id']);
         }
     }
 }

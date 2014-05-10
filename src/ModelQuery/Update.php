@@ -20,11 +20,11 @@ class Update extends Query\Update implements SetInterface {
     use ModelQueryTrait;
     use SoftDeleteTrait;
 
-    public function __construct(Store $Store)
+    public function __construct(Store $store)
     {
         $this
-            ->setStore($Store)
-            ->table($Store->getTable());
+            ->setStore($store)
+            ->table($store->getTable());
 
         $this->setSoftDelete($this->getStore()->getSoftDelete());
     }
@@ -37,7 +37,7 @@ class Update extends Query\Update implements SetInterface {
 
             $this
                 ->setMultiple($changes, $this->getStore()->getPrimaryKey())
-                ->where($this->Store->getPrimaryKey(), array_keys($changes));
+                ->where($this->getStore()->getPrimaryKey(), array_keys($changes));
         } else {
             $models->rewind();
             $model = $models->current();

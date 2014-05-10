@@ -25,18 +25,18 @@ class Persist
             ->deleteRels()
             ->expandWithLinked();
 
-        self::persist($nodes->getDeleted(), [NodeEvent::DELETE], function ($Store, $nodes) {
-            $Store->delete($nodes);
+        self::persist($nodes->getDeleted(), [NodeEvent::DELETE], function ($store, $nodes) {
+            $store->delete($nodes);
         });
 
-        self::persist($nodes->getPending(), [NodeEvent::INSERT, NodeEvent::SAVE], function ($Store, $nodes) {
-            $Store->insert($nodes);
+        self::persist($nodes->getPending(), [NodeEvent::INSERT, NodeEvent::SAVE], function ($store, $nodes) {
+            $store->insert($nodes);
         });
 
         $nodes->updateRels();
 
-        self::persist($nodes->getChanged(), [NodeEvent::UPDATE, NodeEvent::SAVE], function ($Store, $nodes) {
-            $Store->update($nodes);
+        self::persist($nodes->getChanged(), [NodeEvent::UPDATE, NodeEvent::SAVE], function ($store, $nodes) {
+            $store->update($nodes);
         });
     }
 
@@ -44,15 +44,15 @@ class Persist
     {
         $groups = self::groupByStore($nodes);
 
-        foreach ($groups as $Store) {
+        foreach ($groups as $store) {
             foreach ($events as $event) {
-                $Store->dispatchBeforeEvent($nodes, $event);
+                $store->dispatchBeforeEvent($nodes, $event);
             }
 
-            $yield($Store, $groups->getInfo());
+            $yield($store, $groups->getInfo());
 
             foreach ($events as $event) {
-                $Store->dispatchAfterEvent($nodes, $event);
+                $store->dispatchAfterEvent($nodes, $event);
             }
         }
     }

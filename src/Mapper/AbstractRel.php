@@ -11,7 +11,7 @@ abstract class AbstractRel
 {
     protected $name;
     protected $foreignStore;
-    protected $Store;
+    protected $store;
 
     abstract public function update(AbstractNode $parent, AbstractLink $link);
     abstract public function hasForeign(array $nodes);
@@ -19,11 +19,11 @@ abstract class AbstractRel
     abstract public function linkToForeign(array $nodes, array $foreign);
     abstract public function loadFromData(array $data);
 
-    public function __construct($name, StoreInterface $Store, StoreInterface $foreignStore, array $options = array())
+    public function __construct($name, StoreInterface $store, StoreInterface $foreignStore, array $options = array())
     {
         $this->name = $name;
         $this->foreignStore = $foreignStore;
-        $this->Store = $Store;
+        $this->Store = $store;
 
         foreach ($options as $name => $value) {
             $this->$name = $value;

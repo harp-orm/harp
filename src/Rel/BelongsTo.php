@@ -21,11 +21,11 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
 
     protected $key;
 
-    public function __construct($name, Store $Store, Store $foreignStore, array $options = array())
+    public function __construct($name, Store $store, Store $foreignStore, array $options = array())
     {
         $this->key = $name.'Id';
 
-        parent::__construct($name, $Store, $foreignStore, $options);
+        parent::__construct($name, $store, $foreignStore, $options);
     }
 
     public function hasForeign(array $models)

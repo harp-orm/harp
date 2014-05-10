@@ -12,9 +12,9 @@ use CL\Luna\Field;
  */
 trait NestedStoreTrait {
 
-    public static function initializeTrait(Store $Store)
+    public static function initializeTrait(Store $store)
     {
-        $Store
+        $store
             ->getFields()
                 ->add(new Field\Integer('parentId'));
     }

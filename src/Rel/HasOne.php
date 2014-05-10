@@ -20,11 +20,11 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 
     protected $foreignKey;
 
-    public function __construct($name, Store $Store, Store $foreignStore, array $options = array())
+    public function __construct($name, Store $store, Store $foreignStore, array $options = array())
     {
-        $this->foreignKey = $Store->getName().'Id';
+        $this->foreignKey = $store->getName().'Id';
 
-        parent::__construct($name, $Store, $foreignStore, $options);
+        parent::__construct($name, $store, $foreignStore, $options);
     }
 
     public function getForeignKey()
@@ -49,9 +49,9 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 
     public function loadForeign(array $models)
     {
-        $Store = $this->getForeignStore();
+        $store = $this->getForeignStore();
 
-        return $Store->findAll()
+        return $store->findAll()
             ->where(
                 $this->getKey(),
                 Arr::extractUnique($models, $this->foreignKey)

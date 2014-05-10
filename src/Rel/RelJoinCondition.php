@@ -13,7 +13,7 @@ use CL\Luna\Model\Store;
  */
 class RelJoinCondition extends SQL
 {
-    public function __construct($table, $foreign_table, array $conditions, Store $Store = null)
+    public function __construct($table, $foreign_table, array $conditions, Store $store = null)
     {
         $parts = [];
 
@@ -22,7 +22,7 @@ class RelJoinCondition extends SQL
             $parts []= "{$foreign_table}.{$foreignColumn} = {$table}.{$column}";
         }
 
-        if ($Store->getSoftDelete())
+        if ($store->getSoftDelete())
         {
             $parts []= $foreign_table.'.'.Store::SOFT_DELETE_KEY.' IS NULL';
         }

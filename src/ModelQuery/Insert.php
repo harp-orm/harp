@@ -19,20 +19,20 @@ class Insert extends Query\Insert implements SetInterface {
 
     private $insertModels;
 
-    public function __construct(Store $Store)
+    public function __construct(Store $store)
     {
         $this
-            ->setStore($Store)
-            ->into($Store->getTable());
+            ->setStore($store)
+            ->into($store->getTable());
     }
 
     public function setMultiple(array $values)
     {
-        $columns = $this->Store->getFields()->getNames();
+        $columns = $this->store->getFields()->getNames();
 
         $this->columns($columns);
 
-        $defaultValues = $this->Store->getFieldDefaults();
+        $defaultValues = $this->store->getFieldDefaults();
 
         foreach ($values as $value)
         {

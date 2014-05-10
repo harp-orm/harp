@@ -18,21 +18,21 @@ class Delete extends Query\Delete implements SetInterface {
     use ModelQueryTrait;
     use SoftDeleteTrait;
 
-    public function __construct(Store $Store)
+    public function __construct(Store $store)
     {
         $this
-            ->setStore($Store)
-            ->from($Store->getTable());
+            ->setStore($store)
+            ->from($store->getTable());
 
-        $this->setSoftDelete($Store->getSoftDelete());
+        $this->setSoftDelete($store->getSoftDelete());
     }
 
     public function execute()
     {
         if ($this->getSoftDelete()) {
-            $Store = $this->getStore();
+            $store = $this->getStore();
 
-            $softDelete = (new Update($Store));
+            $softDelete = (new Update($store));
 
             if ($this->getOrder()) {
                 $softDelete->setOrder($this->getOrder());
@@ -50,7 +50,7 @@ class Delete extends Query\Delete implements SetInterface {
             $softDelete
                 ->setTable($this->getTable() ?: $this->getFrom())
                 ->set([Store::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
-                ->where($Store->getTable().'.'.Store::SOFT_DELETE_KEY, null);
+                ->where($store->getTable().'.'.Store::SOFT_DELETE_KEY, null);
 
             return $softDelete->execute();
         } else {

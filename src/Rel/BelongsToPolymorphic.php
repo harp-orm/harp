@@ -16,14 +16,14 @@ use Closure;
 class BelongsToPolymorphic extends Mapper\AbstractRelOne
 {
     protected $key;
-    protected $StoreKey;
+    protected $storeKey;
 
-    public function __construct($name, Store $Store, Store $defaultForeignStore, array $options = array())
+    public function __construct($name, Store $store, Store $defaultForeignStore, array $options = array())
     {
         $this->key = $name.'Id';
         $this->StoreKey = $name.'Class';
 
-        parent::__construct($name, $Store, $defaultForeignStore, $options);
+        parent::__construct($name, $store, $defaultForeignStore, $options);
     }
 
     public function getKey()
@@ -55,10 +55,10 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
         foreach ($groups as $modelClass => & $models) {
 
             $keys = Arr::extractUnique($models, $this->key);
-            $Store = (new $modelClass())->getStore();
+            $store = (new $modelClass())->getStore();
 
             if ($keys) {
-                $models = $Store->findAll()
+                $models = $store->findAll()
                     ->where($this->getForeignKey(), $keys)
                     ->loadRaw();
             }
@@ -99,9 +99,9 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
     public function loadFromData(array $data)
     {
         if (isset($data['_id'])) {
-            $Store = $this->loadForeignStore($data);
+            $store = $this->loadForeignStore($data);
 
-            return $Store->find($data['_id']);
+            return $store->find($data['_id']);
         }
     }
 }

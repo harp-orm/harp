@@ -21,13 +21,13 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
     protected $foreignKey;
     protected $through;
 
-    public function __construct($name, Store $Store, Store $foreignStore, $through, array $options = array())
+    public function __construct($name, Store $store, Store $foreignStore, $through, array $options = array())
     {
         $this->through = $through;
         $this->foreignKey = $foreignStore->getName().'Id';
-        $this->key = $Store->getName().'Id';
+        $this->key = $store->getName().'Id';
 
-        parent::__construct($name, $Store, $foreignStore, $options);
+        parent::__construct($name, $store, $foreignStore, $options);
     }
 
     public function getForeignKey()
@@ -64,9 +64,9 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
     {
         $throughKey = $this->getThroughTable().'.'.$this->getThroughRel()->getForeignKey();
         $throughForeignKey = $this->getThroughTable().'.'.$this->key;
-        $Store = $this->getForeignStore();
+        $store = $this->getForeignStore();
 
-        $select = $Store->findAll()
+        $select = $store->findAll()
             ->column($throughKey, $this->getTHroughKey())
             ->joinRels($this->through)
             ->where(

@@ -13,24 +13,24 @@ use InvalidArgumentException;
  */
 trait ModelQueryTrait {
 
-    protected $Store;
+    protected $store;
 
-    public function setStore(Store $Store)
+    public function setStore(Store $store)
     {
-        $this->Store = $Store;
-        $this->db = DB::get($Store->getDb());
+        $this->store = $store;
+        $this->db = DB::get($store->getDb());
 
         return $this;
     }
 
     public function getStore()
     {
-        return $this->Store;
+        return $this->store;
     }
 
     public function getRel($name)
     {
-        return $this->Store->getRel($name);
+        return $this->store->getRel($name);
     }
 
     public function addToLog()
@@ -43,32 +43,32 @@ trait ModelQueryTrait {
 
     public function whereKey($key)
     {
-        return $this->where($this->getStore()->getTable().'.'.$this->getStore()->getPrimaryKey(), $key);
+        return $this->where($this->store->getTable().'.'.$this->store->getPrimaryKey(), $key);
     }
 
     public function whereKeys(array $keys)
     {
-        return $this->where($this->getStore()->getTable().'.'.$this->getStore()->getPrimaryKey(), $keys);
+        return $this->where($this->store->getTable().'.'.$this->store->getPrimaryKey(), $keys);
     }
 
     public function joinRels($rels)
     {
         $rels = Arr::toAssoc((array) $rels);
 
-        $this->joinNestedRels($this->getStore(), $rels, $this->getStore()->getTable());
+        $this->joinNestedRels($this->store, $rels, $this->store->getTable());
 
         return $this;
     }
 
-    public function joinNestedRels($Store, array $rels, $parent)
+    public function joinNestedRels(Store $store, array $rels, $parent)
     {
         foreach ($rels as $name => $childRels)
         {
-            $rel = $Store->getRel($name);
+            $rel = $store->getRel($name);
 
             if (! $rel) {
                 throw new InvalidArgumentException(
-                    sprintf('Relation %s does not exist on %s when joining', $name, $Store->getName())
+                    sprintf('Relation %s does not exist on %s when joining', $name, $store->getName())
                 );
             }
 

@@ -7,7 +7,6 @@ use CL\Luna\Util\Objects;
 use CL\Luna\Model\Schema;
 use CL\Luna\Mapper;
 use CL\Luna\ModelQuery\RelJoinInterface;
-use CL\Luna\ModelQuery\Select;
 use CL\Atlas\Query\AbstractQuery;
 use Closure;
 
@@ -36,10 +35,12 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface
 
     public function loadForeign(array $models)
     {
-        return (new Select($this->getForeignSchema()))
-            ->where([
-                $this->getForeignKey() => Arr::extractUnique($models, $this->key)
-            ])
+        return $this->getForeignSchema()
+            ->findAll()
+            ->where(
+                $this->getForeignKey(),
+                Arr::extractUnique($models, $this->key)
+            )
             ->loadRaw();
     }
 

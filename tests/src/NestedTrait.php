@@ -7,12 +7,10 @@ namespace CL\Luna\Test;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BlogPost extends Post {
+trait NestedTrait {
 
-    public function getSchema()
-    {
-        return BlogPostSchema::get();
-    }
-
-    public $isPublished = false;
+    /**
+     * @var string
+     */
+    public $parentId;
 }

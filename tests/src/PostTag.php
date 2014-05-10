@@ -1,11 +1,8 @@
-<?php namespace CL\Luna\Test;
+<?php
+
+namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
-use CL\Luna\Mapper\Repo;
-use CL\Luna\Field;
-use CL\Luna\Rel;
 
 /**
  * @author     Ivan Kerin
@@ -14,7 +11,10 @@ use CL\Luna\Rel;
  */
 class PostTag extends Model {
 
-    use SchemaTrait;
+    public function getSchema()
+    {
+        return PostTagSchema::get();
+    }
 
     public $id;
     public $postId;
@@ -39,21 +39,4 @@ class PostTag extends Model {
     {
         return $this->loadRelLink('post')->set($post);
     }
-
-    public static function initialize(Schema $schema)
-    {
-        $schema
-            ->setRels([
-                new Rel\BelongsTo('post', $schema, User::getSchema()),
-                new Rel\BelongsTo('tag', $schema, User::getSchema()),
-            ]);
-
-        $schema
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\Integer('postId'),
-                new Field\Integer('tagId'),
-            ]);
-    }
-
 }

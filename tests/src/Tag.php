@@ -1,8 +1,6 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -14,7 +12,10 @@ use CL\Carpo\Assert;
  */
 class Tag extends Model {
 
-    use SchemaTrait;
+    public function getSchema()
+    {
+        return TagSchema::get();
+    }
 
     public $id;
     public $name;
@@ -34,21 +35,4 @@ class Tag extends Model {
     {
         return $this->loadRelLink('posts');
     }
-
-    public static function initialize(Schema $schema)
-    {
-        $schema
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('name'),
-            ])
-            ->setRels([
-                new Rel\HasMany('postTags', $schema, PostTag::getSchema()),
-                new Rel\HasManyThrough('posts', $schema, Post::getSchema(), 'postTags'),
-            ])
-            ->setAsserts([
-                new Assert\Present('name'),
-            ]);
-    }
-
 }

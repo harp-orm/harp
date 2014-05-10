@@ -1,8 +1,9 @@
-<?php namespace CL\Luna\Test;
+<?php
+
+namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
 use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -14,7 +15,10 @@ use CL\Carpo\Assert;
  */
 class Address extends Model {
 
-    use SchemaTrait;
+    public function getSchema()
+    {
+        return AddressSchema::get();
+    }
 
     /**
      * @var integer
@@ -34,25 +38,8 @@ class Address extends Model {
     /**
      * @return Users
      */
-    public function users()
+    public function getUsers()
     {
         return $this->loadRelLink('users');
     }
-
-    public static function initialize(Schema $schema)
-    {
-        $schema
-            ->setRels([
-                new Rel\HasMany('users', $schema, User::getSchema()),
-            ])
-            ->setAsserts([
-                new Assert\Present('location'),
-            ])
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('zipCode'),
-                new Field\String('location'),
-            ]);
-    }
-
 }

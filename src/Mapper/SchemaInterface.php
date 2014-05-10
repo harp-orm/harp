@@ -13,7 +13,7 @@ interface SchemaInterface
     public function update(SplObjectStorage $nodes);
     public function delete(SplObjectStorage $nodes);
     public function insert(SplObjectStorage $nodes);
-    public function dispatchBeforeEvent(SplObjectStorage $nodes, $event);
-    public function dispatchAfterEvent(SplObjectStorage $nodes, $event);
+    public function dispatchBeforeEvent($nodes, $event);
+    public function dispatchAfterEvent($nodes, $event);
     public function newInstance($properties = null, $status = AbstractNode::PENDING);
 }

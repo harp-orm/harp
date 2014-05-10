@@ -14,7 +14,10 @@ use CL\Carpo\Assert;
  */
 class Profile extends Model {
 
-    use SchemaTrait;
+    public function getSchema()
+    {
+        return ProfileSchema::get();
+    }
 
     /**
      * @var integer
@@ -51,22 +54,4 @@ class Profile extends Model {
     {
         return $this->loadRelLink('user')->set($user);
     }
-
-    public static function initialize(Schema $schema)
-    {
-        $schema
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('firstName'),
-                new Field\String('lastName'),
-                new Field\Integer('userId'),
-            ])
-            ->setRels([
-                new Rel\BelongsTo('user', $schema, User::getSchema()),
-            ])
-            ->setAsserts([
-                new Assert\Present('name'),
-            ]);
-    }
-
 }

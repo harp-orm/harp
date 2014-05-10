@@ -13,22 +13,13 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Country extends Model implements LocationInterface{
+class Country extends Model implements LocationInterface {
 
-    use SchemaTrait;
+    public function getSchema()
+    {
+        return CountrySchema::get();
+    }
 
     public $id;
     public $name;
-
-    public static function initialize(Schema $schema)
-    {
-        $schema
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('name'),
-            ])
-            ->setAsserts([
-                new Assert\Present('name'),
-            ]);
-    }
 }

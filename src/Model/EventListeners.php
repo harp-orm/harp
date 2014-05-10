@@ -59,14 +59,14 @@ class EventListeners {
         return isset($this->after[$event]);
     }
 
-    public function dispatchAfterEvent(SplObjectStorage $models, $event)
+    public function dispatchAfterEvent($models, $event)
     {
         foreach ($models as $model) {
             self::dispatchEvent($this->after, $event, $model);
         }
     }
 
-    public function dispatchBeforeEvent(SplObjectStorage $models, $event)
+    public function dispatchBeforeEvent($models, $event)
     {
         foreach ($models as $model) {
             self::dispatchEvent($this->before, $event, $model);

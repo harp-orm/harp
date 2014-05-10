@@ -44,13 +44,21 @@ class LinkMap
         }
     }
 
-    public function updateNodes(SplObjectStorage $nodes)
+    public function updateRels(SplObjectStorage $nodes)
     {
-        $nodes = clone $this->map;
-        $nodes->removeAllExcept($nodes);
-
         foreach ($nodes as $node) {
-            $nodes->getInfo()->update();
+            if ($this->map->contains($node)) {
+                $this->map[$node]->updateRels();
+            }
+        }
+    }
+
+    public function deleteRels(SplObjectStorage $nodes)
+    {
+        foreach ($nodes as $node) {
+            if ($this->map->contains($node)) {
+                $this->map[$node]->deleteRels();
+            }
         }
     }
 
@@ -62,7 +70,9 @@ class LinkMap
 
             $linkedNodes = $this->get($node)->getNodes();
             foreach ($linkedNodes as $node) {
-                $this->addAllRecursive($all, $node);
+                if (! $all->contains($node)) {
+                    $this->addAllRecursive($all, $node);
+                }
             }
         }
 

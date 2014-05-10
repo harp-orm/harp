@@ -40,10 +40,19 @@ class Links extends Collection
         return $all;
     }
 
-    public function update()
+    public function updateRels()
     {
         foreach ($this->items as $item) {
             $item->getRel()->update($this->node, $item);
+        }
+    }
+
+    public function deleteRels()
+    {
+        foreach ($this->items as $item) {
+            if ($item->getRel() instanceof DeleteCascadeInterface) {
+                $item->getRel()->delete($this->node, $item);
+            }
         }
     }
 }

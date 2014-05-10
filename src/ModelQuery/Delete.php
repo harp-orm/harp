@@ -50,7 +50,7 @@ class Delete extends Query\Delete implements SetInterface {
             $softDelete
                 ->setTable($this->getTable() ?: $this->getFrom())
                 ->set([Schema::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
-                ->where([$schema->getTable().'.'.Schema::SOFT_DELETE_KEY => null]);
+                ->where($schema->getTable().'.'.Schema::SOFT_DELETE_KEY, null);
 
             return $softDelete->execute();
         } else {

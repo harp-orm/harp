@@ -26,7 +26,7 @@ class Arr
 
         foreach ($array as $key => $value) {
             if (is_numeric($key)) {
-                $converted[$value] = null
+                $converted[$value] = null;
             } else {
                 $converted[$key] = self::toAssoc((array) $value);
             }

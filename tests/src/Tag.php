@@ -12,9 +12,9 @@ use CL\Carpo\Assert;
  */
 class Tag extends Model {
 
-    public function getSchema()
+    public function getStore()
     {
-        return TagSchema::get();
+        return TagStore::get();
     }
 
     public $id;

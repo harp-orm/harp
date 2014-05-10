@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 
 /**
  * @author     Ivan Kerin
@@ -26,7 +26,7 @@ trait SoftDeleteTrait {
     public function applySoftDelete()
     {
         if ($this->getSoftDelete()) {
-            $this->where($this->getSchema()->getTable().'.'.Schema::SOFT_DELETE_KEY, null);
+            $this->where($this->getStore()->getTable().'.'.Store::SOFT_DELETE_KEY, null);
         }
     }
 }

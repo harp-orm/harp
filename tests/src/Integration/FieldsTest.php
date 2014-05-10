@@ -12,7 +12,7 @@ class FieldsTest extends AbstractTestCase {
     {
         Log::setEnabled(TRUE);
 
-        $user = UserSchema::get()->find(1);
+        $user = UserStore::get()->find(1);
 
         $user->delete();
 

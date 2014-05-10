@@ -5,7 +5,7 @@ namespace CL\Luna\Rel;
 use CL\Luna\Mapper;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
 
@@ -21,13 +21,13 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
     protected $foreignKey;
     protected $through;
 
-    public function __construct($name, Schema $schema, Schema $foreignSchema, $through, array $options = array())
+    public function __construct($name, Store $Store, Store $foreignStore, $through, array $options = array())
     {
         $this->through = $through;
-        $this->foreignKey = $foreignSchema->getName().'Id';
-        $this->key = $schema->getName().'Id';
+        $this->foreignKey = $foreignStore->getName().'Id';
+        $this->key = $Store->getName().'Id';
 
-        parent::__construct($name, $schema, $foreignSchema, $options);
+        parent::__construct($name, $Store, $foreignStore, $options);
     }
 
     public function getForeignKey()
@@ -37,7 +37,7 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
 
     public function getThroughRel()
     {
-        return $this->getSchema()->getRel($this->through);
+        return $this->getStore()->getRel($this->through);
     }
 
     public function getKey()
@@ -64,14 +64,14 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
     {
         $throughKey = $this->getThroughTable().'.'.$this->getThroughRel()->getForeignKey();
         $throughForeignKey = $this->getThroughTable().'.'.$this->key;
-        $schema = $this->getForeignSchema();
+        $Store = $this->getForeignStore();
 
-        $select = $schema->findAll()
+        $select = $Store->findAll()
             ->column($throughKey, $this->getTHroughKey())
             ->joinRels($this->through)
             ->where(
                 $throughForeignKey,
-                Arr::extractUnique($models, $this->getSchema()->getPrimaryKey())
+                Arr::extractUnique($models, $this->getStore()->getPrimaryKey())
             );
 
         return $select->loadRaw();
@@ -86,9 +86,9 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
 
     public function joinRel(AbstractQuery $query, $parent)
     {
-        $columns = [$this->getForeignKey() => $this->foreignSchema->getPrimaryKey()];
+        $columns = [$this->getForeignKey() => $this->foreignStore->getPrimaryKey()];
 
-        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignSchema());
+        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignStore());
 
         $query
             ->joinAliased($this->getForeignTable(), $this->getName(), $condition);
@@ -96,7 +96,7 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
-        $throughReflection = $this->getThroughRel()->getForeignSchema()->getModelReflection();
+        $throughReflection = $this->getThroughRel()->getForeignStore()->getModelReflection();
         $through = $model->{$this->through};
 
         foreach ($link->getAdded() as $added) {

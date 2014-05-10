@@ -5,7 +5,7 @@ namespace CL\Luna\Rel;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
 use CL\Luna\Mapper;
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 use Closure;
 
 /**
@@ -16,14 +16,14 @@ use Closure;
 class BelongsToPolymorphic extends Mapper\AbstractRelOne
 {
     protected $key;
-    protected $schemaKey;
+    protected $StoreKey;
 
-    public function __construct($name, Schema $schema, Schema $defaultForeignSchema, array $options = array())
+    public function __construct($name, Store $Store, Store $defaultForeignStore, array $options = array())
     {
         $this->key = $name.'Id';
-        $this->schemaKey = $name.'Class';
+        $this->StoreKey = $name.'Class';
 
-        parent::__construct($name, $schema, $defaultForeignSchema, $options);
+        parent::__construct($name, $Store, $defaultForeignStore, $options);
     }
 
     public function getKey()
@@ -31,14 +31,14 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
         return $this->key;
     }
 
-    public function getSchemaKey()
+    public function getStoreKey()
     {
-        return $this->schemaKey;
+        return $this->StoreKey;
     }
 
     public function getForeignKey()
     {
-        return $this->getSchema()->getPrimaryKey();
+        return $this->getStore()->getPrimaryKey();
     }
 
     public function hasForeign(array $models)
@@ -49,16 +49,16 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
     public function loadForeign(array $models)
     {
         $groups = Arr::groupBy($models, function($model){
-            return $model->{$this->schemaKey};
+            return $model->{$this->StoreKey};
         });
 
         foreach ($groups as $modelClass => & $models) {
 
             $keys = Arr::extractUnique($models, $this->key);
-            $schema = (new $modelClass())->getSchema();
+            $Store = (new $modelClass())->getStore();
 
             if ($keys) {
-                $models = $schema->findAll()
+                $models = $Store->findAll()
                     ->where($this->getForeignKey(), $keys)
                     ->loadRaw();
             }
@@ -72,7 +72,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
         return Objects::combineArrays($models, $foreign, function($model, $foreign){
             return (
                 $model->{$this->key} == $foreign->{$this->getForeignKey()}
-                and $model->{$this->schemaKey} == get_class($foreign)
+                and $model->{$this->StoreKey} == get_class($foreign)
             );
         });
     }
@@ -82,26 +82,26 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne
         if ($link->get()->isPersisted())
         {
             $model->{$this->key} = $link->get()->getId();
-            $model->{$this->schemaKey} = $link->get()->getSchema()->getName();
+            $model->{$this->StoreKey} = $link->get()->getStore()->getName();
         }
     }
 
-    public function loadForeignSchema(array $data)
+    public function loadForeignStore(array $data)
     {
         if (isset($data['_class'])) {
             $class = $data['_class'];
-            return $class::getSchema();
+            return $class::getStore();
         }
 
-        return $this->getForeignSchema();
+        return $this->getForeignStore();
     }
 
     public function loadFromData(array $data)
     {
         if (isset($data['_id'])) {
-            $schema = $this->loadForeignSchema($data);
+            $Store = $this->loadForeignStore($data);
 
-            return $schema->find($data['_id']);
+            return $Store->find($data['_id']);
         }
     }
 }

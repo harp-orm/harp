@@ -7,7 +7,7 @@ use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 
 /**
  * @author     Ivan Kerin
@@ -20,11 +20,11 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 
     protected $foreignKey;
 
-    public function __construct($name, Schema $schema, Schema $foreignSchema, array $options = array())
+    public function __construct($name, Store $Store, Store $foreignStore, array $options = array())
     {
-        $this->foreignKey = $schema->getName().'Id';
+        $this->foreignKey = $Store->getName().'Id';
 
-        parent::__construct($name, $schema, $foreignSchema, $options);
+        parent::__construct($name, $Store, $foreignStore, $options);
     }
 
     public function getForeignKey()
@@ -37,9 +37,9 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
         return $this->getPrimaryKey();
     }
 
-    public function getForeignSchema()
+    public function getForeignStore()
     {
-        return $this->foreignSchema;
+        return $this->foreignStore;
     }
 
     public function hasForeign(array $models)
@@ -49,9 +49,9 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 
     public function loadForeign(array $models)
     {
-        $schema = $this->getForeignSchema();
+        $Store = $this->getForeignStore();
 
-        return $schema->findAll()
+        return $Store->findAll()
             ->where(
                 $this->getKey(),
                 Arr::extractUnique($models, $this->foreignKey)
@@ -77,9 +77,9 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
 
     public function joinRel(AbstractQuery $query, $parent)
     {
-        $columns = [$this->getForeignKey() => $this->getForeignSchema()->getPrimaryKey()];
+        $columns = [$this->getForeignKey() => $this->getForeignStore()->getPrimaryKey()];
 
-        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignSchema());
+        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignStore());
 
         $query->joinAliased($this->getForeignTable(), $this->getName(), $condition);
     }

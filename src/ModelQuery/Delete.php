@@ -3,7 +3,7 @@
 namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\Query;
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 use CL\atlas\SQL\SQL;
 use CL\Luna\Util\Objects;
 use SplObjectStorage;
@@ -18,21 +18,21 @@ class Delete extends Query\Delete implements SetInterface {
     use ModelQueryTrait;
     use SoftDeleteTrait;
 
-    public function __construct(Schema $schema)
+    public function __construct(Store $Store)
     {
         $this
-            ->setSchema($schema)
-            ->from($schema->getTable());
+            ->setStore($Store)
+            ->from($Store->getTable());
 
-        $this->setSoftDelete($schema->getSoftDelete());
+        $this->setSoftDelete($Store->getSoftDelete());
     }
 
     public function execute()
     {
         if ($this->getSoftDelete()) {
-            $schema = $this->getSchema();
+            $Store = $this->getStore();
 
-            $softDelete = (new Update($schema));
+            $softDelete = (new Update($Store));
 
             if ($this->getOrder()) {
                 $softDelete->setOrder($this->getOrder());
@@ -49,8 +49,8 @@ class Delete extends Query\Delete implements SetInterface {
 
             $softDelete
                 ->setTable($this->getTable() ?: $this->getFrom())
-                ->set([Schema::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
-                ->where($schema->getTable().'.'.Schema::SOFT_DELETE_KEY, null);
+                ->set([Store::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
+                ->where($Store->getTable().'.'.Store::SOFT_DELETE_KEY, null);
 
             return $softDelete->execute();
         } else {

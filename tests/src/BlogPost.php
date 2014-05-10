@@ -9,9 +9,9 @@ namespace CL\Luna\Test;
  */
 class BlogPost extends Post {
 
-    public function getSchema()
+    public function getStore()
     {
-        return BlogPostSchema::get();
+        return BlogPostStore::get();
     }
 
     public $isPublished = false;

@@ -2,27 +2,27 @@
 
 namespace CL\Luna\Test;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
+
 use CL\Luna\Field;
 use CL\Luna\Rel;
-use CL\Carpo\Assert;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class AddressSchema extends Schema {
+class PostTagStore extends Store {
 
     private static $instance;
 
     /**
-     * @return PostSchema
+     * @return PostTagStore
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new AddressSchema('CL\Luna\Test\Address');
+            self::$instance = new PostTagStore('CL\Luna\Test\PostTag');
         }
 
         return self::$instance;
@@ -32,15 +32,15 @@ class AddressSchema extends Schema {
     {
         $this
             ->setRels([
-                new Rel\HasMany('users', $this, UserSchema::get()),
+                new Rel\BelongsTo('post', $this, PostStore::get()),
+                new Rel\BelongsTo('tag', $this, TagStore::get()),
             ])
-            ->setAsserts([
-                new Assert\Present('location'),
-            ])
+
             ->setFields([
                 new Field\Integer('id'),
-                new Field\String('zipCode'),
-                new Field\String('location'),
+                new Field\Integer('postId'),
+                new Field\Integer('tagId'),
             ]);
     }
+
 }

@@ -1,8 +1,8 @@
 <?php namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
+use CL\Luna\Model\Store;
+use CL\Luna\Model\StoreTrait;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -14,9 +14,9 @@ use CL\Carpo\Assert;
  */
 class Profile extends Model {
 
-    public function getSchema()
+    public function getStore()
     {
-        return ProfileSchema::get();
+        return ProfileStore::get();
     }
 
     /**

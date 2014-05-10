@@ -11,7 +11,7 @@ abstract class AbstractRelOne extends AbstractRel
 {
     public function newForeignNotLoaded()
     {
-        return $this->getForeignSchema()->newInstance(null, AbstractNode::NOT_LOADED);
+        return $this->getForeignStore()->newInstance(null, AbstractNode::NOT_LOADED);
     }
 
     public function newLink(AbstractNode $foreign, IdentityMap $map)

@@ -124,7 +124,7 @@ class LinkMany extends AbstractLink implements Countable, Iterator
         $this->clear();
 
         foreach ($data as $itemData) {
-            $model = $this->getRel()->loadFromData($data) ?: $this->getRel()->getForeignSchema()->newInstance();
+            $model = $this->getRel()->loadFromData($data) ?: $this->getRel()->getForeignStore()->newInstance();
 
             $yield($model, $itemData);
 

@@ -2,7 +2,7 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 use CL\Luna\Mapper\Repo;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Util\log(§);
@@ -29,22 +29,22 @@ class Union extends Query\Union {
 
     public function loadRaw()
     {
-        if ($this->getSchema()->getPolymorphic()) {
-            $this->prependColumn($this->getSchema()->getTable().'.polymorphicClass');
+        if ($this->getStore()->getPolymorphic()) {
+            $this->prependColumn($this->getStore()->getTable().'.polymorphicClass');
         }
 
         $pdoStatement = $this
             ->addToLog()
             ->execute();
 
-        if ($this->getSchema()->getPolymorphic()) {
+        if ($this->getStore()->getPolymorphic()) {
             $pdoStatement->setFetchMode(
                 PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE
             );
         } else {
             $pdoStatement->setFetchMode(
                 PDO::FETCH_CLASS,
-                $this->getSchema()->getModelClass()
+                $this->getStore()->getModelClass()
             );
         }
 

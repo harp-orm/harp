@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\Test;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -10,19 +10,19 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class UserSchema extends Schema {
+class UserStore extends Store {
 
-    use NestedSchemaTrait;
+    use NestedStoreTrait;
 
     private static $instance;
 
     /**
-     * @return UserSchema
+     * @return UserStore
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new UserSchema('CL\Luna\Test\User');
+            self::$instance = new UserStore('CL\Luna\Test\User');
         }
 
         return self::$instance;
@@ -45,17 +45,17 @@ class UserSchema extends Schema {
             ])
 
             ->setRels([
-                new Rel\BelongsTo('address', $this, AddressSchema::get()),
-                new Rel\BelongsToPolymorphic('location', $this, CitySchema::get()),
-                new Rel\HasMany('posts', $this, PostSchema::get()),
-                new Rel\HasOne('profile', $this, ProfileSchema::get()),
+                new Rel\BelongsTo('address', $this, AddressStore::get()),
+                new Rel\BelongsToPolymorphic('location', $this, CityStore::get()),
+                new Rel\HasMany('posts', $this, PostStore::get()),
+                new Rel\HasOne('profile', $this, ProfileStore::get()),
             ])
 
             ->setAsserts([
                 new Assert\Present('name'),
             ])
 
-            ->setEventAfterLoad('CL\Luna\Test\UserSchema::test');
+            ->setEventAfterLoad('CL\Luna\Test\UserStore::test');
     }
 
     public static function test($model)

@@ -11,9 +11,9 @@ use CL\Luna\Model\Model;
  */
 class PostTag extends Model {
 
-    public function getSchema()
+    public function getStore()
     {
-        return PostTagSchema::get();
+        return PostTagStore::get();
     }
 
     public $id;

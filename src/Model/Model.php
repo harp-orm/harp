@@ -23,27 +23,27 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
 
     public static function find($key)
     {
-        return static::getSchema()->getSelect()->whereKey($key)->loadFirst();
+        return static::getStore()->getSelect()->whereKey($key)->loadFirst();
     }
 
     public static function findAll()
     {
-        return static::getSchema()->getSelect();
+        return static::getStore()->getSelect();
     }
 
     public static function deleteAll()
     {
-        return static::getSchema()->getDelete();
+        return static::getStore()->getDelete();
     }
 
     public static function updateAll()
     {
-        return static::getSchema()->getUpdate();
+        return static::getStore()->getUpdate();
     }
 
     public static function insertAll()
     {
-        return static::getSchema()->getInsert();
+        return static::getStore()->getInsert();
     }
 
     private $errors;
@@ -71,7 +71,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
     {
         $fields = $fields !== null ? $fields : $this->getFieldValues();
 
-        $fields = $this->getSchema()->getFields()->loadData($fields);
+        $fields = $this->getStore()->getFields()->loadData($fields);
 
         $this->setProperties($fields);
         $this->setOriginals($fields);
@@ -82,7 +82,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
     public function initializePending(array $fields = null)
     {
         $this->setOriginals($this->getFieldValues());
-        if ($this->getSchema()->getPolymorphic()) {
+        if ($this->getStore()->getPolymorphic()) {
             $this->polymorphicClass = get_called_class();
         }
         if ($fields) {
@@ -106,12 +106,12 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
 
     public function getId()
     {
-        return $this->{$this->getSchema()->getPrimaryKey()};
+        return $this->{$this->getStore()->getPrimaryKey()};
     }
 
     public function setId($id)
     {
-        $this->{$this->getSchema()->getPrimaryKey()} = $id;
+        $this->{$this->getStore()->getPrimaryKey()} = $id;
 
         return $this;
     }
@@ -134,7 +134,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
     public function getFieldValues()
     {
         $fields = [];
-        foreach ($this->getSchema()->getFieldNames() as $name)
+        foreach ($this->getStore()->getFieldNames() as $name)
         {
             $fields[$name] = $this->{$name};
         }
@@ -150,7 +150,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
 
     public function dispatchEvent($event)
     {
-        $this->getSchema()->dispatchEvent($event, $this);
+        $this->getStore()->dispatchEvent($event, $this);
 
         return $this;
     }
@@ -168,7 +168,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
             $changes += $this->getUnmapped();
         }
 
-        $this->errors = $this->getSchema()->getAsserts()->execute($changes);
+        $this->errors = $this->getStore()->getAsserts()->execute($changes);
 
         return $this->isValid();
     }
@@ -180,7 +180,7 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
 
     public function setData(array $data, Closure $yield)
     {
-        $rels = $this->getSchema()->getRels()->all();
+        $rels = $this->getStore()->getRels()->all();
 
         $relsData = array_intersect_key($data, $rels);
         $propertiesData = array_diff_key($data, $rels);

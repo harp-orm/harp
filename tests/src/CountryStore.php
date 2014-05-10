@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Test;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -12,17 +12,17 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class CountrySchema extends Schema {
+class CountryStore extends Store {
 
     private static $instance;
 
     /**
-     * @return CountrySchema
+     * @return CountryStore
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new CountrySchema('CL\Luna\Test\Country');
+            self::$instance = new CountryStore('CL\Luna\Test\Country');
         }
 
         return self::$instance;

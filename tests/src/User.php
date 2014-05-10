@@ -9,9 +9,9 @@ use CL\Luna\Model\Model;
  */
 class User extends Model {
 
-    public function getSchema()
+    public function getStore()
     {
-        return UserSchema::get();
+        return UserStore::get();
     }
 
     use NestedTrait;

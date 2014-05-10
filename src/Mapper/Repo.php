@@ -64,7 +64,7 @@ class Repo
         $links = $this->linkMap->get($node);
 
         if (! $links->has($linkName)) {
-            $rel = $node->getSchema()->getRel($linkName);
+            $rel = $node->getStore()->getRel($linkName);
 
             $this->loadRel($rel, [$node]);
         }

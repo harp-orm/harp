@@ -9,17 +9,17 @@ use CL\Luna\Field;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BlogPostSchema extends PostSchema {
+class BlogPostStore extends PostStore {
 
     private static $instance;
 
     /**
-     * @return BlogPostSchema
+     * @return BlogPostStore
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new BlogPostSchema('CL\Luna\Test\BlogPost');
+            self::$instance = new BlogPostStore('CL\Luna\Test\BlogPost');
         }
 
         return self::$instance;

@@ -14,9 +14,9 @@ use CL\Carpo\Assert;
  */
 class Post extends Model {
 
-    public function getSchema()
+    public function getStore()
     {
-        return PostSchema::get();
+        return PostStore::get();
     }
 
     public $id;

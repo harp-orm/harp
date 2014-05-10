@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Mapper;
+<?php
+
+namespace CL\Luna\Mapper;
 
 use SplObjectStorage;
 
@@ -7,7 +9,7 @@ use SplObjectStorage;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-interface SchemaInterface
+interface StoreInterface
 {
     public function getRel($name);
     public function update(SplObjectStorage $nodes);

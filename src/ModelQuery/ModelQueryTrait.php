@@ -1,6 +1,6 @@
 <?php namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Log;
 use CL\Atlas\DB;
@@ -13,24 +13,24 @@ use InvalidArgumentException;
  */
 trait ModelQueryTrait {
 
-    protected $schema;
+    protected $Store;
 
-    public function setSchema(Schema $schema)
+    public function setStore(Store $Store)
     {
-        $this->schema = $schema;
-        $this->db = DB::get($schema->getDb());
+        $this->Store = $Store;
+        $this->db = DB::get($Store->getDb());
 
         return $this;
     }
 
-    public function getSchema()
+    public function getStore()
     {
-        return $this->schema;
+        return $this->Store;
     }
 
     public function getRel($name)
     {
-        return $this->schema->getRel($name);
+        return $this->Store->getRel($name);
     }
 
     public function addToLog()
@@ -43,32 +43,32 @@ trait ModelQueryTrait {
 
     public function whereKey($key)
     {
-        return $this->where($this->getSchema()->getTable().'.'.$this->getSchema()->getPrimaryKey(), $key);
+        return $this->where($this->getStore()->getTable().'.'.$this->getStore()->getPrimaryKey(), $key);
     }
 
     public function whereKeys(array $keys)
     {
-        return $this->where($this->getSchema()->getTable().'.'.$this->getSchema()->getPrimaryKey(), $keys);
+        return $this->where($this->getStore()->getTable().'.'.$this->getStore()->getPrimaryKey(), $keys);
     }
 
     public function joinRels($rels)
     {
         $rels = Arr::toAssoc((array) $rels);
 
-        $this->joinNestedRels($this->getSchema(), $rels, $this->getSchema()->getTable());
+        $this->joinNestedRels($this->getStore(), $rels, $this->getStore()->getTable());
 
         return $this;
     }
 
-    public function joinNestedRels($schema, array $rels, $parent)
+    public function joinNestedRels($Store, array $rels, $parent)
     {
         foreach ($rels as $name => $childRels)
         {
-            $rel = $schema->getRel($name);
+            $rel = $Store->getRel($name);
 
             if (! $rel) {
                 throw new InvalidArgumentException(
-                    sprintf('Relation %s does not exist on %s when joining', $name, $schema->getName())
+                    sprintf('Relation %s does not exist on %s when joining', $name, $Store->getName())
                 );
             }
 
@@ -76,7 +76,7 @@ trait ModelQueryTrait {
 
             if ($childRels)
             {
-                $this->joinNestedRels($rel->getForeignSchema(), $childRels, $name);
+                $this->joinNestedRels($rel->getForeignStore(), $childRels, $name);
             }
         }
     }

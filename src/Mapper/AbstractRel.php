@@ -10,8 +10,8 @@ namespace CL\Luna\Mapper;
 abstract class AbstractRel
 {
     protected $name;
-    protected $foreignSchema;
-    protected $schema;
+    protected $foreignStore;
+    protected $Store;
 
     abstract public function update(AbstractNode $parent, AbstractLink $link);
     abstract public function hasForeign(array $nodes);
@@ -19,11 +19,11 @@ abstract class AbstractRel
     abstract public function linkToForeign(array $nodes, array $foreign);
     abstract public function loadFromData(array $data);
 
-    public function __construct($name, SchemaInterface $schema, SchemaInterface $foreignSchema, array $options = array())
+    public function __construct($name, StoreInterface $Store, StoreInterface $foreignStore, array $options = array())
     {
         $this->name = $name;
-        $this->foreignSchema = $foreignSchema;
-        $this->schema = $schema;
+        $this->foreignStore = $foreignStore;
+        $this->Store = $Store;
 
         foreach ($options as $name => $value) {
             $this->$name = $value;
@@ -35,14 +35,14 @@ abstract class AbstractRel
         return $this->name;
     }
 
-    public function getSchema()
+    public function getStore()
     {
-        return $this->schema;
+        return $this->Store;
     }
 
-    public function getForeignSchema()
+    public function getForeignStore()
     {
-        return $this->foreignSchema;
+        return $this->foreignStore;
     }
 
     public function loadForeignForNodes(array $nodes)

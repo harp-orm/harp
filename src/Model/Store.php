@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Model;
 
-use CL\Luna\Mapper\SchemaInterface;
+use CL\Luna\Mapper\StoreInterface;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Mapper\NodeEvent;
 use CL\Luna\ModelQuery;
@@ -17,7 +17,7 @@ use SplObjectStorage;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-abstract class Schema implements SchemaInterface
+abstract class Store implements StoreInterface
 {
     const SOFT_DELETE_KEY = 'deletedAt';
 

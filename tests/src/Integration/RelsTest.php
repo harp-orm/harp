@@ -12,7 +12,7 @@ class RelsTest extends AbstractTestCase {
     {
         Log::setEnabled(TRUE);
 
-        $users = UserSchema::get()->findAll()->loadWith(['profile', 'posts']);
+        $users = UserStore::get()->findAll()->loadWith(['profile', 'posts']);
 
         var_dump(Log::all());
     }

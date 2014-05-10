@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Test;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -12,17 +12,17 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class PostSchema extends Schema {
+class PostStore extends Store {
 
     private static $instance;
 
     /**
-     * @return PostSchema
+     * @return PostStore
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new PostSchema('CL\Luna\Test\Post');
+            self::$instance = new PostStore('CL\Luna\Test\Post');
         }
 
         return self::$instance;
@@ -34,9 +34,9 @@ class PostSchema extends Schema {
             ->setPolymorphic(true)
 
             ->setRels([
-                new Rel\BelongsTo('user', $this, UserSchema::get()),
-                new Rel\HasMany('postTags', $this, PostTagSchema::get()),
-                new Rel\HasManyThrough('tags', $this, TagSchema::get(), 'postTags'),
+                new Rel\BelongsTo('user', $this, UserStore::get()),
+                new Rel\HasMany('postTags', $this, PostTagStore::get()),
+                new Rel\HasManyThrough('tags', $this, TagStore::get(), 'postTags'),
             ])
 
             ->setFields([

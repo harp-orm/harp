@@ -3,8 +3,8 @@
 namespace CL\Luna\Test;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\Schema;
-use CL\Luna\Model\SchemaTrait;
+use CL\Luna\Model\Store;
+use CL\Luna\Model\StoreTrait;
 use CL\Luna\Field;
 use CL\Carpo\Assert;
 
@@ -15,9 +15,9 @@ use CL\Carpo\Assert;
  */
 class Country extends Model implements LocationInterface {
 
-    public function getSchema()
+    public function getStore()
     {
-        return CountrySchema::get();
+        return CountryStore::get();
     }
 
     public $id;

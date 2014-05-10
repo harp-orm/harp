@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Test;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -12,17 +12,17 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class CitySchema extends Schema {
+class ProfileStore extends Store {
 
     private static $instance;
 
     /**
-     * @return CitySchema
+     * @return ProfileStore
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new CitySchema('CL\Luna\Test\City');
+            self::$instance = new ProfileStore('CL\Luna\Test\Profile');
         }
 
         return self::$instance;
@@ -31,16 +31,18 @@ class CitySchema extends Schema {
     public function initialize()
     {
         $this
-            ->setRels([
-                new Rel\HasMany('users', $this, UserSchema::get()),
-            ])
-            ->setAsserts([
-                new Assert\Present('location'),
-            ])
             ->setFields([
                 new Field\Integer('id'),
-                new Field\String('zipCode'),
-                new Field\String('location'),
+                new Field\String('firstName'),
+                new Field\String('lastName'),
+                new Field\Integer('userId'),
+            ])
+            ->setRels([
+                new Rel\BelongsTo('user', $this, UserStore::get()),
+            ])
+            ->setAsserts([
+                new Assert\Present('name'),
             ]);
     }
+
 }

@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Test;
 
-use CL\Luna\Model\Schema;
+use CL\Luna\Model\Store;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -12,17 +12,17 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class ProfileSchema extends Schema {
+class AddressStore extends Store {
 
     private static $instance;
 
     /**
-     * @return ProfileSchema
+     * @return PostStore
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new ProfileSchema('CL\Luna\Test\Profile');
+            self::$instance = new AddressStore('CL\Luna\Test\Address');
         }
 
         return self::$instance;
@@ -31,18 +31,16 @@ class ProfileSchema extends Schema {
     public function initialize()
     {
         $this
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('firstName'),
-                new Field\String('lastName'),
-                new Field\Integer('userId'),
-            ])
             ->setRels([
-                new Rel\BelongsTo('user', $this, UserSchema::get()),
+                new Rel\HasMany('users', $this, UserStore::get()),
             ])
             ->setAsserts([
-                new Assert\Present('name'),
+                new Assert\Present('location'),
+            ])
+            ->setFields([
+                new Field\Integer('id'),
+                new Field\String('zipCode'),
+                new Field\String('location'),
             ]);
     }
-
 }

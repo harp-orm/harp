@@ -11,10 +11,10 @@ use Closure;
  */
 class Persist
 {
-    public static function groupBySchema(SplObjectStorage $nodes)
+    public static function groupByStore(SplObjectStorage $nodes)
     {
         return Objects::groupBy($nodes, function($node) {
-            return $node->getSchema();
+            return $node->getStore();
         });
     }
 
@@ -25,34 +25,34 @@ class Persist
             ->deleteRels()
             ->expandWithLinked();
 
-        self::persist($nodes->getDeleted(), [NodeEvent::DELETE], function ($schema, $nodes) {
-            $schema->delete($nodes);
+        self::persist($nodes->getDeleted(), [NodeEvent::DELETE], function ($Store, $nodes) {
+            $Store->delete($nodes);
         });
 
-        self::persist($nodes->getPending(), [NodeEvent::INSERT, NodeEvent::SAVE], function ($schema, $nodes) {
-            $schema->insert($nodes);
+        self::persist($nodes->getPending(), [NodeEvent::INSERT, NodeEvent::SAVE], function ($Store, $nodes) {
+            $Store->insert($nodes);
         });
 
         $nodes->updateRels();
 
-        self::persist($nodes->getChanged(), [NodeEvent::UPDATE, NodeEvent::SAVE], function ($schema, $nodes) {
-            $schema->update($nodes);
+        self::persist($nodes->getChanged(), [NodeEvent::UPDATE, NodeEvent::SAVE], function ($Store, $nodes) {
+            $Store->update($nodes);
         });
     }
 
     public static function persist(SplObjectStorage $nodes, array $events, Closure $yield)
     {
-        $groups = self::groupBySchema($nodes);
+        $groups = self::groupByStore($nodes);
 
-        foreach ($groups as $schema) {
+        foreach ($groups as $Store) {
             foreach ($events as $event) {
-                $schema->dispatchBeforeEvent($nodes, $event);
+                $Store->dispatchBeforeEvent($nodes, $event);
             }
 
-            $yield($schema, $groups->getInfo());
+            $yield($Store, $groups->getInfo());
 
             foreach ($events as $event) {
-                $schema->dispatchAfterEvent($nodes, $event);
+                $Store->dispatchAfterEvent($nodes, $event);
             }
         }
     }

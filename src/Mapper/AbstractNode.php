@@ -14,7 +14,7 @@ abstract class AbstractNode
 
     abstract public function getId();
     abstract public function isChanged();
-    abstract public function getSchema();
+    abstract public function getStore();
 
     public $state;
 

@@ -1,12 +1,9 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace CL\Luna\Test\Model;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Field;
-use CL\Luna\Rel;
-use CL\Carpo\Assert;
-
+use CL\Luna\Test\Store\TagStore;
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.

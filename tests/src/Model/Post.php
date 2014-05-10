@@ -1,11 +1,9 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace CL\Luna\Test\Model;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Field;
-use CL\Luna\Rel;
-use CL\Carpo\Assert;
+use CL\Luna\Test\Store\PostStore;
 
 /**
  * @author     Ivan Kerin

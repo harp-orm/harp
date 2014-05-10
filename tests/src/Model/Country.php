@@ -1,13 +1,9 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace CL\Luna\Test\Model;
 
 use CL\Luna\Model\Model;
-use CL\Luna\Model\Store;
-use CL\Luna\Model\StoreTrait;
-use CL\Luna\Field;
-use CL\Carpo\Assert;
-
+use CL\Luna\Test\Store\CountryStore;
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.

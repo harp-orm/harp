@@ -1,8 +1,9 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace CL\Luna\Test\Model;
 
 use CL\Luna\Model\Model;
+use CL\Luna\Test\Store\PostTagStore;
 
 /**
  * @author     Ivan Kerin

@@ -1,6 +1,6 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace CL\Luna\Test\Store;
 
 use CL\Luna\Model\Store;
 use CL\Luna\Field;
@@ -12,17 +12,17 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class ProfileStore extends Store {
+class TagStore extends Store {
 
     private static $instance;
 
     /**
-     * @return ProfileStore
+     * @return TagStore
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new ProfileStore('CL\Luna\Test\Profile');
+            self::$instance = new TagStore('CL\Luna\Test\Model\Tag');
         }
 
         return self::$instance;
@@ -33,12 +33,11 @@ class ProfileStore extends Store {
         $this
             ->setFields([
                 new Field\Integer('id'),
-                new Field\String('firstName'),
-                new Field\String('lastName'),
-                new Field\Integer('userId'),
+                new Field\String('name'),
             ])
             ->setRels([
-                new Rel\BelongsTo('user', $this, UserStore::get()),
+                new Rel\HasMany('postTags', $this, PostTagStore::get()),
+                new Rel\HasManyThrough('posts', $this, PostStore::get(), 'postTags'),
             ])
             ->setAsserts([
                 new Assert\Present('name'),

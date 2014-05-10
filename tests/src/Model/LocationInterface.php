@@ -1,6 +1,6 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace CL\Luna\Test\Model;
 
 /**
  * @author     Ivan Kerin

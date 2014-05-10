@@ -1,6 +1,6 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace CL\Luna\Test\Store;
 
 use CL\Luna\Model\Store;
 use CL\Luna\Field;
@@ -12,17 +12,17 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class CityStore extends Store {
+class AddressStore extends Store {
 
     private static $instance;
 
     /**
-     * @return CityStore
+     * @return PostStore
      */
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new CityStore('CL\Luna\Test\City');
+            self::$instance = new AddressStore('CL\Luna\Test\Model\Address');
         }
 
         return self::$instance;

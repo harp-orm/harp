@@ -4,8 +4,11 @@ namespace CL\Luna\Test;
 
 use CL\Luna\Util\Log;
 use CL\Luna\Mapper\Repo;
-use CL\Luna\ModelQuery\Union;
 use CL\Luna\MassAssign\Data;
+use CL\Luna\Test\Store\UserStore;
+use CL\Luna\Test\Store\PostStore;
+use CL\Luna\Test\Store\BlogPostStore;
+use CL\Luna\Test\Store\TagStore;
 
 class TestTest extends AbstractTestCase {
 
@@ -46,7 +49,7 @@ class TestTest extends AbstractTestCase {
                 'SELECT User.* FROM User WHERE (User.id = 3) AND (User.deletedAt IS NULL) LIMIT 1',
                 'SELECT Post.polymorphicClass, Post.* FROM Post WHERE (userId IN (3))',
                 'SELECT Address.* FROM Address WHERE (Address.id = 1) LIMIT 1',
-                'INSERT INTO Post (id, title, body, price, tags, createdAt, updatedAt, publishedAt, userId, polymorphicClass) VALUES (NULL, "my title", "my body", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Post"), (NULL, "my title 2", "my body 2", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Post")',
+                'INSERT INTO Post (id, title, body, price, tags, createdAt, updatedAt, publishedAt, userId, polymorphicClass) VALUES (NULL, "my title", "my body", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Model\Post"), (NULL, "my title 2", "my body 2", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Model\Post")',
                 'UPDATE User SET name = "new name!!", addressId = 1 WHERE (User.id = 3) AND (User.deletedAt IS NULL)',
                 'UPDATE Post SET userId = CASE id WHEN 5 THEN 3 WHEN 6 THEN 3 ELSE userId END WHERE (id IN (5, 6))',
                 'UPDATE Post SET userId = NULL WHERE (Post.id = 4)',
@@ -60,7 +63,7 @@ class TestTest extends AbstractTestCase {
     {
         $post = PostStore::get()->find(4);
 
-        $this->assertInstanceOf('CL\Luna\Test\BlogPost', $post);
+        $this->assertInstanceOf('CL\Luna\Test\Model\BlogPost', $post);
         $this->assertTrue($post->isPublished);
 
         $this->assertNotSame(PostStore::get(), BlogPostStore::get());
@@ -146,7 +149,7 @@ class TestTest extends AbstractTestCase {
                 'isBlocked' => false,
                 'deletedAt' => null,
                 'locationId' => 1,
-                'locationClass' => 'CL\Luna\Test\City',
+                'locationClass' => 'CL\Luna\Test\Model\City',
             ],
             $user1->getFieldValues()
         );
@@ -161,7 +164,7 @@ class TestTest extends AbstractTestCase {
                 'isBlocked' => false,
                 'deletedAt' => null,
                 'locationId' => 2,
-                'locationClass' => 'CL\Luna\Test\Country',
+                'locationClass' => 'CL\Luna\Test\Model\Country',
             ],
             $user2->getFieldValues()
         );

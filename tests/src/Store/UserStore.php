@@ -1,6 +1,6 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace CL\Luna\Test\Store;
 
 use CL\Luna\Model\Store;
 use CL\Luna\Field;
@@ -24,7 +24,7 @@ class UserStore extends Store {
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new UserStore('CL\Luna\Test\User');
+            self::$instance = new UserStore('CL\Luna\Test\Model\User');
         }
 
         return self::$instance;
@@ -57,7 +57,7 @@ class UserStore extends Store {
                 new Assert\Present('name'),
             ])
 
-            ->setEventAfterLoad('CL\Luna\Test\UserStore::test');
+            ->setEventAfterLoad(__CLASS__.'::test');
     }
 
     public static function test($model)

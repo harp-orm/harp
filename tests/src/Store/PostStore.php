@@ -1,6 +1,6 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace CL\Luna\Test\Store;
 
 use CL\Luna\Model\Store;
 use CL\Luna\Field;
@@ -22,7 +22,7 @@ class PostStore extends Store {
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new PostStore('CL\Luna\Test\Post');
+            self::$instance = new PostStore('CL\Luna\Test\Model\Post');
         }
 
         return self::$instance;

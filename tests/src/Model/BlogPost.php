@@ -1,6 +1,8 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace CL\Luna\Test\Model;
+
+use CL\Luna\Test\Store\BlogPostStore;
 
 /**
  * @author     Ivan Kerin

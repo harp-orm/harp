@@ -9,6 +9,7 @@ use CL\Luna\Mapper\NodeEvent;
 use CL\Luna\Util\Arr;
 use CL\Atlas\Query;
 use PDO;
+use PDOStatement;
 
 /**
  * @author     Ivan Kerin
@@ -71,9 +72,11 @@ class Select extends Query\Select {
 
     public function loadCount()
     {
+        $schema = $this->getSchema();
+
         return $this
             ->clearColumns()
-            ->column("COUNT({$this->getSchema()->getPrimaryKey()})", 'countAll')
+            ->column("COUNT({$schema->getTable()}.{$schema->getPrimaryKey()})", 'countAll')
             ->execute()
                 ->fetchColumn();
     }
@@ -92,6 +95,20 @@ class Select extends Query\Select {
         return parent::execute();
     }
 
+    public function setFetchMode(PDOStatement $statement)
+    {
+        if ($this->getSchema()->getPolymorphic()) {
+            $statement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE);
+        } else {
+            $statement->setFetchMode(PDO::FETCH_CLASS, $this->getSchema()->getModelClass(), $this->getModelConstructArguments());
+        }
+    }
+
+    public function getModelConstructArguments()
+    {
+        return null;
+    }
+
     public function loadRaw()
     {
         if ($this->getSchema()->getPolymorphic()) {
@@ -102,11 +119,7 @@ class Select extends Query\Select {
 
         $pdoStatement = $this->execute();
 
-        if ($this->getSchema()->getPolymorphic()) {
-            $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE);
-        } else {
-            $pdoStatement->setFetchMode(PDO::FETCH_CLASS, $this->getSchema()->getModelClass());
-        }
+        $this->setFetchMode($pdoStatement);
 
         $models = $pdoStatement->fetchAll();
 

@@ -82,9 +82,11 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
     public function initializePending(array $fields = null)
     {
         $this->setOriginals($this->getFieldValues());
+
         if ($this->getStore()->getPolymorphic()) {
             $this->polymorphicClass = get_called_class();
         }
+
         if ($fields) {
             $this->setProperties($fields);
         }
@@ -134,10 +136,11 @@ abstract class Model extends AbstractNode implements AssignNodeInterface {
     public function getFieldValues()
     {
         $fields = [];
-        foreach ($this->getStore()->getFieldNames() as $name)
-        {
+
+        foreach ($this->getStore()->getFieldNames() as $name) {
             $fields[$name] = $this->{$name};
         }
+
         return $fields;
     }
 

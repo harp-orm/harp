@@ -368,8 +368,7 @@ abstract class Store implements StoreInterface
 
             $this->initialize();
 
-            foreach ((new ReflectionClass($this))->getTraits() as $trait)
-            {
+            foreach ((new ReflectionClass($this))->getTraits() as $trait) {
                 if ($trait->hasMethod('initializeTrait')) {
                     $trait->getMethod('initializeTrait')->invoke(null, $this);
                 }

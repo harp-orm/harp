@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Util;
+<?php
+
+namespace CL\Luna\Util;
 
 /**
  * @author     Ivan Kerin
@@ -9,10 +11,8 @@ class Arr
 {
     public static function invokeObjects(array $arr, array $objects, $method)
     {
-        foreach ($arr as $name => & $value)
-        {
-            if (isset($objects[$name]))
-            {
+        foreach ($arr as $name => & $value) {
+            if (isset($objects[$name])) {
                 $value = $objects[$name]->$method($value);
             }
         }
@@ -24,15 +24,11 @@ class Arr
     {
         $converted = array();
 
-        foreach ($array as $key => $value)
-        {
-            if (is_numeric($key))
-            {
-                $converted[$value] = NULL;
-            }
-            else
-            {
-                $converted[$key] = self::toAssoc( (array) $value);
+        foreach ($array as $key => $value) {
+            if (is_numeric($key)) {
+                $converted[$value] = null
+            } else {
+                $converted[$key] = self::toAssoc((array) $value);
             }
         }
 
@@ -41,7 +37,7 @@ class Arr
 
     public static function invoke(array $arr, $method)
     {
-        return array_map(function($item) use ($method) {
+        return array_map(function ($item) use ($method) {
             return $item->$method();
         }, $arr);
     }
@@ -49,20 +45,22 @@ class Arr
     public static function index(array $arr, $yield)
     {
         $result = [];
+
         foreach ($arr as $item)
         {
             $key = call_user_func($yield, $item);
 
             $result[$key] = $item;
         }
+
         return $result;
     }
 
     public static function indexGroup(array $arr, $attribute)
     {
         $result = [];
-        foreach ($arr as $item)
-        {
+
+        foreach ($arr as $item) {
             $result[$item->{$attribute}] []= $item;
         }
         return $result;
@@ -70,7 +68,7 @@ class Arr
 
     public static function extract(array $arr, $attribute)
     {
-        return array_map(function($item) use ($attribute) {
+        return array_map(function ($item) use ($attribute) {
             return $item->$attribute;
         }, $arr);
     }
@@ -86,7 +84,7 @@ class Arr
 
     public static function filterInvoke(array $arr, $method)
     {
-        return array_filter($arr, function($item) use ($method) {
+        return array_filter($arr, function ($item) use ($method) {
             return $item->$method();
         });
     }
@@ -96,12 +94,9 @@ class Arr
         $result = array();
 
         array_walk_recursive($array, function ($value, $key) use ( & $result) {
-            if (is_numeric($key) OR is_object($value))
-            {
+            if (is_numeric($key) OR is_object($value)) {
                 $result[] = $value;
-            }
-            else
-            {
+            } else {
                 $result[$key] = $value;
             }
         });

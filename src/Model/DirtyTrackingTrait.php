@@ -28,8 +28,7 @@ trait DirtyTrackingTrait
 
     public function getChange($name)
     {
-        if ($this->isAttributeChanged($name))
-        {
+        if ($this->isAttributeChanged($name)) {
             return [$this->getOriginal($name), $this->$name];
         }
     }
@@ -38,10 +37,8 @@ trait DirtyTrackingTrait
     {
         $changes = [];
 
-        foreach ($this->originals as $name => $original)
-        {
-            if ($this->isAttributeChanged($name))
-            {
+        foreach ($this->originals as $name => $original) {
+            if ($this->isAttributeChanged($name)) {
                 $changes[$name] = $this->$name;
             }
         }
@@ -56,13 +53,11 @@ trait DirtyTrackingTrait
 
     public function isChanged()
     {
-        foreach ($this->originals as $name => $orignial)
-        {
-            if ($this->isAttributeChanged($name))
-            {
-                return TRUE;
+        foreach ($this->originals as $name => $orignial) {
+            if ($this->isAttributeChanged($name)) {
+                return true;
             }
         }
-        return FALSE;
+        return false;
     }
 }

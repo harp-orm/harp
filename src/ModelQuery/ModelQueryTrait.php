@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\ModelQuery;
+<?php
+
+namespace CL\Luna\ModelQuery;
 
 use CL\Luna\Model\Store;
 use CL\Luna\Util\Arr;
@@ -35,8 +37,7 @@ trait ModelQueryTrait {
 
     public function addToLog()
     {
-        if (Log::getEnabled())
-        {
+        if (Log::getEnabled()) {
             Log::add($this->humanize());
         }
     }
@@ -74,8 +75,7 @@ trait ModelQueryTrait {
 
             $rel->joinRel($this, $parent);
 
-            if ($childRels)
-            {
+            if ($childRels) {
                 $this->joinNestedRels($rel->getForeignStore(), $childRels, $name);
             }
         }

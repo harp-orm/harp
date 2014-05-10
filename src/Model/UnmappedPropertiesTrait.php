@@ -19,6 +19,7 @@ trait UnmappedPropertiesTrait
     public function __set($name, $value)
     {
         $this->unmapped[$name] = $value;
+
         return $this;
     }
 

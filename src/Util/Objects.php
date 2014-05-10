@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Util;
+<?php
+
+namespace CL\Luna\Util;
 
 use SplObjectStorage;
 use Closure;
@@ -56,8 +58,7 @@ class Objects
     public static function index(SplObjectStorage $storage, $property)
     {
         $result = [];
-        foreach ($storage as $item)
-        {
+        foreach ($storage as $item) {
             $result[$item->{$property}] = $item;
         }
         return $result;
@@ -103,8 +104,7 @@ class Objects
     {
         $items = [];
 
-        foreach ($storage as $item)
-        {
+        foreach ($storage as $item) {
             $items []= $item;
         }
 
@@ -115,16 +115,12 @@ class Objects
     {
         $groups = new SplObjectStorage();
 
-        foreach ($storage as $item)
-        {
+        foreach ($storage as $item) {
             $key = $get_group($item);
 
-            if ($groups->contains($key))
-            {
+            if ($groups->contains($key)) {
                 $groups[$key]->attach($item);
-            }
-            else
-            {
+            } else {
                 $group = new SplObjectStorage();
                 $group->attach($item);
                 $groups->attach($key, $group);

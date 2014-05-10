@@ -57,12 +57,10 @@ class Insert extends Query\Insert implements SetInterface {
 
         $result = parent::execute();
 
-        if ($this->insertModels)
-        {
+        if ($this->insertModels) {
             $lastInsertId = $this->getDb()->lastInsertId();
 
-            foreach ($this->insertModels as $model)
-            {
+            foreach ($this->insertModels as $model) {
                 $model
                     ->setId($lastInsertId)
                     ->resetOriginals()
@@ -70,6 +68,7 @@ class Insert extends Query\Insert implements SetInterface {
 
                 $lastInsertId += 1;
             }
+
             $this->insertModels = NULL;
         }
 

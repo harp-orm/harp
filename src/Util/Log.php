@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Util;
+<?php
+
+namespace CL\Luna\Util;
 
 /**
  * @author     Ivan Kerin
@@ -33,14 +35,10 @@ class Log
 
     public static function add($message)
     {
-        if (static::$enabled)
-        {
-            if (static::$callback)
-            {
+        if (static::$enabled) {
+            if (static::$callback) {
                 static::$callback($message);
-            }
-            else
-            {
+            } else {
                 static::$items []= $message;
             }
         }

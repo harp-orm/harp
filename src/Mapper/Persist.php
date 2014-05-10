@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Mapper;
+<?php
+
+namespace CL\Luna\Mapper;
 
 use CL\Luna\Util\Objects;
 use SplObjectStorage;

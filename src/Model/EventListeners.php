@@ -13,10 +13,8 @@ class EventListeners {
 
     public static function dispatchEvent($listeners, $event, Model $target)
     {
-        if (isset($listeners[$event]))
-        {
-            foreach ($listeners[$event] as $listner)
-            {
+        if (isset($listeners[$event])) {
+            foreach ($listeners[$event] as $listner) {
                 call_user_func($listner, $target);
             }
         }

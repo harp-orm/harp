@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Test;
+<?php
+
+namespace CL\Luna\Test;
 
 use CL\Luna\Model\Store;
 use CL\Luna\Field;

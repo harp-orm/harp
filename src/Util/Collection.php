@@ -1,4 +1,6 @@
-<?php namespace CL\Luna\Util;
+<?php
+
+namespace CL\Luna\Util;
 
 /*
  * @author     Ivan Kerin
@@ -11,8 +13,7 @@ abstract class Collection
 
     public function __construct(array $items = NULL)
     {
-        if ($items)
-        {
+        if ($items) {
             $this->set($items);
         }
     }
@@ -38,8 +39,7 @@ abstract class Collection
 
     public function get($name)
     {
-        if ($this->has($name))
-        {
+        if ($this->has($name)) {
             return $this->items[$name];
         }
     }

@@ -3,7 +3,6 @@
 namespace CL\Luna\Mapper;
 
 use CL\Luna\Util\Util;
-use CL\Luna\MassAssign\AssignNodeInterface;
 use Closure;
 
 /*
@@ -11,7 +10,7 @@ use Closure;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-abstract class AbstractNode implements AssignNodeInterface
+abstract class AbstractNode
 {
     use DirtyTrackingTrait;
     use UnmappedPropertiesTrait;
@@ -103,20 +102,6 @@ abstract class AbstractNode implements AssignNodeInterface
         foreach ($values as $name => $value)
         {
             $this->$name = $value;
-        }
-    }
-
-    public function setData(array $data, Closure $yield)
-    {
-        $rels = $this->getRepo()->getRels()->all();
-
-        $relsData = array_intersect_key($data, $rels);
-        $propertiesData = array_diff_key($data, $rels);
-
-        $this->setProperties($propertiesData);
-
-        foreach ($relsData as $relName => $relData) {
-            $yield($this->getRepo()->loadLink($this, $relName), $relData);
         }
     }
 

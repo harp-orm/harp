@@ -3,6 +3,10 @@
 namespace CL\Luna\MassAssign;
 
 use CL\Luna\Util\Arr;
+use CL\Luna\Mapper\AbstractNode;
+use CL\Luna\Mapper\AbstractLink;
+use CL\Luna\Mapper\LinkOne;
+use CL\Luna\Mapper\LinkMany;
 
 /*
  * @author     Ivan Kerin
@@ -11,17 +15,6 @@ use CL\Luna\Util\Arr;
  */
 class Data extends UnsafeData
 {
-    public static function assignPermitted(array $data, array $permitted, AssignNodeInterface $node)
-    {
-        $data = new Data($data, $permitted);
-        $data->assignTo($node);
-    }
-
-    public static function assign(array $data, AssignNodeInterface $node)
-    {
-        throw new LogicException('Use "assignPermitted" method for Data class');
-    }
-
     protected $permitted;
 
     public function __construct(array $data, array $permitted)
@@ -31,17 +24,25 @@ class Data extends UnsafeData
         $this->permitted = Arr::toAssoc($permitted);
     }
 
-    public function assignTo(AssignNodeInterface $node)
+    public function assignTo(AbstractNode $node)
     {
         $data = array_intersect_key($this->data, $this->permitted);
 
-        $node->setData($data, function (LinkSetDataInterface $link, array $data) {
+        $this->setDataNode($node, $this->data, function (AbstractLink $link, array $data) {
+
             $name = $link->getRel()->getName();
             $permitted = isset($this->permitted[$name]) ? $this->permitted[$name] : array();
 
-            $link->setData($data, function (AssignNodeInterface $node, array $data) use ($permitted) {
-                Data::assignPermitted($data, $permitted, $node);
-            });
+            $assign = function(AbstractNode $node, array $data) use ($permitted) {
+                $data = new Data($data, $permitted);
+                $data->assignTo($node);
+            };
+
+            if ($link instanceof LinkOne) {
+                $this->setDataLinkOne($link, $data, $assign);
+            } elseif ($link instanceof LinkMany) {
+                $this->setDataLinkMany($link, $data, $assign);
+            }
         });
     }
 }

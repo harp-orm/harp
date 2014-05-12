@@ -2,7 +2,7 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Model\AbstractRepo;
+use CL\Luna\Model\AbstractDbRepo;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Mapper\NodeEvent;
 use CL\Luna\Util\Arr;
@@ -21,7 +21,7 @@ class Select extends Query\Select {
     use SoftDeleteTrait;
     use FetchModeTrait;
 
-    public function __construct(AbstractRepo $repo)
+    public function __construct(AbstractDbRepo $repo)
     {
         $this
             ->setRepo($repo)

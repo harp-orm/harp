@@ -5,7 +5,7 @@ namespace CL\Luna\Rel;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
 use CL\Luna\Mapper;
-use CL\Luna\Model\AbstractRepo;
+use CL\Luna\Model\AbstractDbRepo;
 use Closure;
 
 /**
@@ -18,7 +18,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne implements Mapper\RelUp
     protected $key;
     protected $storeKey;
 
-    public function __construct($name, AbstractRepo $store, AbstractRepo $defaultForeignRepo, array $options = array())
+    public function __construct($name, AbstractDbRepo $store, AbstractDbRepo $defaultForeignRepo, array $options = array())
     {
         $this->key = $name.'Id';
         $this->storeKey = $name.'Class';

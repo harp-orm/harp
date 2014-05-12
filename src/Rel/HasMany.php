@@ -5,7 +5,7 @@ namespace CL\Luna\Rel;
 use CL\Luna\Mapper;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
-use CL\Luna\Model\AbstractRepo;
+use CL\Luna\Model\AbstractDbRepo;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
 
@@ -20,7 +20,7 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface, Mapper
 
     protected $foreignKey;
 
-    public function __construct($name, AbstractRepo $repo, AbstractRepo $foreignRepo, array $options = array())
+    public function __construct($name, AbstractDbRepo $repo, AbstractDbRepo $foreignRepo, array $options = array())
     {
         $this->foreignKey = lcfirst($repo->getName()).'Id';
 

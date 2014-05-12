@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Test\Model;
 
-use CL\Luna\Model\Model;
+use CL\Luna\Model\AbstractModel;
 use CL\Luna\Test\Repo;
 
 /**
@@ -10,7 +10,7 @@ use CL\Luna\Test\Repo;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Post extends Model {
+class Post extends AbstractModel {
 
     public function getRepo()
     {

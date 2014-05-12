@@ -7,7 +7,7 @@ use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
-use CL\Luna\Model\AbstractRepo;
+use CL\Luna\Model\AbstractDbRepo;
 
 /**
  * @author     Ivan Kerin
@@ -20,7 +20,7 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface, Mapper\R
 
     protected $foreignKey;
 
-    public function __construct($name, AbstractRepo $store, AbstractRepo $foreignRepo, array $options = array())
+    public function __construct($name, AbstractDbRepo $store, AbstractDbRepo $foreignRepo, array $options = array())
     {
         $this->foreignKey = $name.'Id';
 

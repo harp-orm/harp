@@ -3,7 +3,7 @@
 namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\Query;
-use CL\Luna\Model\AbstractRepo;
+use CL\Luna\Model\AbstractDbRepo;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Util\Objects;
 use SplObjectStorage;
@@ -19,7 +19,7 @@ class Insert extends Query\Insert implements SetInterface {
 
     private $insertModels;
 
-    public function __construct(AbstractRepo $repo)
+    public function __construct(AbstractDbRepo $repo)
     {
         $this
             ->setRepo($repo)

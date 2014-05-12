@@ -2,7 +2,7 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Model\AbstractRepo;
+use CL\Luna\Model\AbstractDbRepo;
 use CL\Luna\Util\Arr;
 use CL\Atlas\DB;
 use InvalidArgumentException;
@@ -16,7 +16,7 @@ trait ModelQueryTrait {
 
     protected $repo;
 
-    public function setRepo(AbstractRepo $repo)
+    public function setRepo(AbstractDbRepo $repo)
     {
         $this->repo = $repo;
         $this->db = DB::get($repo->getDb());
@@ -53,7 +53,7 @@ trait ModelQueryTrait {
         return $this;
     }
 
-    public function joinNestedRels(AbstractRepo $repo, array $rels, $parent)
+    public function joinNestedRels(AbstractDbRepo $repo, array $rels, $parent)
     {
         foreach ($rels as $name => $childRels)
         {

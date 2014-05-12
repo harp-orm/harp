@@ -3,7 +3,7 @@
 namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\Query;
-use CL\Luna\Model\AbstractRepo;
+use CL\Luna\Model\AbstractDbRepo;
 use CL\Luna\Util\Objects;
 use CL\Luna\Util\Arr;
 use SplObjectStorage;
@@ -18,7 +18,7 @@ class Update extends Query\Update implements SetInterface {
     use ModelQueryTrait;
     use SoftDeleteTrait;
 
-    public function __construct(AbstractRepo $store)
+    public function __construct(AbstractDbRepo $store)
     {
         $this
             ->setRepo($store)

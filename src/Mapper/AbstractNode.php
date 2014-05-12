@@ -25,7 +25,7 @@ abstract class AbstractNode
         $this->state = $state;
     }
 
-    public function setStateLoaded()
+    public function setStateNotVoid()
     {
         $this->state = $this->getId() ? self::PERSISTED : self::PENDING;
 
@@ -70,4 +70,19 @@ abstract class AbstractNode
     {
         return $this->state === self::VOID;
     }
+
+    public function delete()
+    {
+        $this->state = self::DELETED;
+
+        return $this;
+    }
+
+    public function dispatchEvent($event)
+    {
+        $this->getRepo()->dispatchEvent($event, $this);
+
+        return $this;
+    }
+
 }

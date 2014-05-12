@@ -2,7 +2,7 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Mapper\AbstractRepo;
+use CL\Luna\Mapper\AbstractDbRepo;
 use CL\Luna\Util\Arr;
 use CL\Atlas\Query;
 
@@ -16,7 +16,7 @@ class Union extends Query\Union {
     use ModelQueryTrait;
     use FetchModeTrait;
 
-    public function __construct(AbstractRepo $repo)
+    public function __construct(AbstractDbRepo $repo)
     {
         $this->setRepo($repo);
     }

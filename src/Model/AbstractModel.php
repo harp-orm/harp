@@ -4,10 +4,6 @@ namespace CL\Luna\Model;
 
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\MassAssign\AssignNodeInterface;
-use CL\Luna\ModelQuery\Select;
-use CL\Luna\ModelQuery\Delete;
-use CL\Luna\ModelQuery\Update;
-use CL\Luna\ModelQuery\Insert;
 use Closure;
 
 /**

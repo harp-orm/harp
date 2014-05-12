@@ -12,7 +12,7 @@ use SplObjectStorage;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-abstract class AbstractRepo extends Mapper\AbstractRepo
+abstract class AbstractDbRepo extends Mapper\AbstractRepo
 {
     const SOFT_DELETE_KEY = 'deletedAt';
 

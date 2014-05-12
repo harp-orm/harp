@@ -2,6 +2,8 @@
 
 namespace CL\Luna\MassAssign;
 
+use CL\Luna\Mapper\AbstractNode;
+
 /*
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -9,15 +11,9 @@ namespace CL\Luna\MassAssign;
  */
 class UnsafeData
 {
-    public static function assign(array $data, AssignNodeInterface $node)
-    {
-        $data = new UnsafeData($data);
-        $data->assignTo($node);
-    }
-
     protected $data;
 
-    public function getData()
+    public function all()
     {
         return $this->data;
     }
@@ -27,12 +23,38 @@ class UnsafeData
         $this->data = $data;
     }
 
-    public function assignTo(AssignNodeInterface $node)
+    public function assignTo(AbstractNode $node)
     {
-        $node->setData($this->data, function (LinkSetDataInterface $link, array $data) {
-            $link->setData($data, function (AssignNodeInterface $node, array $data) {
-                self::assign($data, $node);
-            });
-        });
+        $assign = new AssignNode($node);
+        $assign->execute($this);
+
+        return $this;
+    }
+
+    public function getPropertiesData(AbstractNode $node)
+    {
+        $rels = $node->getRepo()->getRels()->all();
+
+        return array_diff_key($this->data, $rels);
+    }
+
+    public function getRelData(AbstractNode $node)
+    {
+        $rels = $node->getRepo()->getRels()->all();
+
+        $relData = array_intersect_key($this->data, $rels);
+
+        foreach ($relData as & $data) {
+            $data = new UnsafeData($data);
+        }
+
+        return $relData;
+    }
+
+    public function getArray()
+    {
+        return array_map(function ($data) {
+            return new UnsafeData($data);
+        }, $this->data);
     }
 }

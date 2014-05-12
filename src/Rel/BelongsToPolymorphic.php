@@ -79,15 +79,4 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne implements Mapper\RelUp
         $model->{$this->key} = $link->get()->getId();
         $model->{$this->storeKey} = $link->get()->getRepo()->getName();
     }
-
-    public function loadRepoFromData(array $data)
-    {
-        if (isset($data['_repo'])) {
-            $repoClass = $data['_repo'];
-
-            return $repoClass::get();
-        }
-
-        return parent::loadRepoFromData($data);
-    }
 }

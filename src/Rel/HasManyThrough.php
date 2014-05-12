@@ -17,8 +17,6 @@ use SplObjectStorage;
  */
 class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface, Mapper\RelInsertInterface, Mapper\RelDeleteInterface
 {
-    use LoadFromDataTrait;
-
     protected $foreignKey;
     protected $through;
 
@@ -78,11 +76,9 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface,
         return $select->loadRaw();
     }
 
-    public function linkToForeign(array $models, array $foreign)
+    public function areLinked(Mapper\AbstractNode $model, Mapper\AbstractNode $foreign)
     {
-        return Objects::groupCombineArrays($models, $foreign, function ($model, $foreign) {
-            return $model->getId() == $foreign->{$this->getThroughKey()};
-        });
+        return $model->getId() == $foreign->{$this->getThroughKey()};
     }
 
     public function joinRel(AbstractQuery $query, $parent)

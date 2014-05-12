@@ -63,7 +63,7 @@ class LinkOne extends AbstractLink
 
     public function setData(array $data, Closure $yield)
     {
-        $model = $this->getRel()->loadFromData($data) ?: $this->current;
+        $model = $this->getRel()->loadNodeFromData($data) ?: $this->current;
 
         $yield($model, $data);
 

@@ -16,7 +16,6 @@ abstract class AbstractRel
     abstract public function hasForeign(array $nodes);
     abstract public function loadForeign(array $nodes);
     abstract public function linkToForeign(array $nodes, array $foreign);
-    abstract public function loadFromData(array $data);
 
     public function __construct($name, AbstractRepo $repo, AbstractRepo $foreignRepo, array $options = array())
     {
@@ -51,5 +50,19 @@ abstract class AbstractRel
         } else {
             return array();
         }
+    }
+
+    public function loadNodeFromData(array $data)
+    {
+        if (isset($data['_id'])) {
+            $repo = $this->loadRepoFromData($data);
+
+            return $repo->find($data['_id']);
+        }
+    }
+
+    public function loadRepoFromData(array $data)
+    {
+        return $this->getForeignRepo();
     }
 }

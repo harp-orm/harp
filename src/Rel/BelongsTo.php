@@ -17,8 +17,6 @@ use Closure;
  */
 class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface, Mapper\RelUpdateInterface
 {
-    use LoadFromDataTrait;
-
     protected $key;
 
     public function __construct($name, AbstractDbRepo $store, AbstractDbRepo $foreignRepo, array $options = array())
@@ -44,11 +42,9 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface, Mappe
             ->loadRaw();
     }
 
-    public function linkToForeign(array $models, array $foreign)
+    public function areLinked(Mapper\AbstractNode $model, Mapper\AbstractNode $foreign)
     {
-        return Objects::combineArrays($models, $foreign, function($model, $foreign){
-            return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
-        });
+        return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
     }
 
     public function getKey()

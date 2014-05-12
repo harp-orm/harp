@@ -165,18 +165,4 @@ abstract class AbstractModel extends AbstractNode implements AssignNodeInterface
     {
         return $this->errors ? $this->errors->isEmpty() : true;
     }
-
-    public function setData(array $data, Closure $yield)
-    {
-        $rels = $this->getRepo()->getRels()->all();
-
-        $relsData = array_intersect_key($data, $rels);
-        $propertiesData = array_diff_key($data, $rels);
-
-        $this->setProperties($propertiesData);
-
-        foreach ($relsData as $relName => $relData) {
-            $yield($this->getRepo()->loadLink($this, $relName), $relData);
-        }
-    }
 }

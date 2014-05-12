@@ -16,8 +16,6 @@ use CL\Atlas\Query\AbstractQuery;
  */
 class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface, Mapper\RelUpdateInterface
 {
-    use LoadFromDataTrait;
-
     protected $foreignKey;
 
     public function __construct($name, AbstractDbRepo $repo, AbstractDbRepo $foreignRepo, array $options = array())
@@ -53,13 +51,9 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface, Mapper
             ->loadRaw();
     }
 
-    public function linkToForeign(array $models, array $foreign)
+    public function areLinked(Mapper\AbstractNode $model, Mapper\AbstractNode $foreign)
     {
-        $return = Objects::groupCombineArrays($models, $foreign, function ($model, $foreign) {
-            return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
-        });
-
-        return $return;
+        return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
     }
 
     public function joinRel(AbstractQuery $query, $parent)

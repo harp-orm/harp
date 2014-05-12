@@ -2,6 +2,8 @@
 
 namespace CL\Luna\Mapper;
 
+use Closure;
+
 /*
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -83,6 +85,28 @@ abstract class AbstractNode
         $this->getRepo()->dispatchEvent($event, $this);
 
         return $this;
+    }
+
+    public function setProperties(array $values)
+    {
+        foreach ($values as $name => $value)
+        {
+            $this->$name = $value;
+        }
+    }
+
+    public function setData(array $data, Closure $yield)
+    {
+        $rels = $this->getRepo()->getRels()->all();
+
+        $relsData = array_intersect_key($data, $rels);
+        $propertiesData = array_diff_key($data, $rels);
+
+        $this->setProperties($propertiesData);
+
+        foreach ($relsData as $relName => $relData) {
+            $yield($this->getRepo()->loadLink($this, $relName), $relData);
+        }
     }
 
 }

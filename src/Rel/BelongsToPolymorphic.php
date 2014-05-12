@@ -67,14 +67,12 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne implements Mapper\RelUp
         return Arr::flatten($groups);
     }
 
-    public function linkToForeign(array $models, array $foreign)
+    public function areLinked(Mapper\AbstractNode $model, Mapper\AbstractNode $foreign)
     {
-        return Objects::combineArrays($models, $foreign, function($model, $foreign){
-            return (
-                $model->{$this->key} == $foreign->{$this->getForeignKey()}
-                and $model->{$this->storeKey} == get_class($foreign)
-            );
-        });
+        return (
+            $model->{$this->key} == $foreign->{$this->getForeignKey()}
+            and $model->{$this->storeKey} == get_class($foreign)
+        );
     }
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
@@ -83,22 +81,14 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne implements Mapper\RelUp
         $model->{$this->storeKey} = $link->get()->getRepo()->getName();
     }
 
-    public function loadForeignRepo(array $data)
+    public function loadRepoFromData(array $data)
     {
-        if (isset($data['_class'])) {
-            $class = $data['_class'];
-            return $class::getRepo();
+        if (isset($data['_repo'])) {
+            $repoClass = $data['_repo'];
+
+            return $repoClass::get();
         }
 
-        return $this->getForeignRepo();
-    }
-
-    public function loadFromData(array $data)
-    {
-        if (isset($data['_id'])) {
-            $store = $this->loadForeignRepo($data);
-
-            return $store->find($data['_id']);
-        }
+        return parent::loadRepoFromData($data);
     }
 }

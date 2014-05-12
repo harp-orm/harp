@@ -51,18 +51,4 @@ abstract class AbstractRel
             return array();
         }
     }
-
-    public function loadNodeFromData(array $data)
-    {
-        if (isset($data['_id'])) {
-            $repo = $this->loadRepoFromData($data);
-
-            return $repo->find($data['_id']);
-        }
-    }
-
-    public function loadRepoFromData(array $data)
-    {
-        return $this->getForeignRepo();
-    }
 }

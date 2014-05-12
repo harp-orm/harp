@@ -24,25 +24,33 @@ class Data extends UnsafeData
         $this->permitted = Arr::toAssoc($permitted);
     }
 
-    public function assignTo(AbstractNode $node)
+    public function getPropertiesData(AbstractNode $node)
     {
+        $rels = $node->getRepo()->getRels()->all();
+
         $data = array_intersect_key($this->data, $this->permitted);
 
-        $this->setDataNode($node, $this->data, function (AbstractLink $link, array $data) {
+        return array_diff_key($data, $rels);
+    }
 
-            $name = $link->getRel()->getName();
-            $permitted = isset($this->permitted[$name]) ? $this->permitted[$name] : array();
+    public function getRelData(AbstractNode $node)
+    {
+        $rels = $node->getRepo()->getRels()->all();
 
-            $assign = function(AbstractNode $node, array $data) use ($permitted) {
-                $data = new Data($data, $permitted);
-                $data->assignTo($node);
-            };
+        $relData = array_intersect_key($this->data, $rels);
 
-            if ($link instanceof LinkOne) {
-                $this->setDataLinkOne($link, $data, $assign);
-            } elseif ($link instanceof LinkMany) {
-                $this->setDataLinkMany($link, $data, $assign);
-            }
-        });
+        foreach ($relData as $relName => & $data) {
+            $permitted = isset($this->permitted[$relName]) ? $this->permitted[$relName] : [];
+            $data = new Data($data, $permitted);
+        }
+
+        return $relData;
+    }
+
+    public function getArray()
+    {
+        return array_map(function ($data) {
+            return new Data($data, $this->permitted);
+        }, $this->data);
     }
 }

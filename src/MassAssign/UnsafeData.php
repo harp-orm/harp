@@ -3,10 +3,6 @@
 namespace CL\Luna\MassAssign;
 
 use CL\Luna\Mapper\AbstractNode;
-use CL\Luna\Mapper\AbstractLink;
-use CL\Luna\Mapper\LinkOne;
-use CL\Luna\Mapper\LinkMany;
-use Closure;
 
 /*
  * @author     Ivan Kerin
@@ -17,7 +13,7 @@ class UnsafeData
 {
     protected $data;
 
-    public function getData()
+    public function all()
     {
         return $this->data;
     }
@@ -29,54 +25,36 @@ class UnsafeData
 
     public function assignTo(AbstractNode $node)
     {
-        $this->setDataNode($node, $this->data, function (AbstractLink $link, array $data) {
+        $assign = new AssignNode($node);
+        $assign->execute($this);
 
-            $assign = function(AbstractNode $node, array $data) {
-                $data = new UnsafeData($data);
-                $data->assignTo($node);
-            };
-
-            if ($link instanceof LinkOne) {
-                $this->setDataLinkOne($link, $data, $assign);
-            } elseif ($link instanceof LinkMany) {
-                $this->setDataLinkMany($link, $data, $assign);
-            }
-        });
+        return $this;
     }
 
-    public function setDataNode(AbstractNode $node, array $data, Closure $yield)
+    public function getPropertiesData(AbstractNode $node)
     {
         $rels = $node->getRepo()->getRels()->all();
 
-        $relsData = array_intersect_key($data, $rels);
-        $propertiesData = array_diff_key($data, $rels);
-
-        $node->setProperties($propertiesData);
-
-        foreach ($relsData as $relName => $relData) {
-            $yield($node->getRepo()->loadLink($node, $relName), $relData);
-        }
+        return array_diff_key($this->data, $rels);
     }
 
-    public function setDataLinkOne(LinkOne $link, array $data, Closure $yield)
+    public function getRelData(AbstractNode $node)
     {
-        $node = $link->getRel()->loadNodeFromData($data) ?: $link->get();
+        $rels = $node->getRepo()->getRels()->all();
 
-        $yield($node, $data);
+        $relData = array_intersect_key($this->data, $rels);
 
-        $link->set($node);
+        foreach ($relData as & $data) {
+            $data = new UnsafeData($data);
+        }
+
+        return $relData;
     }
 
-    public function setDataLinkMany(LinkMany $link, array $data, Closure $yield)
+    public function getArray()
     {
-        $link->clear();
-
-        foreach ($data as $itemData) {
-            $node = $link->getRel()->loadNodeFromData($data) ?: $link->getRel()->getForeignRepo()->newInstance();
-
-            $yield($node, $itemData);
-
-            $link->add($node);
-        }
+        return array_map(function ($data) {
+            return new UnsafeData($data);
+        }, $this->data);
     }
 }

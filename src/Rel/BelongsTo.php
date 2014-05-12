@@ -3,7 +3,6 @@
 namespace CL\Luna\Rel;
 
 use CL\Luna\Util\Arr;
-use CL\Luna\Util\Objects;
 use CL\Luna\Model\AbstractDbRepo;
 use CL\Luna\Mapper;
 use CL\Luna\ModelQuery\RelJoinInterface;

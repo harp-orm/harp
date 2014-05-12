@@ -4,7 +4,6 @@ namespace CL\Luna\Model;
 
 use CL\Luna\ModelQuery;
 use CL\Luna\Mapper;
-use CL\Carpo\Asserts;
 use SplObjectStorage;
 
 /*
@@ -114,22 +113,6 @@ abstract class AbstractDbRepo extends Mapper\AbstractRepo
         return $this->getFields()->get($name);
     }
 
-    public function getAsserts()
-    {
-        $this->initializeAllOnce();
-
-        return $this->asserts;
-    }
-
-    public function setAsserts(array $asserts)
-    {
-        $this->initializeAllOnce();
-
-        $this->getAsserts()->set($asserts);
-
-        return $this;
-    }
-
     public function find($key)
     {
         return $this->findAll()->whereKey($key)->loadFirst();
@@ -181,7 +164,6 @@ abstract class AbstractDbRepo extends Mapper\AbstractRepo
         parent::__construct($modelClass);
 
         $this->fields = new Fields();
-        $this->asserts = new Asserts();
         $this->table = $this->getModelReflection()->getShortName();
     }
 

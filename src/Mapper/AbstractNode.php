@@ -2,6 +2,8 @@
 
 namespace CL\Luna\Mapper;
 
+use CL\Luna\Util\Util;
+use CL\Luna\MassAssign\AssignNodeInterface;
 use Closure;
 
 /*
@@ -9,22 +11,26 @@ use Closure;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-abstract class AbstractNode
+abstract class AbstractNode implements AssignNodeInterface
 {
+    use DirtyTrackingTrait;
+    use UnmappedPropertiesTrait;
+
     const PENDING = 1;
     const DELETED = 2;
     const PERSISTED = 3;
     const VOID = 4;
 
     abstract public function getId();
-    abstract public function isChanged();
     abstract public function getRepo();
 
     public $state;
+    private $errors;
 
     public function __construct($state = self::PENDING)
     {
         $this->state = $state;
+        $this->setOriginals($this->getProperties());
     }
 
     public function setStateNotVoid()
@@ -87,6 +93,11 @@ abstract class AbstractNode
         return $this;
     }
 
+    public function getProperties()
+    {
+        return Util::getPublicProperties($this);
+    }
+
     public function setProperties(array $values)
     {
         foreach ($values as $name => $value)
@@ -109,4 +120,26 @@ abstract class AbstractNode
         }
     }
 
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    public function validate()
+    {
+        $changes = $this->getChanges();
+
+        if ($this->getUnmapped()) {
+            $changes += $this->getUnmapped();
+        }
+
+        $this->errors = $this->getRepo()->getAsserts()->execute($changes);
+
+        return $this->isEmptyErrors();
+    }
+
+    public function isEmptyErrors()
+    {
+        return $this->errors ? $this->errors->isEmpty() : true;
+    }
 }

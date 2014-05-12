@@ -5,6 +5,7 @@ namespace CL\Luna\Mapper;
 use ReflectionClass;
 use SplObjectStorage;
 use InvalidArgumentException;
+use CL\Carpo\Asserts;
 
 /*
  * @author     Ivan Kerin
@@ -31,6 +32,7 @@ abstract class AbstractRepo
         $this->modelClass = $modelClass;
         $this->linkMap = new LinkMap();
         $this->eventListeners = new EventListeners();
+        $this->asserts = new Asserts();
         $this->rels = new Rels();
         $this->modelReflection = new ReflectionClass($modelClass);
         $this->identityMap = new IdentityMap($this->modelReflection);
@@ -99,6 +101,22 @@ abstract class AbstractRepo
         $this->initializeAllOnce();
 
         return $this->eventListeners;
+    }
+
+    public function getAsserts()
+    {
+        $this->initializeAllOnce();
+
+        return $this->asserts;
+    }
+
+    public function setAsserts(array $asserts)
+    {
+        $this->initializeAllOnce();
+
+        $this->getAsserts()->set($asserts);
+
+        return $this;
     }
 
     public function setEventBeforeDelete($callback)

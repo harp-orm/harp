@@ -1,6 +1,6 @@
 <?php
 
-namespace CL\Luna\Model;
+namespace CL\Luna\Mapper;
 
 /**
  * @author     Ivan Kerin

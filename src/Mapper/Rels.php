@@ -1,8 +1,7 @@
 <?php
 
-namespace CL\Luna\Model;
+namespace CL\Luna\Mapper;
 
-use CL\Luna\Mapper\AbstractRel;
 use CL\Luna\Util\Collection;
 use CL\Luna\Util\Arr;
 

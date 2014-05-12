@@ -15,9 +15,6 @@
         "clippings/atlas": "dev-master",
         "clippings/carpo": "dev-master"
     },
-    "require-dev": {
-        "clippings/env-backup": "0.2.*"
-    },
     "autoload": {
         "psr-4": {"CL\\Luna\\": "src/"}
     }

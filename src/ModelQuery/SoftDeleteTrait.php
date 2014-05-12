@@ -2,7 +2,7 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Model\Repo;
+use CL\Luna\Model\AbstractRepo;
 
 /**
  * @author     Ivan Kerin
@@ -28,7 +28,7 @@ trait SoftDeleteTrait {
     public function applySoftDelete()
     {
         if ($this->getSoftDelete()) {
-            $this->where($this->getRepo()->getTable().'.'.Repo::SOFT_DELETE_KEY, null);
+            $this->where($this->getRepo()->getTable().'.'.AbstractRepo::SOFT_DELETE_KEY, null);
         }
     }
 }

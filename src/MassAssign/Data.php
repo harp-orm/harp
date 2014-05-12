@@ -9,25 +9,20 @@ use CL\Luna\Util\Arr;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Data
+class Data extends UnsafeData
 {
-    public static function assign(array $data, array $permitted, AssignNodeInterface $node)
+    public static function assignPermitted(array $data, array $permitted, AssignNodeInterface $node)
     {
         $data = new Data($data, $permitted);
         $data->assignTo($node);
     }
 
-    protected $data;
     protected $permitted;
-
-    public function getData()
-    {
-        return $this->data;
-    }
 
     public function __construct(array $data, array $permitted)
     {
-        $this->data = $data;
+        parent::__construct($data);
+
         $this->permitted = Arr::toAssoc($permitted);
     }
 
@@ -40,7 +35,7 @@ class Data
             $permitted = isset($this->permitted[$name]) ? $this->permitted[$name] : array();
 
             $link->setData($data, function (AssignNodeInterface $node, array $data) use ($permitted) {
-                self::assign($data, $permitted, $node);
+                Data::assignPermitted($data, $permitted, $node);
             });
         });
     }

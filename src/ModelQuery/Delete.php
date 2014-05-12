@@ -3,7 +3,7 @@
 namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\Query;
-use CL\Luna\Model\Repo;
+use CL\Luna\Model\AbstractRepo;
 use CL\atlas\SQL\SQL;
 use CL\Luna\Util\Objects;
 use SplObjectStorage;
@@ -18,7 +18,7 @@ class Delete extends Query\Delete implements SetInterface {
     use ModelQueryTrait;
     use SoftDeleteTrait;
 
-    public function __construct(Repo $store)
+    public function __construct(AbstractRepo $store)
     {
         $this
             ->setRepo($store)
@@ -59,8 +59,8 @@ class Delete extends Query\Delete implements SetInterface {
 
         $query
             ->setTable($this->getTable() ?: $this->getFrom())
-            ->set([Repo::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
-            ->where($store->getTable().'.'.Repo::SOFT_DELETE_KEY, null);
+            ->set([AbstractRepo::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
+            ->where($store->getTable().'.'.AbstractRepo::SOFT_DELETE_KEY, null);
 
         return $query;
     }

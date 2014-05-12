@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Test\Repo;
 
-use CL\Luna\Model\Repo;
+use CL\Luna\Model\AbstractRepo;
 use CL\Luna\Field;
 
 /**
@@ -12,7 +12,7 @@ use CL\Luna\Field;
  */
 trait NestedRepoTrait {
 
-    public static function initializeTrait(Repo $store)
+    public static function initializeTrait(AbstractRepo $store)
     {
         $store
             ->getFields()

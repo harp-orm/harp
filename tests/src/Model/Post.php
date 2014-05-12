@@ -30,21 +30,21 @@ class Post extends Model {
 
     public function getUser()
     {
-        return $this->loadRelLink('user')->get();
+        return Repo\Post::get()->loadLink($this, 'user')->get();
     }
 
     public function getTags()
     {
-        return $this->loadRelLink('tags');
+        return Repo\Post::get()->loadLink($this, 'tags');
     }
 
     public function getPostTags()
     {
-        return $this->loadRelLink('postTags');
+        return Repo\Post::get()->loadLink($this, 'postTags');
     }
 
     public function setUser(User $user)
     {
-        return $this->loadRelLink('user')->set($user);
+        return Repo\Post::get()->loadLink($this, 'user')->set($user);
     }
 }

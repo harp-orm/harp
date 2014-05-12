@@ -2,6 +2,9 @@
 
 namespace CL\Luna\Mapper;
 
+use InvalidArgumentException;
+use ReflectionClass;
+
 /*
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -10,26 +13,28 @@ namespace CL\Luna\Mapper;
 class IdentityMap
 {
     private $nodes;
+    private $nodeClass;
 
-    public static function modelUnqiueKey(AbstractNode $node)
+    public function __construct(ReflectionClass $nodeClass)
     {
-        return self::getUniqueKey(get_class($node), $node->getId());
-    }
-
-    public static function getUniqueKey($class, $id)
-    {
-        return $class.'|'.$id;
+        $this->nodeClass = $nodeClass;
     }
 
     public function get(AbstractNode $node)
     {
-        if ($node->isPersisted()) {
-            $key = self::modelUnqiueKey($node);
+        if ( ! $this->nodeClass->isInstance($node)) {
+            throw new InvalidArgumentException(
+                sprintf('Node Must be of %s', $this->nodeClass->getName())
+            );
+        }
 
-            if ($this->hasKey($key)) {
-                $node = $this->getKey($key);
+        if ($node->isPersisted()) {
+            $key = $node->getId();
+
+            if (isset($this->nodes[$key])) {
+                $node = $this->nodes[$key];
             } else {
-                $this->setKey($key, $node);
+                $this->nodes[$key] = $node;
             }
         }
 
@@ -43,28 +48,8 @@ class IdentityMap
         }, $nodes);
     }
 
-    public function hasKey($key)
+    public function clear()
     {
-        return isset($this->nodes[$key]);
-    }
-
-    public function getKey($key)
-    {
-        return $this->nodes[$key];
-    }
-
-    public function setKey($key, AbstractNode $node)
-    {
-        return $this->nodes[$key] = $node;
-    }
-
-    public function set(AbstractNode $model)
-    {
-        $this->setKey(self::modelUnqiueKey($model), $Model);
-    }
-
-    public function has(AbstractNode $model)
-    {
-        return $this->hasKey(self::modelUnqiueKey($model));
+        $this->nodes = null;
     }
 }

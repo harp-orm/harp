@@ -2,7 +2,7 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Mapper\MainRepo;
+use CL\Luna\Mapper\AbstractRepo;
 use CL\Luna\Util\Arr;
 use CL\Atlas\Query;
 
@@ -16,11 +16,17 @@ class Union extends Query\Union {
     use ModelQueryTrait;
     use FetchModeTrait;
 
+    public function __construct(AbstractRepo $repo)
+    {
+        $this->setRepo($repo);
+    }
+
+
     public function load()
     {
         $models = $this->loadRaw();
 
-        return MainRepo::get()->getCanonicalArray($models);
+        return $this->getRepo()->getIdentityMap()->getArray($models);
     }
 
     public function loadRaw()

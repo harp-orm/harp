@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Test\Repo;
 
-use CL\Luna\Model\Repo;
+use CL\Luna\Model\AbstractRepo;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -12,7 +12,7 @@ use CL\Carpo\Assert;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class City extends Repo {
+class City extends AbstractRepo {
 
     private static $instance;
 

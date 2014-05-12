@@ -1,6 +1,6 @@
 <?php
 
-namespace CL\Luna\Model;
+namespace CL\Luna\Mapper;
 
 use SplObjectStorage;
 
@@ -11,7 +11,7 @@ use SplObjectStorage;
  */
 class EventListeners {
 
-    public static function dispatchEvent($listeners, $event, Model $target)
+    public static function dispatchEvent($listeners, $event, AbstractNode $target)
     {
         if (isset($listeners[$event])) {
             foreach ($listeners[$event] as $listner) {

@@ -9,14 +9,16 @@ namespace CL\Luna\Mapper;
  */
 abstract class AbstractRelMany extends AbstractRel
 {
-    public function newLink(array $foreign, IdentityMap $map)
+    public function newLink(array $foreignNodes)
     {
-        $foreign = $map->getArray($foreign);
+        foreach ($foreignNodes as & $node) {
+            $node = $node->getRepo()->getIdentityMap()->get($node);
+        }
 
-        return new LinkMany($this, $foreign);
+        return new LinkMany($this, $foreignNodes);
     }
 
-    public function newVoidLink()
+    public function newEmptyLink()
     {
         return new LinkMany($this, array());
     }

@@ -4,6 +4,7 @@ namespace CL\Luna\Mapper;
 
 use CL\Luna\Util\Objects;
 use SplObjectStorage;
+use Closure;
 
 /**
  * @author     Ivan Kerin
@@ -47,20 +48,45 @@ class LinkedNodes extends SplObjectStorage
         return $this;
     }
 
-    public function updateRels()
+    public function eachRel(Closure $yield)
     {
-        $this->linkMap->updateRels($this);
+        $this->linkMap->eachRel($this, $yield);
 
         return $this;
     }
 
     public function deleteRels()
     {
-        $this->linkMap->deleteRels($this);
-
-        return $this;
+        return $this
+            ->eachRel(function($rel, AbstractNode $node, AbstractLink $link){
+                if ($rel instanceof RelDeleteInterface) {
+                    $rel->delete($node, $link);
+                }
+            })
+            ->expandWithLinked();
     }
 
+    public function insertRels()
+    {
+        return $this
+            ->eachRel(function($rel, AbstractNode $node, AbstractLink $link){
+                if ($rel instanceof RelInsertInterface) {
+                    $rel->insert($node, $link);
+                }
+            })
+            ->expandWithLinked();
+    }
+
+    public function updateRels()
+    {
+        return $this
+            ->eachRel(function($rel, AbstractNode $node, AbstractLink $link){
+                if ($rel instanceof RelUpdateInterface) {
+                    $rel->update($node, $link);
+                }
+            })
+            ->expandWithLinked();
+    }
     public function expandWithLinked()
     {
         foreach ($this as $node) {

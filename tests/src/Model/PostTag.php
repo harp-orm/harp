@@ -23,21 +23,21 @@ class PostTag extends Model {
 
     public function getTag()
     {
-        return $this->loadRelLink('tag')->get();
+        return Repo\PostTag::get()->loadLink($this, 'tag')->get();
     }
 
     public function setTag(Tag $tag)
     {
-        return $this->loadRelLink('tag')->set($tag);
+        return Repo\PostTag::get()->loadLink($this, 'tag')->set($tag);
     }
 
     public function getPost()
     {
-        return $this->loadRelLink('post')->get();
+        return Repo\PostTag::get()->loadLink($this, 'post')->get();
     }
 
     public function setPost(Post $post)
     {
-        return $this->loadRelLink('post')->set($post);
+        return Repo\PostTag::get()->loadLink($this, 'post')->set($post);
     }
 }

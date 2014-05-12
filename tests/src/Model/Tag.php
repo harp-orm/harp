@@ -24,7 +24,7 @@ class Tag extends Model {
      */
     public function getPostTags()
     {
-        return $this->loadRelLink('postTags');
+        return Repo\Tag::get()->loadLink($this, 'postTags');
     }
 
     /**
@@ -32,6 +32,6 @@ class Tag extends Model {
      */
     public function getPosts()
     {
-        return $this->loadRelLink('posts');
+        return Repo\Tag::get()->loadLink($this, 'posts');
     }
 }

@@ -3,7 +3,7 @@
 namespace CL\Luna\ModelQuery;
 
 use CL\Atlas\Query;
-use CL\Luna\Model\Repo;
+use CL\Luna\Model\AbstractRepo;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Util\Objects;
 use SplObjectStorage;
@@ -19,20 +19,20 @@ class Insert extends Query\Insert implements SetInterface {
 
     private $insertModels;
 
-    public function __construct(Repo $store)
+    public function __construct(AbstractRepo $repo)
     {
         $this
-            ->setRepo($store)
-            ->into($store->getTable());
+            ->setRepo($repo)
+            ->into($repo->getTable());
     }
 
     public function setMultiple(array $values)
     {
-        $columns = $this->store->getFields()->getNames();
+        $columns = $this->getRepo()->getFields()->getNames();
 
         $this->columns($columns);
 
-        $defaultValues = $this->store->getFieldDefaults();
+        $defaultValues = $this->getRepo()->getFieldDefaults();
 
         foreach ($values as $value) {
             $this->values(array_values(array_merge($defaultValues, $value)));

@@ -11,19 +11,18 @@ abstract class AbstractRel
 {
     protected $name;
     protected $foreignRepo;
-    protected $store;
+    protected $repo;
 
-    abstract public function update(AbstractNode $parent, AbstractLink $link);
     abstract public function hasForeign(array $nodes);
     abstract public function loadForeign(array $nodes);
     abstract public function linkToForeign(array $nodes, array $foreign);
     abstract public function loadFromData(array $data);
 
-    public function __construct($name, RepoInterface $store, RepoInterface $foreignRepo, array $options = array())
+    public function __construct($name, AbstractRepo $repo, AbstractRepo $foreignRepo, array $options = array())
     {
         $this->name = $name;
         $this->foreignRepo = $foreignRepo;
-        $this->store = $store;
+        $this->repo = $repo;
 
         foreach ($options as $name => $value) {
             $this->$name = $value;
@@ -37,7 +36,7 @@ abstract class AbstractRel
 
     public function getRepo()
     {
-        return $this->store;
+        return $this->repo;
     }
 
     public function getForeignRepo()

@@ -31,36 +31,36 @@ class User extends Model {
 
     public function getAddress()
     {
-        return $this->loadRelLink('address')->get();
+        return Repo\User::get()->loadLink($this, 'address')->get();
     }
 
     public function setAddress(Address $address)
     {
-        return $this->loadRelLink('address')->set($address);
+        return Repo\User::get()->loadLink($this, 'address')->set($address);
     }
 
     public function getLocation()
     {
-        return $this->loadRelLink('location')->get();
+        return Repo\User::get()->loadLink($this, 'location')->get();
     }
 
     public function setLocation(LocationInterface $location)
     {
-        return $this->loadRelLink('location')->set($location);
+        return Repo\User::get()->loadLink($this, 'location')->set($location);
     }
 
     public function getProfile()
     {
-        return $this->loadRelLink('profile')->get();
+        return Repo\User::get()->loadLink($this, 'profile')->get();
     }
 
     public function setProfile(Profile $profile)
     {
-        return $this->loadRelLink('profile')->set($profile);
+        return Repo\User::get()->loadLink($this, 'profile')->set($profile);
     }
 
     public function getPosts()
     {
-        return $this->loadRelLink('posts');
+        return Repo\User::get()->loadLink($this, 'posts');
     }
 }

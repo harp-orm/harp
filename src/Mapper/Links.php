@@ -4,6 +4,7 @@ namespace CL\Luna\Mapper;
 
 use CL\Luna\Util\Collection;
 use SplObjectStorage;
+use Closure;
 
 /**
  * @author     Ivan Kerin
@@ -42,19 +43,10 @@ class Links extends Collection
         return $all;
     }
 
-    public function updateRels()
+    public function eachRel(Closure $yield)
     {
         foreach ($this->items as $item) {
-            $item->getRel()->update($this->node, $item);
-        }
-    }
-
-    public function deleteRels()
-    {
-        foreach ($this->items as $item) {
-            if ($item->getRel() instanceof DeleteCascadeInterface) {
-                $item->getRel()->delete($this->node, $item);
-            }
+            $yield($item->getRel(), $this->node, $item);
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace CL\Luna\Rel;
 
 use CL\Atlas\SQL\SQL;
-use CL\Luna\Model\Repo;
+use CL\Luna\Model\AbstractRepo;
 
 
 /**
@@ -13,7 +13,7 @@ use CL\Luna\Model\Repo;
  */
 class RelJoinCondition extends SQL
 {
-    public function __construct($table, $foreign_table, array $conditions, Repo $store = null)
+    public function __construct($table, $foreign_table, array $conditions, AbstractRepo $store = null)
     {
         $parts = [];
 
@@ -24,7 +24,7 @@ class RelJoinCondition extends SQL
 
         if ($store->getSoftDelete())
         {
-            $parts []= $foreign_table.'.'.Repo::SOFT_DELETE_KEY.' IS NULL';
+            $parts []= $foreign_table.'.'.AbstractRepo::SOFT_DELETE_KEY.' IS NULL';
         }
 
         $this->content = 'ON '.implode(' AND ', $parts);

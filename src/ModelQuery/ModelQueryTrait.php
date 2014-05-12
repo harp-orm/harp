@@ -2,7 +2,7 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Model\Repo;
+use CL\Luna\Model\AbstractRepo;
 use CL\Luna\Util\Arr;
 use CL\Atlas\DB;
 use InvalidArgumentException;
@@ -14,54 +14,54 @@ use InvalidArgumentException;
  */
 trait ModelQueryTrait {
 
-    protected $store;
+    protected $repo;
 
-    public function setRepo(Repo $store)
+    public function setRepo(AbstractRepo $repo)
     {
-        $this->store = $store;
-        $this->db = DB::get($store->getDb());
+        $this->repo = $repo;
+        $this->db = DB::get($repo->getDb());
 
         return $this;
     }
 
     public function getRepo()
     {
-        return $this->store;
+        return $this->repo;
     }
 
     public function getRel($name)
     {
-        return $this->store->getRel($name);
+        return $this->repo->getRel($name);
     }
 
     public function whereKey($key)
     {
-        return $this->where($this->store->getTable().'.'.$this->store->getPrimaryKey(), $key);
+        return $this->where($this->repo->getTable().'.'.$this->repo->getPrimaryKey(), $key);
     }
 
     public function whereKeys(array $keys)
     {
-        return $this->where($this->store->getTable().'.'.$this->store->getPrimaryKey(), $keys);
+        return $this->where($this->repo->getTable().'.'.$this->repo->getPrimaryKey(), $keys);
     }
 
     public function joinRels($rels)
     {
         $rels = Arr::toAssoc((array) $rels);
 
-        $this->joinNestedRels($this->store, $rels, $this->store->getTable());
+        $this->joinNestedRels($this->repo, $rels, $this->repo->getTable());
 
         return $this;
     }
 
-    public function joinNestedRels(Repo $store, array $rels, $parent)
+    public function joinNestedRels(AbstractRepo $repo, array $rels, $parent)
     {
         foreach ($rels as $name => $childRels)
         {
-            $rel = $store->getRel($name);
+            $rel = $repo->getRel($name);
 
             if (! $rel) {
                 throw new InvalidArgumentException(
-                    sprintf('Relation %s does not exist on %s when joining', $name, $store->getName())
+                    sprintf('Relation %s does not exist on %s when joining', $name, $repo->getName())
                 );
             }
 

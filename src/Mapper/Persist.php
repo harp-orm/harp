@@ -22,23 +22,24 @@ class Persist
 
     public static function nodes(LinkedNodes $nodes)
     {
-        $nodes
-            ->expandWithLinked()
-            ->deleteRels()
-            ->expandWithLinked();
+        $nodes->expandWithLinked();
 
-        self::persist($nodes->getDeleted(), [NodeEvent::DELETE], function ($store, $nodes) {
-            $store->delete($nodes);
+        $nodes->deleteRels();
+
+        self::persist($nodes->getDeleted(), [NodeEvent::DELETE], function (AbstractRepo $repo, SplObjectStorage $nodes) {
+            $repo->delete($nodes);
         });
 
-        self::persist($nodes->getPending(), [NodeEvent::INSERT, NodeEvent::SAVE], function ($store, $nodes) {
-            $store->insert($nodes);
+        $nodes->insertRels();
+
+        self::persist($nodes->getPending(), [NodeEvent::INSERT, NodeEvent::SAVE], function (AbstractRepo $repo, SplObjectStorage $nodes) {
+            $repo->insert($nodes);
         });
 
         $nodes->updateRels();
 
-        self::persist($nodes->getChanged(), [NodeEvent::UPDATE, NodeEvent::SAVE], function ($store, $nodes) {
-            $store->update($nodes);
+        self::persist($nodes->getChanged(), [NodeEvent::UPDATE, NodeEvent::SAVE], function (AbstractRepo $repo, SplObjectStorage $nodes) {
+            $repo->update($nodes);
         });
     }
 
@@ -46,15 +47,15 @@ class Persist
     {
         $groups = self::groupByRepo($nodes);
 
-        foreach ($groups as $store) {
+        foreach ($groups as $repo) {
             foreach ($events as $event) {
-                $store->dispatchBeforeEvent($nodes, $event);
+                $repo->dispatchBeforeEvent($nodes, $event);
             }
 
-            $yield($store, $groups->getInfo());
+            $yield($repo, $groups->getInfo());
 
             foreach ($events as $event) {
-                $store->dispatchAfterEvent($nodes, $event);
+                $repo->dispatchAfterEvent($nodes, $event);
             }
         }
     }

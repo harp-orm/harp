@@ -3,6 +3,7 @@
 namespace CL\Luna\Mapper;
 
 use SplObjectStorage;
+use Closure;
 
 /*
  * @author     Ivan Kerin
@@ -46,20 +47,11 @@ class LinkMap
         }
     }
 
-    public function updateRels(SplObjectStorage $nodes)
+    public function eachRel(SplObjectStorage $nodes, Closure $yield)
     {
         foreach ($nodes as $node) {
             if ($this->map->contains($node)) {
-                $this->map[$node]->updateRels();
-            }
-        }
-    }
-
-    public function deleteRels(SplObjectStorage $nodes)
-    {
-        foreach ($nodes as $node) {
-            if ($this->map->contains($node)) {
-                $this->map[$node]->deleteRels();
+                $this->map[$node]->eachRel($yield);
             }
         }
     }

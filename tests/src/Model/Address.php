@@ -37,6 +37,6 @@ class Address extends Model {
      */
     public function getUsers()
     {
-        return $this->loadRelLink('users');
+        return Repo\Address::get()->loadLink($this, 'users');
     }
 }

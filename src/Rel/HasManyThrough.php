@@ -5,7 +5,7 @@ namespace CL\Luna\Rel;
 use CL\Luna\Mapper;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
-use CL\Luna\Model\Repo;
+use CL\Luna\Model\AbstractRepo;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
 
@@ -14,20 +14,20 @@ use CL\Atlas\Query\AbstractQuery;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
+class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface, Mapper\RelInsertInterface, Mapper\RelDeleteInterface
 {
     use LoadFromDataTrait;
 
     protected $foreignKey;
     protected $through;
 
-    public function __construct($name, Repo $store, Repo $foreignRepo, $through, array $options = array())
+    public function __construct($name, AbstractRepo $repo, AbstractRepo $foreignRepo, $through, array $options = array())
     {
         $this->through = $through;
         $this->foreignKey = $foreignRepo->getName().'Id';
-        $this->key = $store->getName().'Id';
+        $this->key = $repo->getName().'Id';
 
-        parent::__construct($name, $store, $foreignRepo, $options);
+        parent::__construct($name, $repo, $foreignRepo, $options);
     }
 
     public function getForeignKey()
@@ -94,26 +94,32 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface
             ->joinAliased($this->getForeignTable(), $this->getName(), $condition);
     }
 
-    public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
+    public function delete(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
-        $throughReflection = $this->getThroughRel()->getForeignRepo()->getModelReflection();
-        $through = $model->{$this->through};
-
-        foreach ($link->getAdded() as $added) {
-            $item = $throughReflection->newInstance([
-                $this->getThroughRel()->getForeignKey() => $model->getId(),
-                $this->foreignKey => $added->getId(),
-            ]);
-
-            $through->add($item);
-        }
-
         foreach ($link->getRemoved() as $removed) {
-            foreach ($through as $item) {
+            foreach ($model->{$this->through} as $item) {
                 if ($item->{$this->foreignKey} == $removed->getId()) {
-                    $through->remove($item);
+                    $item->delete();
                 }
             }
         }
+    }
+
+    public function insert(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
+    {
+        if (count($link->getAdded()) > 0) {
+            $throughRepo = $this->getThroughRel()->getForeignRepo();
+            $through = $item->{$this->foreignKey};
+
+            foreach ($link->getAdded() as $added) {
+                $item = $throughRepo->newInstance([
+                    $this->getThroughRel()->getForeignKey() => $model->getId(),
+                    $this->foreignKey => $added->getId(),
+                ]);
+
+                $through->add($item);
+            }
+        }
+
     }
 }

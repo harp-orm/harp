@@ -7,22 +7,22 @@ use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
-use CL\Luna\Model\Repo;
+use CL\Luna\Model\AbstractRepo;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface
+class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface, Mapper\RelUpdateInterface
 {
     use LoadFromDataTrait;
 
     protected $foreignKey;
 
-    public function __construct($name, Repo $store, Repo $foreignRepo, array $options = array())
+    public function __construct($name, AbstractRepo $store, AbstractRepo $foreignRepo, array $options = array())
     {
-        $this->foreignKey = $store->getName().'Id';
+        $this->foreignKey = $name.'Id';
 
         parent::__construct($name, $store, $foreignRepo, $options);
     }

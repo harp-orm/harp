@@ -41,7 +41,7 @@ class Profile extends Model {
      */
     public function getUser()
     {
-        return $this->loadRelLink('user')->get();
+        return Repo\Profile::get()->loadLink($this, 'user')->get();
     }
 
     /**
@@ -49,6 +49,6 @@ class Profile extends Model {
      */
     public function setUser(User $user)
     {
-        return $this->loadRelLink('user')->set($user);
+        return Repo\Profile::get()->loadLink($this, 'user')->set($user);
     }
 }

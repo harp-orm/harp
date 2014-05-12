@@ -2,9 +2,8 @@
 
 namespace CL\Luna\Test;
 
-use CL\EnvBackup\Env;
-use CL\EnvBackup\StaticParam;
 use CL\Atlas\DB;
+use CL\Luna\Test\Repo;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -14,22 +13,10 @@ use PHPUnit_Framework_TestCase;
 abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
 
     /**
-     * @var Env
-     */
-    protected $env;
-
-    /**
      * @var TestLogger
      */
     protected $logger;
 
-    /**
-     * @return Env
-     */
-    public function getEnv()
-    {
-        return $this->env;
-    }
     /**
      * @return TestLogger
      */
@@ -42,11 +29,6 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
     {
         parent::setUp();
 
-        $this->env = new Env();
-        $this->env
-            ->add(new StaticParam('CL\Luna\Mapper\MainRepo', 'repo', null))
-            ->apply();
-
         $this->logger = new TestLogger();
 
         DB::setConfig('default', array(
@@ -57,12 +39,20 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
         DB::get()->execute('ALTER TABLE Post AUTO_INCREMENT = 5', array());
         DB::get()->setLogger($this->logger);
         DB::get()->beginTransaction();
+
+        Repo\Address::get()->getIdentityMap()->clear();
+        Repo\BlogPost::get()->getIdentityMap()->clear();
+        Repo\City::get()->getIdentityMap()->clear();
+        Repo\Country::get()->getIdentityMap()->clear();
+        Repo\Post::get()->getIdentityMap()->clear();
+        Repo\PostTag::get()->getIdentityMap()->clear();
+        Repo\Profile::get()->getIdentityMap()->clear();
+        Repo\Tag::get()->getIdentityMap()->clear();
+        Repo\User::get()->getIdentityMap()->clear();
     }
 
     public function tearDown()
     {
-        $this->env->restore();
-
         DB::get()->rollback();
 
         parent::tearDown();

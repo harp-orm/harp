@@ -5,7 +5,7 @@ namespace CL\Luna\Rel;
 use CL\Luna\Util\Arr;
 use CL\Luna\Util\Objects;
 use CL\Luna\Mapper;
-use CL\Luna\Model\Repo;
+use CL\Luna\Model\AbstractRepo;
 use Closure;
 
 /**
@@ -13,12 +13,12 @@ use Closure;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsToPolymorphic extends Mapper\AbstractRelOne
+class BelongsToPolymorphic extends Mapper\AbstractRelOne implements Mapper\RelUpdateInterface
 {
     protected $key;
     protected $storeKey;
 
-    public function __construct($name, Repo $store, Repo $defaultForeignRepo, array $options = array())
+    public function __construct($name, AbstractRepo $store, AbstractRepo $defaultForeignRepo, array $options = array())
     {
         $this->key = $name.'Id';
         $this->storeKey = $name.'Class';

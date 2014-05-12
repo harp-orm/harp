@@ -23,11 +23,11 @@ class City extends Model implements LocationInterface {
 
     public function getCountry()
     {
-        return $this->loadRelLink('country')->get();
+        return Repo\City::get()->loadLink($this, 'country')->get();
     }
 
     public function setCountry(Country $country)
     {
-        return $this->loadRelLink('country')->set($country);
+        return Repo\City::get()->loadLink($this, 'country')->set($country);
     }
 }

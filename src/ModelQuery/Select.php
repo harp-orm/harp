@@ -2,8 +2,7 @@
 
 namespace CL\Luna\ModelQuery;
 
-use CL\Luna\Model\Repo;
-use CL\Luna\Mapper\MainRepo;
+use CL\Luna\Model\AbstractRepo;
 use CL\Luna\Mapper\AbstractNode;
 use CL\Luna\Mapper\NodeEvent;
 use CL\Luna\Util\Arr;
@@ -22,23 +21,23 @@ class Select extends Query\Select {
     use SoftDeleteTrait;
     use FetchModeTrait;
 
-    public function __construct(Repo $Repo)
+    public function __construct(AbstractRepo $repo)
     {
         $this
-            ->setRepo($Repo)
-            ->from($Repo->getTable())
-            ->column($Repo->getTable().'.*');
+            ->setRepo($repo)
+            ->from($repo->getTable())
+            ->column($repo->getTable().'.*');
 
         $this->setSoftDelete($this->getRepo()->getSoftDelete());
     }
 
 
-    protected static function loadRels($Repo, $models, $rels)
+    protected static function loadRels($repo, $models, $rels)
     {
         foreach ($rels as $relName => $childRels) {
-            $rel = $Repo->getRel($relName);
+            $rel = $repo->getRel($relName);
 
-            $foreign = MainRepo::get()->loadRel($rel, $models);
+            $foreign = $repo->loadRel($rel, $models);
 
             if ($childRels) {
                 self::loadRels($rel->getForeignRepo(), $foreign, $childRels);
@@ -61,7 +60,7 @@ class Select extends Query\Select {
     {
         $models = $this->loadRaw();
 
-        return MainRepo::get()->getCanonicalArray($models);
+        return $this->getRepo()->getIdentityMap()->getArray($models);
     }
 
     public function loadIds()
@@ -73,11 +72,11 @@ class Select extends Query\Select {
 
     public function loadCount()
     {
-        $store = $this->getRepo();
+        $repo = $this->getRepo();
 
         return $this
             ->clearColumns()
-            ->column("COUNT({$store->getTable()}.{$store->getPrimaryKey()})", 'countAll')
+            ->column("COUNT({$repo->getTable()}.{$repo->getPrimaryKey()})", 'countAll')
             ->execute()
                 ->fetchColumn();
     }
@@ -86,7 +85,7 @@ class Select extends Query\Select {
     {
         $items = $this->limit(1)->load();
 
-        return reset($items) ?: $this->store->newInstance(null, AbstractNode::VOID);
+        return reset($items) ?: $this->getRepo()->newVoidInstance();
     }
 
     public function loadRaw()

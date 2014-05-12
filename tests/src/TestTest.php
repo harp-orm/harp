@@ -36,7 +36,7 @@ class TestTest extends AbstractTestCase {
 
         $data->assignTo($user3);
 
-        MainRepo::get()->persist($user3);
+        Repo\User::get()->persist($user3);
 
         $this->assertEquals(
             [

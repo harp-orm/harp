@@ -17,6 +17,11 @@ class Data extends UnsafeData
         $data->assignTo($node);
     }
 
+    public static function assign(array $data, AssignNodeInterface $node)
+    {
+        throw new LogicException('Use "assignPermitted" method for Data class');
+    }
+
     protected $permitted;
 
     public function __construct(array $data, array $permitted)

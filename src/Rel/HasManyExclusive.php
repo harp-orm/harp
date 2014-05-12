@@ -74,6 +74,8 @@ class HasManyExclusive extends Mapper\AbstractRelMany implements RelJoinInterfac
     public function delete(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
         Objects::invoke($link->getRemoved(), 'delete');
+
+        return $link->getRemoved();
     }
 
     public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)

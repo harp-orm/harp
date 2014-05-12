@@ -8,6 +8,7 @@ use CL\Luna\Util\Objects;
 use CL\Luna\Model\AbstractRepo;
 use CL\Luna\ModelQuery\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
+use SplObjectStorage;
 
 /**
  * @author     Ivan Kerin
@@ -96,17 +97,24 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface,
 
     public function delete(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
+        $removed = new SplObjectStorage();
+
         foreach ($link->getRemoved() as $removed) {
             foreach ($model->{$this->through} as $item) {
                 if ($item->{$this->foreignKey} == $removed->getId()) {
                     $item->delete();
+                    $removed->attach($item);
                 }
             }
         }
+
+        return $removed;
     }
 
     public function insert(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
     {
+        $inserted = new SplObjectStorage();
+
         if (count($link->getAdded()) > 0) {
             $throughRepo = $this->getThroughRel()->getForeignRepo();
             $through = $item->{$this->foreignKey};
@@ -118,8 +126,11 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface,
                 ]);
 
                 $through->add($item);
+
+                $inserted->attach($item);
             }
         }
 
+        return $inserted;
     }
 }

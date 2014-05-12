@@ -36,17 +36,12 @@ class Links extends Collection
     {
         $all = new SplObjectStorage();
 
-        foreach ($this->items as $item) {
-            $all->addAll($item->getAll());
+        if ($this->items) {
+            foreach ($this->items as $item) {
+                $all->addAll($item->getAll());
+            }
         }
 
         return $all;
-    }
-
-    public function eachRel(Closure $yield)
-    {
-        foreach ($this->items as $item) {
-            $yield($item->getRel(), $this->node, $item);
-        }
     }
 }

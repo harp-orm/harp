@@ -25,7 +25,7 @@ class TestLogger extends AbstractLogger
      */
     public function log($level, $message, array $context = array())
     {
-        $this->entries []= Compiler::humanize($message, $context['parameters']);
+        $this->entries []= isset($context['parameters']) ? Compiler::humanize($message, $context['parameters']) : $message;
     }
 
     /**

@@ -35,41 +35,6 @@ class LinkMap
 
     public function has(AbstractNode $node)
     {
-        return $this->map->contains($model);
-    }
-
-    public function update(AbstractNode $node)
-    {
-        $links = $this->get($node);
-
-        foreach ($links as $model) {
-            $links->getInfo()->update();
-        }
-    }
-
-    public function eachRel(SplObjectStorage $nodes, Closure $yield)
-    {
-        foreach ($nodes as $node) {
-            if ($this->map->contains($node)) {
-                $this->map[$node]->eachRel($yield);
-            }
-        }
-    }
-
-    public function addAllRecursive(SplObjectStorage $all, AbstractNode $node)
-    {
-        $all->attach($node);
-
-        if (! $this->isEmpty($node)) {
-
-            $linkedNodes = $this->get($node)->getNodes();
-            foreach ($linkedNodes as $node) {
-                if (! $all->contains($node)) {
-                    $this->addAllRecursive($all, $node);
-                }
-            }
-        }
-
-        return $all;
+        return $this->map->contains($node);
     }
 }

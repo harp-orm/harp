@@ -45,6 +45,7 @@ class Insert extends Query\Insert implements SetInterface {
     {
         $this->insertModels = $models;
         $changes = Objects::invoke($models, 'getChanges');
+
         $this->setMultiple($changes);
 
         return $this;

@@ -220,10 +220,10 @@ abstract class AbstractRepo
             throw new InvalidArgumentException(sprintf('Argument must be instance of %s', $this->modelClass));
         }
 
-        $nodes = new LinkedNodes($this->linkMap);
-        $nodes->add($node);
-
-        Persist::nodes($nodes);
+        $queue = new PersistQueue();
+        $queue
+            ->addWithLinked($node)
+            ->execute();
     }
 
     public function loadLink(AbstractNode $node, $linkName)

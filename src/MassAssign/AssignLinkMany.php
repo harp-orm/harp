@@ -2,7 +2,7 @@
 
 namespace CL\Luna\MassAssign;
 
-use CL\Luna\Mapper\LinkMany;
+use CL\LunaCore\Repo\LinkMany;
 
 /*
  * @author     Ivan Kerin
@@ -28,7 +28,7 @@ class AssignLinkMany extends AbstractAssignLink
 
             $this->link->add($node);
 
-            $assign = new AssignNode($node);
+            $assign = new AssignModel($node);
             $assign->execute($itemData);
         }
     }

@@ -2,7 +2,6 @@
 
 namespace CL\Luna\Test\Repo;
 
-use CL\Luna\Model\AbstractDbRepo;
 use CL\Luna\Field;
 
 /**
@@ -12,9 +11,9 @@ use CL\Luna\Field;
  */
 trait NestedRepoTrait {
 
-    public static function initializeTrait(AbstractDbRepo $store)
+    public function initializeNestedRepo()
     {
-        $store
+        $this
             ->getFields()
                 ->add(new Field\Integer('parentId'));
     }

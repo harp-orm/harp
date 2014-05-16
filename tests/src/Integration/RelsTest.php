@@ -2,7 +2,6 @@
 
 namespace CL\Luna\Test;
 
-use CL\Luna\Util\Log;
 use CL\Luna\Test\Repo;
 
 /**

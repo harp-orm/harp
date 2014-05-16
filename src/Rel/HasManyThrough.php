@@ -2,19 +2,23 @@
 
 namespace CL\Luna\Rel;
 
-use CL\Luna\Mapper;
-use CL\Luna\Util\Arr;
-use CL\Luna\Model\AbstractDbRepo;
-use CL\Luna\ModelQuery\RelJoinInterface;
+use CL\Util\Arr;
+use CL\Util\Objects;
+use CL\Luna\AbstractDbRepo;
+use CL\LunaCore\Model\AbstractModel;
+use CL\LunaCore\Repo\AbstractLink;
+use CL\LunaCore\Rel\InsertInterface;
+use CL\LunaCore\Rel\DeleteInterface;
+use CL\LunaCore\Rel\AbstractRelMany;
+use CL\Luna\Query\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
-use SplObjectStorage;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface, Mapper\RelInsertInterface, Mapper\RelDeleteInterface
+class HasManyThrough extends AbstractRelMany implements RelJoinInterface, InsertInterface, DeleteInterface
 {
     protected $foreignKey;
     protected $through;
@@ -69,13 +73,13 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface,
             ->joinRels($this->through)
             ->where(
                 $throughForeignKey,
-                Arr::extractUnique($models, $this->getRepo()->getPrimaryKey())
+                Arr::pluckUniqueProperty($models, $this->getRepo()->getPrimaryKey())
             );
 
         return $select->loadRaw();
     }
 
-    public function areLinked(Mapper\AbstractNode $model, Mapper\AbstractNode $foreign)
+    public function areLinked(AbstractModel $model, AbstractModel $foreign)
     {
         return $model->getId() == $foreign->{$this->getThroughKey()};
     }
@@ -90,7 +94,7 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface,
             ->joinAliased($this->getForeignTable(), $this->getName(), $condition);
     }
 
-    public function delete(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
+    public function delete(AbstractModel $model, AbstractLink $link)
     {
         $removed = new SplObjectStorage();
 
@@ -106,7 +110,7 @@ class HasManyThrough extends Mapper\AbstractRelMany implements RelJoinInterface,
         return $removed;
     }
 
-    public function insert(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
+    public function insert(AbstractModel $model, AbstractLink $link)
     {
         $inserted = new SplObjectStorage();
 

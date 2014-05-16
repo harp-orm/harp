@@ -3,7 +3,7 @@
 namespace CL\Luna\Rel;
 
 use CL\Atlas\SQL\SQL;
-use CL\Luna\Model\AbstractDbRepo;
+use CL\Luna\AbstractDbRepo;
 
 
 /**

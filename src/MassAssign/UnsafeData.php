@@ -2,7 +2,7 @@
 
 namespace CL\Luna\MassAssign;
 
-use CL\Luna\Mapper\AbstractNode;
+use CL\LunaCore\Model\AbstractModel;
 
 /*
  * @author     Ivan Kerin
@@ -23,22 +23,22 @@ class UnsafeData
         $this->data = $data;
     }
 
-    public function assignTo(AbstractNode $node)
+    public function assignTo(AbstractModel $node)
     {
-        $assign = new AssignNode($node);
+        $assign = new AssignModel($node);
         $assign->execute($this);
 
         return $this;
     }
 
-    public function getPropertiesData(AbstractNode $node)
+    public function getPropertiesData(AbstractModel $node)
     {
         $rels = $node->getRepo()->getRels()->all();
 
         return array_diff_key($this->data, $rels);
     }
 
-    public function getRelData(AbstractNode $node)
+    public function getRelData(AbstractModel $node)
     {
         $rels = $node->getRepo()->getRels()->all();
 

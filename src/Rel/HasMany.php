@@ -2,10 +2,13 @@
 
 namespace CL\Luna\Rel;
 
-use CL\Luna\Mapper;
-use CL\Luna\Util\Arr;
-use CL\Luna\Model\AbstractDbRepo;
-use CL\Luna\ModelQuery\RelJoinInterface;
+use CL\Util\Arr;
+use CL\Luna\AbstractDbRepo;
+use CL\LunaCore\Model\AbstractModel;
+use CL\LunaCore\Repo\AbstractLink;
+use CL\LunaCore\Rel\UpdateInterface;
+use CL\LunaCore\Rel\AbstractRelMany;
+use CL\Luna\Query\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
 
 /**
@@ -13,7 +16,7 @@ use CL\Atlas\Query\AbstractQuery;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface, Mapper\RelUpdateInterface
+class HasMany extends AbstractRelMany implements RelJoinInterface, UpdateInterface
 {
     protected $foreignKey;
 
@@ -36,7 +39,8 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface, Mapper
 
     public function hasForeign(array $models)
     {
-        return ! empty(Arr::extractUnique($models, $this->getKey()));
+        $keys = Arr::pluckUniqueProperty($models, $this->getKey());
+        return ! empty($keys);
     }
 
     public function loadForeign(array $models)
@@ -45,12 +49,12 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface, Mapper
             ->findAll()
             ->where(
                 $this->foreignKey,
-                Arr::extractUnique($models, $this->getKey())
+                Arr::pluckUniqueProperty($models, $this->getKey())
             )
             ->loadRaw();
     }
 
-    public function areLinked(Mapper\AbstractNode $model, Mapper\AbstractNode $foreign)
+    public function areLinked(AbstractModel $model, AbstractModel $foreign)
     {
         return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
     }
@@ -64,7 +68,7 @@ class HasMany extends Mapper\AbstractRelMany implements RelJoinInterface, Mapper
         $query->joinAliased($this->foreignRepo->getTable(), $this->getName(), $condition);
     }
 
-    public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
+    public function update(AbstractModel $model, AbstractLink $link)
     {
         foreach ($link->getAdded() as $added) {
             $added->{$this->getForeignKey()} = $model->{$this->getKey()};

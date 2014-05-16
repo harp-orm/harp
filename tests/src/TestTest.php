@@ -2,7 +2,6 @@
 
 namespace CL\Luna\Test;
 
-use CL\Luna\Mapper\MainRepo;
 use CL\Luna\MassAssign\Data;
 use CL\Luna\Test\Repo;
 

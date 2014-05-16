@@ -1,9 +1,9 @@
 <?php
 
-namespace CL\Luna\ModelQuery;
+namespace CL\Luna\Query;
 
-use CL\Luna\Model\AbstractDbRepo;
-use CL\Luna\Util\Arr;
+use CL\Luna\AbstractDbRepo;
+use CL\Util\Arr;
 use CL\Atlas\DB;
 use InvalidArgumentException;
 

@@ -2,19 +2,21 @@
 
 namespace CL\Luna\Rel;
 
-use CL\Luna\Util\Arr;
-use CL\Luna\Model\AbstractDbRepo;
-use CL\Luna\Mapper;
-use CL\Luna\ModelQuery\RelJoinInterface;
+use CL\Util\Arr;
+use CL\Luna\AbstractDbRepo;
+use CL\LunaCore\Model\AbstractModel;
+use CL\LunaCore\Repo\AbstractLink;
+use CL\LunaCore\Rel\UpdateInterface;
+use CL\LunaCore\Rel\AbstractRelOne;
+use CL\Luna\Query\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
-use Closure;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface, Mapper\RelUpdateInterface
+class BelongsTo extends AbstractRelOne implements RelJoinInterface, UpdateInterface
 {
     protected $key;
 
@@ -27,7 +29,9 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface, Mappe
 
     public function hasForeign(array $models)
     {
-        return ! empty(Arr::extractUnique($models, $this->key));
+        $keys = Arr::pluckUniqueProperty($models, $this->key);
+
+        return ! empty($keys);
     }
 
     public function loadForeign(array $models)
@@ -36,12 +40,12 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface, Mappe
             ->findAll()
             ->where(
                 $this->getForeignKey(),
-                Arr::extractUnique($models, $this->key)
+                Arr::pluckUniqueProperty($models, $this->key)
             )
             ->loadRaw();
     }
 
-    public function areLinked(Mapper\AbstractNode $model, Mapper\AbstractNode $foreign)
+    public function areLinked(AbstractModel $model, AbstractModel $foreign)
     {
         return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
     }
@@ -56,7 +60,7 @@ class BelongsTo extends Mapper\AbstractRelOne implements RelJoinInterface, Mappe
         return $this->getRepo()->getPrimaryKey();
     }
 
-    public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
+    public function update(AbstractModel $model, AbstractLink $link)
     {
         $model->{$this->getKey()} = $link->get()->getId();
     }

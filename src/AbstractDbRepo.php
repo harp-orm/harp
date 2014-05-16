@@ -1,9 +1,9 @@
 <?php
 
-namespace CL\Luna\Model;
+namespace CL\Luna;
 
-use CL\Luna\ModelQuery;
-use CL\Luna\Mapper;
+use CL\Luna\Query;
+use CL\LunaCore\Repo\AbstractRepo;
 use SplObjectStorage;
 
 /*
@@ -11,7 +11,7 @@ use SplObjectStorage;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-abstract class AbstractDbRepo extends Mapper\AbstractRepo
+abstract class AbstractDbRepo extends AbstractRepo
 {
     const SOFT_DELETE_KEY = 'deletedAt';
 
@@ -26,7 +26,7 @@ abstract class AbstractDbRepo extends Mapper\AbstractRepo
 
     public function getPolymorphic()
     {
-        $this->initializeAllOnce();
+        $this->initializeOnce();
 
         return $this->polymorphic;
     }
@@ -40,7 +40,7 @@ abstract class AbstractDbRepo extends Mapper\AbstractRepo
 
     public function getSoftDelete()
     {
-        $this->initializeAllOnce();
+        $this->initializeOnce();
 
         return $this->softDelete;
     }
@@ -54,7 +54,7 @@ abstract class AbstractDbRepo extends Mapper\AbstractRepo
 
     public function getTable()
     {
-        $this->initializeAllOnce();
+        $this->initializeOnce();
 
         return $this->table;
     }
@@ -68,7 +68,7 @@ abstract class AbstractDbRepo extends Mapper\AbstractRepo
 
     public function getDb()
     {
-        $this->initializeAllOnce();
+        $this->initializeOnce();
 
         return $this->db;
     }
@@ -82,21 +82,21 @@ abstract class AbstractDbRepo extends Mapper\AbstractRepo
 
     public function getFieldNames()
     {
-        $this->initializeAllOnce();
+        $this->initializeOnce();
 
         return array_keys($this->fields->all());
     }
 
     public function getFieldDefaults()
     {
-        $this->initializeAllOnce();
+        $this->initializeOnce();
 
         return $this->fieldDefaults;
     }
 
     public function getFields()
     {
-        $this->initializeAllOnce();
+        $this->initializeOnce();
 
         return $this->fields;
     }
@@ -113,29 +113,29 @@ abstract class AbstractDbRepo extends Mapper\AbstractRepo
         return $this->getFields()->get($name);
     }
 
-    public function find($key)
+    public function selectWithId($key)
     {
         return $this->findAll()->whereKey($key)->loadFirst();
     }
 
     public function findAll()
     {
-        return new ModelQuery\Select($this);
+        return new Query\Select($this);
     }
 
     public function deleteAll()
     {
-        return new ModelQuery\Delete($this);
+        return new Query\Delete($this);
     }
 
     public function updateAll()
     {
-        return new ModelQuery\Update($this);
+        return new Query\Update($this);
     }
 
     public function insertAll()
     {
-        return new ModelQuery\Insert($this);
+        return new Query\Insert($this);
     }
 
     public function update(SplObjectStorage $models)
@@ -167,10 +167,8 @@ abstract class AbstractDbRepo extends Mapper\AbstractRepo
         $this->table = $this->getModelReflection()->getShortName();
     }
 
-    public function initializeAll()
+    public function afterInitialize()
     {
-        parent::initializeAll();
-
         $allDefaults = $this->getModelReflection()->getDefaultProperties();
 
         $this->fieldDefaults = array_intersect_key(

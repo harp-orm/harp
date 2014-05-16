@@ -1,6 +1,6 @@
 <?php
 
-namespace CL\Luna\ModelQuery;
+namespace CL\Luna\Query;
 
 use PDO;
 use PDOStatement;

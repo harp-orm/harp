@@ -1,13 +1,15 @@
 <?php
 
-namespace CL\Luna\Mapper;
+namespace CL\Luna\Query;
+
+use CL\Atlas\Query\AbstractQuery;
 
 /*
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-interface RelDeleteInterface
+interface RelJoinInterface
 {
-    public function delete(AbstractNode $node, AbstractLink $link);
+    public function joinRel(AbstractQuery $query, $parent);
 }

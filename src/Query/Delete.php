@@ -1,11 +1,11 @@
 <?php
 
-namespace CL\Luna\ModelQuery;
+namespace CL\Luna\Query;
 
 use CL\Atlas\Query;
-use CL\Luna\Model\AbstractDbRepo;
-use CL\atlas\SQL\SQL;
-use CL\Luna\Util\Objects;
+use CL\Luna\AbstractDbRepo;
+use CL\Atlas\SQL\SQL;
+use CL\Util\Objects;
 use SplObjectStorage;
 
 /**

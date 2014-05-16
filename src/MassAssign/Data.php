@@ -2,11 +2,11 @@
 
 namespace CL\Luna\MassAssign;
 
-use CL\Luna\Util\Arr;
-use CL\Luna\Mapper\AbstractNode;
-use CL\Luna\Mapper\AbstractLink;
-use CL\Luna\Mapper\LinkOne;
-use CL\Luna\Mapper\LinkMany;
+use CL\Util\Arr;
+use CL\LunaCore\Model\AbstractModel;
+use CL\LunaCore\Repo\AbstractLink;
+use CL\LunaCore\Repo\LinkOne;
+use CL\LunaCore\Repo\LinkMany;
 
 /*
  * @author     Ivan Kerin
@@ -24,7 +24,7 @@ class Data extends UnsafeData
         $this->permitted = Arr::toAssoc($permitted);
     }
 
-    public function getPropertiesData(AbstractNode $node)
+    public function getPropertiesData(AbstractModel $node)
     {
         $rels = $node->getRepo()->getRels()->all();
 
@@ -33,7 +33,7 @@ class Data extends UnsafeData
         return array_diff_key($data, $rels);
     }
 
-    public function getRelData(AbstractNode $node)
+    public function getRelData(AbstractModel $node)
     {
         $rels = $node->getRepo()->getRels()->all();
 

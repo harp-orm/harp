@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Test\Repo;
 
-use CL\Luna\Model\AbstractDbRepo;
+use CL\Luna\AbstractDbRepo;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;
@@ -57,7 +57,9 @@ class User extends AbstractDbRepo {
                 new Assert\Present('name'),
             ])
 
-            ->setEventAfterLoad(__CLASS__.'::test');
+            ->addEventAfterLoad(__CLASS__.'::test')
+
+            ->initializeNestedRepo();
     }
 
     public static function test($model)

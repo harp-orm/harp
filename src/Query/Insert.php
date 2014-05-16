@@ -1,11 +1,11 @@
 <?php
 
-namespace CL\Luna\ModelQuery;
+namespace CL\Luna\Query;
 
 use CL\Atlas\Query;
-use CL\Luna\Model\AbstractDbRepo;
-use CL\Luna\Mapper\AbstractNode;
-use CL\Luna\Util\Objects;
+use CL\Luna\AbstractDbRepo;
+use CL\LunaCore\Model\AbstractModel;
+use CL\Util\Objects;
 use SplObjectStorage;
 
 /**
@@ -62,7 +62,7 @@ class Insert extends Query\Insert implements SetInterface {
                 $model
                     ->setId($lastInsertId)
                     ->resetOriginals()
-                    ->setState(AbstractNode::PERSISTED);
+                    ->setState(AbstractModel::PERSISTED);
 
                 $lastInsertId += 1;
             }

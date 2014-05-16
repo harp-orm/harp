@@ -2,7 +2,7 @@
 
 namespace CL\Luna\MassAssign;
 
-use CL\Luna\Mapper\AbstractRel;
+use CL\LunaCore\Rel\AbstractRel;
 
 /*
  * @author     Ivan Kerin

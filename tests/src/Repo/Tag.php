@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Test\Repo;
 
-use CL\Luna\Model\AbstractDbRepo;
+use CL\Luna\AbstractDbRepo;
 use CL\Luna\Field;
 use CL\Luna\Rel;
 use CL\Carpo\Assert;

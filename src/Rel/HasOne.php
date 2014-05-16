@@ -2,18 +2,20 @@
 
 namespace CL\Luna\Rel;
 
-use CL\Luna\Mapper;
-use CL\Luna\Util\Arr;
-use CL\Luna\ModelQuery\RelJoinInterface;
+use CL\Util\Arr;
+use CL\Luna\AbstractDbRepo;
+use CL\LunaCore\Model\AbstractModel;
+use CL\LunaCore\Repo\AbstractLink;
+use CL\LunaCore\Rel\UpdateInterface;
+use CL\LunaCore\Rel\AbstractRelOne;
+use CL\Luna\Query\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
-use CL\Luna\Model\AbstractDbRepo;
-
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface, Mapper\RelUpdateInterface
+class HasOne extends AbstractRelOne implements RelJoinInterface, UpdateInterface
 {
     protected $foreignKey;
 
@@ -41,7 +43,8 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface, Mapper\R
 
     public function hasForeign(array $models)
     {
-        return ! empty(Arr::extractUnique($models, $this->foreignKey));
+        $keys = Arr::pluckUniqueProperty($models, $this->foreignKey);
+        return ! empty($keys);
     }
 
     public function loadForeign(array $models)
@@ -51,17 +54,17 @@ class HasOne extends Mapper\AbstractRelOne implements RelJoinInterface, Mapper\R
         return $store->findAll()
             ->where(
                 $this->getKey(),
-                Arr::extractUnique($models, $this->foreignKey)
+                Arr::pluckUniqueProperty($models, $this->foreignKey)
             )
             ->loadRaw();
     }
 
-    public function areLinked(Mapper\AbstractNode $model, Mapper\AbstractNode $foreign)
+    public function areLinked(AbstractModel $model, AbstractModel $foreign)
     {
         return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
     }
 
-    public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
+    public function update(AbstractModel $model, AbstractLink $link)
     {
         if ($link->isChanged())
         {

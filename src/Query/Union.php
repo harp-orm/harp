@@ -1,9 +1,8 @@
 <?php
 
-namespace CL\Luna\ModelQuery;
+namespace CL\Luna\Query;
 
-use CL\Luna\Mapper\AbstractDbRepo;
-use CL\Luna\Util\Arr;
+use CL\Luna\AbstractDbRepo;
 use CL\Atlas\Query;
 
 /**

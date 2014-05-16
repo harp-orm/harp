@@ -2,7 +2,7 @@
 
 namespace CL\Luna\MassAssign;
 
-use CL\Luna\Mapper\LinkOne;
+use CL\LunaCore\Repo\LinkOne;
 
 /*
  * @author     Ivan Kerin
@@ -23,7 +23,7 @@ class AssignLinkOne extends AbstractAssignLink
         $node = $this->loadNodeFromData($this->link->getRel(), $data) ?: $this->link->get();
         $this->link->set($node);
 
-        $assign = new AssignNode($node);
+        $assign = new AssignModel($node);
         $assign->execute($data);
     }
 }

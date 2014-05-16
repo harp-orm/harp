@@ -2,17 +2,20 @@
 
 namespace CL\Luna\Rel;
 
-use CL\Luna\Util\Arr;
-use CL\Luna\Mapper;
-use CL\Luna\Model\AbstractDbRepo;
-use Closure;
+use CL\Util\Arr;
+use CL\Luna\AbstractDbRepo;
+use CL\LunaCore\Model\AbstractModel;
+use CL\LunaCore\Repo\AbstractLink;
+use CL\LunaCore\Rel\UpdateInterface;
+use CL\LunaCore\Rel\AbstractRelOne;
+use CL\Atlas\Query\AbstractQuery;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsToPolymorphic extends Mapper\AbstractRelOne implements Mapper\RelUpdateInterface
+class BelongsToPolymorphic extends AbstractRelOne implements UpdateInterface
 {
     protected $key;
     protected $storeKey;
@@ -53,7 +56,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne implements Mapper\RelUp
 
         foreach ($groups as $modelClass => & $models) {
 
-            $keys = Arr::extractUnique($models, $this->key);
+            $keys = Arr::pluckUniqueProperty($models, $this->key);
             $store = (new $modelClass())->getRepo();
 
             if ($keys) {
@@ -66,7 +69,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne implements Mapper\RelUp
         return Arr::flatten($groups);
     }
 
-    public function areLinked(Mapper\AbstractNode $model, Mapper\AbstractNode $foreign)
+    public function areLinked(AbstractModel $model, AbstractModel $foreign)
     {
         return (
             $model->{$this->key} == $foreign->{$this->getForeignKey()}
@@ -74,7 +77,7 @@ class BelongsToPolymorphic extends Mapper\AbstractRelOne implements Mapper\RelUp
         );
     }
 
-    public function update(Mapper\AbstractNode $model, Mapper\AbstractLink $link)
+    public function update(AbstractModel $model, AbstractLink $link)
     {
         $model->{$this->key} = $link->get()->getId();
         $model->{$this->storeKey} = $link->get()->getRepo()->getName();

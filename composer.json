@@ -9,9 +9,17 @@
             "role": "Author"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/clippings/luna-core"
+        }
+    ],
     "require": {
         "php": ">=5.4.0",
         "psr/log": "~1.0",
+        "clippings/luna-core": "dev-master",
+        "clippings/util": "dev-master",
         "clippings/atlas": "dev-master",
         "clippings/carpo": "dev-master"
     },

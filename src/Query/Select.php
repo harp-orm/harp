@@ -1,11 +1,10 @@
 <?php
 
-namespace CL\Luna\ModelQuery;
+namespace CL\Luna\Query;
 
-use CL\Luna\Model\AbstractDbRepo;
-use CL\Luna\Mapper\AbstractNode;
-use CL\Luna\Mapper\NodeEvent;
-use CL\Luna\Util\Arr;
+use CL\Luna\AbstractDbRepo;
+use CL\LunaCore\Repo\ModelEvent;
+use CL\Util\Arr;
 use CL\Atlas\Query;
 use PDO;
 use PDOStatement;
@@ -36,8 +35,7 @@ class Select extends Query\Select {
     {
         foreach ($rels as $relName => $childRels) {
             $rel = $repo->getRel($relName);
-
-            $foreign = $repo->loadRel($rel, $models);
+            $foreign = $repo->loadRel($relName, $models);
 
             if ($childRels) {
                 self::loadRels($rel->getForeignRepo(), $foreign, $childRels);
@@ -102,7 +100,7 @@ class Select extends Query\Select {
 
         $models = $pdoStatement->fetchAll();
 
-        $this->getRepo()->dispatchAfterEvent($models, NodeEvent::LOAD);
+        $this->getRepo()->dispatchAfterEvent($models, ModelEvent::LOAD);
 
         return $models;
     }

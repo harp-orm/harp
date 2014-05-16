@@ -1,8 +1,8 @@
 <?php
 
-namespace CL\Luna\ModelQuery;
+namespace CL\Luna\Query;
 
-use CL\Luna\Model\AbstractDbRepo;
+use CL\Luna\AbstractDbRepo;
 
 /**
  * @author     Ivan Kerin

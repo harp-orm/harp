@@ -6,16 +6,14 @@ use CL\Util\Arr;
 use CL\Luna\AbstractDbRepo;
 use CL\LunaCore\Model\AbstractModel;
 use CL\LunaCore\Repo\AbstractLink;
-use CL\LunaCore\Rel\UpdateInterface;
 use CL\LunaCore\Rel\AbstractRelOne;
-use CL\Luna\Query\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasOne extends AbstractRelOne implements RelJoinInterface, UpdateInterface
+class HasOne extends AbstractRelOne implements DbRelInterface
 {
     protected $foreignKey;
 
@@ -41,21 +39,18 @@ class HasOne extends AbstractRelOne implements RelJoinInterface, UpdateInterface
         return $this->foreignRepo;
     }
 
-    public function hasForeign(array $models)
+    public function hasForeign(Models $models)
     {
-        $keys = Arr::pluckUniqueProperty($models, $this->foreignKey);
-        return ! empty($keys);
+        return ! $models->isEmptyProperty($this->foreignKey);
     }
 
-    public function loadForeign(array $models)
+    public function loadForeign(Models $models)
     {
-        $store = $this->getForeignRepo();
+        $keys = $models->pluckPropertyUnique($this->foreignKey);
 
-        return $store->findAll()
-            ->where(
-                $this->getKey(),
-                Arr::pluckUniqueProperty($models, $this->foreignKey)
-            )
+        return $this->getForeignRepo()
+            ->findAll()
+            ->where($this->getForeignKey(), $keys)
             ->loadRaw();
     }
 
@@ -64,21 +59,24 @@ class HasOne extends AbstractRelOne implements RelJoinInterface, UpdateInterface
         return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
     }
 
-    public function update(AbstractModel $model, AbstractLink $link)
+    public function update(AbstractModel $model, LinkOne $link)
     {
         if ($link->isChanged())
         {
             $link->get()->{$this->getForeignKey()} = $model->{$this->getKey()};
-            $link->getOriginal()->{$this->getForeignKey()} = NULL;
+            $link->getOriginal()->{$this->getForeignKey()} = null;
         }
     }
 
     public function joinRel(AbstractQuery $query, $parent)
     {
-        $columns = [$this->getForeignKey() => $this->getForeignRepo()->getPrimaryKey()];
+        $alias = $this->getName();
+        $condition = "ON $alias.{$this->getForeignKey()}. = $parent.{$this->getKey()}";
 
-        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignRepo());
+        if ($this->getForeignRepo()->getSoftDelete()) {
+            $condition .= "AND $alias.deletedAt IS NULL"
+        }
 
-        $query->joinAliased($this->getForeignTable(), $this->getName(), $condition);
+        $query->joinAliased($this->getForeignTable(), $alias, $condition);
     }
 }

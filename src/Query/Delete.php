@@ -2,73 +2,37 @@
 
 namespace CL\Luna\Query;
 
-use CL\Atlas\Query;
 use CL\Luna\AbstractDbRepo;
-use CL\Atlas\SQL\SQL;
-use CL\Util\Objects;
-use SplObjectStorage;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Delete extends Query\Delete implements SetInterface {
+class Delete extends \CL\Atlas\Query\Delete {
 
-    use ModelQueryTrait;
-    use SoftDeleteTrait;
+    use JoinRelTrait;
 
-    public function __construct(AbstractDbRepo $store)
+    protected $repo;
+
+    public function __construct(AbstractDbRepo $repo)
     {
-        $this
-            ->setRepo($store)
-            ->from($store->getTable());
+        $this->repo = $repo;
 
-        $this->setSoftDelete($store->getSoftDelete());
+        $this->from($repo->getTable());
+
+        parnet::__construct($repo->getDbInstance());
     }
 
-    public function execute()
+    public function getRepo()
     {
-        if ($this->getSoftDelete()) {
-            return $this->convertToSoftDelete()->execute();
-        } else {
-            return parent::execute();
-        }
+        return $this->repo;
     }
 
-    public function convertToSoftDelete()
+    public function models(Models $models)
     {
-        $store = $this->getRepo();
-        $query = (new Update($store));
-
-        if ($this->getOrder()) {
-            $query->setOrder($this->getOrder());
-        }
-
-        if ($this->getLimit()) {
-            $query->setLimit($this->getLimit());
-        }
-
-        if ($this->getJoin()) {
-            $query->setJoin($this->getJoin());
-        }
-
-        if ($this->getWhere()) {
-            $query->setWhere($this->getWhere());
-        }
-
-        $query
-            ->setTable($this->getTable() ?: $this->getFrom())
-            ->set([AbstractDbRepo::SOFT_DELETE_KEY => new SQL('CURRENT_TIMESTAMP')])
-            ->where($store->getTable().'.'.AbstractDbRepo::SOFT_DELETE_KEY, null);
-
-        return $query;
-    }
-
-    public function setModels(SplObjectStorage $models)
-    {
-        $ids = Objects::invoke($models, 'getId');
-        $this->whereKey($ids);
+        $ids = $models->pluckProperty($this->getRepo()->getPrimaryKey());
+        $this->whereKeys($ids);
 
         return $this;
     }

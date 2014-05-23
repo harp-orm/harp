@@ -6,11 +6,8 @@ use CL\Util\Arr;
 use CL\Util\Objects;
 use CL\Luna\AbstractDbRepo;
 use CL\LunaCore\Model\AbstractModel;
-use CL\LunaCore\Repo\AbstractLink;
-use CL\LunaCore\Rel\InsertInterface;
-use CL\LunaCore\Rel\DeleteInterface;
-use CL\LunaCore\Rel\AbstractRelMany;
-use CL\Luna\Query\RelJoinInterface;
+use CL\LunaCore\Model\Models;
+use CL\LunaCore\Repo\LinkMany;
 use CL\Atlas\Query\AbstractQuery;
 
 /**
@@ -18,7 +15,7 @@ use CL\Atlas\Query\AbstractQuery;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasManyThrough extends AbstractRelMany implements RelJoinInterface, InsertInterface, DeleteInterface
+class HasManyThrough extends AbstractRelMany implements DbRelInterface
 {
     protected $foreignKey;
     protected $through;
@@ -52,9 +49,9 @@ class HasManyThrough extends AbstractRelMany implements RelJoinInterface, Insert
         return $this->getName().'Key';
     }
 
-    public function hasForeign(array $models)
+    public function hasForeign(Models $models)
     {
-        return ! empty($models);
+        return $models->count() > 0;
     }
 
     public function getThroughTable()
@@ -62,19 +59,18 @@ class HasManyThrough extends AbstractRelMany implements RelJoinInterface, Insert
         return $this->getThroughRel()->getName();
     }
 
-    public function loadForeign(array $models)
+    public function loadForeign(Models $models)
     {
         $throughKey = $this->getThroughTable().'.'.$this->getThroughRel()->getForeignKey();
         $throughForeignKey = $this->getThroughTable().'.'.$this->key;
-        $store = $this->getForeignRepo();
+        $repo = $this->getForeignRepo();
 
-        $select = $store->findAll()
+        $keys = $models->pluckPropertyUnique($this->getRepo()->getPrimaryKey());
+
+        $select = $repo->findAll()
             ->column($throughKey, $this->getTHroughKey())
             ->joinRels($this->through)
-            ->where(
-                $throughForeignKey,
-                Arr::pluckUniqueProperty($models, $this->getRepo()->getPrimaryKey())
-            );
+            ->whereIn($throughForeignKey, $keys);
 
         return $select->loadRaw();
     }
@@ -86,23 +82,25 @@ class HasManyThrough extends AbstractRelMany implements RelJoinInterface, Insert
 
     public function joinRel(AbstractQuery $query, $parent)
     {
-        $columns = [$this->getForeignKey() => $this->foreignRepo->getPrimaryKey()];
+        $alias = $this->getName();
+        $condition = "ON $alias.{$this->getForeignKey()}. = $parent.{$this->getKey()}";
 
-        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->getForeignRepo());
+        if ($this->getForeignRepo()->getSoftDelete()) {
+            $condition .= "AND $alias.deletedAt IS NULL"
+        }
 
-        $query
-            ->joinAliased($this->getForeignTable(), $this->getName(), $condition);
+        $query->joinAliased($this->getForeignTable(), $alias, $condition);
     }
 
-    public function delete(AbstractModel $model, AbstractLink $link)
+    public function delete(AbstractModel $model, LinkMany $link)
     {
-        $removed = new SplObjectStorage();
+        $removed = new Models();
 
         foreach ($link->getRemoved() as $removed) {
             foreach ($model->{$this->through} as $item) {
                 if ($item->{$this->foreignKey} == $removed->getId()) {
                     $item->delete();
-                    $removed->attach($item);
+                    $removed->add($item);
                 }
             }
         }
@@ -110,23 +108,23 @@ class HasManyThrough extends AbstractRelMany implements RelJoinInterface, Insert
         return $removed;
     }
 
-    public function insert(AbstractModel $model, AbstractLink $link)
+    public function insert(AbstractModel $model, LinkMany $link)
     {
-        $inserted = new SplObjectStorage();
+        $inserted = new Models();
 
         if (count($link->getAdded()) > 0) {
             $throughRepo = $this->getThroughRel()->getForeignRepo();
-            $through = $item->{$this->foreignKey};
+            $through = $throughRepo->loadLink($model, $this->through);
 
             foreach ($link->getAdded() as $added) {
-                $item = $throughRepo->newInstance([
+                $item = $throughRepo->newModel([
                     $this->getThroughRel()->getForeignKey() => $model->getId(),
                     $this->foreignKey => $added->getId(),
                 ]);
 
                 $through->add($item);
 
-                $inserted->attach($item);
+                $inserted->add($item);
             }
         }
 

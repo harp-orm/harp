@@ -13,63 +13,37 @@ use SplObjectStorage;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Insert extends Query\Insert implements SetInterface {
+class Insert extends \CL\Atlas\Query\Insert {
 
-    use ModelQueryTrait;
+    use JoinRelTrait;
 
-    private $insertModels;
+    protected $repo;
 
     public function __construct(AbstractDbRepo $repo)
     {
-        $this
-            ->setRepo($repo)
-            ->into($repo->getTable());
+        $this->repo = $repo;
+        $this->into($repo->getTable());
+
+        parnet::__construct($repo->getDbInstance());
     }
 
-    public function setMultiple(array $values)
+    public function getRepo()
     {
-        $columns = $this->getRepo()->getFields()->getNames();
+        return $this->repo;
+    }
+
+    public function models(Models $models)
+    {
+        $columns = $this->getRepo()->getFields();
+        $columnKeys = array_flip($columns);
 
         $this->columns($columns);
 
-        $defaultValues = $this->getRepo()->getFieldDefaults();
-
-        foreach ($values as $value) {
-            $this->values(array_values(array_merge($defaultValues, $value)));
+        foreach ($models as $model) {
+            $values = array_intersect_key($model->getProperties(), $columnKeys);
+            $this->values(array_values($values));
         }
 
         return $this;
-    }
-
-    public function setModels(SplObjectStorage $models)
-    {
-        $this->insertModels = $models;
-        $changes = Objects::invoke($models, 'getChanges');
-
-        $this->setMultiple($changes);
-
-        return $this;
-    }
-
-    public function execute()
-    {
-        $result = parent::execute();
-
-        if ($this->insertModels) {
-            $lastInsertId = $this->getDb()->lastInsertId();
-
-            foreach ($this->insertModels as $model) {
-                $model
-                    ->setId($lastInsertId)
-                    ->resetOriginals()
-                    ->setState(AbstractModel::PERSISTED);
-
-                $lastInsertId += 1;
-            }
-
-            $this->insertModels = NULL;
-        }
-
-        return $result;
     }
 }

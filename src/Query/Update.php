@@ -2,55 +2,43 @@
 
 namespace CL\Luna\Query;
 
-use CL\Atlas\Query;
 use CL\Luna\AbstractDbRepo;
-use CL\Util\Objects;
-use CL\Util\Arr;
-use SplObjectStorage;
+use CL\LunaCore\Model\Models;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Update extends Query\Update implements SetInterface {
+class Update extends \CL\Atlas\Query\Update {
 
-    use ModelQueryTrait;
-    use SoftDeleteTrait;
+    use JoinRelTrait;
 
-    public function __construct(AbstractDbRepo $store)
+    public function __construct(AbstractDbRepo $repo)
     {
-        $this
-            ->setRepo($store)
-            ->table($store->getTable());
+        $this->repo = $repo;
+        $this->table($repo->getTable());
 
-        $this->setSoftDelete($this->getRepo()->getSoftDelete());
+        parent::__construct($repo->getDbInstance());
     }
 
-    public function setModels(SplObjectStorage $models)
+    public function getRepo()
     {
-        if ($models->count() > 1) {
-            $models = Objects::index($models, $this->getRepo()->getPrimaryKey());
-            $changes = Arr::invoke($models, 'getChanges');
+        return $this->repo;
+    }
 
-            $this
-                ->setMultiple($changes, $this->getRepo()->getPrimaryKey())
-                ->where($this->getRepo()->getPrimaryKey(), array_keys($changes));
-        } else {
-            $models->rewind();
-            $model = $models->current();
-            $this
-                ->set($model->getChanges())
-                ->whereKey($model->getId());
+    public function models(Models $models)
+    {
+        $changes = array();
+
+        foreach ($models as $model) {
+            $changes[$model->getId()] = $model->getChanges();
         }
 
+        $update
+            ->setMultiple($changes, $this->repo->getPrimaryKey())
+            ->whereKey(array_keys($changes));
+
         return $this;
-    }
-
-    public function execute()
-    {
-        $this->applySoftDelete();
-
-        return parent::execute();
     }
 }

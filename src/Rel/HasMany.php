@@ -6,9 +6,7 @@ use CL\Util\Arr;
 use CL\Luna\AbstractDbRepo;
 use CL\LunaCore\Model\AbstractModel;
 use CL\LunaCore\Repo\AbstractLink;
-use CL\LunaCore\Rel\UpdateInterface;
 use CL\LunaCore\Rel\AbstractRelMany;
-use CL\Luna\Query\RelJoinInterface;
 use CL\Atlas\Query\AbstractQuery;
 
 /**
@@ -16,7 +14,7 @@ use CL\Atlas\Query\AbstractQuery;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasMany extends AbstractRelMany implements RelJoinInterface, UpdateInterface
+class HasMany extends AbstractRelMany implements DbRelInterface
 {
     protected $foreignKey;
 
@@ -37,20 +35,18 @@ class HasMany extends AbstractRelMany implements RelJoinInterface, UpdateInterfa
         return $this->getRepo()->getPrimaryKey();
     }
 
-    public function hasForeign(array $models)
+    public function hasForeign(Models $models)
     {
-        $keys = Arr::pluckUniqueProperty($models, $this->getKey());
-        return ! empty($keys);
+        return ! $models->isEmptyProperty($this->getKey());
     }
 
     public function loadForeign(array $models)
     {
+        $keys = $models->pluckPropertyUnique($this->getKey());
+
         return $this->getForeignRepo()
             ->findAll()
-            ->where(
-                $this->foreignKey,
-                Arr::pluckUniqueProperty($models, $this->getKey())
-            )
+            ->whereIn($this->foreignKey, $keys)
             ->loadRaw();
     }
 
@@ -61,14 +57,17 @@ class HasMany extends AbstractRelMany implements RelJoinInterface, UpdateInterfa
 
     public function joinRel(AbstractQuery $query, $parent)
     {
-        $columns = [$this->getForeignKey() => $this->foreignRepo->getPrimaryKey()];
+        $alias = $this->getName();
+        $condition = "ON $alias.{$this->getForeignKey()}. = $parent.{$this->getKey()}";
 
-        $condition = new RelJoinCondition($parent, $this->getName(), $columns, $this->foreignRepo);
+        if ($this->getForeignRepo()->getSoftDelete()) {
+            $condition .= "AND $alias.deletedAt IS NULL"
+        }
 
-        $query->joinAliased($this->foreignRepo->getTable(), $this->getName(), $condition);
+        $query->joinAliased($this->getForeignTable(), $alias, $condition);
     }
 
-    public function update(AbstractModel $model, AbstractLink $link)
+    public function update(AbstractModel $model, LinkMany $link)
     {
         foreach ($link->getAdded() as $added) {
             $added->{$this->getForeignKey()} = $model->{$this->getKey()};

@@ -2,54 +2,32 @@
 
 namespace CL\Luna;
 
-use CL\Luna\Query;
 use CL\LunaCore\Repo\AbstractRepo;
-use SplObjectStorage;
+use CL\LunaCore\Model\Models;
+use CL\Luna\Rel\DbRelInterface;
+use CL\Luna\Query;
+use CL\Atlas\DB;
 
 /*
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-abstract class AbstractDbRepo extends AbstractRepo
+abstract class AbstractDbRepo extends AbstractSaveRepo
 {
-    const SOFT_DELETE_KEY = 'deletedAt';
-
     private $table;
-    private $softDelete = false;
     private $db = 'default';
-    private $primaryKey = 'id';
-    private $fields;
-    private $fieldDefaults;
-    private $asserts;
-    private $polymorphic;
+    private $fields = array();
 
-    public function getPolymorphic()
+    public function __construct($modelClass)
     {
-        $this->initializeOnce();
+        parent::__construct($modelClass);
 
-        return $this->polymorphic;
-    }
+        foreach ($this->getModelReflection()->getProperties() => $property) {
+            $this->fields []= $property->getName();
+        }
 
-    public function setPolymorphic($polymorphic)
-    {
-        $this->polymorphic = (bool) $polymorphic;
-
-        return $this;
-    }
-
-    public function getSoftDelete()
-    {
-        $this->initializeOnce();
-
-        return $this->softDelete;
-    }
-
-    public function setSoftDelete($softDelete)
-    {
-        $this->softDelete = $softDelete;
-
-        return $this;
+        $this->table = $this->getModelReflection()->getShortName();
     }
 
     public function getTable()
@@ -80,18 +58,9 @@ abstract class AbstractDbRepo extends AbstractRepo
         return $this;
     }
 
-    public function getFieldNames()
+    public function getDbInstance()
     {
-        $this->initializeOnce();
-
-        return array_keys($this->fields->all());
-    }
-
-    public function getFieldDefaults()
-    {
-        $this->initializeOnce();
-
-        return $this->fieldDefaults;
+        return DB::get($this->getDb());
     }
 
     public function getFields()
@@ -103,77 +72,107 @@ abstract class AbstractDbRepo extends AbstractRepo
 
     public function setFields(array $items)
     {
-        $this->getFields()->set($items);
+        $this->fields = $items;
 
         return $this;
     }
 
-    public function getField($name)
+    /**
+     * @param DbRelInterface $rel
+     */
+    public function addRel(DbRelInterface $rel)
     {
-        return $this->getFields()->get($name);
+        return parent::addRel($rel);
     }
 
-    public function selectWithId($key)
+    /**
+     * @param DbRelInterface[]
+     */
+    public function addRels(array $rels)
     {
-        return $this->findAll()->whereKey($key)->loadFirst();
+        return parent::addRels($rels);
+    }
+
+    /**
+     * @param  string $name
+     * @return DbRelInterface
+     */
+    public function getRel($name)
+    {
+        return parent::getRel($name);
+    }
+
+    /**
+     * @param  string $name
+     * @return DbRelInterface
+     */
+    public function getRelOrError($name)
+    {
+        return parent::getRelOrError($name);
     }
 
     public function findAll()
     {
-        return new Query\Select($this);
+        return new Save\Find($this);
+    }
+
+    public function selectAll()
+    {
+        return new Save\Select($this);
     }
 
     public function deleteAll()
     {
-        return new Query\Delete($this);
+        return new Save\Delete($this);
     }
 
     public function updateAll()
     {
-        return new Query\Update($this);
+        return new Save\Update($this);
     }
 
     public function insertAll()
     {
-        return new Query\Insert($this);
+        return new Save\Insert($this);
     }
 
-    public function update(SplObjectStorage $models)
+    public function update(Models $models)
     {
-        return $this->updateAll()
-            ->setModels($models)
+        $update = $this->updateAll();
+
+        if ($models->count() > 1) {
+            $update
+                ->models($models);
+        } else {
+            $model = $models->getFirst();
+            $update
+                ->set($model->getChanges())
+                ->whereKey($model->getId());
+        }
+
+        $update->execute();
+    }
+
+    public function delete(Models $models)
+    {
+        $this
+            ->deleteAll()
+            ->models($models)
             ->execute();
     }
 
-    public function delete(SplObjectStorage $models)
+    public function insert(Models $models)
     {
-        return $this->deleteAll()
-            ->setModels($models)
+        $this
+            ->insertAll()
+            ->models($models)
             ->execute();
-    }
 
-    public function insert(SplObjectStorage $models)
-    {
-        return $this->insertAll()
-            ->setModels($models)
-            ->execute();
-    }
+        $lastInsertId = $this->getDbInstance()->lastInsertId();
 
-    public function __construct($modelClass)
-    {
-        parent::__construct($modelClass);
-
-        $this->fields = new Fields();
-        $this->table = $this->getModelReflection()->getShortName();
-    }
-
-    public function afterInitialize()
-    {
-        $allDefaults = $this->getModelReflection()->getDefaultProperties();
-
-        $this->fieldDefaults = array_intersect_key(
-            array_replace($this->fields->all(), $allDefaults),
-            $this->fields->all()
-        );
+        foreach ($models as $model) {
+            $model->setId($lastInsertId);
+            $lastInsertId += 1;
+        }
     }
 }

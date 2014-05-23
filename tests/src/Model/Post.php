@@ -26,7 +26,7 @@ class Post extends AbstractDbModel {
     public $updatedAt;
     public $publishedAt;
     public $userId;
-    public $polymorphicClass;
+    public $class;
 
     public function getUser()
     {

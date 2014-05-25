@@ -3,6 +3,7 @@
 namespace CL\Luna\Query;
 
 use CL\Luna\AbstractDbRepo;
+use CL\LunaCore\Model\Models;
 
 /**
  * @author     Ivan Kerin
@@ -21,7 +22,7 @@ class Delete extends \CL\Atlas\Query\Delete {
 
         $this->from($repo->getTable());
 
-        parnet::__construct($repo->getDbInstance());
+        parent::__construct($repo->getDbInstance());
     }
 
     public function getRepo()
@@ -31,8 +32,9 @@ class Delete extends \CL\Atlas\Query\Delete {
 
     public function models(Models $models)
     {
-        $ids = $models->pluckProperty($this->getRepo()->getPrimaryKey());
-        $this->whereKeys($ids);
+        $key = $this->getRepo()->getPrimaryKey();
+        $ids = $models->pluckProperty($key);
+        $this->whereIn($key, $ids);
 
         return $this;
     }

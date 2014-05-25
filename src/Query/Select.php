@@ -3,6 +3,7 @@
 namespace CL\Luna\Query;
 
 use CL\Luna\AbstractDbRepo;
+use CL\LunaCore\Model\Models;
 
 /**
  * @author     Ivan Kerin

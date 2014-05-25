@@ -31,11 +31,7 @@ class Tag extends AbstractDbRepo {
     public function initialize()
     {
         $this
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('name'),
-            ])
-            ->setRels([
+            ->addRels([
                 new Rel\HasMany('postTags', $this, PostTag::get()),
                 new Rel\HasManyThrough('posts', $this, Post::get(), 'postTags'),
             ])

@@ -2,7 +2,7 @@
 
 namespace CL\Luna\Test;
 
-use CL\Luna\MassAssign\Data;
+use CL\MassAssign\Data;
 use CL\Luna\Test\Repo;
 
 class TestTest extends AbstractTestCase {
@@ -35,29 +35,29 @@ class TestTest extends AbstractTestCase {
 
         $data->assignTo($user3);
 
-        Repo\User::get()->persist($user3);
+        Repo\User::get()->save($user3);
 
         $this->assertEquals(
             [
                 'SELECT User.* FROM User WHERE (User.id = 3) AND (User.deletedAt IS NULL) LIMIT 1',
-                'SELECT Post.polymorphicClass, Post.* FROM Post WHERE (userId IN (3))',
+                'SELECT Post.class, Post.* FROM Post WHERE (userId IN ("3"))',
                 'SELECT Address.* FROM Address WHERE (Address.id = 1) LIMIT 1',
-                'INSERT INTO Post (id, title, body, price, tags, createdAt, updatedAt, publishedAt, userId, polymorphicClass) VALUES (NULL, "my title", "my body", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Model\Post"), (NULL, "my title 2", "my body 2", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Model\Post")',
-                'UPDATE User SET name = "new name!!", addressId = 1 WHERE (User.id = 3) AND (User.deletedAt IS NULL)',
-                'UPDATE Post SET userId = CASE id WHEN 5 THEN 3 WHEN 6 THEN 3 ELSE userId END WHERE (id IN (5, 6))',
-                'UPDATE Post SET userId = NULL WHERE (Post.id = 4)',
-                'UPDATE Address SET zipCode = 2222 WHERE (Address.id = 1)',
+                'INSERT INTO Post (id, title, body, price, tags, createdAt, updatedAt, publishedAt, userId, class) VALUES (NULL, "my title", "my body", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Model\Post"), (NULL, "my title 2", "my body 2", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Model\Post")',
+                'UPDATE User SET name = "new name!!", addressId = "1" WHERE (id = "3")',
+                'UPDATE Post SET userId = CASE id WHEN 5 THEN "3" WHEN 6 THEN "3" ELSE userId END WHERE (id IN (5, 6))',
+                'UPDATE Post SET userId = NULL WHERE (id = "4")',
+                'UPDATE Address SET zipCode = 2222 WHERE (id = "1")',
             ],
             $this->getLogger()->getEntries()
         );
     }
 
-    public function testPolymorphic()
+    public function testInherited()
     {
         $post = Repo\Post::get()->find(4);
 
         $this->assertInstanceOf('CL\Luna\Test\Model\BlogPost', $post);
-        $this->assertTrue($post->isPublished);
+        $this->assertEquals(true, $post->isPublished);
 
         $this->assertNotSame(Repo\Post::get(), Repo\BlogPost::get());
     }
@@ -76,10 +76,10 @@ class TestTest extends AbstractTestCase {
 
         $this->assertEquals(
             [
-                'SELECT Post.polymorphicClass, Post.* FROM Post WHERE (Post.id = 1) LIMIT 1',
+                'SELECT Post.class, Post.* FROM Post WHERE (Post.id = 1) LIMIT 1',
                 'SELECT Tag.* FROM Tag WHERE (Tag.id = 1) LIMIT 1',
                 'SELECT Tag.* FROM Tag WHERE (Tag.id = 2) LIMIT 1',
-                'SELECT Tag.*, postTags.postId AS tagsKey FROM Tag JOIN PostTag AS postTags ON postTags.tagId = Tag.id WHERE (postTags.PostId IN (1))',
+                'SELECT Tag.*, postTags.postId AS tagsKey FROM Tag JOIN PostTag AS postTags ON postTags.tagId = Tag.id WHERE (postTags.PostId IN ("1"))',
             ],
             $this->getLogger()->getEntries()
         );
@@ -95,7 +95,7 @@ class TestTest extends AbstractTestCase {
 
         $this->assertEquals(
             [
-                'SELECT Post.* FROM Post WHERE (Post.id IN (1, 2, 3))',
+                'SELECT Post.* FROM Post WHERE (id IN (1, 2, 3))',
             ],
             $this->getLogger()->getEntries()
         );
@@ -103,7 +103,7 @@ class TestTest extends AbstractTestCase {
 
     public function testLoadWith()
     {
-        $posts = Repo\Post::get()->findAll()->loadWith(['user' => ['address', 'location']]);
+        $posts = Repo\Post::get()->findAll()->loadWith(['user' => ['address', 'location']])->toArray();
 
         $user1 = $posts[0]->getUser();
         $user2 = $posts[1]->getUser();
@@ -116,11 +116,11 @@ class TestTest extends AbstractTestCase {
 
         $this->assertEquals(
             [
-                'SELECT Post.polymorphicClass, Post.* FROM Post',
-                'SELECT User.* FROM User WHERE (id IN (1, 4, 5, 3)) AND (User.deletedAt IS NULL)',
-                'SELECT Address.* FROM Address WHERE (id IN (1))',
-                'SELECT City.* FROM City WHERE (id IN (1))',
-                'SELECT Country.* FROM Country WHERE (id IN (1, 2))',
+                'SELECT Post.class, Post.* FROM Post',
+                'SELECT User.* FROM User WHERE (id IN ("1", "4", "5", "3")) AND (User.deletedAt IS NULL)',
+                'SELECT Address.* FROM Address WHERE (id IN ("1"))',
+                'SELECT City.* FROM City WHERE (id IN ("1"))',
+                'SELECT Country.* FROM Country WHERE (id IN ("1", "2"))',
             ],
             $this->getLogger()->getEntries()
         );
@@ -128,17 +128,18 @@ class TestTest extends AbstractTestCase {
         $this->assertSame($address1, $address2);
         $this->assertEquals(
             [
-                'id' => 1,
+                'id' => '1',
                 'name' => "User 1",
                 'password' => null,
-                'addressId' => 1,
+                'addressId' => '1',
                 'parentId' => null,
-                'isBlocked' => false,
+                'isBlocked' => '0',
                 'deletedAt' => null,
-                'locationId' => 1,
+                'locationId' => '1',
                 'locationClass' => 'CL\Luna\Test\Model\City',
+                'test' => null,
             ],
-            $user1->getFieldValues()
+            $user1->getProperties()
         );
 
         $this->assertEquals(
@@ -146,14 +147,15 @@ class TestTest extends AbstractTestCase {
                 'id' => 4,
                 'name' => "User 4",
                 'password' => null,
-                'addressId' => 1,
+                'addressId' => '1',
                 'parentId' => null,
-                'isBlocked' => false,
+                'isBlocked' => null,
                 'deletedAt' => null,
-                'locationId' => 2,
+                'locationId' => '2',
                 'locationClass' => 'CL\Luna\Test\Model\Country',
+                'test' => null,
             ],
-            $user2->getFieldValues()
+            $user2->getProperties()
         );
     }
 }

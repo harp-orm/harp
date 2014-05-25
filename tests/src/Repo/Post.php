@@ -31,25 +31,12 @@ class Post extends AbstractDbRepo {
     public function initialize()
     {
         $this
-            ->setPolymorphic(true)
+            ->setInherited(true)
 
-            ->setRels([
+            ->addRels([
                 new Rel\BelongsTo('user', $this, User::get()),
                 new Rel\HasMany('postTags', $this, PostTag::get()),
                 new Rel\HasManyThrough('tags', $this, Tag::get(), 'postTags'),
-            ])
-
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('title'),
-                new Field\Text('body'),
-                new Field\Decimal('price'),
-                new Field\Serialized('tags', Field\Serialized::CSV),
-                new Field\Timestamp('createdAt'),
-                new Field\Timestamp('updatedAt'),
-                new Field\DateTime('publishedAt'),
-                new Field\Integer('userId'),
-                new Field\String('polymorphicClass'),
             ])
 
             ->setAsserts([

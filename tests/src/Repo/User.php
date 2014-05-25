@@ -35,18 +35,7 @@ class User extends AbstractDbRepo {
         $this
             ->setSoftDelete(true)
 
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('name'),
-                new Field\Password('password'),
-                new Field\Boolean('isBlocked'),
-                new Field\Integer('addressId'),
-                new Field\Integer('locationId'),
-                new Field\String('locationClass'),
-                new Field\Timestamp('deletedAt'),
-            ])
-
-            ->setRels([
+            ->addRels([
                 new Rel\BelongsTo('address', $this, Address::get()),
                 new Rel\BelongsToPolymorphic('location', $this, City::get()),
                 new Rel\HasMany('posts', $this, Post::get()),

@@ -35,9 +35,11 @@ class Update extends \CL\Atlas\Query\Update {
             $changes[$model->getId()] = $model->getChanges();
         }
 
-        $update
-            ->setMultiple($changes, $this->repo->getPrimaryKey())
-            ->whereKey(array_keys($changes));
+        $key = $this->repo->getPrimaryKey();
+
+        $this
+            ->setMultiple($changes, $key)
+            ->whereIn($key, array_keys($changes));
 
         return $this;
     }

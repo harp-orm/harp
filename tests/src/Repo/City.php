@@ -31,16 +31,11 @@ class City extends AbstractDbRepo {
     public function initialize()
     {
         $this
-            ->setRels([
+            ->addRels([
                 new Rel\HasMany('users', $this, User::get()),
             ])
             ->setAsserts([
                 new Assert\Present('location'),
-            ])
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('zipCode'),
-                new Field\String('location'),
             ]);
     }
 }

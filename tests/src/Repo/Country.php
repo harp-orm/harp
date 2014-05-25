@@ -30,13 +30,6 @@ class Country extends AbstractDbRepo {
 
     public function initialize()
     {
-        $this
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('name'),
-            ])
-            ->setAsserts([
-                new Assert\Present('name'),
-            ]);
+
     }
 }

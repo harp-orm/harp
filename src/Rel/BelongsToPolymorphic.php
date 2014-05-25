@@ -5,8 +5,10 @@ namespace CL\Luna\Rel;
 use CL\Util\Arr;
 use CL\Luna\AbstractDbRepo;
 use CL\LunaCore\Model\AbstractModel;
+use CL\LunaCore\Model\Models;
 use CL\LunaCore\Repo\LinkOne;
 use CL\LunaCore\Rel\AbstractRelOne;
+use CL\LunaCore\Rel\UpdateOneInterface;
 use CL\Atlas\Query\AbstractQuery;
 use BadMethodCallException;
 
@@ -15,15 +17,15 @@ use BadMethodCallException;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsToPolymorphic extends AbstractRelOne implements DbRelInterface
+class BelongsToPolymorphic extends AbstractRelOne implements DbRelInterface, UpdateOneInterface
 {
     protected $key;
-    protected $repoKey;
+    protected $classKey;
 
     public function __construct($name, AbstractDbRepo $store, AbstractDbRepo $defaultForeignRepo, array $options = array())
     {
         $this->key = $name.'Id';
-        $this->repoKey = $name.'Repo';
+        $this->classKey = $name.'Class';
 
         parent::__construct($name, $store, $defaultForeignRepo, $options);
     }
@@ -33,9 +35,9 @@ class BelongsToPolymorphic extends AbstractRelOne implements DbRelInterface
         return $this->key;
     }
 
-    public function getRepoKey()
+    public function getClassKey()
     {
-        return $this->repoKey;
+        return $this->classKey;
     }
 
     public function getForeignKey()
@@ -43,25 +45,26 @@ class BelongsToPolymorphic extends AbstractRelOne implements DbRelInterface
         return $this->getRepo()->getPrimaryKey();
     }
 
-    public function hasForeign(array $models)
+    public function hasForeign(Models $models)
     {
         return true;
     }
 
-    public function loadForeign(Models $models)
+    public function loadForeign(Models $models, $flags = null)
     {
         $groups = Arr::groupBy($models->toArray(), function($model){
-            return $model->{$this->repoKey};
+            return $model->{$this->classKey};
         });
 
-        foreach ($groups as $repoClass => & $models) {
+        foreach ($groups as $modelClass => & $models) {
 
             $keys = Arr::pluckUniqueProperty($models, $this->key);
+            $repo = (new $modelClass())->getRepo();
 
             if ($keys) {
-                $models = $repoClass::get()->findAll()
-                    ->where($this->getForeignKey(), $keys)
-                    ->loadRaw();
+                $models = $repo->findAll()
+                    ->whereIn($this->getForeignKey(), $keys)
+                    ->loadRaw($flags);
             }
         }
 
@@ -72,14 +75,14 @@ class BelongsToPolymorphic extends AbstractRelOne implements DbRelInterface
     {
         return (
             $model->{$this->key} == $foreign->{$this->getForeignKey()}
-            and $model->{$this->repoKey} == get_class($foreign->getRepo())
+            and $model->{$this->classKey} == get_class($foreign->getRepo())
         );
     }
 
     public function update(AbstractModel $model, LinkOne $link)
     {
         $model->{$this->key} = $link->get()->getId();
-        $model->{$this->repoKey} = get_class($link->get()->getRepo());
+        $model->{$this->classKey} = get_class($link->get()->getRepo());
     }
 
     public function joinRel(AbstractQuery $query, $parent)

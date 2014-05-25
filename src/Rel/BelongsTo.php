@@ -7,6 +7,7 @@ use CL\LunaCore\Model\AbstractModel;
 use CL\LunaCore\Model\Models;
 use CL\LunaCore\Repo\LinkOne;
 use CL\LunaCore\Rel\AbstractRelOne;
+use CL\LunaCore\Rel\UpdateOneInterface;
 use CL\Atlas\Query\AbstractQuery;
 
 /**
@@ -14,7 +15,7 @@ use CL\Atlas\Query\AbstractQuery;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsTo extends AbstractRelOne implements DbRelInterface
+class BelongsTo extends AbstractRelOne implements DbRelInterface, UpdateOneInterface
 {
     protected $key;
 
@@ -30,14 +31,14 @@ class BelongsTo extends AbstractRelOne implements DbRelInterface
         return ! $models->isEmptyProperty($this->key);
     }
 
-    public function loadForeign(Models $models)
+    public function loadForeign(Models $models, $flags = null)
     {
         $keys = $models->pluckPropertyUnique($this->key);
 
         return $this->getForeignRepo()
             ->findAll()
-            ->where($this->getForeignKey(), $keys)
-            ->loadRaw();
+            ->whereIn($this->getForeignKey(), $keys)
+            ->loadRaw($flags);
     }
 
     public function areLinked(AbstractModel $model, AbstractModel $foreign)
@@ -63,10 +64,10 @@ class BelongsTo extends AbstractRelOne implements DbRelInterface
     public function joinRel(AbstractQuery $query, $parent)
     {
         $alias = $this->getName();
-        $condition = "ON $alias.{$this->getForeignKey()}. = $parent.{$this->getKey()}";
+        $condition = "ON $alias.{$this->getForeignKey()} = $parent.{$this->getKey()}";
 
         if ($this->getForeignRepo()->getSoftDelete()) {
-            $condition .= "AND $alias.deletedAt IS NULL"
+            $condition .= " AND $alias.deletedAt IS NULL";
         }
 
         $query->joinAliased($this->getForeignTable(), $alias, $condition);

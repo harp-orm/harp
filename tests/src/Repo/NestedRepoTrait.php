@@ -13,8 +13,6 @@ trait NestedRepoTrait {
 
     public function initializeNestedRepo()
     {
-        $this
-            ->getFields()
-                ->add(new Field\Integer('parentId'));
+        $this;
     }
 }

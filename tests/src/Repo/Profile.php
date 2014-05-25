@@ -31,13 +31,7 @@ class Profile extends AbstractDbRepo {
     public function initialize()
     {
         $this
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\String('firstName'),
-                new Field\String('lastName'),
-                new Field\Integer('userId'),
-            ])
-            ->setRels([
+            ->addRels([
                 new Rel\BelongsTo('user', $this, User::get()),
             ])
             ->setAsserts([

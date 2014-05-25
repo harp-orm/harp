@@ -2,7 +2,7 @@
 
 namespace CL\Luna;
 
-use CL\LunaCore\Repo\AbstractRepo;
+use CL\LunaCore\Save\AbstractSaveRepo;
 use CL\LunaCore\Model\Models;
 use CL\Luna\Rel\DbRelInterface;
 use CL\Luna\Query;
@@ -23,7 +23,9 @@ abstract class AbstractDbRepo extends AbstractSaveRepo
     {
         parent::__construct($modelClass);
 
-        foreach ($this->getModelReflection()->getProperties() => $property) {
+        $properties = $this->getModelReflection()->getProperties();
+
+        foreach ($properties as $property) {
             $this->fields []= $property->getName();
         }
 
@@ -78,22 +80,6 @@ abstract class AbstractDbRepo extends AbstractSaveRepo
     }
 
     /**
-     * @param DbRelInterface $rel
-     */
-    public function addRel(DbRelInterface $rel)
-    {
-        return parent::addRel($rel);
-    }
-
-    /**
-     * @param DbRelInterface[]
-     */
-    public function addRels(array $rels)
-    {
-        return parent::addRels($rels);
-    }
-
-    /**
      * @param  string $name
      * @return DbRelInterface
      */
@@ -113,27 +99,27 @@ abstract class AbstractDbRepo extends AbstractSaveRepo
 
     public function findAll()
     {
-        return new Save\Find($this);
+        return new Find($this);
     }
 
     public function selectAll()
     {
-        return new Save\Select($this);
+        return new Query\Select($this);
     }
 
     public function deleteAll()
     {
-        return new Save\Delete($this);
+        return new Query\Delete($this);
     }
 
     public function updateAll()
     {
-        return new Save\Update($this);
+        return new Query\Update($this);
     }
 
     public function insertAll()
     {
-        return new Save\Insert($this);
+        return new Query\Insert($this);
     }
 
     public function update(Models $models)
@@ -147,7 +133,7 @@ abstract class AbstractDbRepo extends AbstractSaveRepo
             $model = $models->getFirst();
             $update
                 ->set($model->getChanges())
-                ->whereKey($model->getId());
+                ->where($this->getPrimaryKey(), $model->getId());
         }
 
         $update->execute();

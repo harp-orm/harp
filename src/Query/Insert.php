@@ -5,6 +5,7 @@ namespace CL\Luna\Query;
 use CL\Atlas\Query;
 use CL\Luna\AbstractDbRepo;
 use CL\LunaCore\Model\AbstractModel;
+use CL\LunaCore\Model\Models;
 use CL\Util\Objects;
 use SplObjectStorage;
 
@@ -24,7 +25,7 @@ class Insert extends \CL\Atlas\Query\Insert {
         $this->repo = $repo;
         $this->into($repo->getTable());
 
-        parnet::__construct($repo->getDbInstance());
+        parent::__construct($repo->getDbInstance());
     }
 
     public function getRepo()

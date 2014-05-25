@@ -5,13 +5,14 @@ namespace CL\Luna\Rel;
 use CL\Util\Objects;
 use CL\LunaCore\Model\AbstractModel;
 use CL\LunaCore\Repo\LinkMany;
+use CL\LunaCore\Rel\DeleteManyInterface;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasManyExclusive extends HasMany
+class HasManyExclusive extends HasMany implements DeleteManyInterface
 {
     public function delete(AbstractModel $model, LinkMany $link)
     {

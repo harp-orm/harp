@@ -30,10 +30,7 @@ class BlogPost extends Post {
         parent::initialize();
 
         $this
-            ->setTable('Post')
-            ->setFields([
-                new Field\Boolean('isPublished'),
-            ]);
+            ->setTable('Post');
     }
 
 }

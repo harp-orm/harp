@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "072c2e442ea27caa9fffcaeca0a8e094",
+    "hash": "e7e7892f2ab5fe5cd9c2e79cbfb1858c",
     "packages": [
         {
             "name": "clippings/atlas",
@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/atlas.git",
-                "reference": "54c669524df806c981194db4e1b51964263df005"
+                "reference": "22ea02fc547336a51f9733c9ccc73508b4517125"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/atlas/zipball/54c669524df806c981194db4e1b51964263df005",
-                "reference": "54c669524df806c981194db4e1b51964263df005",
+                "url": "https://api.github.com/repos/clippings/atlas/zipball/22ea02fc547336a51f9733c9ccc73508b4517125",
+                "reference": "22ea02fc547336a51f9733c9ccc73508b4517125",
                 "shasum": ""
             },
             "require": {
@@ -51,7 +51,7 @@
                 }
             ],
             "description": "SQL Builder for PDO",
-            "time": "2014-05-10 14:00:03"
+            "time": "2014-05-22 11:08:27"
         },
         {
             "name": "clippings/carpo",
@@ -94,12 +94,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/luna-core.git",
-                "reference": "15de4cc293f8de45425ffe49db51bd7807d51d18"
+                "reference": "d6a3f86ea13974da632c2d2819db21c43ce45544"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/luna-core/zipball/15de4cc293f8de45425ffe49db51bd7807d51d18",
-                "reference": "15de4cc293f8de45425ffe49db51bd7807d51d18",
+                "url": "https://api.github.com/repos/clippings/luna-core/zipball/d6a3f86ea13974da632c2d2819db21c43ce45544",
+                "reference": "d6a3f86ea13974da632c2d2819db21c43ce45544",
                 "shasum": ""
             },
             "require": {
@@ -131,7 +131,55 @@
                 "source": "https://github.com/clippings/luna-core/tree/master",
                 "issues": "https://github.com/clippings/luna-core/issues"
             },
-            "time": "2014-05-16 09:55:23"
+            "time": "2014-05-23 15:44:26"
+        },
+        {
+            "name": "clippings/mass-assign",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/clippings/mass-assign.git",
+                "reference": "bcc1eaa8b0991fd8d1298c32b7978217f497e7be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/clippings/mass-assign/zipball/bcc1eaa8b0991fd8d1298c32b7978217f497e7be",
+                "reference": "bcc1eaa8b0991fd8d1298c32b7978217f497e7be",
+                "shasum": ""
+            },
+            "require": {
+                "clippings/carpo": "dev-master",
+                "clippings/luna-core": "dev-master",
+                "clippings/util": "dev-master",
+                "php": ">=5.4.0",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "clippings/env-backup": "~0.2.5",
+                "clippings/luna-json-store": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CL\\MassAssign\\": "src/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Kerin",
+                    "email": "ikerin@gmail.com",
+                    "role": "Author"
+                }
+            ],
+            "description": "Luna extension to allow safe mass assignment of models",
+            "support": {
+                "source": "https://github.com/clippings/mass-assign/tree/master",
+                "issues": "https://github.com/clippings/mass-assign/issues"
+            },
+            "time": "2014-05-23 15:11:23"
         },
         {
             "name": "clippings/util",
@@ -139,12 +187,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/util.git",
-                "reference": "4f433f09ac61d98e56b599512cac2260bdf17ee1"
+                "reference": "1e696104d68c578001c3803499a07d6179633b49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/util/zipball/4f433f09ac61d98e56b599512cac2260bdf17ee1",
-                "reference": "4f433f09ac61d98e56b599512cac2260bdf17ee1",
+                "url": "https://api.github.com/repos/clippings/util/zipball/1e696104d68c578001c3803499a07d6179633b49",
+                "reference": "1e696104d68c578001c3803499a07d6179633b49",
                 "shasum": ""
             },
             "type": "library",
@@ -166,7 +214,7 @@
                 }
             ],
             "description": "General purpose helper methods",
-            "time": "2014-05-15 15:41:04"
+            "time": "2014-05-15 17:15:07"
         },
         {
             "name": "psr/log",
@@ -216,6 +264,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "clippings/luna-core": 20,
+        "clippings/mass-assign": 20,
         "clippings/util": 20,
         "clippings/atlas": 20,
         "clippings/carpo": 20

@@ -31,15 +31,9 @@ class PostTag extends AbstractDbRepo {
     public function initialize()
     {
         $this
-            ->setRels([
+            ->addRels([
                 new Rel\BelongsTo('post', $this, Post::get()),
                 new Rel\BelongsTo('tag', $this, Tag::get()),
-            ])
-
-            ->setFields([
-                new Field\Integer('id'),
-                new Field\Integer('postId'),
-                new Field\Integer('tagId'),
             ]);
     }
 

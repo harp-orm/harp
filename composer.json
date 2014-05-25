@@ -13,12 +13,17 @@
         {
             "type": "vcs",
             "url": "https://github.com/clippings/luna-core"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/clippings/mass-assign"
         }
     ],
     "require": {
         "php": ">=5.4.0",
         "psr/log": "~1.0",
         "clippings/luna-core": "dev-master",
+        "clippings/mass-assign": "dev-master",
         "clippings/util": "dev-master",
         "clippings/atlas": "dev-master",
         "clippings/carpo": "dev-master"

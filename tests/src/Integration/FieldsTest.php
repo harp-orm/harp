@@ -15,7 +15,7 @@ class FieldsTest extends AbstractTestCase {
 
         $user->delete();
 
-        Repo\User::get()->persist($user);
+        Repo\User::get()->save($user);
 
         var_dump($this->getLogger()->getEntries());
     }

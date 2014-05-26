@@ -5,7 +5,7 @@ CREATE TABLE `User` (
   `password` varchar(100) NULL,
   `addressId` int(11) UNSIGNED NULL,
   `parentId` int(11) UNSIGNED NULL,
-  `isBlocked` int(1) UNSIGNED NULL,
+  `isBlocked` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `locationId` int(1) UNSIGNED NULL,
   `locationClass` varchar(100) NULL,
   `deletedAt` TIMESTAMP NULL,

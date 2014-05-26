@@ -26,12 +26,42 @@ class Find extends AbstractFind
         parent::__construct($repo);
     }
 
+    public function getTable()
+    {
+        return $this->getRepo()->getTable();
+    }
+
     /**
      * @return array
      */
     public function getSelect()
     {
         return $this->select;
+    }
+
+    /**
+     * @param  string $property
+     * @param  string  $alias
+     */
+    public function column($column, $alias = null)
+    {
+        $this->select->column($column, $alias);
+
+        return $this;
+    }
+
+    public function prependColumn($column, $alias = null)
+    {
+        $this->select->prependColumn($column, $alias);
+
+        return $this;
+    }
+
+    public function clearColumns()
+    {
+        $this->select->clearColumns();
+
+        return $this;
     }
 
     /**
@@ -106,16 +136,9 @@ class Find extends AbstractFind
         return $this;
     }
 
-    public function column($column, $alias = null)
+    public function clearHaving()
     {
-        $this->select->column($column, $alias);
-
-        return $this;
-    }
-
-    public function from($table, $alias = null)
-    {
-        $this->select->from($column, $alias);
+        $this->select->clearHaving();
 
         return $this;
     }
@@ -123,6 +146,27 @@ class Find extends AbstractFind
     public function group($column, $direction = null)
     {
         $this->select->group($column, $direction);
+
+        return $this;
+    }
+
+    public function clearGroup()
+    {
+        $this->select->clearGroup();
+
+        return $this;
+    }
+
+    public function order($column, $direction = null)
+    {
+        $this->select->order($column, $direction);
+
+        return $this;
+    }
+
+    public function clearOrder()
+    {
+        $this->select->clearOrder();
 
         return $this;
     }
@@ -204,7 +248,7 @@ class Find extends AbstractFind
 
     public function onlySaved()
     {
-        $this->where($this->getRepo()->getTable().'.deletedAt', null);
+        $this->where($this->getTable().'.deletedAt', null);
 
         return $this;
     }
@@ -217,14 +261,14 @@ class Find extends AbstractFind
     {
         $property = $this->getRepo()->getPrimaryKey();
 
-        $this->where($this->getRepo()->getTable().'.'.$property, $value);
+        $this->where($this->getTable().'.'.$property, $value);
 
         return $this;
     }
 
     public function onlyDeleted()
     {
-        $this->whereNot($this->getRepo()->getTable().'.deletedAt', null);
+        $this->whereNot($this->getTable().'.deletedAt', null);
 
         return $this;
     }
@@ -235,7 +279,7 @@ class Find extends AbstractFind
     public function execute()
     {
         if ($this->getRepo()->getInherited()) {
-            $this->select->prependColumn($this->getRepo()->getTable().'.class');
+            $this->select->prependColumn($this->getTable().'.class');
             return $this->select->execute()->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE);
         } else {
             return $this->select->execute()->fetchAll(PDO::FETCH_CLASS, $this->getRepo()->getModelClass());

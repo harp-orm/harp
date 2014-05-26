@@ -11,5 +11,5 @@ use CL\Atlas\Query\AbstractQuery;
  */
 interface DbRelInterface
 {
-    public function joinRel(AbstractQuery $query, $parent);
+    public function join(AbstractQuery $query, $parent);
 }

@@ -85,7 +85,7 @@ class BelongsToPolymorphic extends AbstractRelOne implements DbRelInterface, Upd
         $model->{$this->classKey} = get_class($link->get()->getRepo());
     }
 
-    public function joinRel(AbstractQuery $query, $parent)
+    public function join(AbstractQuery $query, $parent)
     {
         throw new BadMethodCallException('BelongsToPolymorphic does not support join');
     }

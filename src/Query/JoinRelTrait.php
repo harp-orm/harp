@@ -27,7 +27,7 @@ trait JoinRelTrait {
         {
             $rel = $repo->getRelOrError($name);
 
-            $rel->joinRel($this, $parent);
+            $rel->join($this, $parent);
 
             if ($childRels) {
                 $this->joinNestedRels($rel->getForeignRepo(), $childRels, $name);

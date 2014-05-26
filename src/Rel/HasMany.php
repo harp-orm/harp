@@ -57,7 +57,7 @@ class HasMany extends AbstractRelMany implements DbRelInterface, UpdateManyInter
         return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
     }
 
-    public function joinRel(AbstractQuery $query, $parent)
+    public function join(AbstractQuery $query, $parent)
     {
         $alias = $this->getName();
         $condition = "ON $alias.{$this->getForeignKey()} = $parent.{$this->getKey()}";

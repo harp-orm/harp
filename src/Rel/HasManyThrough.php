@@ -83,7 +83,7 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
         return $model->getId() == $foreign->{$this->getThroughKey()};
     }
 
-    public function joinRel(AbstractQuery $query, $parent)
+    public function join(AbstractQuery $query, $parent)
     {
         $alias = $this->getName();
         $condition = "ON $alias.{$this->getForeignKey()} = $parent.{$this->getKey()}";

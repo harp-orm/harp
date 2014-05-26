@@ -40,13 +40,13 @@ class TestTest extends AbstractTestCase {
         $this->assertEquals(
             [
                 'SELECT User.* FROM User WHERE (User.id = 3) AND (User.deletedAt IS NULL) LIMIT 1',
-                'SELECT Post.class, Post.* FROM Post WHERE (userId IN ("3"))',
+                'SELECT Post.class, Post.* FROM Post WHERE (userId IN (3))',
                 'SELECT Address.* FROM Address WHERE (Address.id = 1) LIMIT 1',
                 'INSERT INTO Post (id, title, body, price, tags, createdAt, updatedAt, publishedAt, userId, class) VALUES (NULL, "my title", "my body", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Model\Post"), (NULL, "my title 2", "my body 2", NULL, NULL, NULL, NULL, NULL, NULL, "CL\Luna\Test\Model\Post")',
-                'UPDATE User SET name = "new name!!", addressId = "1" WHERE (id = "3")',
-                'UPDATE Post SET userId = CASE id WHEN 5 THEN "3" WHEN 6 THEN "3" ELSE userId END WHERE (id IN (5, 6))',
-                'UPDATE Post SET userId = NULL WHERE (id = "4")',
-                'UPDATE Address SET zipCode = 2222 WHERE (id = "1")',
+                'UPDATE User SET name = "new name!!", addressId = 1 WHERE (id = 3)',
+                'UPDATE Post SET userId = CASE id WHEN 5 THEN 3 WHEN 6 THEN 3 ELSE userId END WHERE (id IN (5, 6))',
+                'UPDATE Post SET userId = NULL WHERE (id = 4)',
+                'UPDATE Address SET zipCode = 2222 WHERE (id = 1)',
             ],
             $this->getLogger()->getEntries()
         );
@@ -79,7 +79,7 @@ class TestTest extends AbstractTestCase {
                 'SELECT Post.class, Post.* FROM Post WHERE (Post.id = 1) LIMIT 1',
                 'SELECT Tag.* FROM Tag WHERE (Tag.id = 1) LIMIT 1',
                 'SELECT Tag.* FROM Tag WHERE (Tag.id = 2) LIMIT 1',
-                'SELECT Tag.*, postTags.postId AS tagsKey FROM Tag JOIN PostTag AS postTags ON postTags.tagId = Tag.id WHERE (postTags.PostId IN ("1"))',
+                'SELECT Tag.*, postTags.postId AS tagsKey FROM Tag JOIN PostTag AS postTags ON postTags.tagId = Tag.id WHERE (postTags.PostId IN (1))',
             ],
             $this->getLogger()->getEntries()
         );
@@ -117,10 +117,10 @@ class TestTest extends AbstractTestCase {
         $this->assertEquals(
             [
                 'SELECT Post.class, Post.* FROM Post',
-                'SELECT User.* FROM User WHERE (id IN ("1", "4", "5", "3")) AND (User.deletedAt IS NULL)',
-                'SELECT Address.* FROM Address WHERE (id IN ("1"))',
-                'SELECT City.* FROM City WHERE (id IN ("1"))',
-                'SELECT Country.* FROM Country WHERE (id IN ("1", "2"))',
+                'SELECT User.* FROM User WHERE (id IN (1, 4, 5, 3)) AND (User.deletedAt IS NULL)',
+                'SELECT Address.* FROM Address WHERE (id IN (1))',
+                'SELECT City.* FROM City WHERE (id IN (1))',
+                'SELECT Country.* FROM Country WHERE (id IN (1, 2))',
             ],
             $this->getLogger()->getEntries()
         );
@@ -128,12 +128,12 @@ class TestTest extends AbstractTestCase {
         $this->assertSame($address1, $address2);
         $this->assertEquals(
             [
-                'id' => '1',
+                'id' => 1,
                 'name' => "User 1",
                 'password' => null,
-                'addressId' => '1',
+                'addressId' => 1,
                 'parentId' => null,
-                'isBlocked' => '0',
+                'isBlocked' => false,
                 'deletedAt' => null,
                 'locationId' => '1',
                 'locationClass' => 'CL\Luna\Test\Model\City',
@@ -147,7 +147,7 @@ class TestTest extends AbstractTestCase {
                 'id' => 4,
                 'name' => "User 4",
                 'password' => null,
-                'addressId' => '1',
+                'addressId' => 1,
                 'parentId' => null,
                 'isBlocked' => null,
                 'deletedAt' => null,

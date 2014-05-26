@@ -16,6 +16,10 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/clippings/atlas"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/clippings/mass-assign"
         }
     ],

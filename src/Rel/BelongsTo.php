@@ -61,7 +61,7 @@ class BelongsTo extends AbstractRelOne implements DbRelInterface, UpdateOneInter
         $model->{$this->getKey()} = $link->get()->getId();
     }
 
-    public function joinRel(AbstractQuery $query, $parent)
+    public function join(AbstractQuery $query, $parent)
     {
         $alias = $this->getName();
         $condition = "ON $alias.{$this->getForeignKey()} = $parent.{$this->getKey()}";

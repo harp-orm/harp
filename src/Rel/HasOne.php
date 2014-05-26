@@ -19,11 +19,11 @@ class HasOne extends AbstractRelOne implements DbRelInterface, UpdateOneInterfac
 {
     protected $foreignKey;
 
-    public function __construct($name, AbstractDbRepo $store, AbstractDbRepo $foreignRepo, array $options = array())
+    public function __construct($name, AbstractDbRepo $repo, AbstractDbRepo $foreignRepo, array $options = array())
     {
-        $this->foreignKey = $name.'Id';
+        $this->foreignKey = lcfirst($repo->getName()).'Id';
 
-        parent::__construct($name, $store, $foreignRepo, $options);
+        parent::__construct($name, $repo, $foreignRepo, $options);
     }
 
     public function getForeignKey()
@@ -33,7 +33,7 @@ class HasOne extends AbstractRelOne implements DbRelInterface, UpdateOneInterfac
 
     public function getKey()
     {
-        return $this->getPrimaryKey();
+        return $this->getRepo()->getPrimaryKey();
     }
 
     public function getForeignRepo()
@@ -79,6 +79,6 @@ class HasOne extends AbstractRelOne implements DbRelInterface, UpdateOneInterfac
             $condition .= " AND $alias.deletedAt IS NULL";
         }
 
-        $query->joinAliased($this->getForeignTable(), $alias, $condition);
+        $query->joinAliased($this->getForeignRepo()->getTable(), $alias, $condition);
     }
 }

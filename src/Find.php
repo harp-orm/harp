@@ -273,6 +273,11 @@ class Find extends AbstractFind
         return $this;
     }
 
+    public function humanize()
+    {
+        return $this->select->humanize();
+    }
+
     /**
      * @return AbstractModel[]
      */
@@ -288,11 +293,16 @@ class Find extends AbstractFind
 
     public function loadIds($flags = null)
     {
+        $repo = $this->getRepo();
+
         $this->applyFlags($flags);
 
-        $statement = $this->select->execute();
+        $statement = $this->select
+            ->clearColumns()
+            ->column("{$repo->getTable()}.{$repo->getPrimaryKey()}", 'id')
+            ->execute();
 
-        return $statement->fetchAll(PDO::FETCH_COLUMN, ''.$this->getRepo()->getPrimaryKey());
+        return $statement->fetchAll(PDO::FETCH_COLUMN, 'id');
     }
 
     public function loadCount($flags = null)

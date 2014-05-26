@@ -32,7 +32,7 @@ class Address extends AbstractDbRepo {
     {
         $this
             ->addRels([
-                new Rel\HasMany('users', $this, User::get()),
+                new Rel\HasOne('user', $this, User::get()),
             ])
             ->setAsserts([
                 new Assert\Present('location'),

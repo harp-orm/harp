@@ -17,4 +17,24 @@ class BlogPost extends Post {
     }
 
     public $isPublished = false;
+
+    public function getUser()
+    {
+        return Repo\BlogPost::get()->loadLink($this, 'user')->get();
+    }
+
+    public function getTags()
+    {
+        return Repo\BlogPost::get()->loadLink($this, 'tags');
+    }
+
+    public function getPostTags()
+    {
+        return Repo\BlogPost::get()->loadLink($this, 'postTags');
+    }
+
+    public function setUser(User $user)
+    {
+        return Repo\BlogPost::get()->loadLink($this, 'user')->set($user);
+    }
 }

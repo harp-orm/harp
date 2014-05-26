@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/atlas.git",
-                "reference": "f15a236310b6dd7e23581dc382600c8a0f455189"
+                "reference": "374243f8de2b77b453aab2b9e3425e5c9b6fb524"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/atlas/zipball/f15a236310b6dd7e23581dc382600c8a0f455189",
-                "reference": "f15a236310b6dd7e23581dc382600c8a0f455189",
+                "url": "https://api.github.com/repos/clippings/atlas/zipball/374243f8de2b77b453aab2b9e3425e5c9b6fb524",
+                "reference": "374243f8de2b77b453aab2b9e3425e5c9b6fb524",
                 "shasum": ""
             },
             "require": {
@@ -52,7 +52,7 @@
                 "source": "https://github.com/clippings/atlas/tree/master",
                 "issues": "https://github.com/clippings/atlas/issues"
             },
-            "time": "2014-05-25 10:52:00"
+            "time": "2014-05-25 10:57:24"
         },
         {
             "name": "clippings/carpo",
@@ -95,12 +95,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/luna-core.git",
-                "reference": "d6a3f86ea13974da632c2d2819db21c43ce45544"
+                "reference": "fd2c5a7bff548c47dcc46825843af4f79331e683"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/luna-core/zipball/d6a3f86ea13974da632c2d2819db21c43ce45544",
-                "reference": "d6a3f86ea13974da632c2d2819db21c43ce45544",
+                "url": "https://api.github.com/repos/clippings/luna-core/zipball/fd2c5a7bff548c47dcc46825843af4f79331e683",
+                "reference": "fd2c5a7bff548c47dcc46825843af4f79331e683",
                 "shasum": ""
             },
             "require": {
@@ -132,7 +132,7 @@
                 "source": "https://github.com/clippings/luna-core/tree/master",
                 "issues": "https://github.com/clippings/luna-core/issues"
             },
-            "time": "2014-05-23 15:44:26"
+            "time": "2014-05-26 17:01:06"
         },
         {
             "name": "clippings/mass-assign",

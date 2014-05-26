@@ -37,6 +37,7 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
         ));
 
         DB::get()->execute('ALTER TABLE Post AUTO_INCREMENT = 5', array());
+        DB::get()->execute('ALTER TABLE PostTag AUTO_INCREMENT = 4', array());
         DB::get()->setLogger($this->logger);
         DB::get()->beginTransaction();
 
@@ -56,5 +57,10 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
         DB::get()->rollback();
 
         parent::tearDown();
+    }
+
+    public function assertQueries(array $query)
+    {
+        $this->assertEquals($query, $this->getLogger()->getEntries());
     }
 }

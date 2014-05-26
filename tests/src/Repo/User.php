@@ -46,7 +46,7 @@ class User extends AbstractDbRepo {
                 new Assert\Present('name'),
             ])
 
-            ->addEventAfterLoad(__CLASS__.'::test')
+            ->addEventAfterSave(__CLASS__.'::test')
 
             ->initializeNestedRepo();
     }

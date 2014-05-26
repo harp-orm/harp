@@ -26,8 +26,8 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
     public function __construct($name, AbstractDbRepo $repo, AbstractDbRepo $foreignRepo, $through, array $options = array())
     {
         $this->through = $through;
-        $this->foreignKey = $foreignRepo->getName().'Id';
-        $this->key = $repo->getName().'Id';
+        $this->foreignKey = lcfirst($foreignRepo->getName()).'Id';
+        $this->key = lcfirst($repo->getName()).'Id';
 
         parent::__construct($name, $repo, $foreignRepo, $options);
     }
@@ -42,6 +42,11 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
         return $this->getRepo()->getRel($this->through);
     }
 
+    public function getThroughRepo()
+    {
+        return $this->getThroughRel()->getForeignRepo();
+    }
+
     public function getKey()
     {
         return $this->key;
@@ -54,7 +59,9 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
 
     public function hasForeign(Models $models)
     {
-        return $models->count() > 0;
+        $keys = $models->getIds();
+
+        return ! empty($keys);
     }
 
     public function getThroughTable()
@@ -68,7 +75,7 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
         $throughForeignKey = $this->getThroughTable().'.'.$this->key;
         $repo = $this->getForeignRepo();
 
-        $keys = $models->pluckPropertyUnique($this->getRepo()->getPrimaryKey());
+        $keys = $models->getIds();
 
         $select = $repo->findAll()
             ->column($throughKey, $this->getTHroughKey())
@@ -86,21 +93,25 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
     public function join(AbstractQuery $query, $parent)
     {
         $alias = $this->getName();
-        $condition = "ON $alias.{$this->getForeignKey()} = $parent.{$this->getKey()}";
+        $condition = "ON $alias.{$this->getForeignRepo()->getPrimaryKey()} = {$this->through}.{$this->getForeignKey()}";
 
         if ($this->getForeignRepo()->getSoftDelete()) {
             $condition .= " AND $alias.deletedAt IS NULL";
         }
 
-        $query->joinAliased($this->getForeignTable(), $alias, $condition);
+        $this->getThroughRel()->join($query, $parent);
+
+        $query
+            ->joinAliased($this->getForeignRepo()->getTable(), $alias, $condition);
     }
 
     public function delete(AbstractModel $model, LinkMany $link)
     {
         $removed = new Models();
+        $through = $this->getRepo()->loadLink($model, $this->through);
 
         foreach ($link->getRemoved() as $removed) {
-            foreach ($model->{$this->through} as $item) {
+            foreach ($through as $item) {
                 if ($item->{$this->foreignKey} == $removed->getId()) {
                     $item->delete();
                     $removed->add($item);
@@ -116,11 +127,10 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
         $inserted = new Models();
 
         if (count($link->getAdded()) > 0) {
-            $throughRepo = $this->getThroughRel()->getForeignRepo();
-            $through = $throughRepo->loadLink($model, $this->through);
+            $through = $this->getRepo()->loadLink($model, $this->through);
 
             foreach ($link->getAdded() as $added) {
-                $item = $throughRepo->newModel([
+                $item = $this->getThroughRepo()->newModel([
                     $this->getThroughRel()->getForeignKey() => $model->getId(),
                     $this->foreignKey => $added->getId(),
                 ]);

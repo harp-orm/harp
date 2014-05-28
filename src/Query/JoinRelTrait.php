@@ -21,7 +21,7 @@ trait JoinRelTrait {
         return $this;
     }
 
-    public function joinNestedRels(AbstractDbRepo $repo, array $rels, $parent)
+    private function joinNestedRels(AbstractDbRepo $repo, array $rels, $parent)
     {
         foreach ($rels as $name => $childRels)
         {

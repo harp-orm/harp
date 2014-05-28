@@ -150,12 +150,13 @@ abstract class AbstractDbRepo extends AbstractSaveRepo
 
     public function insert(Models $models)
     {
-        $this
-            ->insertAll()
+        $insert = $this->insertAll();
+
+        $insert
             ->models($models)
             ->execute();
 
-        $lastInsertId = $this->getDbInstance()->lastInsertId();
+        $lastInsertId = $insert->getLastInsertId();
 
         foreach ($models as $model) {
             $model->setId($lastInsertId);

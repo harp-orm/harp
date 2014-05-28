@@ -7,6 +7,7 @@ use CL\LunaCore\Model\Models;
 use CL\Luna\Rel\DbRelInterface;
 use CL\Luna\Query;
 use CL\Atlas\DB;
+use ReflectionProperty;
 
 /*
  * @author     Ivan Kerin
@@ -23,7 +24,7 @@ abstract class AbstractDbRepo extends AbstractSaveRepo
     {
         parent::__construct($modelClass);
 
-        $properties = $this->getModelReflection()->getProperties();
+        $properties = $this->getModelReflection()->getProperties(ReflectionProperty::IS_PUBLIC);
 
         foreach ($properties as $property) {
             $this->fields []= $property->getName();

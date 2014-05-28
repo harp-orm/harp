@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "8383699fb6498ab11a5e3a2be9540103",
+    "hash": "44be22308ceaaf1723928703fe672457",
     "packages": [
         {
             "name": "clippings/atlas",
@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/atlas.git",
-                "reference": "374243f8de2b77b453aab2b9e3425e5c9b6fb524"
+                "reference": "966b6d5482032a31e60f358a9ec3498e77dd493b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/atlas/zipball/374243f8de2b77b453aab2b9e3425e5c9b6fb524",
-                "reference": "374243f8de2b77b453aab2b9e3425e5c9b6fb524",
+                "url": "https://api.github.com/repos/clippings/atlas/zipball/966b6d5482032a31e60f358a9ec3498e77dd493b",
+                "reference": "966b6d5482032a31e60f358a9ec3498e77dd493b",
                 "shasum": ""
             },
             "require": {
@@ -52,7 +52,7 @@
                 "source": "https://github.com/clippings/atlas/tree/master",
                 "issues": "https://github.com/clippings/atlas/issues"
             },
-            "time": "2014-05-25 10:57:24"
+            "time": "2014-05-27 14:54:29"
         },
         {
             "name": "clippings/carpo",
@@ -95,12 +95,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/luna-core.git",
-                "reference": "fd2c5a7bff548c47dcc46825843af4f79331e683"
+                "reference": "f9f466b1c825f5e6504a6eec3f0ced8949c2b999"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/luna-core/zipball/fd2c5a7bff548c47dcc46825843af4f79331e683",
-                "reference": "fd2c5a7bff548c47dcc46825843af4f79331e683",
+                "url": "https://api.github.com/repos/clippings/luna-core/zipball/f9f466b1c825f5e6504a6eec3f0ced8949c2b999",
+                "reference": "f9f466b1c825f5e6504a6eec3f0ced8949c2b999",
                 "shasum": ""
             },
             "require": {
@@ -132,7 +132,7 @@
                 "source": "https://github.com/clippings/luna-core/tree/master",
                 "issues": "https://github.com/clippings/luna-core/issues"
             },
-            "time": "2014-05-26 17:01:06"
+            "time": "2014-05-28 14:24:35"
         },
         {
             "name": "clippings/mass-assign",
@@ -256,7 +256,168 @@
             "time": "2012-12-21 11:40:51"
         }
     ],
-    "packages-dev": [],
+    "packages-dev": [
+        {
+            "name": "nikic/php-parser",
+            "version": "v0.9.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/PHP-Parser.git",
+                "reference": "1e5e280ae88a27effa2ae4aa2bd088494ed8594f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/1e5e280ae88a27effa2ae4aa2bd088494ed8594f",
+                "reference": "1e5e280ae88a27effa2ae4aa2bd088494ed8594f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "PHPParser": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov"
+                }
+            ],
+            "description": "A PHP parser written in PHP",
+            "keywords": [
+                "parser",
+                "php"
+            ],
+            "time": "2013-08-25 17:11:40"
+        },
+        {
+            "name": "psy/psysh",
+            "version": "v0.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bobthecow/psysh.git",
+                "reference": "33db0d52546a2b543739eee0ec62235fa7813d35"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/33db0d52546a2b543739eee0ec62235fa7813d35",
+                "reference": "33db0d52546a2b543739eee0ec62235fa7813d35",
+                "shasum": ""
+            },
+            "require": {
+                "nikic/php-parser": "~0.9.3",
+                "php": ">=5.3.0",
+                "symfony/console": "~2.3, >=2.3.10"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=3.7, <4.1",
+                "symfony/finder": "~2.1"
+            },
+            "suggest": {
+                "ext-pcntl": "Enabling the PCNTL extension makes PsySH a lot happier :)"
+            },
+            "bin": [
+                "bin/psysh"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Psy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Justin Hileman",
+                    "email": "justin@justinhileman.info",
+                    "homepage": "http://justinhileman.com"
+                }
+            ],
+            "description": "An interactive shell for modern PHP.",
+            "homepage": "https://github.com/bobthecow/psysh",
+            "keywords": [
+                "REPL",
+                "console",
+                "interactive",
+                "shell"
+            ],
+            "time": "2014-04-13 01:58:29"
+        },
+        {
+            "name": "symfony/console",
+            "version": "v2.4.5",
+            "target-dir": "Symfony/Component/Console",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Console.git",
+                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/24f723436e62598c9dddee2a8573d6992504dc5d",
+                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "symfony/event-dispatcher": "~2.1"
+            },
+            "suggest": {
+                "symfony/event-dispatcher": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Console\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Console Component",
+            "homepage": "http://symfony.com",
+            "time": "2014-05-14 21:48:29"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {

@@ -32,6 +32,9 @@
         "clippings/atlas": "dev-master",
         "clippings/carpo": "dev-master"
     },
+    "require-dev": {
+        "psy/psysh": "~0.1.8"
+    },
     "autoload": {
         "psr-4": {"CL\\Luna\\": "src/"}
     }

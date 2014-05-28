@@ -41,15 +41,15 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
         DB::get()->setLogger($this->logger);
         DB::get()->beginTransaction();
 
-        Repo\Address::get()->getIdentityMap()->clear();
-        Repo\BlogPost::get()->getIdentityMap()->clear();
-        Repo\City::get()->getIdentityMap()->clear();
-        Repo\Country::get()->getIdentityMap()->clear();
-        Repo\Post::get()->getIdentityMap()->clear();
-        Repo\PostTag::get()->getIdentityMap()->clear();
-        Repo\Profile::get()->getIdentityMap()->clear();
-        Repo\Tag::get()->getIdentityMap()->clear();
-        Repo\User::get()->getIdentityMap()->clear();
+        Repo\Address::get()->clear();
+        Repo\BlogPost::get()->clear();
+        Repo\City::get()->clear();
+        Repo\Country::get()->clear();
+        Repo\Post::get()->clear();
+        Repo\PostTag::get()->clear();
+        Repo\Profile::get()->clear();
+        Repo\Tag::get()->clear();
+        Repo\User::get()->clear();
     }
 
     public function tearDown()

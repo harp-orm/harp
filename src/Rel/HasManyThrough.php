@@ -37,6 +37,11 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
         return $this->foreignKey;
     }
 
+    public function getKey()
+    {
+        return $this->key;
+    }
+
     public function getThroughRel()
     {
         return $this->getRepo()->getRel($this->through);
@@ -47,11 +52,6 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
         return $this->getThroughRel()->getForeignRepo();
     }
 
-    public function getKey()
-    {
-        return $this->key;
-    }
-
     public function getThroughKey()
     {
         return $this->getName().'Key';
@@ -59,9 +59,7 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
 
     public function hasForeign(Models $models)
     {
-        $keys = $models->getIds();
-
-        return ! empty($keys);
+        return ! $models->isEmptyProperty($this->getRepo()->getPrimaryKey());
     }
 
     public function getThroughTable()
@@ -109,17 +107,19 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
     {
         $removed = new Models();
         $through = $this->getRepo()->loadLink($model, $this->through);
+        $removedIds = $link->getRemoved()->getIds();
 
-        foreach ($link->getRemoved() as $removed) {
-            foreach ($through as $item) {
-                if ($item->{$this->foreignKey} == $removed->getId()) {
-                    $item->delete();
-                    $removed->add($item);
-                }
-            }
+        $removedItems = $through->get()->filter(function ($item) use ($removedIds) {
+            return in_array($item->{$this->foreignKey}, $removedIds);
+        });
+
+        $through->get()->removeAll($removedItems);
+
+        foreach ($removedItems as $item) {
+            $item->delete();
         }
 
-        return $removed;
+        return $removedItems;
     }
 
     public function insert(AbstractModel $model, LinkMany $link)
@@ -128,17 +128,16 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
 
         if (count($link->getAdded()) > 0) {
             $through = $this->getRepo()->loadLink($model, $this->through);
+            $repo = $this->getThroughRepo();
 
             foreach ($link->getAdded() as $added) {
-                $item = $this->getThroughRepo()->newModel([
-                    $this->getThroughRel()->getForeignKey() => $model->getId(),
+                $inserted->add($repo->newModel([
+                    $this->key => $model->getId(),
                     $this->foreignKey => $added->getId(),
-                ]);
-
-                $through->add($item);
-
-                $inserted->add($item);
+                ]));
             }
+
+            $through->get()->addAll($inserted);
         }
 
         return $inserted;

@@ -47,11 +47,15 @@ class BelongsToPolymorphic extends AbstractRelOne implements DbRelInterface, Upd
 
     public function hasForeign(Models $models)
     {
-        return true;
+        return ! ($models->isEmptyProperty($this->key) or $models->isEmptyProperty($this->classKey));
     }
 
     public function loadForeign(Models $models, $flags = null)
     {
+        $models = $models->filter(function ($model) {
+            return $model->{$this->classKey};
+        });
+
         $groups = Arr::groupBy($models->toArray(), function($model){
             return $model->{$this->classKey};
         });
@@ -65,6 +69,8 @@ class BelongsToPolymorphic extends AbstractRelOne implements DbRelInterface, Upd
                 $models = $repo->findAll()
                     ->whereIn($this->getForeignKey(), $keys)
                     ->loadRaw($flags);
+            } else {
+                $models = [];
             }
         }
 
@@ -75,14 +81,14 @@ class BelongsToPolymorphic extends AbstractRelOne implements DbRelInterface, Upd
     {
         return (
             $model->{$this->key} == $foreign->{$this->getForeignKey()}
-            and $model->{$this->classKey} == get_class($foreign->getRepo())
+            and $model->{$this->classKey} == get_class($foreign)
         );
     }
 
     public function update(AbstractModel $model, LinkOne $link)
     {
         $model->{$this->key} = $link->get()->getId();
-        $model->{$this->classKey} = get_class($link->get()->getRepo());
+        $model->{$this->classKey} = get_class($link->get());
     }
 
     public function join(AbstractQuery $query, $parent)

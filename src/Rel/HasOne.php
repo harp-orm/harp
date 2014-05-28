@@ -36,23 +36,18 @@ class HasOne extends AbstractRelOne implements DbRelInterface, UpdateOneInterfac
         return $this->getRepo()->getPrimaryKey();
     }
 
-    public function getForeignRepo()
-    {
-        return $this->foreignRepo;
-    }
-
     public function hasForeign(Models $models)
     {
-        return ! $models->isEmptyProperty($this->foreignKey);
+        return ! $models->isEmptyProperty($this->getKey());
     }
 
     public function loadForeign(Models $models, $flags = null)
     {
-        $keys = $models->pluckPropertyUnique($this->foreignKey);
+        $keys = $models->pluckPropertyUnique($this->getKey());
 
         return $this->getForeignRepo()
             ->findAll()
-            ->where($this->getForeignKey(), $keys)
+            ->whereIn($this->getForeignKey(), $keys)
             ->loadRaw($flags);
     }
 

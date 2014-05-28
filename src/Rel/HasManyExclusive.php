@@ -4,6 +4,7 @@ namespace CL\Luna\Rel;
 
 use CL\Util\Objects;
 use CL\LunaCore\Model\AbstractModel;
+use CL\LunaCore\Model\Models;
 use CL\LunaCore\Repo\LinkMany;
 use CL\LunaCore\Rel\DeleteManyInterface;
 
@@ -14,9 +15,16 @@ use CL\LunaCore\Rel\DeleteManyInterface;
  */
 class HasManyExclusive extends HasMany implements DeleteManyInterface
 {
+    /**
+     * @param  AbstractModel $model
+     * @param  LinkMany      $link
+     * @return Models
+     */
     public function delete(AbstractModel $model, LinkMany $link)
     {
-        Objects::invoke($link->getRemoved(), 'delete');
+        foreach ($link->getRemoved() as $removed) {
+            $removed->delete();
+        }
 
         return $link->getRemoved();
     }

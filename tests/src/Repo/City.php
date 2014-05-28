@@ -33,6 +33,7 @@ class City extends AbstractDbRepo {
         $this
             ->addRels([
                 new Rel\HasMany('users', $this, User::get()),
+                new Rel\BelongsTo('country', $this, Country::get()),
             ])
             ->setAsserts([
                 new Assert\Present('location'),

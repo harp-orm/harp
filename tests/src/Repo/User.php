@@ -46,14 +46,6 @@ class User extends AbstractDbRepo {
                 new Assert\Present('name'),
             ])
 
-            ->addEventAfterSave(__CLASS__.'::test')
-
             ->initializeNestedRepo();
     }
-
-    public static function test($model)
-    {
-        var_dump('User event "test" called');
-    }
-
 }

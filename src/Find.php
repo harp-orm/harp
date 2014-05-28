@@ -40,6 +40,16 @@ class Find extends AbstractFind
     }
 
     /**
+     * @return array
+     */
+    public function setSelect(Query\Select $select)
+    {
+        $this->select = $select;
+
+        return $this;
+    }
+
+    /**
      * @param  string $property
      * @param  string  $alias
      */
@@ -96,6 +106,13 @@ class Find extends AbstractFind
     public function whereIn($property, array $value)
     {
         $this->select->whereIn($property, $value);
+
+        return $this;
+    }
+
+    public function clearWhere()
+    {
+        $this->select->clearWhere();
 
         return $this;
     }
@@ -239,16 +256,16 @@ class Find extends AbstractFind
         return $this;
     }
 
-    public function clearWhere()
+    public function onlySaved()
     {
-        $this->select->clearWhere();
+        $this->where($this->getTable().'.deletedAt', null);
 
         return $this;
     }
 
-    public function onlySaved()
+    public function onlyDeleted()
     {
-        $this->where($this->getTable().'.deletedAt', null);
+        $this->whereNot($this->getTable().'.deletedAt', null);
 
         return $this;
     }
@@ -266,16 +283,14 @@ class Find extends AbstractFind
         return $this;
     }
 
-    public function onlyDeleted()
-    {
-        $this->whereNot($this->getTable().'.deletedAt', null);
-
-        return $this;
-    }
-
     public function humanize()
     {
         return $this->select->humanize();
+    }
+
+    public function sql()
+    {
+        return $this->select->sql();
     }
 
     /**

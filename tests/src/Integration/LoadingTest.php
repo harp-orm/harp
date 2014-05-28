@@ -11,6 +11,9 @@ use CL\Atlas\SQL\SQL;
  */
 class LoadingTest extends AbstractTestCase {
 
+    /**
+     * @coversNothing
+     */
     public function testFind()
     {
         $user = Repo\User::get()->find(1);
@@ -48,6 +51,9 @@ class LoadingTest extends AbstractTestCase {
 
     }
 
+    /**
+     * @coversNothing
+     */
     public function testFindAll()
     {
         $cities = Repo\City::get()->findAll()->where('countryId', 1)->load();
@@ -82,6 +88,9 @@ class LoadingTest extends AbstractTestCase {
         ]);
     }
 
+    /**
+     * @coversNothing
+     */
     public function testComplexFindAll()
     {
         $users = Repo\User::get()->findAll()
@@ -125,6 +134,9 @@ class LoadingTest extends AbstractTestCase {
         ]);
     }
 
+    /**
+     * @coversNothing
+     */
     public function testJoinRels()
     {
         $users = Repo\User::get()->findAll()
@@ -152,6 +164,9 @@ class LoadingTest extends AbstractTestCase {
         ]);
     }
 
+    /**
+     * @coversNothing
+     */
     public function testLoadIds()
     {
         $ids = Repo\City::get()->findAll()->where('countryId', 2)->loadIds();
@@ -165,6 +180,9 @@ class LoadingTest extends AbstractTestCase {
         ]);
     }
 
+    /**
+     * @coversNothing
+     */
     public function testLoadCount()
     {
         $count = Repo\City::get()->findAll()->where('countryId', 2)->loadCount();
@@ -176,6 +194,9 @@ class LoadingTest extends AbstractTestCase {
         ]);
     }
 
+    /**
+     * @coversNothing
+     */
     public function testLoadWith()
     {
         $users = Repo\User::get()->findAll()

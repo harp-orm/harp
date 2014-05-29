@@ -1,17 +1,17 @@
 <?php
 
-namespace CL\Luna\Test\Unit\Query;
+namespace Harp\Db\Test\Unit\Query;
 
-use CL\Luna\Test\Repo;
-use CL\Luna\Test\Model;
-use CL\LunaCore\Model\Models;
-use CL\LunaCore\Model\State;
-use CL\Atlas\SQL;
-use CL\Luna\Query\Update;
+use Harp\Db\Test\Repo;
+use Harp\Db\Test\Model;
+use Harp\Core\Model\Models;
+use Harp\Core\Model\State;
+use Harp\Query\SQL;
+use Harp\Db\Query\Update;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass CL\Luna\Query\Update
+ * @coversDefaultClass Harp\Db\Query\Update
  */
 class UpdateTest extends PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class UpdateTest extends PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $repo = new Repo\City('CL\Luna\Test\Model\City');
+        $repo = new Repo\City('Harp\Db\Test\Model\City');
 
         $Update = new Update($repo);
 
@@ -34,7 +34,7 @@ class UpdateTest extends PHPUnit_Framework_TestCase
      */
     public function testModels()
     {
-        $repo = new Repo\Country('CL\Luna\Test\Model\Country');
+        $repo = new Repo\Country('Harp\Db\Test\Model\Country');
 
         $update = new Update($repo);
 

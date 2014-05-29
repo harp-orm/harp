@@ -1,9 +1,9 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace Harp\Db\Test;
 
 use Psr\Log\AbstractLogger;
-use CL\Atlas\Compiler\Compiler;
+use Harp\Query\Compiler\Compiler;
 
 /**
  * A dummy logger used for testing

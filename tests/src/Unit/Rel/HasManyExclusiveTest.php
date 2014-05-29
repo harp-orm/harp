@@ -1,17 +1,17 @@
 <?php
 
-namespace CL\Luna\Test\Unit\Rel;
+namespace Harp\Db\Test\Unit\Rel;
 
-use CL\Luna\Test\Repo;
-use CL\Luna\Test\Model;
-use CL\LunaCore\Repo\LinkMany;
-use CL\LunaCore\Model\Models;
-use CL\LunaCore\Model\State;
-use CL\Luna\Rel\HasManyExclusive;
-use CL\Luna\Test\AbstractTestCase;
+use Harp\Db\Test\Repo;
+use Harp\Db\Test\Model;
+use Harp\Core\Repo\LinkMany;
+use Harp\Core\Model\Models;
+use Harp\Core\Model\State;
+use Harp\Db\Rel\HasManyExclusive;
+use Harp\Db\Test\AbstractTestCase;
 
 /**
- * @coversDefaultClass CL\Luna\Rel\HasManyExclusive
+ * @coversDefaultClass Harp\Db\Rel\HasManyExclusive
  */
 class HasManyExclusiveTest extends AbstractTestCase
 {
@@ -32,7 +32,7 @@ class HasManyExclusiveTest extends AbstractTestCase
 
         $result = $rel->delete($model, $link);
 
-        $this->assertInstanceOf('CL\LunaCore\Model\Models', $result);
+        $this->assertInstanceOf('Harp\Core\Model\Models', $result);
 
         $this->assertSame([$foreign2], $result->toArray());
         $this->assertTrue($result->getFirst()->isDeleted());

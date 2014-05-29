@@ -1,9 +1,9 @@
 <?php
 
-namespace CL\Luna\Test;
+namespace Harp\Db\Test;
 
-use CL\Atlas\DB;
-use CL\Luna\Test\Repo;
+use Harp\Query\DB;
+use Harp\Db\Test\Repo;
 use PHPUnit_Framework_TestCase;
 
 /**

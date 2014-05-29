@@ -1,15 +1,15 @@
 <?php
 
-namespace CL\Luna\Rel;
+namespace Harp\Db\Rel;
 
 use CL\Util\Arr;
-use CL\Luna\AbstractDbRepo;
-use CL\LunaCore\Model\AbstractModel;
-use CL\LunaCore\Model\Models;
-use CL\LunaCore\Repo\LinkOne;
-use CL\LunaCore\Rel\AbstractRelOne;
-use CL\LunaCore\Rel\UpdateOneInterface;
-use CL\Atlas\Query\AbstractQuery;
+use Harp\Db\AbstractDbRepo;
+use Harp\Core\Model\AbstractModel;
+use Harp\Core\Model\Models;
+use Harp\Core\Repo\LinkOne;
+use Harp\Core\Rel\AbstractRelOne;
+use Harp\Core\Rel\UpdateOneInterface;
+use Harp\Query\AbstractQuery;
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.

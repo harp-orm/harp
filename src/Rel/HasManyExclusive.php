@@ -1,12 +1,12 @@
 <?php
 
-namespace CL\Luna\Rel;
+namespace Harp\Db\Rel;
 
 use CL\Util\Objects;
-use CL\LunaCore\Model\AbstractModel;
-use CL\LunaCore\Model\Models;
-use CL\LunaCore\Repo\LinkMany;
-use CL\LunaCore\Rel\DeleteManyInterface;
+use Harp\Core\Model\AbstractModel;
+use Harp\Core\Model\Models;
+use Harp\Core\Repo\LinkMany;
+use Harp\Core\Rel\DeleteManyInterface;
 
 /**
  * @author     Ivan Kerin

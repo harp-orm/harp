@@ -1,8 +1,8 @@
 <?php
 
-namespace CL\Luna\Test\Model;
+namespace Harp\Db\Test\Model;
 
-use CL\Luna\Test\Repo;
+use Harp\Db\Test\Repo;
 
 /**
  * @author     Ivan Kerin

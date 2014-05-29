@@ -1,5 +1,5 @@
 {
-    "name": "clippings/luna",
+    "name": "harp-orm/db",
     "description": "Lightweight ORM",
     "license": "BSD-3-Clause",
     "authors": [
@@ -12,30 +12,30 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/clippings/luna-core"
+            "url": "https://github.com/harp-orm/core"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/clippings/atlas"
+            "url": "https://github.com/harp-orm/query"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/clippings/mass-assign"
+            "url": "https://github.com/harp-orm/mass-assign"
         }
     ],
     "require": {
         "php": ">=5.4.0",
         "psr/log": "~1.0",
-        "clippings/luna-core": "dev-master",
-        "clippings/mass-assign": "dev-master",
         "clippings/util": "dev-master",
-        "clippings/atlas": "dev-master",
-        "clippings/carpo": "dev-master"
+        "harp-orm/core": "dev-master",
+        "harp-orm/mass-assign": "dev-master",
+        "harp-orm/query": "dev-master",
+        "harp-orm/validate": "dev-master"
     },
     "require-dev": {
         "psy/psysh": "~0.1.8"
     },
     "autoload": {
-        "psr-4": {"CL\\Luna\\": "src/"}
+        "psr-4": {"Harp\\Db\\": "src/"}
     }
 }

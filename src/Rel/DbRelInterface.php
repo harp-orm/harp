@@ -1,8 +1,8 @@
 <?php
 
-namespace CL\Luna\Rel;
+namespace Harp\Db\Rel;
 
-use CL\Atlas\Query\AbstractQuery;
+use Harp\Query\AbstractQuery;
 
 /**
  * @author     Ivan Kerin

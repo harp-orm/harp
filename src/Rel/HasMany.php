@@ -1,15 +1,15 @@
 <?php
 
-namespace CL\Luna\Rel;
+namespace Harp\Db\Rel;
 
 use CL\Util\Arr;
-use CL\Luna\AbstractDbRepo;
-use CL\LunaCore\Model\AbstractModel;
-use CL\LunaCore\Model\Models;
-use CL\LunaCore\Repo\LinkMany;
-use CL\LunaCore\Rel\AbstractRelMany;
-use CL\LunaCore\Rel\UpdateManyInterface;
-use CL\Atlas\Query\AbstractQuery;
+use Harp\Db\AbstractDbRepo;
+use Harp\Core\Model\AbstractModel;
+use Harp\Core\Model\Models;
+use Harp\Core\Repo\LinkMany;
+use Harp\Core\Rel\AbstractRelMany;
+use Harp\Core\Rel\UpdateManyInterface;
+use Harp\Query\AbstractQuery;
 
 /**
  * @author     Ivan Kerin

@@ -1,17 +1,17 @@
 <?php
 
-namespace CL\Luna\Test\Unit\Rel;
+namespace Harp\Db\Test\Unit\Rel;
 
-use CL\Luna\Test\Repo;
-use CL\Luna\Test\Model;
-use CL\LunaCore\Repo\LinkMany;
-use CL\LunaCore\Model\Models;
-use CL\Luna\Rel\HasMany;
-use CL\Luna\Query\Select;
-use CL\Luna\Test\AbstractTestCase;
+use Harp\Db\Test\Repo;
+use Harp\Db\Test\Model;
+use Harp\Core\Repo\LinkMany;
+use Harp\Core\Model\Models;
+use Harp\Db\Rel\HasMany;
+use Harp\Db\Query\Select;
+use Harp\Db\Test\AbstractTestCase;
 
 /**
- * @coversDefaultClass CL\Luna\Rel\HasMany
+ * @coversDefaultClass Harp\Db\Rel\HasMany
  */
 class HasManyTest extends AbstractTestCase
 {
@@ -70,7 +70,7 @@ class HasManyTest extends AbstractTestCase
 
         $cities = $rel->loadForeign($models);
 
-        $this->assertContainsOnlyInstancesOf('CL\Luna\Test\Model\City', $cities);
+        $this->assertContainsOnlyInstancesOf('Harp\Db\Test\Model\City', $cities);
         $this->assertCount(4, $cities);
 
         $this->assertEquals(1, $cities[0]->id);

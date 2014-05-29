@@ -1,11 +1,11 @@
 <?php
 
-namespace CL\Luna\Test\Repo;
+namespace Harp\Db\Test\Repo;
 
-use CL\Luna\AbstractDbRepo;
-use CL\Luna\Field;
-use CL\Luna\Rel;
-use CL\Carpo\Assert;
+use Harp\Db\AbstractDbRepo;
+use Harp\Db\Field;
+use Harp\Db\Rel;
+use Harp\Validate\Assert;
 
 /**
  * @author     Ivan Kerin
@@ -22,7 +22,7 @@ class Tag extends AbstractDbRepo {
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new Tag('CL\Luna\Test\Model\Tag');
+            self::$instance = new Tag('Harp\Db\Test\Model\Tag');
         }
 
         return self::$instance;

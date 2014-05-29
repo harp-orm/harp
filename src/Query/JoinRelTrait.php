@@ -1,8 +1,8 @@
 <?php
 
-namespace CL\Luna\Query;
+namespace Harp\Db\Query;
 
-use CL\Luna\AbstractDbRepo;
+use Harp\Db\AbstractDbRepo;
 use CL\Util\Arr;
 
 /**

@@ -1,16 +1,16 @@
 <?php
 
-namespace CL\Luna\Test\Unit\Query;
+namespace Harp\Db\Test\Unit\Query;
 
-use CL\Luna\Test\Repo;
-use CL\Luna\Test\Model;
-use CL\LunaCore\Model\Models;
-use CL\Atlas\SQL;
-use CL\Luna\Query\Select;
+use Harp\Db\Test\Repo;
+use Harp\Db\Test\Model;
+use Harp\Core\Model\Models;
+use Harp\Query\SQL;
+use Harp\Db\Query\Select;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass CL\Luna\Query\JoinRelTrait
+ * @coversDefaultClass Harp\Db\Query\JoinRelTrait
  */
 class JoinRelTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class JoinRelTest extends PHPUnit_Framework_TestCase
      */
     public function testJoinRels()
     {
-        $repo = new Repo\User('CL\Luna\Test\Model\User');
+        $repo = new Repo\User('Harp\Db\Test\Model\User');
 
         $select = new Select($repo);
 
@@ -38,7 +38,7 @@ class JoinRelTest extends PHPUnit_Framework_TestCase
      */
     public function testJoinRelsError()
     {
-        $repo = new Repo\User('CL\Luna\Test\Model\User');
+        $repo = new Repo\User('Harp\Db\Test\Model\User');
 
         $select = new Select($repo);
 

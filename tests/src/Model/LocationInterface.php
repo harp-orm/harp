@@ -1,6 +1,6 @@
 <?php
 
-namespace CL\Luna\Test\Model;
+namespace Harp\Db\Test\Model;
 
 /**
  * @author     Ivan Kerin

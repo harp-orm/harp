@@ -1,11 +1,11 @@
 <?php
 
-namespace CL\Luna\Query;
+namespace Harp\Db\Query;
 
-use CL\Atlas\Query;
-use CL\Luna\AbstractDbRepo;
-use CL\LunaCore\Model\AbstractModel;
-use CL\LunaCore\Model\Models;
+use Harp\Query;
+use Harp\Db\AbstractDbRepo;
+use Harp\Core\Model\AbstractModel;
+use Harp\Core\Model\Models;
 use CL\Util\Objects;
 use SplObjectStorage;
 
@@ -14,7 +14,7 @@ use SplObjectStorage;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Insert extends \CL\Atlas\Query\Insert {
+class Insert extends \Harp\Query\Insert {
 
     use JoinRelTrait;
 

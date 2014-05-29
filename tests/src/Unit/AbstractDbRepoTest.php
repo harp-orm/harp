@@ -1,16 +1,16 @@
 <?php
 
-namespace CL\Luna\Test\Unit;
+namespace Harp\Db\Test\Unit;
 
-use CL\Luna\Test\Repo;
-use CL\Luna\Test\Model;
-use CL\LunaCore\Model\State;
-use CL\LunaCore\Model\Models;
-use CL\Atlas\DB;
+use Harp\Db\Test\Repo;
+use Harp\Db\Test\Model;
+use Harp\Core\Model\State;
+use Harp\Core\Model\Models;
+use Harp\Query\DB;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass CL\Luna\AbstractDbRepo
+ * @coversDefaultClass Harp\Db\AbstractDbRepo
  */
 class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
 {
@@ -22,7 +22,7 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $repo = new Repo\User('CL\Luna\Test\Model\City');
+        $repo = new Repo\User('Harp\Db\Test\Model\City');
 
         $this->assertEquals('City', $repo->getTable());
         $this->assertEquals('City', $repo->getName());
@@ -36,9 +36,9 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testTable()
     {
         $repo = $this->getMock(
-            'CL\Luna\Test\Repo\BlogPost',
+            'Harp\Db\Test\Repo\BlogPost',
             ['initializeOnce'],
-            ['CL\Luna\Test\Model\BlogPost']
+            ['Harp\Db\Test\Model\BlogPost']
         );
 
         $repo
@@ -60,9 +60,9 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testDb()
     {
         $repo = $this->getMock(
-            'CL\Luna\Test\Repo\City',
+            'Harp\Db\Test\Repo\City',
             ['initializeOnce'],
-            ['CL\Luna\Test\Model\City']
+            ['Harp\Db\Test\Model\City']
         );
 
         $repo
@@ -85,9 +85,9 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testFields()
     {
         $repo = $this->getMock(
-            'CL\Luna\Test\Repo\Country',
+            'Harp\Db\Test\Repo\Country',
             ['initializeOnce'],
-            ['CL\Luna\Test\Model\Country']
+            ['Harp\Db\Test\Model\Country']
         );
 
         $repo
@@ -109,18 +109,18 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     {
         $repo = Repo\City::get();
 
-        $this->assertInstanceof('CL\Luna\Rel\DbRelInterface', $repo->getRel('country'));
-        $this->assertInstanceof('CL\Luna\Rel\DbRelInterface', $repo->getRelOrError('country'));
+        $this->assertInstanceof('Harp\Db\Rel\DbRelInterface', $repo->getRel('country'));
+        $this->assertInstanceof('Harp\Db\Rel\DbRelInterface', $repo->getRelOrError('country'));
     }
 
     public function dataGetters()
     {
         return [
-            ['CL\Luna\Find', 'findAll'],
-            ['CL\Luna\Query\Select', 'selectAll'],
-            ['CL\Luna\Query\Update', 'updateAll'],
-            ['CL\Luna\Query\Delete', 'deleteAll'],
-            ['CL\Luna\Query\Insert', 'insertAll'],
+            ['Harp\Db\Find', 'findAll'],
+            ['Harp\Db\Query\Select', 'selectAll'],
+            ['Harp\Db\Query\Update', 'updateAll'],
+            ['Harp\Db\Query\Delete', 'deleteAll'],
+            ['Harp\Db\Query\Insert', 'insertAll'],
         ];
     }
 
@@ -134,7 +134,7 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
      */
     public function testGetters($class, $method)
     {
-        $repo = new Repo\User('CL\Luna\Test\Model\City');
+        $repo = new Repo\User('Harp\Db\Test\Model\City');
 
         $obj = $repo->$method();
 
@@ -148,13 +148,13 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testUpdateOne()
     {
         $repo = $this->getMock(
-            'CL\Luna\Test\Repo\Country',
+            'Harp\Db\Test\Repo\Country',
             ['updateAll'],
-            ['CL\Luna\Test\Model\Country']
+            ['Harp\Db\Test\Model\Country']
         );
 
         $update = $this->getMock(
-            'CL\Luna\Query\Update',
+            'Harp\Db\Query\Update',
             ['set', 'execute', 'where'],
             [$repo]
         );
@@ -193,13 +193,13 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testUpdateMany()
     {
         $repo = $this->getMock(
-            'CL\Luna\Test\Repo\Country',
+            'Harp\Db\Test\Repo\Country',
             ['updateAll'],
-            ['CL\Luna\Test\Model\Country']
+            ['Harp\Db\Test\Model\Country']
         );
 
         $update = $this->getMock(
-            'CL\Luna\Query\Update',
+            'Harp\Db\Query\Update',
             ['models', 'execute'],
             [$repo]
         );
@@ -230,13 +230,13 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $repo = $this->getMock(
-            'CL\Luna\Test\Repo\Country',
+            'Harp\Db\Test\Repo\Country',
             ['deleteAll'],
-            ['CL\Luna\Test\Model\Country']
+            ['Harp\Db\Test\Model\Country']
         );
 
         $delete = $this->getMock(
-            'CL\Luna\Query\Delete',
+            'Harp\Db\Query\Delete',
             ['models', 'execute'],
             [$repo]
         );
@@ -267,13 +267,13 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testInsert()
     {
         $repo = $this->getMock(
-            'CL\Luna\Test\Repo\Country',
+            'Harp\Db\Test\Repo\Country',
             ['insertAll'],
-            ['CL\Luna\Test\Model\Country']
+            ['Harp\Db\Test\Model\Country']
         );
 
         $insert = $this->getMock(
-            'CL\Luna\Query\Insert',
+            'Harp\Db\Query\Insert',
             ['models', 'execute', 'getLastInsertId'],
             [$repo]
         );

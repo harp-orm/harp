@@ -1,17 +1,17 @@
 <?php
 
-namespace CL\Luna\Test\Unit\Rel;
+namespace Harp\Db\Test\Unit\Rel;
 
-use CL\Luna\Test\Repo;
-use CL\Luna\Test\Model;
-use CL\LunaCore\Repo\LinkOne;
-use CL\LunaCore\Model\Models;
-use CL\Luna\Rel\BelongsTo;
-use CL\Luna\Query\Select;
-use CL\Luna\Test\AbstractTestCase;
+use Harp\Db\Test\Repo;
+use Harp\Db\Test\Model;
+use Harp\Core\Repo\LinkOne;
+use Harp\Core\Model\Models;
+use Harp\Db\Rel\BelongsTo;
+use Harp\Db\Query\Select;
+use Harp\Db\Test\AbstractTestCase;
 
 /**
- * @coversDefaultClass CL\Luna\Rel\BelongsTo
+ * @coversDefaultClass Harp\Db\Rel\BelongsTo
  */
 class BelongsToTest extends AbstractTestCase
 {
@@ -71,7 +71,7 @@ class BelongsToTest extends AbstractTestCase
 
         $countries = $rel->loadForeign($models);
 
-        $this->assertContainsOnlyInstancesOf('CL\Luna\Test\Model\Country', $countries);
+        $this->assertContainsOnlyInstancesOf('Harp\Db\Test\Model\Country', $countries);
         $this->assertCount(2, $countries);
 
         $this->assertEquals(1, $countries[0]->id);

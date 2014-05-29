@@ -1,22 +1,22 @@
 <?php
 
-namespace CL\Luna\Test\Unit;
+namespace Harp\Db\Test\Unit;
 
-use CL\Luna\Test\Repo;
-use CL\LunaCore\Model\State;
-use CL\Luna\Find;
-use CL\Luna\Query\Select;
+use Harp\Db\Test\Repo;
+use Harp\Core\Model\State;
+use Harp\Db\Find;
+use Harp\Db\Query\Select;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass CL\Luna\Find
+ * @coversDefaultClass Harp\Db\Find
  */
 class FindTest extends PHPUnit_Framework_TestCase
 {
     public function getFindSelectTest($method, array $asserts = null, $return = null)
     {
         $select = $this->getMock(
-            'CL\Luna\Query\Select',
+            'Harp\Db\Query\Select',
             [$method],
             [Repo\User::get()]
         );
@@ -47,7 +47,7 @@ class FindTest extends PHPUnit_Framework_TestCase
         $find = new Find($repo);
 
         $this->assertSame($repo, $find->getRepo());
-        $this->assertInstanceOf('CL\Luna\Query\Select', $find->getSelect());
+        $this->assertInstanceOf('Harp\Db\Query\Select', $find->getSelect());
         $this->assertSame($repo, $find->getSelect()->getRepo());
         $this->assertSame('User', $find->getTable());
 
@@ -210,7 +210,7 @@ class FindTest extends PHPUnit_Framework_TestCase
         $find = new Find(Repo\Country::get());
 
         $models = $find->execute();
-        $this->assertContainsOnlyInstancesOf('CL\Luna\Test\Model\Country', $models);
+        $this->assertContainsOnlyInstancesOf('Harp\Db\Test\Model\Country', $models);
         $this->assertCount(2, $models);
     }
 
@@ -222,10 +222,10 @@ class FindTest extends PHPUnit_Framework_TestCase
         $find = new Find(Repo\Post::get());
 
         $models = $find->execute();
-        $this->assertContainsOnlyInstancesOf('CL\Luna\Test\Model\Post', $models);
+        $this->assertContainsOnlyInstancesOf('Harp\Db\Test\Model\Post', $models);
         $this->assertCount(4, $models);
 
-        $this->assertInstanceOf('CL\Luna\Test\Model\BlogPost', $models[3]);
+        $this->assertInstanceOf('Harp\Db\Test\Model\BlogPost', $models[3]);
     }
 
     /**
@@ -233,7 +233,7 @@ class FindTest extends PHPUnit_Framework_TestCase
      */
     public function testLoadIds()
     {
-        $find = $this->getMock('CL\Luna\Find', ['applyFlags'], [Repo\Post::get()]);
+        $find = $this->getMock('Harp\Db\Find', ['applyFlags'], [Repo\Post::get()]);
 
         $find
             ->expects($this->once())
@@ -251,7 +251,7 @@ class FindTest extends PHPUnit_Framework_TestCase
      */
     public function testLoadCount()
     {
-        $find = $this->getMock('CL\Luna\Find', ['applyFlags'], [Repo\Post::get()]);
+        $find = $this->getMock('Harp\Db\Find', ['applyFlags'], [Repo\Post::get()]);
 
         $find
             ->expects($this->once())

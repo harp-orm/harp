@@ -1,16 +1,16 @@
 <?php
 
-namespace CL\Luna\Query;
+namespace Harp\Db\Query;
 
-use CL\Luna\AbstractDbRepo;
-use CL\LunaCore\Model\Models;
+use Harp\Db\AbstractDbRepo;
+use Harp\Core\Model\Models;
 
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class Update extends \CL\Atlas\Query\Update {
+class Update extends \Harp\Query\Update {
 
     use JoinRelTrait;
 

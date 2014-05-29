@@ -1,10 +1,10 @@
 <?php
 
-namespace CL\Luna\Test\Integration;
+namespace Harp\Db\Test\Integration;
 
-use CL\Luna\Test\AbstractTestCase;
-use CL\Luna\Test\Repo;
-use CL\Atlas\SQL\SQL;
+use Harp\Db\Test\AbstractTestCase;
+use Harp\Db\Test\Repo;
+use Harp\Query\SQL\SQL;
 
 /**
  * @group integration
@@ -19,8 +19,8 @@ class LoadingTest extends AbstractTestCase {
         $user = Repo\User::get()->find(1);
         $address = Repo\Address::get()->find(1);
 
-        $this->assertInstanceOf('CL\Luna\Test\Model\User', $user);
-        $this->assertInstanceOf('CL\Luna\Test\Model\Address', $address);
+        $this->assertInstanceOf('Harp\Db\Test\Model\User', $user);
+        $this->assertInstanceOf('Harp\Db\Test\Model\Address', $address);
 
         $userProps = [
             'id' => 1,
@@ -30,7 +30,7 @@ class LoadingTest extends AbstractTestCase {
             'isBlocked' => 0,
             'deletedAt' => null,
             'locationId' => 1,
-            'locationClass' => 'CL\\Luna\\Test\\Model\\City',
+            'locationClass' => 'Harp\\Db\\Test\\Model\\City',
             'test' => null,
             'parentId' => null,
         ];
@@ -58,7 +58,7 @@ class LoadingTest extends AbstractTestCase {
     {
         $cities = Repo\City::get()->findAll()->where('countryId', 1)->load();
 
-        $this->assertInstanceOf('CL\LunaCore\Model\Models', $cities);
+        $this->assertInstanceOf('Harp\Core\Model\Models', $cities);
         $this->assertCount(2, $cities);
 
         $cities->rewind();
@@ -115,7 +115,7 @@ class LoadingTest extends AbstractTestCase {
             'isBlocked' => 0,
             'deletedAt' => null,
             'locationId' => 1,
-            'locationClass' => 'CL\\Luna\\Test\\Model\\City',
+            'locationClass' => 'Harp\\Db\\Test\\Model\\City',
             'test' => null,
             'parentId' => null,
         ];
@@ -225,7 +225,7 @@ class LoadingTest extends AbstractTestCase {
         $this->assertTrue($user->getAddress()->isVoid());
         $this->assertCount(1, $user->getPosts());
 
-        $this->assertInstanceof('CL\Luna\Test\Model\BlogPost', $user->getPosts()->getFirst());
+        $this->assertInstanceof('Harp\Db\Test\Model\BlogPost', $user->getPosts()->getFirst());
         $this->assertEquals(4, $user->getPosts()->getFirst()->id);
         $this->assertCount(0, $user->getPosts()->getFirst()->getTags());
 

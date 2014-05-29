@@ -1,19 +1,19 @@
 <?php
 
-namespace CL\Luna\Test\Unit\Rel;
+namespace Harp\Db\Test\Unit\Rel;
 
-use CL\Luna\Test\Repo;
-use CL\Luna\Test\Model;
-use CL\LunaCore\Repo\LinkMany;
-use CL\LunaCore\Model\Models;
-use CL\LunaCore\Model\State;
-use CL\Luna\Rel\HasMany;
-use CL\Luna\Rel\HasManyThrough;
-use CL\Luna\Query\Select;
-use CL\Luna\Test\AbstractTestCase;
+use Harp\Db\Test\Repo;
+use Harp\Db\Test\Model;
+use Harp\Core\Repo\LinkMany;
+use Harp\Core\Model\Models;
+use Harp\Core\Model\State;
+use Harp\Db\Rel\HasMany;
+use Harp\Db\Rel\HasManyThrough;
+use Harp\Db\Query\Select;
+use Harp\Db\Test\AbstractTestCase;
 
 /**
- * @coversDefaultClass CL\Luna\Rel\HasManyThrough
+ * @coversDefaultClass Harp\Db\Rel\HasManyThrough
  */
 class HasManyThroughTest extends AbstractTestCase
 {
@@ -89,7 +89,7 @@ class HasManyThroughTest extends AbstractTestCase
 
         $tags = $rel->loadForeign($models);
 
-        $this->assertContainsOnlyInstancesOf('CL\Luna\Test\Model\Tag', $tags);
+        $this->assertContainsOnlyInstancesOf('Harp\Db\Test\Model\Tag', $tags);
         $this->assertCount(3, $tags);
 
         $this->assertEquals(1, $tags[0]->id);
@@ -151,7 +151,7 @@ class HasManyThroughTest extends AbstractTestCase
         $result = $rel->insert($model, $link);
 
         $this->assertCount(1, $result);
-        $this->assertInstanceOf('CL\Luna\Test\Model\PostTag', $result->getFirst());
+        $this->assertInstanceOf('Harp\Db\Test\Model\PostTag', $result->getFirst());
         $this->assertTrue($result->getFirst()->isPending());
         $this->assertEquals(['postId' => 2, 'tagId' => 7, 'id' => null], $result->getFirst()->getProperties());
         $this->assertTrue($postTagsLink->has($result->getFirst()));
@@ -179,7 +179,7 @@ class HasManyThroughTest extends AbstractTestCase
      */
     public function testJoinSoftDelete()
     {
-        $repo = new Repo\Post('CL\Luna\Test\Model\Tag');
+        $repo = new Repo\Post('Harp\Db\Test\Model\Tag');
         $repo->setSoftDelete(true);
 
         $rel = new HasManyThrough('tags', Repo\Post::get(), $repo, 'postTags');

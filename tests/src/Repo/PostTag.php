@@ -1,11 +1,11 @@
 <?php
 
-namespace CL\Luna\Test\Repo;
+namespace Harp\Db\Test\Repo;
 
-use CL\Luna\AbstractDbRepo;
+use Harp\Db\AbstractDbRepo;
 
-use CL\Luna\Field;
-use CL\Luna\Rel;
+use Harp\Db\Field;
+use Harp\Db\Rel;
 
 /**
  * @author     Ivan Kerin
@@ -22,7 +22,7 @@ class PostTag extends AbstractDbRepo {
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new PostTag('CL\Luna\Test\Model\PostTag');
+            self::$instance = new PostTag('Harp\Db\Test\Model\PostTag');
         }
 
         return self::$instance;

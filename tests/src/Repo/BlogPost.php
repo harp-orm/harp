@@ -1,8 +1,8 @@
 <?php
 
-namespace CL\Luna\Test\Repo;
+namespace Harp\Db\Test\Repo;
 
-use CL\Luna\Field;
+use Harp\Db\Field;
 
 /**
  * @author     Ivan Kerin
@@ -19,7 +19,7 @@ class BlogPost extends Post {
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new BlogPost('CL\Luna\Test\Model\BlogPost');
+            self::$instance = new BlogPost('Harp\Db\Test\Model\BlogPost');
         }
 
         return self::$instance;

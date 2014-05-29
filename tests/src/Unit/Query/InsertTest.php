@@ -1,16 +1,16 @@
 <?php
 
-namespace CL\Luna\Test\Unit\Query;
+namespace Harp\Db\Test\Unit\Query;
 
-use CL\Luna\Test\Repo;
-use CL\Luna\Test\Model;
-use CL\LunaCore\Model\Models;
-use CL\Atlas\SQL;
-use CL\Luna\Query\Insert;
+use Harp\Db\Test\Repo;
+use Harp\Db\Test\Model;
+use Harp\Core\Model\Models;
+use Harp\Query\SQL;
+use Harp\Db\Query\Insert;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass CL\Luna\Query\Insert
+ * @coversDefaultClass Harp\Db\Query\Insert
  */
 class InsertTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class InsertTest extends PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $repo = new Repo\City('CL\Luna\Test\Model\City');
+        $repo = new Repo\City('Harp\Db\Test\Model\City');
 
         $insert = new Insert($repo);
 
@@ -33,7 +33,7 @@ class InsertTest extends PHPUnit_Framework_TestCase
      */
     public function testModels()
     {
-        $repo = new Repo\Country('CL\Luna\Test\Model\Country');
+        $repo = new Repo\Country('Harp\Db\Test\Model\Country');
 
         $insert = new Insert($repo);
 

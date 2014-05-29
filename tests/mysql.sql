@@ -77,10 +77,10 @@ CREATE TABLE `PostTag` (
 
 INSERT INTO `User` (`id`, `name`, `addressId`, `isBlocked`, `locationId`, `locationClass`)
 VALUES
-  (1, 'User 1', 1   , 0   , 1, 'CL\\Luna\\Test\\Model\\City'),
-  (2, 'User 2', NULL, 1   , 2, 'CL\\Luna\\Test\\Model\\City'),
-  (3, 'User 3', NULL, 1   , 1, 'CL\\Luna\\Test\\Model\\Country'),
-  (4, 'User 4', 2   , NULL, 2, 'CL\\Luna\\Test\\Model\\Country');
+  (1, 'User 1', 1   , 0   , 1, 'Harp\\Db\\Test\\Model\\City'),
+  (2, 'User 2', NULL, 1   , 2, 'Harp\\Db\\Test\\Model\\City'),
+  (3, 'User 3', NULL, 1   , 1, 'Harp\\Db\\Test\\Model\\Country'),
+  (4, 'User 4', 2   , NULL, 2, 'Harp\\Db\\Test\\Model\\Country');
 
 INSERT INTO `Profile` (`id`, `firstName`, `lastName`, `userId`)
 VALUES
@@ -94,10 +94,10 @@ VALUES
 
 INSERT INTO `Post` (`id`, `title`, `body`,`price`,`tags`, `createdAt`, `updatedAt`, `publishedAt`, `userId`, `class`, `isPublished`)
 VALUES
-  (1,'News', 'Big news on the ship', 10.20, 'big,small,medium', '2014-02-10 12:00:00', '2014-02-20 12:00:00', '2014-03-01 12:00:00', 1, 'CL\\Luna\\Test\\Model\\Post', NULL),
-  (2,'New President', 'We will have a new president soon', 10.20, 'medium', '2014-01-10 12:00:00', '2014-01-20 12:00:00', '2014-03-02 12:00:00', 4, 'CL\\Luna\\Test\\Model\\Post', NULL),
-  (3,'Oil Spill', 'BP did it again', 10.20, 'big,medium', '2014-02-20 12:20:00', '2014-02-23 12:00:00', '2014-3-03 12:00:00', 4, 'CL\\Luna\\Test\\Model\\Post', NULL),
-  (4,'Blog News', 'DHH Does not like TDD', 1.20, 'small', '2014-04-20 12:20:00', '2014-07-23 12:00:00', '2014-3-04 12:00:00', 3, 'CL\\Luna\\Test\\Model\\BlogPost', 1);
+  (1,'News', 'Big news on the ship', 10.20, 'big,small,medium', '2014-02-10 12:00:00', '2014-02-20 12:00:00', '2014-03-01 12:00:00', 1, 'Harp\\Db\\Test\\Model\\Post', NULL),
+  (2,'New President', 'We will have a new president soon', 10.20, 'medium', '2014-01-10 12:00:00', '2014-01-20 12:00:00', '2014-03-02 12:00:00', 4, 'Harp\\Db\\Test\\Model\\Post', NULL),
+  (3,'Oil Spill', 'BP did it again', 10.20, 'big,medium', '2014-02-20 12:20:00', '2014-02-23 12:00:00', '2014-3-03 12:00:00', 4, 'Harp\\Db\\Test\\Model\\Post', NULL),
+  (4,'Blog News', 'DHH Does not like TDD', 1.20, 'small', '2014-04-20 12:20:00', '2014-07-23 12:00:00', '2014-3-04 12:00:00', 3, 'Harp\\Db\\Test\\Model\\BlogPost', 1);
 
 INSERT INTO `Tag` (`id`, `name`)
 VALUES

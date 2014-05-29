@@ -3,185 +3,8 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "44be22308ceaaf1723928703fe672457",
+    "hash": "24d034ec4ed663cc6f8334a64c2a4eb0",
     "packages": [
-        {
-            "name": "clippings/atlas",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/clippings/atlas.git",
-                "reference": "966b6d5482032a31e60f358a9ec3498e77dd493b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/clippings/atlas/zipball/966b6d5482032a31e60f358a9ec3498e77dd493b",
-                "reference": "966b6d5482032a31e60f358a9ec3498e77dd493b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "psr/log": "~1.0"
-            },
-            "require-dev": {
-                "clippings/env-backup": "~0.2.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "CL\\Atlas\\": "src/"
-                }
-            },
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Ivan Kerin",
-                    "email": "ikerin@gmail.com",
-                    "role": "Author"
-                },
-                {
-                    "name": "Haralan Dobrev",
-                    "email": "hkdobrev@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "SQL Builder for PDO",
-            "support": {
-                "source": "https://github.com/clippings/atlas/tree/master",
-                "issues": "https://github.com/clippings/atlas/issues"
-            },
-            "time": "2014-05-27 14:54:29"
-        },
-        {
-            "name": "clippings/carpo",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/clippings/carpo.git",
-                "reference": "f466f9db5de58fa68380ed62c32204f0561c4658"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/clippings/carpo/zipball/f466f9db5de58fa68380ed62c32204f0561c4658",
-                "reference": "f466f9db5de58fa68380ed62c32204f0561c4658",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "CL\\Carpo\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Ivan Kerin",
-                    "email": "ikerin@gmail.com",
-                    "homepage": "http://www.openbuildings.com",
-                    "role": "Author"
-                }
-            ],
-            "description": "Object validaiton library",
-            "time": "2014-03-27 13:25:00"
-        },
-        {
-            "name": "clippings/luna-core",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/clippings/luna-core.git",
-                "reference": "f9f466b1c825f5e6504a6eec3f0ced8949c2b999"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/clippings/luna-core/zipball/f9f466b1c825f5e6504a6eec3f0ced8949c2b999",
-                "reference": "f9f466b1c825f5e6504a6eec3f0ced8949c2b999",
-                "shasum": ""
-            },
-            "require": {
-                "clippings/carpo": "dev-master",
-                "clippings/util": "dev-master",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "clippings/env-backup": "~0.2.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "CL\\LunaCore\\": "src/"
-                }
-            },
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Ivan Kerin",
-                    "email": "ikerin@gmail.com",
-                    "role": "Author"
-                }
-            ],
-            "description": "DataMapper style ORM Core Componenets",
-            "support": {
-                "source": "https://github.com/clippings/luna-core/tree/master",
-                "issues": "https://github.com/clippings/luna-core/issues"
-            },
-            "time": "2014-05-28 14:24:35"
-        },
-        {
-            "name": "clippings/mass-assign",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/clippings/mass-assign.git",
-                "reference": "bcc1eaa8b0991fd8d1298c32b7978217f497e7be"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/clippings/mass-assign/zipball/bcc1eaa8b0991fd8d1298c32b7978217f497e7be",
-                "reference": "bcc1eaa8b0991fd8d1298c32b7978217f497e7be",
-                "shasum": ""
-            },
-            "require": {
-                "clippings/carpo": "dev-master",
-                "clippings/luna-core": "dev-master",
-                "clippings/util": "dev-master",
-                "php": ">=5.4.0",
-                "psr/log": "~1.0"
-            },
-            "require-dev": {
-                "clippings/env-backup": "~0.2.5",
-                "clippings/luna-json-store": "dev-master"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "CL\\MassAssign\\": "src/"
-                }
-            },
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Ivan Kerin",
-                    "email": "ikerin@gmail.com",
-                    "role": "Author"
-                }
-            ],
-            "description": "Luna extension to allow safe mass assignment of models",
-            "support": {
-                "source": "https://github.com/clippings/mass-assign/tree/master",
-                "issues": "https://github.com/clippings/mass-assign/issues"
-            },
-            "time": "2014-05-23 15:11:23"
-        },
         {
             "name": "clippings/util",
             "version": "dev-master",
@@ -216,6 +39,183 @@
             ],
             "description": "General purpose helper methods",
             "time": "2014-05-15 17:15:07"
+        },
+        {
+            "name": "harp-orm/core",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/harp-orm/core.git",
+                "reference": "48b1db27f303e9bba8535f7e5267e1a06f6ef3dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/48b1db27f303e9bba8535f7e5267e1a06f6ef3dc",
+                "reference": "48b1db27f303e9bba8535f7e5267e1a06f6ef3dc",
+                "shasum": ""
+            },
+            "require": {
+                "clippings/util": "dev-master",
+                "harp-orm/validate": "dev-master",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "clippings/env-backup": "~0.2.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Harp\\Core\\": "src/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Kerin",
+                    "email": "ikerin@gmail.com",
+                    "role": "Author"
+                }
+            ],
+            "description": "DataMapper style ORM Core Componenets",
+            "support": {
+                "source": "https://github.com/harp-orm/core/tree/master",
+                "issues": "https://github.com/harp-orm/core/issues"
+            },
+            "time": "2014-05-29 12:34:55"
+        },
+        {
+            "name": "harp-orm/mass-assign",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/harp-orm/mass-assign.git",
+                "reference": "603f245f172e1fe879f65c57215aac98a23b48a2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/harp-orm/mass-assign/zipball/603f245f172e1fe879f65c57215aac98a23b48a2",
+                "reference": "603f245f172e1fe879f65c57215aac98a23b48a2",
+                "shasum": ""
+            },
+            "require": {
+                "clippings/util": "dev-master",
+                "harp-orm/core": "dev-master",
+                "harp-orm/validate": "dev-master",
+                "php": ">=5.4.0",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "clippings/env-backup": "~0.2.5",
+                "harp-orm/json-store": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Harp\\MassAssign\\": "src/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Kerin",
+                    "email": "ikerin@gmail.com",
+                    "role": "Author"
+                }
+            ],
+            "description": "Luna extension to allow safe mass assignment of models",
+            "support": {
+                "source": "https://github.com/harp-orm/mass-assign/tree/master",
+                "issues": "https://github.com/harp-orm/mass-assign/issues"
+            },
+            "time": "2014-05-29 13:06:14"
+        },
+        {
+            "name": "harp-orm/query",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/harp-orm/query.git",
+                "reference": "d584a00583ed66ae0630a8a44fd39e7332838545"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/harp-orm/query/zipball/d584a00583ed66ae0630a8a44fd39e7332838545",
+                "reference": "d584a00583ed66ae0630a8a44fd39e7332838545",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "clippings/env-backup": "~0.2.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Harp\\Query\\": "src/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Kerin",
+                    "email": "ikerin@gmail.com",
+                    "role": "Author"
+                },
+                {
+                    "name": "Haralan Dobrev",
+                    "email": "hkdobrev@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "SQL Builder for PDO",
+            "support": {
+                "source": "https://github.com/harp-orm/query/tree/master",
+                "issues": "https://github.com/harp-orm/query/issues"
+            },
+            "time": "2014-05-29 11:34:16"
+        },
+        {
+            "name": "harp-orm/validate",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/harp-orm/validate.git",
+                "reference": "4287648c926e43ec668f17a8be507b521702853b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/harp-orm/validate/zipball/4287648c926e43ec668f17a8be507b521702853b",
+                "reference": "4287648c926e43ec668f17a8be507b521702853b",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Harp\\Validate\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Kerin",
+                    "email": "ikerin@gmail.com",
+                    "homepage": "http://www.openbuildings.com",
+                    "role": "Author"
+                }
+            ],
+            "description": "Object validaiton library",
+            "time": "2014-05-29 12:13:07"
         },
         {
             "name": "psr/log",
@@ -421,11 +421,11 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "clippings/luna-core": 20,
-        "clippings/mass-assign": 20,
         "clippings/util": 20,
-        "clippings/atlas": 20,
-        "clippings/carpo": 20
+        "harp-orm/core": 20,
+        "harp-orm/mass-assign": 20,
+        "harp-orm/query": 20,
+        "harp-orm/validate": 20
     },
     "platform": {
         "php": ">=5.4.0"

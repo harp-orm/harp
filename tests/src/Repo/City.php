@@ -1,11 +1,11 @@
 <?php
 
-namespace CL\Luna\Test\Repo;
+namespace Harp\Db\Test\Repo;
 
-use CL\Luna\AbstractDbRepo;
-use CL\Luna\Field;
-use CL\Luna\Rel;
-use CL\Carpo\Assert;
+use Harp\Db\AbstractDbRepo;
+use Harp\Db\Field;
+use Harp\Db\Rel;
+use Harp\Validate\Assert;
 
 /**
  * @author     Ivan Kerin
@@ -22,7 +22,7 @@ class City extends AbstractDbRepo {
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new City('CL\Luna\Test\Model\City');
+            self::$instance = new City('Harp\Db\Test\Model\City');
         }
 
         return self::$instance;

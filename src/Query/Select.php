@@ -3,7 +3,6 @@
 namespace Harp\Db\Query;
 
 use Harp\Db\AbstractDbRepo;
-use Harp\Core\Model\Models;
 
 /**
  * @author     Ivan Kerin
@@ -13,6 +12,11 @@ use Harp\Core\Model\Models;
 class Select extends \Harp\Query\Select {
 
     use JoinRelTrait;
+
+    /**
+     * @var AbstractDbRepo
+     */
+    private $repo;
 
     public function __construct(AbstractDbRepo $repo)
     {
@@ -24,6 +28,9 @@ class Select extends \Harp\Query\Select {
         parent::__construct($repo->getDbInstance());
     }
 
+    /**
+     * @return AbstractDbRepo
+     */
     public function getRepo()
     {
         return $this->repo;

@@ -2,14 +2,14 @@
 
 namespace Harp\Db\Rel;
 
-use CL\Util\Arr;
 use Harp\Db\AbstractDbRepo;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkOne;
 use Harp\Core\Rel\AbstractRelOne;
 use Harp\Core\Rel\UpdateOneInterface;
-use Harp\Query\AbstractQuery;
+use Harp\Query\AbstractWhere;
+
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -26,21 +26,36 @@ class HasOne extends AbstractRelOne implements DbRelInterface, UpdateOneInterfac
         parent::__construct($name, $repo, $foreignRepo, $options);
     }
 
+    /**
+     * @return string
+     */
     public function getForeignKey()
     {
         return $this->foreignKey;
     }
 
+    /**
+     * @return string
+     */
     public function getKey()
     {
         return $this->getRepo()->getPrimaryKey();
     }
 
+    /**
+     * @param  Models  $models
+     * @return boolean
+     */
     public function hasForeign(Models $models)
     {
         return ! $models->isEmptyProperty($this->getKey());
     }
 
+    /**
+     * @param  Models $models
+     * @param  int    $flags
+     * @return AbstractModelsp[]
+     */
     public function loadForeign(Models $models, $flags = null)
     {
         $keys = $models->pluckPropertyUnique($this->getKey());
@@ -51,6 +66,11 @@ class HasOne extends AbstractRelOne implements DbRelInterface, UpdateOneInterfac
             ->loadRaw($flags);
     }
 
+    /**
+     * @param  AbstractModel $model
+     * @param  AbstractModel $foreign
+     * @return boolean
+     */
     public function areLinked(AbstractModel $model, AbstractModel $foreign)
     {
         return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
@@ -65,7 +85,11 @@ class HasOne extends AbstractRelOne implements DbRelInterface, UpdateOneInterfac
         }
     }
 
-    public function join(AbstractQuery $query, $parent)
+    /**
+     * @param  AbstractWhere $query
+     * @param  string        $parent
+     */
+    public function join(AbstractWhere $query, $parent)
     {
         $alias = $this->getName();
         $condition = "ON $alias.{$this->getForeignKey()} = $parent.{$this->getKey()}";

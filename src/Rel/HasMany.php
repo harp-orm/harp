@@ -2,14 +2,13 @@
 
 namespace Harp\Db\Rel;
 
-use CL\Util\Arr;
 use Harp\Db\AbstractDbRepo;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkMany;
 use Harp\Core\Rel\AbstractRelMany;
 use Harp\Core\Rel\UpdateManyInterface;
-use Harp\Query\AbstractQuery;
+use Harp\Query\AbstractWhere;
 
 /**
  * @author     Ivan Kerin
@@ -27,21 +26,36 @@ class HasMany extends AbstractRelMany implements DbRelInterface, UpdateManyInter
         parent::__construct($name, $repo, $foreignRepo, $options);
     }
 
+    /**
+     * @return string
+     */
     public function getForeignKey()
     {
         return $this->foreignKey;
     }
 
+    /**
+     * @return string
+     */
     public function getKey()
     {
         return $this->getRepo()->getPrimaryKey();
     }
 
+    /**
+     * @param  Models  $models
+     * @return boolean
+     */
     public function hasForeign(Models $models)
     {
         return ! $models->isEmptyProperty($this->getKey());
     }
 
+    /**
+     * @param  Models $models
+     * @param  int $flags
+     * @return AbstractModel[]
+     */
     public function loadForeign(Models $models, $flags = null)
     {
         $keys = $models->pluckPropertyUnique($this->getKey());
@@ -52,12 +66,21 @@ class HasMany extends AbstractRelMany implements DbRelInterface, UpdateManyInter
             ->loadRaw($flags);
     }
 
+    /**
+     * @param  AbstractModel $model
+     * @param  AbstractModel $foreign
+     * @return boolean
+     */
     public function areLinked(AbstractModel $model, AbstractModel $foreign)
     {
         return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
     }
 
-    public function join(AbstractQuery $query, $parent)
+    /**
+     * @param  AbstractWhere $query
+     * @param  string        $parent
+     */
+    public function join(AbstractWhere $query, $parent)
     {
         $alias = $this->getName();
         $condition = "ON $alias.{$this->getForeignKey()} = $parent.{$this->getKey()}";
@@ -69,6 +92,10 @@ class HasMany extends AbstractRelMany implements DbRelInterface, UpdateManyInter
         $query->joinAliased($this->getForeignRepo()->getTable(), $alias, $condition);
     }
 
+    /**
+     * @param  AbstractModel $model
+     * @param  LinkMany      $link
+     */
     public function update(AbstractModel $model, LinkMany $link)
     {
         foreach ($link->getAdded() as $added) {

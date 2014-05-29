@@ -8,7 +8,7 @@ use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkOne;
 use Harp\Core\Rel\AbstractRelOne;
 use Harp\Core\Rel\UpdateOneInterface;
-use Harp\Query\AbstractQuery;
+use Harp\Query\AbstractWhere;
 
 /**
  * @author     Ivan Kerin
@@ -89,10 +89,10 @@ class BelongsTo extends AbstractRelOne implements DbRelInterface, UpdateOneInter
     }
 
     /**
-     * @param  AbstractQuery $query
+     * @param  AbstractWhere $query
      * @param  string        $parent
      */
-    public function join(AbstractQuery $query, $parent)
+    public function join(AbstractWhere $query, $parent)
     {
         $alias = $this->getName();
         $condition = "ON $alias.{$this->getForeignKey()} = $parent.{$this->getKey()}";

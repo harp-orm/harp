@@ -2,8 +2,6 @@
 
 namespace Harp\Db\Rel;
 
-use CL\Util\Arr;
-use CL\Util\Objects;
 use Harp\Db\AbstractDbRepo;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
@@ -11,7 +9,7 @@ use Harp\Core\Repo\LinkMany;
 use Harp\Core\Rel\AbstractRelMany;
 use Harp\Core\Rel\DeleteManyInterface;
 use Harp\Core\Rel\InsertManyInterface;
-use Harp\Query\AbstractQuery;
+use Harp\Query\AbstractWhere;
 
 /**
  * @author     Ivan Kerin
@@ -32,41 +30,68 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
         parent::__construct($name, $repo, $foreignRepo, $options);
     }
 
+    /**
+     * @return string
+     */
     public function getForeignKey()
     {
         return $this->foreignKey;
     }
 
+    /**
+     * @return string
+     */
     public function getKey()
     {
         return $this->key;
     }
 
+    /**
+     * @return DbRelInterface
+     */
     public function getThroughRel()
     {
         return $this->getRepo()->getRel($this->through);
     }
 
+    /**
+     * @return AbstractDbRepo
+     */
     public function getThroughRepo()
     {
         return $this->getThroughRel()->getForeignRepo();
     }
 
-    public function getThroughKey()
-    {
-        return $this->getName().'Key';
-    }
-
-    public function hasForeign(Models $models)
-    {
-        return ! $models->isEmptyProperty($this->getRepo()->getPrimaryKey());
-    }
-
+    /**
+     * @return string
+     */
     public function getThroughTable()
     {
         return $this->getThroughRel()->getName();
     }
 
+    /**
+     * @return string
+     */
+    public function getThroughKey()
+    {
+        return $this->getName().'Key';
+    }
+
+    /**
+     * @param  Models  $models
+     * @return boolean
+     */
+    public function hasForeign(Models $models)
+    {
+        return ! $models->isEmptyProperty($this->getRepo()->getPrimaryKey());
+    }
+
+    /**
+     * @param  Models $models
+     * @param  int $flags
+     * @return AbstractModel[]
+     */
     public function loadForeign(Models $models, $flags = null)
     {
         $throughKey = $this->getThroughTable().'.'.$this->getThroughRel()->getForeignKey();
@@ -83,12 +108,21 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
         return $select->loadRaw($flags);
     }
 
+    /**
+     * @param  AbstractModel $model
+     * @param  AbstractModel $foreign
+     * @return boolean
+     */
     public function areLinked(AbstractModel $model, AbstractModel $foreign)
     {
         return $model->getId() == $foreign->{$this->getThroughKey()};
     }
 
-    public function join(AbstractQuery $query, $parent)
+    /**
+     * @param  AbstractWhere $query
+     * @param  strng         $parent
+     */
+    public function join(AbstractWhere $query, $parent)
     {
         $alias = $this->getName();
         $condition = "ON $alias.{$this->getForeignRepo()->getPrimaryKey()} = {$this->through}.{$this->getForeignKey()}";

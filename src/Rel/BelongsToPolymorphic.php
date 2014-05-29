@@ -9,7 +9,7 @@ use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkOne;
 use Harp\Core\Rel\AbstractRelOne;
 use Harp\Core\Rel\UpdateOneInterface;
-use Harp\Query\AbstractQuery;
+use Harp\Query\AbstractWhere;
 use BadMethodCallException;
 
 /**
@@ -91,7 +91,7 @@ class BelongsToPolymorphic extends AbstractRelOne implements DbRelInterface, Upd
         $model->{$this->classKey} = get_class($link->get());
     }
 
-    public function join(AbstractQuery $query, $parent)
+    public function join(AbstractWhere $query, $parent)
     {
         throw new BadMethodCallException('BelongsToPolymorphic does not support join');
     }

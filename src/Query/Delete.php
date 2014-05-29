@@ -14,7 +14,10 @@ class Delete extends \Harp\Query\Delete {
 
     use JoinRelTrait;
 
-    protected $repo;
+    /**
+     * @var AbstractDbRepo
+     */
+    private $repo;
 
     public function __construct(AbstractDbRepo $repo)
     {
@@ -25,6 +28,9 @@ class Delete extends \Harp\Query\Delete {
         parent::__construct($repo->getDbInstance());
     }
 
+    /**
+     * @return AbstractDbRepo
+     */
     public function getRepo()
     {
         return $this->repo;

@@ -3,7 +3,6 @@
 namespace Harp\Db;
 
 use Harp\Core\Model\AbstractModel;
-use Harp\Core\Model\State;
 use Harp\Core\Save\AbstractFind;
 use PDO;
 
@@ -26,6 +25,9 @@ class Find extends AbstractFind
         parent::__construct($repo);
     }
 
+    /**
+     * @return string
+     */
     public function getTable()
     {
         return $this->getRepo()->getTable();
@@ -40,7 +42,7 @@ class Find extends AbstractFind
     }
 
     /**
-     * @return array
+     * @return Find
      */
     public function setSelect(Query\Select $select)
     {
@@ -50,8 +52,9 @@ class Find extends AbstractFind
     }
 
     /**
-     * @param  string $property
-     * @param  string  $alias
+     * @param  string|\Harp\Query\SQL\SQL  $column
+     * @param  string                      $alias
+     * @return Find
      */
     public function column($column, $alias = null)
     {
@@ -60,6 +63,11 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @param  string|\Harp\Query\SQL\SQL  $column
+     * @param  string                      $alias
+     * @return Find
+     */
     public function prependColumn($column, $alias = null)
     {
         $this->select->prependColumn($column, $alias);
@@ -67,6 +75,9 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @return Find
+     */
     public function clearColumns()
     {
         $this->select->clearColumns();
@@ -110,6 +121,9 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @return Find   $this
+     */
     public function clearWhere()
     {
         $this->select->clearWhere();
@@ -153,6 +167,9 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @return Find   $this
+     */
     public function clearHaving()
     {
         $this->select->clearHaving();
@@ -160,6 +177,11 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @param  string|\Harp\Query\SQL\SQL  $column
+     * @param  string                      $direction
+     * @return Find
+     */
     public function group($column, $direction = null)
     {
         $this->select->group($column, $direction);
@@ -167,6 +189,9 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @return Find
+     */
     public function clearGroup()
     {
         $this->select->clearGroup();
@@ -174,6 +199,11 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @param  string|\Harp\Query\SQL\SQL  $column
+     * @param  string                      $direction
+     * @return Find
+     */
     public function order($column, $direction = null)
     {
         $this->select->order($column, $direction);
@@ -181,6 +211,9 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @return Find
+     */
     public function clearOrder()
     {
         $this->select->clearOrder();
@@ -188,6 +221,12 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @param  string|\Harp\Query\SQL\SQL  $column
+     * @param  string|array                $condition
+     * @param  string                      $type
+     * @return Find
+     */
     public function join($table, $condition, $type = null)
     {
         $this->select->join($table, $condition, $type);
@@ -195,6 +234,13 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @param  string|\Harp\Query\SQL\SQL  $column
+     * @param  string|array                $alias
+     * @param  string|array                $condition
+     * @param  string                      $type
+     * @return Find
+     */
     public function joinAliased($table, $alias, $condition, $type = null)
     {
         $this->select->joinAliased($table, $alias, $condition, $type);
@@ -213,6 +259,9 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @return Find   $this
+     */
     public function clearJoin()
     {
         $this->select->clearJoin();
@@ -231,6 +280,9 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @return Find   $this
+     */
     public function clearLimit()
     {
         $this->select->clearLimit();
@@ -249,6 +301,9 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @return Find   $this
+     */
     public function clearOffset()
     {
         $this->select->clearOffset();
@@ -256,6 +311,9 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @return Find   $this
+     */
     public function onlySaved()
     {
         $this->where($this->getTable().'.deletedAt', null);
@@ -263,6 +321,9 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @return Find   $this
+     */
     public function onlyDeleted()
     {
         $this->whereNot($this->getTable().'.deletedAt', null);
@@ -283,11 +344,17 @@ class Find extends AbstractFind
         return $this;
     }
 
+    /**
+     * @return string $this
+     */
     public function humanize()
     {
         return $this->select->humanize();
     }
 
+    /**
+     * @return string $this
+     */
     public function sql()
     {
         return $this->select->sql();
@@ -306,6 +373,10 @@ class Find extends AbstractFind
         }
     }
 
+    /**
+     * @param  int $flags
+     * @return array
+     */
     public function loadIds($flags = null)
     {
         $repo = $this->getRepo();
@@ -320,6 +391,10 @@ class Find extends AbstractFind
         return $statement->fetchAll(PDO::FETCH_COLUMN, 'id');
     }
 
+    /**
+     * @param  int $flags
+     * @return int
+     */
     public function loadCount($flags = null)
     {
         $repo = $this->getRepo();

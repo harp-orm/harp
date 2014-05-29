@@ -2,7 +2,7 @@
 
 namespace Harp\Db\Rel;
 
-use Harp\Query\AbstractQuery;
+use Harp\Query\AbstractWhere;
 
 /**
  * @author     Ivan Kerin
@@ -11,5 +11,8 @@ use Harp\Query\AbstractQuery;
  */
 interface DbRelInterface
 {
-    public function join(AbstractQuery $query, $parent);
+    /**
+     * @return void
+     */
+    public function join(AbstractWhere $query, $parent);
 }

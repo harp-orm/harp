@@ -2,7 +2,6 @@
 
 namespace Harp\Db\Rel;
 
-use CL\Util\Objects;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkMany;

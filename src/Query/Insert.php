@@ -4,10 +4,7 @@ namespace Harp\Db\Query;
 
 use Harp\Query;
 use Harp\Db\AbstractDbRepo;
-use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
-use CL\Util\Objects;
-use SplObjectStorage;
 
 /**
  * @author     Ivan Kerin
@@ -18,7 +15,10 @@ class Insert extends \Harp\Query\Insert {
 
     use JoinRelTrait;
 
-    protected $repo;
+    /**
+     * @var AbstractDbRepo
+     */
+    private $repo;
 
     public function __construct(AbstractDbRepo $repo)
     {
@@ -27,12 +27,18 @@ class Insert extends \Harp\Query\Insert {
 
         parent::__construct($repo->getDbInstance());
     }
-
+    /**
+     * @return AbstractDbRepo
+     */
     public function getRepo()
     {
         return $this->repo;
     }
 
+    /**
+     * @param  Models $models
+     * @return Insert         $this
+     */
     public function models(Models $models)
     {
         $columns = $this->getRepo()->getFields();

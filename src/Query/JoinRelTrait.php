@@ -3,6 +3,7 @@
 namespace Harp\Db\Query;
 
 use Harp\Db\AbstractDbRepo;
+use Harp\Core\Repo\AbstractRepo;
 use CL\Util\Arr;
 
 /**
@@ -21,7 +22,7 @@ trait JoinRelTrait {
         return $this;
     }
 
-    private function joinNestedRels(AbstractDbRepo $repo, array $rels, $parent)
+    private function joinNestedRels(AbstractRepo $repo, array $rels, $parent)
     {
         foreach ($rels as $name => $childRels)
         {

@@ -14,6 +14,11 @@ class Update extends \Harp\Query\Update {
 
     use JoinRelTrait;
 
+    /**
+     * @var AbstractDbRepo
+     */
+    private $repo;
+
     public function __construct(AbstractDbRepo $repo)
     {
         $this->repo = $repo;
@@ -22,6 +27,9 @@ class Update extends \Harp\Query\Update {
         parent::__construct($repo->getDbInstance());
     }
 
+    /**
+     * @return AbstractDbRepo
+     */
     public function getRepo()
     {
         return $this->repo;

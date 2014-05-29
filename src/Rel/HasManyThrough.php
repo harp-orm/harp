@@ -18,6 +18,7 @@ use Harp\Query\AbstractWhere;
  */
 class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteManyInterface, InsertManyInterface
 {
+    protected $key;
     protected $foreignKey;
     protected $through;
 
@@ -139,7 +140,6 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
 
     public function delete(AbstractModel $model, LinkMany $link)
     {
-        $removed = new Models();
         $through = $this->getRepo()->loadLink($model, $this->through);
         $removedIds = $link->getRemoved()->getIds();
 

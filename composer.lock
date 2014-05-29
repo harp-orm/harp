@@ -46,12 +46,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/core.git",
-                "reference": "48b1db27f303e9bba8535f7e5267e1a06f6ef3dc"
+                "reference": "486210a32546fa3252e95a2bd306c1369c2818bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/48b1db27f303e9bba8535f7e5267e1a06f6ef3dc",
-                "reference": "48b1db27f303e9bba8535f7e5267e1a06f6ef3dc",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/486210a32546fa3252e95a2bd306c1369c2818bf",
+                "reference": "486210a32546fa3252e95a2bd306c1369c2818bf",
                 "shasum": ""
             },
             "require": {
@@ -83,7 +83,7 @@
                 "source": "https://github.com/harp-orm/core/tree/master",
                 "issues": "https://github.com/harp-orm/core/issues"
             },
-            "time": "2014-05-29 12:34:55"
+            "time": "2014-05-29 18:18:37"
         },
         {
             "name": "harp-orm/mass-assign",

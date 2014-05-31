@@ -3,59 +3,24 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "bd5e93000f193e9d98c2f990917d9648",
+    "hash": "b391833de5200dd5394e7f6407341890",
     "packages": [
-        {
-            "name": "clippings/util",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/clippings/util.git",
-                "reference": "d651043559a090015842309900d1204fa343ae51"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/clippings/util/zipball/d651043559a090015842309900d1204fa343ae51",
-                "reference": "d651043559a090015842309900d1204fa343ae51",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "CL\\Util\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Ivan Kerin",
-                    "email": "ikerin@gmail.com",
-                    "homepage": "http://www.openbuildings.com",
-                    "role": "Author"
-                }
-            ],
-            "description": "General purpose helper methods",
-            "time": "2014-05-29 14:46:51"
-        },
         {
             "name": "harp-orm/core",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/core.git",
-                "reference": "98d032dcc8488a296e77dd50ec7666ca0a5384d8"
+                "reference": "d4a6bc523b9953d545dd37d32c3eec2e15855ec7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/98d032dcc8488a296e77dd50ec7666ca0a5384d8",
-                "reference": "98d032dcc8488a296e77dd50ec7666ca0a5384d8",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/d4a6bc523b9953d545dd37d32c3eec2e15855ec7",
+                "reference": "d4a6bc523b9953d545dd37d32c3eec2e15855ec7",
                 "shasum": ""
             },
             "require": {
-                "clippings/util": "dev-master",
+                "harp-orm/util": "~0.2.0",
                 "harp-orm/validate": "dev-master",
                 "php": ">=5.4.0"
             },
@@ -83,7 +48,7 @@
                 "source": "https://github.com/harp-orm/core/tree/master",
                 "issues": "https://github.com/harp-orm/core/issues"
             },
-            "time": "2014-05-29 18:27:50"
+            "time": "2014-05-31 11:47:47"
         },
         {
             "name": "harp-orm/query",
@@ -133,6 +98,41 @@
                 "issues": "https://github.com/harp-orm/query/issues"
             },
             "time": "2014-05-29 11:34:16"
+        },
+        {
+            "name": "harp-orm/util",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/harp-orm/util.git",
+                "reference": "902c0d451126279fa0d5dbff7f3f99ce9e6cf9d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/harp-orm/util/zipball/902c0d451126279fa0d5dbff7f3f99ce9e6cf9d2",
+                "reference": "902c0d451126279fa0d5dbff7f3f99ce9e6cf9d2",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Harp\\Util\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Kerin",
+                    "email": "ikerin@gmail.com",
+                    "homepage": "http://www.openbuildings.com",
+                    "role": "Author"
+                }
+            ],
+            "description": "General purpose helper methods",
+            "time": "2014-05-31 11:21:41"
         },
         {
             "name": "harp-orm/validate",
@@ -212,7 +212,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "clippings/util": 20,
         "harp-orm/core": 20,
         "harp-orm/query": 20,
         "harp-orm/validate": 20

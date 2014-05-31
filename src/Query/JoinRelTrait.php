@@ -3,7 +3,7 @@
 namespace Harp\Harp\Query;
 
 use Harp\Harp\AbstractRepo;
-use CL\Util\Arr;
+use Harp\Util\Arr;
 
 /**
  * @author     Ivan Kerin

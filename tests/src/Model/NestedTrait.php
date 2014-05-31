@@ -1,6 +1,6 @@
 <?php
 
-namespace Harp\Db\Test\Model;
+namespace Harp\Harp\Test\Model;
 
 /**
  * @author     Ivan Kerin

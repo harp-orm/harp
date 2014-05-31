@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "24d034ec4ed663cc6f8334a64c2a4eb0",
+    "hash": "bd5e93000f193e9d98c2f990917d9648",
     "packages": [
         {
             "name": "clippings/util",
@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/clippings/util.git",
-                "reference": "1e696104d68c578001c3803499a07d6179633b49"
+                "reference": "d651043559a090015842309900d1204fa343ae51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clippings/util/zipball/1e696104d68c578001c3803499a07d6179633b49",
-                "reference": "1e696104d68c578001c3803499a07d6179633b49",
+                "url": "https://api.github.com/repos/clippings/util/zipball/d651043559a090015842309900d1204fa343ae51",
+                "reference": "d651043559a090015842309900d1204fa343ae51",
                 "shasum": ""
             },
             "type": "library",
@@ -38,7 +38,7 @@
                 }
             ],
             "description": "General purpose helper methods",
-            "time": "2014-05-15 17:15:07"
+            "time": "2014-05-29 14:46:51"
         },
         {
             "name": "harp-orm/core",
@@ -46,12 +46,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/core.git",
-                "reference": "486210a32546fa3252e95a2bd306c1369c2818bf"
+                "reference": "98d032dcc8488a296e77dd50ec7666ca0a5384d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/486210a32546fa3252e95a2bd306c1369c2818bf",
-                "reference": "486210a32546fa3252e95a2bd306c1369c2818bf",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/98d032dcc8488a296e77dd50ec7666ca0a5384d8",
+                "reference": "98d032dcc8488a296e77dd50ec7666ca0a5384d8",
                 "shasum": ""
             },
             "require": {
@@ -83,55 +83,7 @@
                 "source": "https://github.com/harp-orm/core/tree/master",
                 "issues": "https://github.com/harp-orm/core/issues"
             },
-            "time": "2014-05-29 18:18:37"
-        },
-        {
-            "name": "harp-orm/mass-assign",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/harp-orm/mass-assign.git",
-                "reference": "603f245f172e1fe879f65c57215aac98a23b48a2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/mass-assign/zipball/603f245f172e1fe879f65c57215aac98a23b48a2",
-                "reference": "603f245f172e1fe879f65c57215aac98a23b48a2",
-                "shasum": ""
-            },
-            "require": {
-                "clippings/util": "dev-master",
-                "harp-orm/core": "dev-master",
-                "harp-orm/validate": "dev-master",
-                "php": ">=5.4.0",
-                "psr/log": "~1.0"
-            },
-            "require-dev": {
-                "clippings/env-backup": "~0.2.5",
-                "harp-orm/json-store": "dev-master"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Harp\\MassAssign\\": "src/"
-                }
-            },
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Ivan Kerin",
-                    "email": "ikerin@gmail.com",
-                    "role": "Author"
-                }
-            ],
-            "description": "Luna extension to allow safe mass assignment of models",
-            "support": {
-                "source": "https://github.com/harp-orm/mass-assign/tree/master",
-                "issues": "https://github.com/harp-orm/mass-assign/issues"
-            },
-            "time": "2014-05-29 13:06:14"
+            "time": "2014-05-29 18:27:50"
         },
         {
             "name": "harp-orm/query",
@@ -256,174 +208,12 @@
             "time": "2012-12-21 11:40:51"
         }
     ],
-    "packages-dev": [
-        {
-            "name": "nikic/php-parser",
-            "version": "v0.9.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "1e5e280ae88a27effa2ae4aa2bd088494ed8594f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/1e5e280ae88a27effa2ae4aa2bd088494ed8594f",
-                "reference": "1e5e280ae88a27effa2ae4aa2bd088494ed8594f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.9-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "PHPParser": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Nikita Popov"
-                }
-            ],
-            "description": "A PHP parser written in PHP",
-            "keywords": [
-                "parser",
-                "php"
-            ],
-            "time": "2013-08-25 17:11:40"
-        },
-        {
-            "name": "psy/psysh",
-            "version": "v0.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "33db0d52546a2b543739eee0ec62235fa7813d35"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/33db0d52546a2b543739eee0ec62235fa7813d35",
-                "reference": "33db0d52546a2b543739eee0ec62235fa7813d35",
-                "shasum": ""
-            },
-            "require": {
-                "nikic/php-parser": "~0.9.3",
-                "php": ">=5.3.0",
-                "symfony/console": "~2.3, >=2.3.10"
-            },
-            "require-dev": {
-                "phpunit/phpunit": ">=3.7, <4.1",
-                "symfony/finder": "~2.1"
-            },
-            "suggest": {
-                "ext-pcntl": "Enabling the PCNTL extension makes PsySH a lot happier :)"
-            },
-            "bin": [
-                "bin/psysh"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Psy\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Justin Hileman",
-                    "email": "justin@justinhileman.info",
-                    "homepage": "http://justinhileman.com"
-                }
-            ],
-            "description": "An interactive shell for modern PHP.",
-            "homepage": "https://github.com/bobthecow/psysh",
-            "keywords": [
-                "REPL",
-                "console",
-                "interactive",
-                "shell"
-            ],
-            "time": "2014-04-13 01:58:29"
-        },
-        {
-            "name": "symfony/console",
-            "version": "v2.4.5",
-            "target-dir": "Symfony/Component/Console",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/Console.git",
-                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/24f723436e62598c9dddee2a8573d6992504dc5d",
-                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "symfony/event-dispatcher": "~2.1"
-            },
-            "suggest": {
-                "symfony/event-dispatcher": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Console\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Console Component",
-            "homepage": "http://symfony.com",
-            "time": "2014-05-14 21:48:29"
-        }
-    ],
+    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "clippings/util": 20,
         "harp-orm/core": 20,
-        "harp-orm/mass-assign": 20,
         "harp-orm/query": 20,
         "harp-orm/validate": 20
     },

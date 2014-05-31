@@ -1,8 +1,8 @@
 <?php
 
-namespace Harp\Db\Test\Model;
+namespace Harp\Harp\Test\Model;
 
-use Harp\Db\Test\Repo;
+use Harp\Harp\Test\Repo;
 
 /**
  * @author     Ivan Kerin

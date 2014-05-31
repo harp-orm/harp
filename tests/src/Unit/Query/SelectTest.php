@@ -1,16 +1,16 @@
 <?php
 
-namespace Harp\Db\Test\Unit\Query;
+namespace Harp\Harp\Test\Unit\Query;
 
-use Harp\Db\Test\Repo;
-use Harp\Db\Test\Model;
+use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Core\Model\Models;
 use Harp\Query\SQL;
-use Harp\Db\Query\Select;
+use Harp\Harp\Query\Select;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass Harp\Db\Query\Select
+ * @coversDefaultClass Harp\Harp\Query\Select
  */
 class SelectTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class SelectTest extends PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $repo = new Repo\City('Harp\Db\Test\Model\City');
+        $repo = new Repo\City('Harp\Harp\Test\Model\City');
 
         $select = new Select($repo);
 

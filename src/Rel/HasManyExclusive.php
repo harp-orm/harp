@@ -1,6 +1,6 @@
 <?php
 
-namespace Harp\Db\Rel;
+namespace Harp\Harp\Rel;
 
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;

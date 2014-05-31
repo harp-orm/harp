@@ -1,11 +1,11 @@
 <?php
 
-namespace Harp\Db\Test\Repo;
+namespace Harp\Harp\Test\Repo;
 
-use Harp\Db\AbstractDbRepo;
+use Harp\Harp\AbstractDbRepo;
 
-use Harp\Db\Field;
-use Harp\Db\Rel;
+use Harp\Harp\Field;
+use Harp\Harp\Rel;
 
 /**
  * @author     Ivan Kerin
@@ -22,7 +22,7 @@ class PostTag extends AbstractDbRepo {
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new PostTag('Harp\Db\Test\Model\PostTag');
+            self::$instance = new PostTag('Harp\Harp\Test\Model\PostTag');
         }
 
         return self::$instance;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Harp\Db\Query;
+namespace Harp\Harp\Query;
 
-use Harp\Db\AbstractDbRepo;
+use Harp\Harp\AbstractDbRepo;
 use Harp\Core\Repo\AbstractRepo;
 use CL\Util\Arr;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Harp\Db\Test;
+namespace Harp\Harp\Test;
 
 use Harp\Query\DB;
-use Harp\Db\Test\Repo;
+use Harp\Harp\Test\Repo;
 use PHPUnit_Framework_TestCase;
 
 /**

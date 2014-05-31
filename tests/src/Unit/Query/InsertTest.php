@@ -1,16 +1,16 @@
 <?php
 
-namespace Harp\Db\Test\Unit\Query;
+namespace Harp\Harp\Test\Unit\Query;
 
-use Harp\Db\Test\Repo;
-use Harp\Db\Test\Model;
+use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Core\Model\Models;
 use Harp\Query\SQL;
-use Harp\Db\Query\Insert;
+use Harp\Harp\Query\Insert;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass Harp\Db\Query\Insert
+ * @coversDefaultClass Harp\Harp\Query\Insert
  */
 class InsertTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class InsertTest extends PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $repo = new Repo\City('Harp\Db\Test\Model\City');
+        $repo = new Repo\City('Harp\Harp\Test\Model\City');
 
         $insert = new Insert($repo);
 
@@ -33,7 +33,7 @@ class InsertTest extends PHPUnit_Framework_TestCase
      */
     public function testModels()
     {
-        $repo = new Repo\Country('Harp\Db\Test\Model\Country');
+        $repo = new Repo\Country('Harp\Harp\Test\Model\Country');
 
         $insert = new Insert($repo);
 

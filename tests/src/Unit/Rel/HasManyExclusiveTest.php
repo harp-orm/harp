@@ -1,17 +1,17 @@
 <?php
 
-namespace Harp\Db\Test\Unit\Rel;
+namespace Harp\Harp\Test\Unit\Rel;
 
-use Harp\Db\Test\Repo;
-use Harp\Db\Test\Model;
+use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Core\Repo\LinkMany;
 use Harp\Core\Model\Models;
 use Harp\Core\Model\State;
-use Harp\Db\Rel\HasManyExclusive;
-use Harp\Db\Test\AbstractTestCase;
+use Harp\Harp\Rel\HasManyExclusive;
+use Harp\Harp\Test\AbstractTestCase;
 
 /**
- * @coversDefaultClass Harp\Db\Rel\HasManyExclusive
+ * @coversDefaultClass Harp\Harp\Rel\HasManyExclusive
  */
 class HasManyExclusiveTest extends AbstractTestCase
 {

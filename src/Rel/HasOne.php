@@ -1,8 +1,8 @@
 <?php
 
-namespace Harp\Db\Rel;
+namespace Harp\Harp\Rel;
 
-use Harp\Db\AbstractDbRepo;
+use Harp\Harp\AbstractDbRepo;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkOne;

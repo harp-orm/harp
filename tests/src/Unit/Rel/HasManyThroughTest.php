@@ -1,19 +1,19 @@
 <?php
 
-namespace Harp\Db\Test\Unit\Rel;
+namespace Harp\Harp\Test\Unit\Rel;
 
-use Harp\Db\Test\Repo;
-use Harp\Db\Test\Model;
+use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Core\Repo\LinkMany;
 use Harp\Core\Model\Models;
 use Harp\Core\Model\State;
-use Harp\Db\Rel\HasMany;
-use Harp\Db\Rel\HasManyThrough;
-use Harp\Db\Query\Select;
-use Harp\Db\Test\AbstractTestCase;
+use Harp\Harp\Rel\HasMany;
+use Harp\Harp\Rel\HasManyThrough;
+use Harp\Harp\Query\Select;
+use Harp\Harp\Test\AbstractTestCase;
 
 /**
- * @coversDefaultClass Harp\Db\Rel\HasManyThrough
+ * @coversDefaultClass Harp\Harp\Rel\HasManyThrough
  */
 class HasManyThroughTest extends AbstractTestCase
 {
@@ -89,7 +89,7 @@ class HasManyThroughTest extends AbstractTestCase
 
         $tags = $rel->loadForeign($models);
 
-        $this->assertContainsOnlyInstancesOf('Harp\Db\Test\Model\Tag', $tags);
+        $this->assertContainsOnlyInstancesOf('Harp\Harp\Test\Model\Tag', $tags);
         $this->assertCount(3, $tags);
 
         $this->assertEquals(1, $tags[0]->id);
@@ -151,7 +151,7 @@ class HasManyThroughTest extends AbstractTestCase
         $result = $rel->insert($model, $link);
 
         $this->assertCount(1, $result);
-        $this->assertInstanceOf('Harp\Db\Test\Model\PostTag', $result->getFirst());
+        $this->assertInstanceOf('Harp\Harp\Test\Model\PostTag', $result->getFirst());
         $this->assertTrue($result->getFirst()->isPending());
         $this->assertEquals(['postId' => 2, 'tagId' => 7, 'id' => null], $result->getFirst()->getProperties());
         $this->assertTrue($postTagsLink->has($result->getFirst()));
@@ -179,7 +179,7 @@ class HasManyThroughTest extends AbstractTestCase
      */
     public function testJoinSoftDelete()
     {
-        $repo = new Repo\Post('Harp\Db\Test\Model\Tag');
+        $repo = new Repo\Post('Harp\Harp\Test\Model\Tag');
         $repo->setSoftDelete(true);
 
         $rel = new HasManyThrough('tags', Repo\Post::get(), $repo, 'postTags');

@@ -1,8 +1,8 @@
 <?php
 
-namespace Harp\Db\Test\Repo;
+namespace Harp\Harp\Test\Repo;
 
-use Harp\Db\Field;
+use Harp\Harp\Field;
 
 /**
  * @author     Ivan Kerin

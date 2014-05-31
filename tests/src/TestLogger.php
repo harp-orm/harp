@@ -1,6 +1,6 @@
 <?php
 
-namespace Harp\Db\Test;
+namespace Harp\Harp\Test;
 
 use Psr\Log\AbstractLogger;
 use Harp\Query\Compiler\Compiler;

@@ -1,16 +1,16 @@
 <?php
 
-namespace Harp\Db\Test\Unit\Query;
+namespace Harp\Harp\Test\Unit\Query;
 
-use Harp\Db\Test\Repo;
-use Harp\Db\Test\Model;
+use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Core\Model\Models;
 use Harp\Query\SQL;
-use Harp\Db\Query\Select;
+use Harp\Harp\Query\Select;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass Harp\Db\Query\JoinRelTrait
+ * @coversDefaultClass Harp\Harp\Query\JoinRelTrait
  */
 class JoinRelTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class JoinRelTest extends PHPUnit_Framework_TestCase
      */
     public function testJoinRels()
     {
-        $repo = new Repo\User('Harp\Db\Test\Model\User');
+        $repo = new Repo\User('Harp\Harp\Test\Model\User');
 
         $select = new Select($repo);
 
@@ -38,7 +38,7 @@ class JoinRelTest extends PHPUnit_Framework_TestCase
      */
     public function testJoinRelsError()
     {
-        $repo = new Repo\User('Harp\Db\Test\Model\User');
+        $repo = new Repo\User('Harp\Harp\Test\Model\User');
 
         $select = new Select($repo);
 

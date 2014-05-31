@@ -1,10 +1,10 @@
 <?php
 
-namespace Harp\Db\Test\Integration;
+namespace Harp\Harp\Test\Integration;
 
-use Harp\Db\Test\AbstractTestCase;
-use Harp\Db\Test\Repo;
-use Harp\Db\Test\Model;
+use Harp\Harp\Test\AbstractTestCase;
+use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Query\SQL\SQL;
 
 /**
@@ -73,7 +73,7 @@ class SavingTest extends AbstractTestCase {
             'SELECT Address.* FROM Address WHERE (id IN (1))',
             'SELECT Post.class, Post.* FROM Post WHERE (userId IN (1))',
             'SELECT Tag.* FROM Tag WHERE (id IN (1, 2))',
-            'INSERT INTO Post (id, title, body, price, tags, createdAt, updatedAt, publishedAt, userId, class) VALUES (NULL, "new post", "Lorem Ipsum", "123.23", NULL, NULL, NULL, NULL, NULL, "Harp\\Db\\Test\\Model\\Post")',
+            'INSERT INTO Post (id, title, body, price, tags, createdAt, updatedAt, publishedAt, userId, class) VALUES (NULL, "new post", "Lorem Ipsum", "123.23", NULL, NULL, NULL, NULL, NULL, "Harp\\Harp\\Test\\Model\\Post")',
             'INSERT INTO PostTag (id, postId, tagId) VALUES (NULL, NULL, 1), (NULL, NULL, 2)',
             'UPDATE User SET name = "New Name", isBlocked = 1 WHERE (id = 1)',
             'UPDATE Address SET zipCode = "1234", location = "Somewhere else" WHERE (id = 1)',

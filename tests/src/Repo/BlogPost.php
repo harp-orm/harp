@@ -1,8 +1,8 @@
 <?php
 
-namespace Harp\Db\Test\Repo;
+namespace Harp\Harp\Test\Repo;
 
-use Harp\Db\Field;
+use Harp\Harp\Field;
 
 /**
  * @author     Ivan Kerin
@@ -19,7 +19,7 @@ class BlogPost extends Post {
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new BlogPost('Harp\Db\Test\Model\BlogPost');
+            self::$instance = new BlogPost('Harp\Harp\Test\Model\BlogPost');
         }
 
         return self::$instance;

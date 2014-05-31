@@ -1,6 +1,6 @@
 <?php
 
-namespace Harp\Db;
+namespace Harp\Harp;
 
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Save\AbstractFind;

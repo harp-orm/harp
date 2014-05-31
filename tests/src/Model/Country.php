@@ -1,9 +1,9 @@
 <?php
 
-namespace Harp\Db\Test\Model;
+namespace Harp\Harp\Test\Model;
 
 use Harp\Core\Model\AbstractModel;
-use Harp\Db\Test\Repo;
+use Harp\Harp\Test\Repo;
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.

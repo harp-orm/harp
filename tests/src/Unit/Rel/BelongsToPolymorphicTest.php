@@ -1,17 +1,17 @@
 <?php
 
-namespace Harp\Db\Test\Unit\Rel;
+namespace Harp\Harp\Test\Unit\Rel;
 
-use Harp\Db\Test\Repo;
-use Harp\Db\Test\Model;
+use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Core\Repo\LinkOne;
 use Harp\Core\Model\Models;
-use Harp\Db\Rel\BelongsToPolymorphic;
-use Harp\Db\Query\Select;
-use Harp\Db\Test\AbstractTestCase;
+use Harp\Harp\Rel\BelongsToPolymorphic;
+use Harp\Harp\Query\Select;
+use Harp\Harp\Test\AbstractTestCase;
 
 /**
- * @coversDefaultClass Harp\Db\Rel\BelongsToPolymorphic
+ * @coversDefaultClass Harp\Harp\Rel\BelongsToPolymorphic
  */
 class BelongsToPolymorphicTest extends AbstractTestCase
 {
@@ -65,8 +65,8 @@ class BelongsToPolymorphicTest extends AbstractTestCase
         $this->assertFalse($rel->hasForeign($models));
 
         $models = new Models([
-            new Model\City(['testId' => 1, 'testClass' => 'Harp\Db\Test\Model\Country']),
-            new Model\City(['testId' => 2, 'testClass' => 'Harp\Db\Test\Model\City']),
+            new Model\City(['testId' => 1, 'testClass' => 'Harp\Harp\Test\Model\Country']),
+            new Model\City(['testId' => 2, 'testClass' => 'Harp\Harp\Test\Model\City']),
         ]);
 
         $this->assertTrue($rel->hasForeign($models));
@@ -82,9 +82,9 @@ class BelongsToPolymorphicTest extends AbstractTestCase
 
         $models = new Models([
             new Model\User(['locationId' => null, 'locationClass' => null]),
-            new Model\User(['locationId' => null, 'locationClass' => 'Harp\Db\Test\Model\Post']),
-            new Model\User(['locationId' => 1, 'locationClass' => 'Harp\Db\Test\Model\Country']),
-            new Model\User(['locationId' => 1, 'locationClass' => 'Harp\Db\Test\Model\City']),
+            new Model\User(['locationId' => null, 'locationClass' => 'Harp\Harp\Test\Model\Post']),
+            new Model\User(['locationId' => 1, 'locationClass' => 'Harp\Harp\Test\Model\Country']),
+            new Model\User(['locationId' => 1, 'locationClass' => 'Harp\Harp\Test\Model\City']),
         ]);
 
         $locations = $rel->loadForeign($models);
@@ -92,27 +92,27 @@ class BelongsToPolymorphicTest extends AbstractTestCase
         $this->assertCount(2, $locations);
 
         $this->assertEquals(1, $locations[0]->id);
-        $this->assertInstanceOf('Harp\Db\Test\Model\Country', $locations[0]);
+        $this->assertInstanceOf('Harp\Harp\Test\Model\Country', $locations[0]);
 
         $this->assertEquals(1, $locations[1]->id);
-        $this->assertInstanceOf('Harp\Db\Test\Model\City', $locations[1]);
+        $this->assertInstanceOf('Harp\Harp\Test\Model\City', $locations[1]);
     }
 
     public function dataAreLinked()
     {
         return [
             [
-                new Model\User(['locationId' => 2, 'locationClass' => 'Harp\Db\Test\Model\Country']),
+                new Model\User(['locationId' => 2, 'locationClass' => 'Harp\Harp\Test\Model\Country']),
                 new Model\City(['id' => 2]),
                 false,
             ],
             [
-                new Model\User(['locationId' => 2, 'locationClass' => 'Harp\Db\Test\Model\Country']),
+                new Model\User(['locationId' => 2, 'locationClass' => 'Harp\Harp\Test\Model\Country']),
                 new Model\Country(),
                 false,
             ],
             [
-                new Model\User(['locationId' => 2, 'locationClass' => 'Harp\Db\Test\Model\Country']),
+                new Model\User(['locationId' => 2, 'locationClass' => 'Harp\Harp\Test\Model\Country']),
                 new Model\Country(['id' => 2]),
                 true,
             ],
@@ -144,7 +144,7 @@ class BelongsToPolymorphicTest extends AbstractTestCase
         $rel->update($model, $link);
 
         $this->assertEquals(20, $model->locationId);
-        $this->assertEquals('Harp\Db\Test\Model\Country', $model->locationClass);
+        $this->assertEquals('Harp\Harp\Test\Model\Country', $model->locationClass);
     }
 
     /**

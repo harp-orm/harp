@@ -1,11 +1,11 @@
 <?php
 
-namespace Harp\Db;
+namespace Harp\Harp;
 
 use Harp\Core\Save\AbstractSaveRepo;
 use Harp\Core\Model\Models;
-use Harp\Db\Rel\DbRelInterface;
-use Harp\Db\Query;
+use Harp\Harp\Rel\DbRelInterface;
+use Harp\Harp\Query;
 use Harp\Query\DB;
 use ReflectionProperty;
 

@@ -28,14 +28,10 @@
         "psr/log": "~1.0",
         "clippings/util": "dev-master",
         "harp-orm/core": "dev-master",
-        "harp-orm/mass-assign": "dev-master",
         "harp-orm/query": "dev-master",
         "harp-orm/validate": "dev-master"
     },
-    "require-dev": {
-        "psy/psysh": "~0.1.8"
-    },
     "autoload": {
-        "psr-4": {"Harp\\Db\\": "src/"}
+        "psr-4": {"Harp\\Harp\\": "src/"}
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Harp\Db\Test\Repo;
+namespace Harp\Harp\Test\Repo;
 
-use Harp\Db\AbstractDbRepo;
-use Harp\Db\Field;
-use Harp\Db\Rel;
+use Harp\Harp\AbstractDbRepo;
+use Harp\Harp\Field;
+use Harp\Harp\Rel;
 use Harp\Validate\Assert;
 
 /**
@@ -22,7 +22,7 @@ class Post extends AbstractDbRepo {
     public static function get()
     {
         if (! self::$instance) {
-            self::$instance = new Post('Harp\Db\Test\Model\Post');
+            self::$instance = new Post('Harp\Harp\Test\Model\Post');
         }
 
         return self::$instance;

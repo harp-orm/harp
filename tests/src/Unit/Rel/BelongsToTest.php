@@ -1,17 +1,17 @@
 <?php
 
-namespace Harp\Db\Test\Unit\Rel;
+namespace Harp\Harp\Test\Unit\Rel;
 
-use Harp\Db\Test\Repo;
-use Harp\Db\Test\Model;
+use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Core\Repo\LinkOne;
 use Harp\Core\Model\Models;
-use Harp\Db\Rel\BelongsTo;
-use Harp\Db\Query\Select;
-use Harp\Db\Test\AbstractTestCase;
+use Harp\Harp\Rel\BelongsTo;
+use Harp\Harp\Query\Select;
+use Harp\Harp\Test\AbstractTestCase;
 
 /**
- * @coversDefaultClass Harp\Db\Rel\BelongsTo
+ * @coversDefaultClass Harp\Harp\Rel\BelongsTo
  */
 class BelongsToTest extends AbstractTestCase
 {
@@ -71,7 +71,7 @@ class BelongsToTest extends AbstractTestCase
 
         $countries = $rel->loadForeign($models);
 
-        $this->assertContainsOnlyInstancesOf('Harp\Db\Test\Model\Country', $countries);
+        $this->assertContainsOnlyInstancesOf('Harp\Harp\Test\Model\Country', $countries);
         $this->assertCount(2, $countries);
 
         $this->assertEquals(1, $countries[0]->id);

@@ -1,16 +1,16 @@
 <?php
 
-namespace Harp\Db\Test\Unit;
+namespace Harp\Harp\Test\Unit;
 
-use Harp\Db\Test\Repo;
-use Harp\Db\Test\Model;
+use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Core\Model\State;
 use Harp\Core\Model\Models;
 use Harp\Query\DB;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass Harp\Db\AbstractDbRepo
+ * @coversDefaultClass Harp\Harp\AbstractDbRepo
  */
 class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
 {
@@ -22,7 +22,7 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $repo = new Repo\User('Harp\Db\Test\Model\City');
+        $repo = new Repo\User('Harp\Harp\Test\Model\City');
 
         $this->assertEquals('City', $repo->getTable());
         $this->assertEquals('City', $repo->getName());
@@ -36,9 +36,9 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testTable()
     {
         $repo = $this->getMock(
-            'Harp\Db\Test\Repo\BlogPost',
+            'Harp\Harp\Test\Repo\BlogPost',
             ['initializeOnce'],
-            ['Harp\Db\Test\Model\BlogPost']
+            ['Harp\Harp\Test\Model\BlogPost']
         );
 
         $repo
@@ -60,9 +60,9 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testDb()
     {
         $repo = $this->getMock(
-            'Harp\Db\Test\Repo\City',
+            'Harp\Harp\Test\Repo\City',
             ['initializeOnce'],
-            ['Harp\Db\Test\Model\City']
+            ['Harp\Harp\Test\Model\City']
         );
 
         $repo
@@ -85,9 +85,9 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testFields()
     {
         $repo = $this->getMock(
-            'Harp\Db\Test\Repo\Country',
+            'Harp\Harp\Test\Repo\Country',
             ['initializeOnce'],
-            ['Harp\Db\Test\Model\Country']
+            ['Harp\Harp\Test\Model\Country']
         );
 
         $repo
@@ -109,18 +109,18 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     {
         $repo = Repo\City::get();
 
-        $this->assertInstanceof('Harp\Db\Rel\DbRelInterface', $repo->getRel('country'));
-        $this->assertInstanceof('Harp\Db\Rel\DbRelInterface', $repo->getRelOrError('country'));
+        $this->assertInstanceof('Harp\Harp\Rel\DbRelInterface', $repo->getRel('country'));
+        $this->assertInstanceof('Harp\Harp\Rel\DbRelInterface', $repo->getRelOrError('country'));
     }
 
     public function dataGetters()
     {
         return [
-            ['Harp\Db\Find', 'findAll'],
-            ['Harp\Db\Query\Select', 'selectAll'],
-            ['Harp\Db\Query\Update', 'updateAll'],
-            ['Harp\Db\Query\Delete', 'deleteAll'],
-            ['Harp\Db\Query\Insert', 'insertAll'],
+            ['Harp\Harp\Find', 'findAll'],
+            ['Harp\Harp\Query\Select', 'selectAll'],
+            ['Harp\Harp\Query\Update', 'updateAll'],
+            ['Harp\Harp\Query\Delete', 'deleteAll'],
+            ['Harp\Harp\Query\Insert', 'insertAll'],
         ];
     }
 
@@ -134,7 +134,7 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
      */
     public function testGetters($class, $method)
     {
-        $repo = new Repo\User('Harp\Db\Test\Model\City');
+        $repo = new Repo\User('Harp\Harp\Test\Model\City');
 
         $obj = $repo->$method();
 
@@ -148,13 +148,13 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testUpdateOne()
     {
         $repo = $this->getMock(
-            'Harp\Db\Test\Repo\Country',
+            'Harp\Harp\Test\Repo\Country',
             ['updateAll'],
-            ['Harp\Db\Test\Model\Country']
+            ['Harp\Harp\Test\Model\Country']
         );
 
         $update = $this->getMock(
-            'Harp\Db\Query\Update',
+            'Harp\Harp\Query\Update',
             ['set', 'execute', 'where'],
             [$repo]
         );
@@ -193,13 +193,13 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testUpdateMany()
     {
         $repo = $this->getMock(
-            'Harp\Db\Test\Repo\Country',
+            'Harp\Harp\Test\Repo\Country',
             ['updateAll'],
-            ['Harp\Db\Test\Model\Country']
+            ['Harp\Harp\Test\Model\Country']
         );
 
         $update = $this->getMock(
-            'Harp\Db\Query\Update',
+            'Harp\Harp\Query\Update',
             ['models', 'execute'],
             [$repo]
         );
@@ -230,13 +230,13 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $repo = $this->getMock(
-            'Harp\Db\Test\Repo\Country',
+            'Harp\Harp\Test\Repo\Country',
             ['deleteAll'],
-            ['Harp\Db\Test\Model\Country']
+            ['Harp\Harp\Test\Model\Country']
         );
 
         $delete = $this->getMock(
-            'Harp\Db\Query\Delete',
+            'Harp\Harp\Query\Delete',
             ['models', 'execute'],
             [$repo]
         );
@@ -267,13 +267,13 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     public function testInsert()
     {
         $repo = $this->getMock(
-            'Harp\Db\Test\Repo\Country',
+            'Harp\Harp\Test\Repo\Country',
             ['insertAll'],
-            ['Harp\Db\Test\Model\Country']
+            ['Harp\Harp\Test\Model\Country']
         );
 
         $insert = $this->getMock(
-            'Harp\Db\Query\Insert',
+            'Harp\Harp\Query\Insert',
             ['models', 'execute', 'getLastInsertId'],
             [$repo]
         );

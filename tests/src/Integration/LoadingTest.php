@@ -1,9 +1,9 @@
 <?php
 
-namespace Harp\Db\Test\Integration;
+namespace Harp\Harp\Test\Integration;
 
-use Harp\Db\Test\AbstractTestCase;
-use Harp\Db\Test\Repo;
+use Harp\Harp\Test\AbstractTestCase;
+use Harp\Harp\Test\Repo;
 use Harp\Query\SQL\SQL;
 
 /**
@@ -19,8 +19,8 @@ class LoadingTest extends AbstractTestCase {
         $user = Repo\User::get()->find(1);
         $address = Repo\Address::get()->find(1);
 
-        $this->assertInstanceOf('Harp\Db\Test\Model\User', $user);
-        $this->assertInstanceOf('Harp\Db\Test\Model\Address', $address);
+        $this->assertInstanceOf('Harp\Harp\Test\Model\User', $user);
+        $this->assertInstanceOf('Harp\Harp\Test\Model\Address', $address);
 
         $userProps = [
             'id' => 1,
@@ -30,7 +30,7 @@ class LoadingTest extends AbstractTestCase {
             'isBlocked' => 0,
             'deletedAt' => null,
             'locationId' => 1,
-            'locationClass' => 'Harp\\Db\\Test\\Model\\City',
+            'locationClass' => 'Harp\\Harp\\Test\\Model\\City',
             'test' => null,
             'parentId' => null,
         ];
@@ -115,7 +115,7 @@ class LoadingTest extends AbstractTestCase {
             'isBlocked' => 0,
             'deletedAt' => null,
             'locationId' => 1,
-            'locationClass' => 'Harp\\Db\\Test\\Model\\City',
+            'locationClass' => 'Harp\\Harp\\Test\\Model\\City',
             'test' => null,
             'parentId' => null,
         ];
@@ -225,7 +225,7 @@ class LoadingTest extends AbstractTestCase {
         $this->assertTrue($user->getAddress()->isVoid());
         $this->assertCount(1, $user->getPosts());
 
-        $this->assertInstanceof('Harp\Db\Test\Model\BlogPost', $user->getPosts()->getFirst());
+        $this->assertInstanceof('Harp\Harp\Test\Model\BlogPost', $user->getPosts()->getFirst());
         $this->assertEquals(4, $user->getPosts()->getFirst()->id);
         $this->assertCount(0, $user->getPosts()->getFirst()->getTags());
 

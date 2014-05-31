@@ -1,17 +1,17 @@
 <?php
 
-namespace Harp\Db\Test\Unit\Rel;
+namespace Harp\Harp\Test\Unit\Rel;
 
-use Harp\Db\Test\Repo;
-use Harp\Db\Test\Model;
+use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Core\Repo\LinkOne;
 use Harp\Core\Model\Models;
-use Harp\Db\Rel\HasOne;
-use Harp\Db\Query\Select;
-use Harp\Db\Test\AbstractTestCase;
+use Harp\Harp\Rel\HasOne;
+use Harp\Harp\Query\Select;
+use Harp\Harp\Test\AbstractTestCase;
 
 /**
- * @coversDefaultClass Harp\Db\Rel\HasOne
+ * @coversDefaultClass Harp\Harp\Rel\HasOne
  */
 class HasOneTest extends AbstractTestCase
 {
@@ -70,7 +70,7 @@ class HasOneTest extends AbstractTestCase
 
         $cities = $rel->loadForeign($models);
 
-        $this->assertContainsOnlyInstancesOf('Harp\Db\Test\Model\City', $cities);
+        $this->assertContainsOnlyInstancesOf('Harp\Harp\Test\Model\City', $cities);
         $this->assertCount(4, $cities);
 
         $this->assertEquals(1, $cities[0]->id);

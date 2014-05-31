@@ -1,6 +1,6 @@
 {
-    "name": "harp-orm/db",
-    "description": "Lightweight ORM",
+    "name": "harp-orm/harp",
+    "description": "Light and Flexible ORM without magic",
     "license": "BSD-3-Clause",
     "authors": [
         {

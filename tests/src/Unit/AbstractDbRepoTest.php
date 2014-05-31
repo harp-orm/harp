@@ -10,9 +10,9 @@ use Harp\Query\DB;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass Harp\Harp\AbstractDbRepo
+ * @coversDefaultClass Harp\Harp\AbstractRepo
  */
-class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
+class AbstractRepoTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @covers ::__construct
@@ -109,8 +109,8 @@ class AbstractDbRepoTest extends PHPUnit_Framework_TestCase
     {
         $repo = Repo\City::get();
 
-        $this->assertInstanceof('Harp\Harp\Rel\DbRelInterface', $repo->getRel('country'));
-        $this->assertInstanceof('Harp\Harp\Rel\DbRelInterface', $repo->getRelOrError('country'));
+        $this->assertInstanceof('Harp\Harp\Rel\RelInterface', $repo->getRel('country'));
+        $this->assertInstanceof('Harp\Harp\Rel\RelInterface', $repo->getRelOrError('country'));
     }
 
     public function dataGetters()

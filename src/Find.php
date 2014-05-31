@@ -2,7 +2,6 @@
 
 namespace Harp\Harp;
 
-use Harp\Core\Model\AbstractModel;
 use Harp\Core\Save\AbstractFind;
 use PDO;
 
@@ -18,7 +17,7 @@ class Find extends AbstractFind
      */
     private $select;
 
-    public function __construct(AbstractDbRepo $repo)
+    public function __construct(AbstractRepo $repo)
     {
         $this->select = new Query\Select($repo);
 

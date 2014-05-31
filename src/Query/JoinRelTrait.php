@@ -2,8 +2,7 @@
 
 namespace Harp\Harp\Query;
 
-use Harp\Harp\AbstractDbRepo;
-use Harp\Core\Repo\AbstractRepo;
+use Harp\Harp\AbstractRepo;
 use CL\Util\Arr;
 
 /**

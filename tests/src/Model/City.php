@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Test\Model;
 
-use Harp\Core\Model\AbstractModel;
+use Harp\Harp\AbstractModel;
 use Harp\Harp\Test\Repo;
 
 /**

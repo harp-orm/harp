@@ -3,7 +3,7 @@
 namespace Harp\Harp\Query;
 
 use Harp\Query;
-use Harp\Harp\AbstractDbRepo;
+use Harp\Harp\AbstractRepo;
 use Harp\Core\Model\Models;
 
 /**
@@ -16,11 +16,11 @@ class Insert extends \Harp\Query\Insert {
     use JoinRelTrait;
 
     /**
-     * @var AbstractDbRepo
+     * @var AbstractRepo
      */
     private $repo;
 
-    public function __construct(AbstractDbRepo $repo)
+    public function __construct(AbstractRepo $repo)
     {
         $this->repo = $repo;
         $this->into($repo->getTable());
@@ -28,7 +28,7 @@ class Insert extends \Harp\Query\Insert {
         parent::__construct($repo->getDbInstance());
     }
     /**
-     * @return AbstractDbRepo
+     * @return AbstractRepo
      */
     public function getRepo()
     {

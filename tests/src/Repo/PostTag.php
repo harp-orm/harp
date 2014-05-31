@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Test\Repo;
 
-use Harp\Harp\AbstractDbRepo;
+use Harp\Harp\AbstractRepo;
 
 use Harp\Harp\Field;
 use Harp\Harp\Rel;
@@ -12,7 +12,7 @@ use Harp\Harp\Rel;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class PostTag extends AbstractDbRepo {
+class PostTag extends AbstractRepo {
 
     private static $instance;
 

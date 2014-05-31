@@ -3,7 +3,7 @@
 namespace Harp\Harp\Rel;
 
 use CL\Util\Arr;
-use Harp\Harp\AbstractDbRepo;
+use Harp\Harp\AbstractRepo;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkOne;
@@ -17,12 +17,12 @@ use BadMethodCallException;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsToPolymorphic extends AbstractRelOne implements DbRelInterface, UpdateOneInterface
+class BelongsToPolymorphic extends AbstractRelOne implements RelInterface, UpdateOneInterface
 {
     protected $key;
     protected $classKey;
 
-    public function __construct($name, AbstractDbRepo $store, AbstractDbRepo $defaultForeignRepo, array $options = array())
+    public function __construct($name, AbstractRepo $store, AbstractRepo $defaultForeignRepo, array $options = array())
     {
         $this->key = $name.'Id';
         $this->classKey = $name.'Class';

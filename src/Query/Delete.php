@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Query;
 
-use Harp\Harp\AbstractDbRepo;
+use Harp\Harp\AbstractRepo;
 use Harp\Core\Model\Models;
 
 /**
@@ -15,11 +15,11 @@ class Delete extends \Harp\Query\Delete {
     use JoinRelTrait;
 
     /**
-     * @var AbstractDbRepo
+     * @var AbstractRepo
      */
     private $repo;
 
-    public function __construct(AbstractDbRepo $repo)
+    public function __construct(AbstractRepo $repo)
     {
         $this->repo = $repo;
 
@@ -29,7 +29,7 @@ class Delete extends \Harp\Query\Delete {
     }
 
     /**
-     * @return AbstractDbRepo
+     * @return AbstractRepo
      */
     public function getRepo()
     {

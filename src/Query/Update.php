@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Query;
 
-use Harp\Harp\AbstractDbRepo;
+use Harp\Harp\AbstractRepo;
 use Harp\Core\Model\Models;
 
 /**
@@ -15,11 +15,11 @@ class Update extends \Harp\Query\Update {
     use JoinRelTrait;
 
     /**
-     * @var AbstractDbRepo
+     * @var AbstractRepo
      */
     private $repo;
 
-    public function __construct(AbstractDbRepo $repo)
+    public function __construct(AbstractRepo $repo)
     {
         $this->repo = $repo;
         $this->table($repo->getTable());
@@ -28,7 +28,7 @@ class Update extends \Harp\Query\Update {
     }
 
     /**
-     * @return AbstractDbRepo
+     * @return AbstractRepo
      */
     public function getRepo()
     {

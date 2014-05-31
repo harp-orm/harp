@@ -4,7 +4,7 @@ namespace Harp\Harp;
 
 use Harp\Core\Save\AbstractSaveRepo;
 use Harp\Core\Model\Models;
-use Harp\Harp\Rel\DbRelInterface;
+use Harp\Harp\Rel\RelInterface;
 use Harp\Harp\Query;
 use Harp\Query\DB;
 use ReflectionProperty;
@@ -14,7 +14,7 @@ use ReflectionProperty;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-abstract class AbstractDbRepo extends AbstractSaveRepo
+abstract class AbstractRepo extends AbstractSaveRepo
 {
     private $table;
     private $db = 'default';
@@ -82,7 +82,7 @@ abstract class AbstractDbRepo extends AbstractSaveRepo
 
     /**
      * @param  string $name
-     * @return DbRelInterface
+     * @return RelInterface
      */
     public function getRel($name)
     {
@@ -91,7 +91,7 @@ abstract class AbstractDbRepo extends AbstractSaveRepo
 
     /**
      * @param  string $name
-     * @return DbRelInterface
+     * @return RelInterface
      */
     public function getRelOrError($name)
     {

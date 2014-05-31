@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Rel;
 
-use Harp\Harp\AbstractDbRepo;
+use Harp\Harp\AbstractRepo;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkMany;
@@ -16,13 +16,13 @@ use Harp\Query\AbstractWhere;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteManyInterface, InsertManyInterface
+class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteManyInterface, InsertManyInterface
 {
     protected $key;
     protected $foreignKey;
     protected $through;
 
-    public function __construct($name, AbstractDbRepo $repo, AbstractDbRepo $foreignRepo, $through, array $options = array())
+    public function __construct($name, AbstractRepo $repo, AbstractRepo $foreignRepo, $through, array $options = array())
     {
         $this->through = $through;
         $this->foreignKey = lcfirst($foreignRepo->getName()).'Id';
@@ -48,7 +48,7 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
     }
 
     /**
-     * @return DbRelInterface
+     * @return RelInterface
      */
     public function getThroughRel()
     {
@@ -56,7 +56,7 @@ class HasManyThrough extends AbstractRelMany implements DbRelInterface, DeleteMa
     }
 
     /**
-     * @return AbstractDbRepo
+     * @return AbstractRepo
      */
     public function getThroughRepo()
     {

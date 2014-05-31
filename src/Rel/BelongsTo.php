@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Rel;
 
-use Harp\Harp\AbstractDbRepo;
+use Harp\Harp\AbstractRepo;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkOne;
@@ -15,14 +15,14 @@ use Harp\Query\AbstractWhere;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-class BelongsTo extends AbstractRelOne implements DbRelInterface, UpdateOneInterface
+class BelongsTo extends AbstractRelOne implements RelInterface, UpdateOneInterface
 {
     /**
      * @var string
      */
     protected $key;
 
-    public function __construct($name, AbstractDbRepo $store, AbstractDbRepo $foreignRepo, array $options = array())
+    public function __construct($name, AbstractRepo $store, AbstractRepo $foreignRepo, array $options = array())
     {
         $this->key = $name.'Id';
 

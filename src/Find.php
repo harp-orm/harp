@@ -121,6 +121,18 @@ class Find extends AbstractFind
     }
 
     /**
+     * @param  string $property
+     * @param  string $value
+     * @return Find   $this
+     */
+    public function whereLike($property, $value)
+    {
+        $this->select->whereLike($property, $value);
+
+        return $this;
+    }
+
+    /**
      * @return Find   $this
      */
     public function clearWhere()

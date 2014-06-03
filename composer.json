@@ -17,10 +17,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/harp-orm/query"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/harp-orm/mass-assign"
         }
     ],
     "require": {

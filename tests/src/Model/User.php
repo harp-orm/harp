@@ -31,36 +31,42 @@ class User extends AbstractModel {
 
     public function getAddress()
     {
-        return Repo\User::get()->loadLink($this, 'address')->get();
+        return $this->getLink('address')->get();
     }
 
     public function setAddress(Address $address)
     {
-        return Repo\User::get()->loadLink($this, 'address')->set($address);
+        $this->getLink('address')->set($address);
+
+        return $this;
     }
 
     public function getLocation()
     {
-        return Repo\User::get()->loadLink($this, 'location')->get();
+        return $this->getLink('location')->get();
     }
 
     public function setLocation(LocationInterface $location)
     {
-        return Repo\User::get()->loadLink($this, 'location')->set($location);
+        $this->getLink('location')->set($location);
+
+        return $this;
     }
 
     public function getProfile()
     {
-        return Repo\User::get()->loadLink($this, 'profile')->get();
+        return $this->getLink('profile')->get();
     }
 
     public function setProfile(Profile $profile)
     {
-        return Repo\User::get()->loadLink($this, 'profile')->set($profile);
+        $this->getLink('profile')->set($profile);
+
+        return $this;
     }
 
     public function getPosts()
     {
-        return Repo\User::get()->loadLink($this, 'posts');
+        return $this->getLink('posts');
     }
 }

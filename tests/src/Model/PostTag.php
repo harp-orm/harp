@@ -23,21 +23,25 @@ class PostTag extends AbstractModel {
 
     public function getTag()
     {
-        return Repo\PostTag::get()->loadLink($this, 'tag')->get();
+        return $this->getLink('tag')->get();
     }
 
     public function setTag(Tag $tag)
     {
-        return Repo\PostTag::get()->loadLink($this, 'tag')->set($tag);
+        $this->getLink('tag')->set($tag);
+
+        return $this;
     }
 
     public function getPost()
     {
-        return Repo\PostTag::get()->loadLink($this, 'post')->get();
+        return $this->getLink('post')->get();
     }
 
     public function setPost(Post $post)
     {
-        return Repo\PostTag::get()->loadLink($this, 'post')->set($post);
+        $this->getLink('post')->set($post);
+
+        return $this;
     }
 }

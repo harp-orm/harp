@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/core.git",
-                "reference": "1010128e9497034ba93b26923d1a189c25bc543d"
+                "reference": "2fae207accba6613ed44d5c67cb55e2f630d529a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/1010128e9497034ba93b26923d1a189c25bc543d",
-                "reference": "1010128e9497034ba93b26923d1a189c25bc543d",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/2fae207accba6613ed44d5c67cb55e2f630d529a",
+                "reference": "2fae207accba6613ed44d5c67cb55e2f630d529a",
                 "shasum": ""
             },
             "require": {
@@ -48,7 +48,7 @@
                 "source": "https://github.com/harp-orm/core/tree/master",
                 "issues": "https://github.com/harp-orm/core/issues"
             },
-            "time": "2014-06-04 08:24:37"
+            "time": "2014-06-04 17:27:59"
         },
         {
             "name": "harp-orm/query",

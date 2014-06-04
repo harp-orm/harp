@@ -19,19 +19,13 @@ class Tag extends AbstractModel {
     public $id;
     public $name;
 
-    /**
-     * @return User
-     */
     public function getPostTags()
     {
-        return Repo\Tag::get()->loadLink($this, 'postTags');
+        return $this->getLink('postTags');
     }
 
-    /**
-     * @return User
-     */
     public function getPosts()
     {
-        return Repo\Tag::get()->loadLink($this, 'posts');
+        return $this->getLink('posts');
     }
 }

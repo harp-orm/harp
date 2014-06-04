@@ -41,7 +41,7 @@ class Profile extends AbstractModel {
      */
     public function getUser()
     {
-        return Repo\Profile::get()->loadLink($this, 'user')->get();
+        return $this->getLink('user')->get();
     }
 
     /**
@@ -49,6 +49,8 @@ class Profile extends AbstractModel {
      */
     public function setUser(User $user)
     {
-        return Repo\Profile::get()->loadLink($this, 'user')->set($user);
+        $this->getLink('user')->set($user);
+
+        return $this;
     }
 }

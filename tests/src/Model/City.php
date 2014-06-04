@@ -23,11 +23,13 @@ class City extends AbstractModel implements LocationInterface {
 
     public function getCountry()
     {
-        return Repo\City::get()->loadLink($this, 'country')->get();
+        return $this->getLink('country')->get();
     }
 
     public function setCountry(Country $country)
     {
-        return Repo\City::get()->loadLink($this, 'country')->set($country);
+        $this->getLink('country')->set($country);
+
+        return $this;
     }
 }

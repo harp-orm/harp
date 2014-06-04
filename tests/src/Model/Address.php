@@ -37,12 +37,12 @@ class Address extends AbstractModel {
      */
     public function getUser()
     {
-        return Repo\Address::get()->loadLink($this, 'user')->get();
+        return $this->getLink('user')->get();
     }
 
     public function setUser(User $user)
     {
-        Repo\Address::get()->loadLink($this, 'user')->set($user);
+        $this->getLink('user')->set($user);
 
         return $this;
     }

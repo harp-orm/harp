@@ -30,21 +30,23 @@ class Post extends AbstractModel {
 
     public function getUser()
     {
-        return Repo\Post::get()->loadLink($this, 'user')->get();
+        return $this->getLink('user')->get();
     }
 
     public function getTags()
     {
-        return Repo\Post::get()->loadLink($this, 'tags');
+        return $this->getLink('tags');
     }
 
     public function getPostTags()
     {
-        return Repo\Post::get()->loadLink($this, 'postTags');
+        return $this->getLink('postTags');
     }
 
     public function setUser(User $user)
     {
-        return Repo\Post::get()->loadLink($this, 'user')->set($user);
+        $this->getLink('user')->set($user);
+
+        return $this;
     }
 }

@@ -3,6 +3,7 @@
 namespace Harp\Harp;
 
 use Harp\Core\Save\AbstractSaveRepo;
+use Harp\Core\Repo;
 use Harp\Core\Model\Models;
 use Harp\Harp\Rel\RelInterface;
 use Harp\Harp\Query;
@@ -38,6 +39,15 @@ abstract class AbstractRepo extends AbstractSaveRepo
         $this->initializeOnce();
 
         return $this->table;
+    }
+
+    public function setRootRepo(Repo\AbstractRepo $rootRepo)
+    {
+        if ($rootRepo instanceof AbstractRepo) {
+            $this->table = $rootRepo->getTable();
+        }
+
+        return parent::setRootRepo($rootRepo);
     }
 
     public function setTable($table)

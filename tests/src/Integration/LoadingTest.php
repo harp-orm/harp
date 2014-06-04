@@ -45,8 +45,8 @@ class LoadingTest extends AbstractTestCase {
         $this->assertSame($addressProps, $address->getProperties());
 
         $this->assertQueries([
-            'SELECT User.* FROM User WHERE (User.id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
-            'SELECT Address.* FROM Address WHERE (Address.id = 1) LIMIT 1'
+            'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
+            'SELECT Address.* FROM Address WHERE (id = 1) LIMIT 1'
         ]);
 
     }
@@ -158,9 +158,9 @@ class LoadingTest extends AbstractTestCase {
 
         $this->assertQueries([
             'SELECT User.* FROM User JOIN Post AS posts ON posts.userId = User.id JOIN PostTag AS postTags ON postTags.postId = posts.id JOIN Tag AS tags ON tags.id = postTags.tagId WHERE (User.deletedAt IS NULL) GROUP BY User.id',
-            'SELECT User.* FROM User WHERE (User.id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
+            'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
             'SELECT Address.* FROM Address JOIN User AS user ON user.addressId = Address.id AND user.deletedAt IS NULL JOIN Post AS posts ON posts.userId = user.id',
-            'SELECT Address.* FROM Address WHERE (Address.id = 1) LIMIT 1',
+            'SELECT Address.* FROM Address WHERE (id = 1) LIMIT 1',
         ]);
     }
 

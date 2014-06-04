@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b391833de5200dd5394e7f6407341890",
+    "hash": "d2b70286d8607e3475c0fcb4e137adf1",
     "packages": [
         {
             "name": "harp-orm/core",
@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/core.git",
-                "reference": "d4a6bc523b9953d545dd37d32c3eec2e15855ec7"
+                "reference": "1010128e9497034ba93b26923d1a189c25bc543d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/d4a6bc523b9953d545dd37d32c3eec2e15855ec7",
-                "reference": "d4a6bc523b9953d545dd37d32c3eec2e15855ec7",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/1010128e9497034ba93b26923d1a189c25bc543d",
+                "reference": "1010128e9497034ba93b26923d1a189c25bc543d",
                 "shasum": ""
             },
             "require": {
@@ -48,7 +48,7 @@
                 "source": "https://github.com/harp-orm/core/tree/master",
                 "issues": "https://github.com/harp-orm/core/issues"
             },
-            "time": "2014-05-31 11:47:47"
+            "time": "2014-06-04 08:24:37"
         },
         {
             "name": "harp-orm/query",
@@ -56,12 +56,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/query.git",
-                "reference": "d584a00583ed66ae0630a8a44fd39e7332838545"
+                "reference": "df6e9aff0cda469d3d599a2cfa3b14236d51ae8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/query/zipball/d584a00583ed66ae0630a8a44fd39e7332838545",
-                "reference": "d584a00583ed66ae0630a8a44fd39e7332838545",
+                "url": "https://api.github.com/repos/harp-orm/query/zipball/df6e9aff0cda469d3d599a2cfa3b14236d51ae8f",
+                "reference": "df6e9aff0cda469d3d599a2cfa3b14236d51ae8f",
                 "shasum": ""
             },
             "require": {
@@ -97,7 +97,7 @@
                 "source": "https://github.com/harp-orm/query/tree/master",
                 "issues": "https://github.com/harp-orm/query/issues"
             },
-            "time": "2014-05-29 11:34:16"
+            "time": "2014-06-02 15:45:36"
         },
         {
             "name": "harp-orm/util",

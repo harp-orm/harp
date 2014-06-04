@@ -30,7 +30,7 @@ class BlogPost extends Post {
         parent::initialize();
 
         $this
-            ->setTable('Post');
+            ->setRootRepo(Post::get());
     }
 
 }

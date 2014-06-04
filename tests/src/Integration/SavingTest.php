@@ -24,7 +24,7 @@ class SavingTest extends AbstractTestCase {
         Repo\User::get()->save($user);
 
         $this->assertQueries([
-            'SELECT User.* FROM User WHERE (User.id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
+            'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
             'UPDATE User SET name = "New Name", isBlocked = 1 WHERE (id = 1)',
         ]);
     }
@@ -60,7 +60,7 @@ class SavingTest extends AbstractTestCase {
         $post->getTags()->addModels($tags);
 
         $this->assertQueries([
-            'SELECT User.* FROM User WHERE (User.id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
+            'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
             'SELECT Address.* FROM Address WHERE (id IN (1))',
             'SELECT Post.class, Post.* FROM Post WHERE (userId IN (1))',
             'SELECT Tag.* FROM Tag WHERE (id IN (1, 2))',
@@ -69,7 +69,7 @@ class SavingTest extends AbstractTestCase {
         Repo\User::get()->save($user);
 
         $this->assertQueries([
-            'SELECT User.* FROM User WHERE (User.id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
+            'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
             'SELECT Address.* FROM Address WHERE (id IN (1))',
             'SELECT Post.class, Post.* FROM Post WHERE (userId IN (1))',
             'SELECT Tag.* FROM Tag WHERE (id IN (1, 2))',

@@ -26,11 +26,11 @@ class HasManyExclusiveTest extends AbstractTestCase
         $foreign1 = new Model\City([], State::SAVED);
         $foreign2 = new Model\City([], State::SAVED);
         $foreign3 = new Model\City([], State::SAVED);
-        $link = new LinkMany($rel, [$foreign1, $foreign2]);
+        $link = new LinkMany($model, $rel, [$foreign1, $foreign2]);
         $link->add($foreign3);
         $link->remove($foreign2);
 
-        $result = $rel->delete($model, $link);
+        $result = $rel->delete($link);
 
         $this->assertInstanceOf('Harp\Core\Model\Models', $result);
 
@@ -51,11 +51,11 @@ class HasManyExclusiveTest extends AbstractTestCase
         $foreign2 = new Model\City(['countryId' => 2]);
         $foreign3 = new Model\City(['countryId' => 8]);
 
-        $link = new LinkMany($rel, [$foreign1, $foreign2]);
+        $link = new LinkMany($model, $rel, [$foreign1, $foreign2]);
         $link->remove($foreign1);
         $link->add($foreign3);
 
-        $rel->update($model, $link);
+        $rel->update($link);
 
         $this->assertEquals(2, $foreign2->countryId);
         $this->assertEquals(2, $foreign3->countryId);

@@ -106,9 +106,9 @@ class BelongsToTest extends AbstractTestCase
 
         $model = new Model\City(['countryId' => 2]);
         $foreign = new Model\Country(['id' => 20]);
-        $link = new LinkOne($rel, $foreign);
+        $link = new LinkOne($model, $rel, $foreign);
 
-        $rel->update($model, $link);
+        $rel->update($link);
 
         $this->assertEquals(20, $model->countryId);
     }

@@ -138,9 +138,9 @@ class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteMany
             ->joinAliased($this->getForeignRepo()->getTable(), $alias, $condition);
     }
 
-    public function delete(AbstractModel $model, LinkMany $link)
+    public function delete(LinkMany $link)
     {
-        $through = $this->getRepo()->loadLink($model, $this->through);
+        $through = $link->getModel()->getLink($this->through);
         $removedIds = $link->getRemoved()->getIds();
 
         $removedItems = $through->get()->filter(function ($item) use ($removedIds) {
@@ -156,17 +156,17 @@ class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteMany
         return $removedItems;
     }
 
-    public function insert(AbstractModel $model, LinkMany $link)
+    public function insert(LinkMany $link)
     {
         $inserted = new Models();
 
         if (count($link->getAdded()) > 0) {
-            $through = $this->getRepo()->loadLink($model, $this->through);
+            $through = $link->getModel()->getLink($this->through);
             $repo = $this->getThroughRepo();
 
             foreach ($link->getAdded() as $added) {
                 $inserted->add($repo->newModel([
-                    $this->key => $model->getId(),
+                    $this->key => $link->getModel()->getId(),
                     $this->foreignKey => $added->getId(),
                 ]));
             }

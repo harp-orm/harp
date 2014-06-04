@@ -132,14 +132,14 @@ class HasManyThroughTest extends AbstractTestCase
         $link1 = new Model\PostTag(['tagId' => 5, 'postId' => 2], State::SAVED);
         $link2 = new Model\PostTag(['tagId' => 6, 'postId' => 2], State::SAVED);
 
-        $postTagsLink = new LinkMany(Repo\Post::get()->getRel('postTags'), [$link1, $link2]);
-        Repo\Post::get()->addLink($model, $postTagsLink);
+        $postTagsLink = new LinkMany($model, Repo\Post::get()->getRel('postTags'), [$link1, $link2]);
+        Repo\Post::get()->addLink($postTagsLink);
 
-        $link = new LinkMany($rel, [$foreign1, $foreign2]);
+        $link = new LinkMany($model, $rel, [$foreign1, $foreign2]);
         $link->remove($foreign1);
         $link->add($foreign3);
 
-        $result = $rel->delete($model, $link);
+        $result = $rel->delete($link);
 
         $this->assertCount(1, $result);
         $this->assertSame($link1, $result->getFirst());
@@ -148,7 +148,7 @@ class HasManyThroughTest extends AbstractTestCase
         $this->assertFalse($postTagsLink->has($link1));
         $this->assertTrue($postTagsLink->has($link2));
 
-        $result = $rel->insert($model, $link);
+        $result = $rel->insert($link);
 
         $this->assertCount(1, $result);
         $this->assertInstanceOf('Harp\Harp\Test\Model\PostTag', $result->getFirst());

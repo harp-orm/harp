@@ -139,9 +139,9 @@ class BelongsToPolymorphicTest extends AbstractTestCase
 
         $model = new Model\User();
         $foreign = new Model\Country(['id' => 20]);
-        $link = new LinkOne($rel, $foreign);
+        $link = new LinkOne($model, $rel, $foreign);
 
-        $rel->update($model, $link);
+        $rel->update($link);
 
         $this->assertEquals(20, $model->locationId);
         $this->assertEquals('Harp\Harp\Test\Model\Country', $model->locationClass);

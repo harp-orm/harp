@@ -108,10 +108,10 @@ class HasOneTest extends AbstractTestCase
         $model = new Model\Country(['id' => 20]);
         $old = new Model\City(['countryId' => 20]);
         $foreign = new Model\City(['countryId' => 2]);
-        $link = new LinkOne($rel, $old);
+        $link = new LinkOne($model, $rel, $old);
         $link->set($foreign);
 
-        $rel->update($model, $link);
+        $rel->update($link);
 
         $this->assertEquals(20, $foreign->countryId);
         $this->assertNull($old->countryId);

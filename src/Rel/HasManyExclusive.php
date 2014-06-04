@@ -15,11 +15,10 @@ use Harp\Core\Rel\DeleteManyInterface;
 class HasManyExclusive extends HasMany implements DeleteManyInterface
 {
     /**
-     * @param  AbstractModel $model
      * @param  LinkMany      $link
      * @return Models
      */
-    public function delete(AbstractModel $model, LinkMany $link)
+    public function delete(LinkMany $link)
     {
         foreach ($link->getRemoved() as $removed) {
             $removed->delete();
@@ -28,10 +27,10 @@ class HasManyExclusive extends HasMany implements DeleteManyInterface
         return $link->getRemoved();
     }
 
-    public function update(AbstractModel $model, LinkMany $link)
+    public function update(LinkMany $link)
     {
         foreach ($link->getAdded() as $added) {
-            $added->{$this->getForeignKey()} = $model->{$this->getKey()};
+            $added->{$this->getForeignKey()} = $link->getModel()->{$this->getKey()};
         }
     }
 }

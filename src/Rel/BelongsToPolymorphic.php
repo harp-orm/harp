@@ -85,10 +85,10 @@ class BelongsToPolymorphic extends AbstractRelOne implements RelInterface, Updat
         );
     }
 
-    public function update(AbstractModel $model, LinkOne $link)
+    public function update(LinkOne $link)
     {
-        $model->{$this->key} = $link->get()->getId();
-        $model->{$this->classKey} = get_class($link->get());
+        $link->getModel()->{$this->key} = $link->get()->getId();
+        $link->getModel()->{$this->classKey} = get_class($link->get());
     }
 
     public function join(AbstractWhere $query, $parent)

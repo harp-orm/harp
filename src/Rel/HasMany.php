@@ -93,13 +93,12 @@ class HasMany extends AbstractRelMany implements RelInterface, UpdateManyInterfa
     }
 
     /**
-     * @param  AbstractModel $model
      * @param  LinkMany      $link
      */
-    public function update(AbstractModel $model, LinkMany $link)
+    public function update(LinkMany $link)
     {
         foreach ($link->getAdded() as $added) {
-            $added->{$this->getForeignKey()} = $model->{$this->getKey()};
+            $added->{$this->getForeignKey()} = $link->getModel()->{$this->getKey()};
         }
 
         foreach ($link->getRemoved() as $added) {

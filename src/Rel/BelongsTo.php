@@ -80,12 +80,11 @@ class BelongsTo extends AbstractRelOne implements RelInterface, UpdateOneInterfa
     }
 
     /**
-     * @param  AbstractModel $model
      * @param  LinkOne       $link
      */
-    public function update(AbstractModel $model, LinkOne $link)
+    public function update(LinkOne $link)
     {
-        $model->{$this->getKey()} = $link->get()->getId();
+        $link->getModel()->{$this->getKey()} = $link->get()->getId();
     }
 
     /**

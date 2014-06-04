@@ -76,11 +76,11 @@ class HasOne extends AbstractRelOne implements RelInterface, UpdateOneInterface
         return $model->{$this->getKey()} == $foreign->{$this->getForeignKey()};
     }
 
-    public function update(AbstractModel $model, LinkOne $link)
+    public function update(LinkOne $link)
     {
         if ($link->isChanged())
         {
-            $link->get()->{$this->getForeignKey()} = $model->{$this->getKey()};
+            $link->get()->{$this->getForeignKey()} = $link->getModel()->{$this->getKey()};
             $link->getOriginal()->{$this->getForeignKey()} = null;
         }
     }

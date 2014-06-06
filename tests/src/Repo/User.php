@@ -16,18 +16,9 @@ class User extends AbstractRepo {
 
     use NestedRepoTrait;
 
-    private static $instance;
-
-    /**
-     * @return User
-     */
-    public static function get()
+    public static function newInstance()
     {
-        if (! self::$instance) {
-            self::$instance = new User('Harp\Harp\Test\Model\User');
-        }
-
-        return self::$instance;
+        return new User('Harp\Harp\Test\Model\User');
     }
 
     public function initialize()

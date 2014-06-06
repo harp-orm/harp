@@ -14,18 +14,9 @@ use Harp\Validate\Assert;
  */
 class Profile extends AbstractRepo {
 
-    private static $instance;
-
-    /**
-     * @return Profile
-     */
-    public static function get()
+    public static function newInstance()
     {
-        if (! self::$instance) {
-            self::$instance = new Profile('Harp\Harp\Test\Model\Profile');
-        }
-
-        return self::$instance;
+        return new Profile('Harp\Harp\Test\Model\Profile');
     }
 
     public function initialize()

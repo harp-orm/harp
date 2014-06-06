@@ -14,18 +14,9 @@ use Harp\Validate\Assert;
  */
 class City extends AbstractRepo {
 
-    private static $instance;
-
-    /**
-     * @return CityRepo
-     */
-    public static function get()
+    public static function newInstance()
     {
-        if (! self::$instance) {
-            self::$instance = new City('Harp\Harp\Test\Model\City');
-        }
-
-        return self::$instance;
+        return new City('Harp\Harp\Test\Model\City');
     }
 
     public function initialize()

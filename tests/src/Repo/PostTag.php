@@ -14,18 +14,9 @@ use Harp\Harp\Rel;
  */
 class PostTag extends AbstractRepo {
 
-    private static $instance;
-
-    /**
-     * @return PostTagRepo
-     */
-    public static function get()
+    public static function newInstance()
     {
-        if (! self::$instance) {
-            self::$instance = new PostTag('Harp\Harp\Test\Model\PostTag');
-        }
-
-        return self::$instance;
+        return new PostTag('Harp\Harp\Test\Model\PostTag');
     }
 
     public function initialize()

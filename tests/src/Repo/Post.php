@@ -14,18 +14,9 @@ use Harp\Validate\Assert;
  */
 class Post extends AbstractRepo {
 
-    private static $instance;
-
-    /**
-     * @return Post
-     */
-    public static function get()
+    public static function newInstance()
     {
-        if (! self::$instance) {
-            self::$instance = new Post('Harp\Harp\Test\Model\Post');
-        }
-
-        return self::$instance;
+        return new Post('Harp\Harp\Test\Model\Post');
     }
 
     public function initialize()

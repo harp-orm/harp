@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/core.git",
-                "reference": "3a30b61356938a368e92ab50ed90b95592643771"
+                "reference": "b9e54f78d02057eb184f3c83095be249370e16a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/3a30b61356938a368e92ab50ed90b95592643771",
-                "reference": "3a30b61356938a368e92ab50ed90b95592643771",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/b9e54f78d02057eb184f3c83095be249370e16a1",
+                "reference": "b9e54f78d02057eb184f3c83095be249370e16a1",
                 "shasum": ""
             },
             "require": {
@@ -25,7 +25,8 @@
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "clippings/env-backup": "~0.2.5"
+                "clippings/env-backup": "~0.2.5",
+                "clippings/phpunit-extensions": "dev-master"
             },
             "type": "library",
             "autoload": {
@@ -48,7 +49,7 @@
                 "source": "https://github.com/harp-orm/core/tree/master",
                 "issues": "https://github.com/harp-orm/core/issues"
             },
-            "time": "2014-06-04 20:02:17"
+            "time": "2014-06-06 11:11:40"
         },
         {
             "name": "harp-orm/query",

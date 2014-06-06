@@ -14,18 +14,9 @@ use Harp\Validate\Assert;
  */
 class Tag extends AbstractRepo {
 
-    private static $instance;
-
-    /**
-     * @return TagRepo
-     */
-    public static function get()
+    public static function newInstance()
     {
-        if (! self::$instance) {
-            self::$instance = new Tag('Harp\Harp\Test\Model\Tag');
-        }
-
-        return self::$instance;
+        return new Tag('Harp\Harp\Test\Model\Tag');
     }
 
     public function initialize()

@@ -14,18 +14,9 @@ use Harp\Validate\Assert;
  */
 class Address extends AbstractRepo {
 
-    private static $instance;
-
-    /**
-     * @return PostRepo
-     */
-    public static function get()
+    public static function newInstance()
     {
-        if (! self::$instance) {
-            self::$instance = new Address('Harp\Harp\Test\Model\Address');
-        }
-
-        return self::$instance;
+        return new Address('Harp\Harp\Test\Model\Address');
     }
 
     public function initialize()

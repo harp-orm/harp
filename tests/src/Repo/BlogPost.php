@@ -11,18 +11,9 @@ use Harp\Harp\Field;
  */
 class BlogPost extends Post {
 
-    private static $instance;
-
-    /**
-     * @return BlogPostRepo
-     */
-    public static function get()
+    public static function newInstance()
     {
-        if (! self::$instance) {
-            self::$instance = new BlogPost('Harp\Harp\Test\Model\BlogPost');
-        }
-
-        return self::$instance;
+        return new BlogPost('Harp\Harp\Test\Model\BlogPost');
     }
 
     public function initialize()

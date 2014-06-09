@@ -33,7 +33,7 @@ class User extends AbstractRepo {
                 new Rel\HasOne('profile', $this, Profile::get()),
             ])
 
-            ->setAsserts([
+            ->addAsserts([
                 new Assert\Present('name'),
             ])
 

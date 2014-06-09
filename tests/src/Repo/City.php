@@ -26,7 +26,7 @@ class City extends AbstractRepo {
                 new Rel\HasMany('users', $this, User::get()),
                 new Rel\BelongsTo('country', $this, Country::get()),
             ])
-            ->setAsserts([
+            ->addAsserts([
                 new Assert\Present('location'),
             ]);
     }

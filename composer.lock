@@ -1,7 +1,8 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
     "hash": "d2b70286d8607e3475c0fcb4e137adf1",
     "packages": [
@@ -11,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/core.git",
-                "reference": "b9e54f78d02057eb184f3c83095be249370e16a1"
+                "reference": "50087cf57374f89268758309efd9d256411b4dfd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/b9e54f78d02057eb184f3c83095be249370e16a1",
-                "reference": "b9e54f78d02057eb184f3c83095be249370e16a1",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/50087cf57374f89268758309efd9d256411b4dfd",
+                "reference": "50087cf57374f89268758309efd9d256411b4dfd",
                 "shasum": ""
             },
             "require": {
@@ -49,7 +50,7 @@
                 "source": "https://github.com/harp-orm/core/tree/master",
                 "issues": "https://github.com/harp-orm/core/issues"
             },
-            "time": "2014-06-06 11:11:40"
+            "time": "2014-06-09 07:15:59"
         },
         {
             "name": "harp-orm/query",

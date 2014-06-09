@@ -25,7 +25,7 @@ class Address extends AbstractRepo {
             ->addRels([
                 new Rel\HasOne('user', $this, User::get()),
             ])
-            ->setAsserts([
+            ->addAsserts([
                 new Assert\Present('location'),
             ]);
     }

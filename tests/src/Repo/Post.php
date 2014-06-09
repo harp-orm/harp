@@ -30,7 +30,7 @@ class Post extends AbstractRepo {
                 new Rel\HasManyThrough('tags', $this, Tag::get(), 'postTags'),
             ])
 
-            ->setAsserts([
+            ->addAsserts([
                 new Assert\Present('title'),
             ]);
     }

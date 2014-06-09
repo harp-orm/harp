@@ -25,7 +25,7 @@ class Profile extends AbstractRepo {
             ->addRels([
                 new Rel\BelongsTo('user', $this, User::get()),
             ])
-            ->setAsserts([
+            ->addAsserts([
                 new Assert\Present('name'),
             ]);
     }

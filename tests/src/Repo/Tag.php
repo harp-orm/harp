@@ -26,7 +26,7 @@ class Tag extends AbstractRepo {
                 new Rel\HasMany('postTags', $this, PostTag::get()),
                 new Rel\HasManyThrough('posts', $this, Post::get(), 'postTags'),
             ])
-            ->setAsserts([
+            ->addAsserts([
                 new Assert\Present('name'),
             ]);
     }

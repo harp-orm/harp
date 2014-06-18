@@ -28,6 +28,7 @@ class User extends AbstractModel {
     public $locationId;
     public $locationClass;
     public $test;
+    public $object;
 
     public function getAddress()
     {

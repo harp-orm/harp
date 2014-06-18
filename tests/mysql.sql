@@ -8,6 +8,7 @@ CREATE TABLE `User` (
   `isBlocked` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `locationId` int(1) UNSIGNED NULL,
   `locationClass` varchar(100) NULL,
+  `object` varchar(255) NULL,
   `deletedAt` TIMESTAMP NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -75,12 +76,12 @@ CREATE TABLE `PostTag` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `User` (`id`, `name`, `addressId`, `isBlocked`, `locationId`, `locationClass`)
+INSERT INTO `User` (`id`, `name`, `addressId`, `isBlocked`, `locationId`, `locationClass`, `object`)
 VALUES
-  (1, 'User 1', 1   , 0   , 1, 'Harp\\Harp\\Test\\Model\\City'),
-  (2, 'User 2', NULL, 1   , 2, 'Harp\\Harp\\Test\\Model\\City'),
-  (3, 'User 3', NULL, 1   , 1, 'Harp\\Harp\\Test\\Model\\Country'),
-  (4, 'User 4', 2   , NULL, 2, 'Harp\\Harp\\Test\\Model\\Country');
+  (1, 'User 1', 1   , 0   , 1, 'Harp\\Harp\\Test\\Model\\City', 'C:41:"Harp\\Harp\\Test\\Integration\\SaveableObject":22:{a:1:{i:0;s:5:"test1";}}'),
+  (2, 'User 2', NULL, 1   , 2, 'Harp\\Harp\\Test\\Model\\City', NULL),
+  (3, 'User 3', NULL, 1   , 1, 'Harp\\Harp\\Test\\Model\\Country', NULL),
+  (4, 'User 4', 2   , NULL, 2, 'Harp\\Harp\\Test\\Model\\Country', NULL);
 
 INSERT INTO `Profile` (`id`, `firstName`, `lastName`, `userId`)
 VALUES

@@ -17,10 +17,14 @@ class LoadingTest extends AbstractTestCase {
     public function testFind()
     {
         $user = Repo\User::get()->find(1);
+
         $address = Repo\Address::get()->find(1);
 
         $this->assertInstanceOf('Harp\Harp\Test\Model\User', $user);
         $this->assertInstanceOf('Harp\Harp\Test\Model\Address', $address);
+
+        $obj = new SaveableObject();
+        $obj->setVar('test1');
 
         $userProps = [
             'id' => 1,
@@ -32,6 +36,7 @@ class LoadingTest extends AbstractTestCase {
             'locationId' => 1,
             'locationClass' => 'Harp\\Harp\\Test\\Model\\City',
             'test' => null,
+            'object' => $obj,
             'parentId' => null,
         ];
 
@@ -41,8 +46,8 @@ class LoadingTest extends AbstractTestCase {
             'location' => 'Belvedere',
         ];
 
-        $this->assertSame($userProps, $user->getProperties());
-        $this->assertSame($addressProps, $address->getProperties());
+        $this->assertEquals($userProps, $user->getProperties());
+        $this->assertEquals($addressProps, $address->getProperties());
 
         $this->assertQueries([
             'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
@@ -107,6 +112,9 @@ class LoadingTest extends AbstractTestCase {
 
         $user = $users->getFirst();
 
+        $obj = new SaveableObject();
+        $obj->setVar('test1');
+
         $userProps = [
             'id' => 1,
             'name' => 'User 1',
@@ -117,10 +125,11 @@ class LoadingTest extends AbstractTestCase {
             'locationId' => 1,
             'locationClass' => 'Harp\\Harp\\Test\\Model\\City',
             'test' => null,
+            'object' => $obj,
             'parentId' => null,
         ];
 
-        $this->assertSame($userProps, $user->getProperties());
+        $this->assertEquals($userProps, $user->getProperties());
 
         $userUnmapped = [
             'param2' => 1,

@@ -3,6 +3,7 @@
 namespace Harp\Harp\Test\Repo;
 
 use Harp\Harp\AbstractRepo;
+use Harp\Core\Model\AbstractModel;
 use Harp\Harp\Field;
 use Harp\Harp\Rel;
 use Harp\Validate\Assert;
@@ -38,5 +39,23 @@ class User extends AbstractRepo {
             ])
 
             ->initializeNestedRepo();
+    }
+
+    public function unserializeModel(AbstractModel $model)
+    {
+        if (is_string($model->object)) {
+            $model->object = unserialize($model->object);
+        }
+
+        return $this;
+    }
+
+    public function serializeModel(array $properties)
+    {
+        if (isset($properties['object'])) {
+            $properties['object'] = serialize($properties['object']);
+        }
+
+        return $properties;
     }
 }

@@ -17,8 +17,8 @@ install:
 
 before_script:
   - mkdir -p build/logs
-  - mysql -e 'create database `test-luna`;'
-  - mysql --default-character-set=utf8 test-luna < tests/mysql.sql
+  - mysql -e 'create database `harp-orm/harp`;'
+  - mysql --default-character-set=utf8 harp-orm/harp < tests/mysql.sql
 
 script:
   - phpunit --coverage-clover build/logs/clover.xml

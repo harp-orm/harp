@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d2b70286d8607e3475c0fcb4e137adf1",
+    "hash": "2d8160a028487a5b475f54ea878f31a1",
     "packages": [
         {
             "name": "harp-orm/core",
@@ -12,15 +12,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/core.git",
-                "reference": "879c491767c51d86ae55683e706516914631cf06"
+                "reference": "5a77fb09899a27d1aeee8024f1a4bb0436ff1518"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/879c491767c51d86ae55683e706516914631cf06",
-                "reference": "879c491767c51d86ae55683e706516914631cf06",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/5a77fb09899a27d1aeee8024f1a4bb0436ff1518",
+                "reference": "5a77fb09899a27d1aeee8024f1a4bb0436ff1518",
                 "shasum": ""
             },
             "require": {
+                "harp-orm/serializer": "dev-master",
                 "harp-orm/util": "~0.2.0",
                 "harp-orm/validate": "dev-master",
                 "php": ">=5.4.0"
@@ -50,7 +51,7 @@
                 "source": "https://github.com/harp-orm/core/tree/master",
                 "issues": "https://github.com/harp-orm/core/issues"
             },
-            "time": "2014-06-18 09:36:49"
+            "time": "2014-06-19 13:20:26"
         },
         {
             "name": "harp-orm/query",
@@ -100,6 +101,43 @@
                 "issues": "https://github.com/harp-orm/query/issues"
             },
             "time": "2014-06-02 15:45:36"
+        },
+        {
+            "name": "harp-orm/serializer",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/harp-orm/serializer.git",
+                "reference": "da593dadbaa20a852ac3004428ecbc4aea5cedb2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/harp-orm/serializer/zipball/da593dadbaa20a852ac3004428ecbc4aea5cedb2",
+                "reference": "da593dadbaa20a852ac3004428ecbc4aea5cedb2",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Harp\\Serializer\\": "src/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Kerin",
+                    "email": "ikerin@gmail.com",
+                    "role": "Author"
+                }
+            ],
+            "description": "Serialize object properties",
+            "support": {
+                "source": "https://github.com/harp-orm/serializer/tree/master",
+                "issues": "https://github.com/harp-orm/serializer/issues"
+            },
+            "time": "2014-06-19 13:51:49"
         },
         {
             "name": "harp-orm/util",
@@ -210,16 +248,23 @@
             "time": "2012-12-21 11:40:51"
         }
     ],
-    "packages-dev": [],
-    "aliases": [],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "harp-orm/core": 20,
         "harp-orm/query": 20,
-        "harp-orm/validate": 20
+        "harp-orm/validate": 20,
+        "harp-orm/serializer": 20
     },
     "platform": {
         "php": ">=5.4.0"
     },
-    "platform-dev": []
+    "platform-dev": [
+
+    ]
 }

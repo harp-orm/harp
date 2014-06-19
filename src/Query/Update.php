@@ -40,7 +40,9 @@ class Update extends \Harp\Query\Update {
         $changes = array();
 
         foreach ($models as $model) {
-            $changes[$model->getId()] = $model->getRepo()->serializeModel($model->getChanges());
+            $data = $model->getChanges();
+            $model->getRepo()->getSerializers()->serialize($data);
+            $changes[$model->getId()] = $data;
         }
 
         $key = $this->repo->getPrimaryKey();

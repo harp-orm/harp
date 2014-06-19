@@ -47,7 +47,8 @@ class Insert extends \Harp\Query\Insert {
         $this->columns($columns);
 
         foreach ($models as $model) {
-            $data = $model->getRepo()->serializeModel($model->getProperties());
+            $data = $model->getProperties();
+            $model->getRepo()->getSerializers()->serialize($data);
             $values = array_intersect_key($data, $columnKeys);
             $this->values(array_values($values));
         }

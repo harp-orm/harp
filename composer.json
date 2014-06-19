@@ -16,6 +16,10 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/harp-orm/serializer"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/harp-orm/query"
         }
     ],
@@ -24,7 +28,8 @@
         "psr/log": "~1.0",
         "harp-orm/core": "dev-master",
         "harp-orm/query": "dev-master",
-        "harp-orm/validate": "dev-master"
+        "harp-orm/validate": "dev-master",
+        "harp-orm/serializer": "dev-master"
     },
     "autoload": {
         "psr-4": {"Harp\\Harp\\": "src/"}

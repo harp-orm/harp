@@ -142,8 +142,12 @@ abstract class AbstractRepo extends AbstractSaveRepo
                 ->models($models);
         } else {
             $model = $models->getFirst();
+
+            $data = $model->getChanges();
+            $this->getSerializers()->serialize($data);
+
             $update
-                ->set($this->serializeModel($model->getChanges()))
+                ->set($data)
                 ->where($this->getPrimaryKey(), $model->getId());
         }
 

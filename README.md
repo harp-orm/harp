@@ -129,7 +129,7 @@ All the public properties get persisted in the database, using the native types 
 
 ### The repo class
 
-The repo class holds all configuration of the corresponding model - table name, associations, validation, serialization etc. Here is a repo class for the model class above:
+The repo class holds all the configuration of the corresponding model - table name, associations, validation, serialization etc. Here is a repo class for the model class above:
 
 ```php
 namespace Repo;

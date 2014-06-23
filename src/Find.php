@@ -13,7 +13,7 @@ use PDO;
 class Find extends AbstractFind
 {
     /**
-     * @var Select
+     * @var Query\Select
      */
     private $select;
 
@@ -245,7 +245,7 @@ class Find extends AbstractFind
     }
 
     /**
-     * @param  string|\Harp\Query\SQL\SQL  $column
+     * @param  string|\Harp\Query\SQL\SQL  $table
      * @param  string|array                $condition
      * @param  string                      $type
      * @return Find
@@ -258,7 +258,7 @@ class Find extends AbstractFind
     }
 
     /**
-     * @param  string|\Harp\Query\SQL\SQL  $column
+     * @param  string|\Harp\Query\SQL\SQL  $table
      * @param  string|array                $alias
      * @param  string|array                $condition
      * @param  string                      $type

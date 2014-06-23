@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Query;
 
-use Harp\Harp\AbstractRepo;
+use Harp\Core\Repo\AbstractRepo;
 use Harp\Util\Arr;
 
 /**
@@ -10,8 +10,16 @@ use Harp\Util\Arr;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
-trait JoinRelTrait {
+trait JoinRelTrait
+{
+    /**
+     * @return AbstractRepo
+     */
+    abstract public function getRepo();
 
+    /**
+     * @param  array|string $rels
+     */
     public function joinRels($rels)
     {
         $rels = Arr::toAssoc((array) $rels);
@@ -21,6 +29,11 @@ trait JoinRelTrait {
         return $this;
     }
 
+    /**
+     * @param  AbstractRepo $repo
+     * @param  array        $rels
+     * @param  string       $parent
+     */
     private function joinNestedRels(AbstractRepo $repo, array $rels, $parent)
     {
         foreach ($rels as $name => $childRels)

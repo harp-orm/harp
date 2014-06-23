@@ -5,7 +5,6 @@ namespace Harp\Harp;
 use Harp\Core\Save\AbstractSaveRepo;
 use Harp\Core\Repo;
 use Harp\Core\Model\Models;
-use Harp\Harp\Rel\RelInterface;
 use Harp\Harp\Query;
 use Harp\Query\DB;
 use ReflectionProperty;
@@ -99,7 +98,7 @@ abstract class AbstractRepo extends AbstractSaveRepo
 
     /**
      * @param  string $name
-     * @return RelInterface
+     * @return \Harp\Harp\Rel\RelInterface
      */
     public function getRel($name)
     {
@@ -108,7 +107,7 @@ abstract class AbstractRepo extends AbstractSaveRepo
 
     /**
      * @param  string $name
-     * @return RelInterface
+     * @return \Harp\Harp\Rel\RelInterface
      */
     public function getRelOrError($name)
     {

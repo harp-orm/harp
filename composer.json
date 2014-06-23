@@ -13,17 +13,13 @@
         {
             "type": "vcs",
             "url": "https://github.com/harp-orm/core"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/harp-orm/query"
         }
     ],
     "require": {
         "php": ">=5.4.0",
         "psr/log": "~1.0",
-        "harp-orm/core": "dev-master",
-        "harp-orm/query": "dev-master"
+        "harp-orm/core": "~0.3.1",
+        "harp-orm/query": "~0.2.1"
     },
     "autoload": {
         "psr-4": {"Harp\\Harp\\": "src/"}

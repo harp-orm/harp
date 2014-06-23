@@ -68,9 +68,11 @@ class FindTest extends PHPUnit_Framework_TestCase
             ['where', ['name', 'val']],
             ['whereNot', ['name', 'val2']],
             ['whereIn', ['name', ['arr1', 'arr2']]],
+            ['whereLike', ['name', 'val3']],
             ['having', ['name' ,'val']],
             ['havingNot', ['name', 'val']],
             ['havingIn', ['name', ['arr1', 'arr2']]],
+            ['havingLike', ['name', 'val3']],
             ['group', ['name']],
             ['group', ['name', 'DESC']],
             ['order', ['name', 'ASC']],
@@ -90,9 +92,11 @@ class FindTest extends PHPUnit_Framework_TestCase
      * @covers ::where
      * @covers ::whereNot
      * @covers ::whereIn
+     * @covers ::whereLike
      * @covers ::having
      * @covers ::havingNot
      * @covers ::havingIn
+     * @covers ::havingLike
      * @covers ::group
      * @covers ::order
      * @covers ::join

@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2421bfdfb426e0533d26e12ca77404bf",
+    "hash": "6fbd6d17a5007aafc11285b32b2cc784",
     "packages": [
         {
             "name": "harp-orm/core",
-            "version": "dev-master",
+            "version": "0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/core.git",
-                "reference": "e496f585d25f24510c7db2cb09a3d7b1be4aa70c"
+                "reference": "090f8bcc6688f0a0e1f25ad33da933606019cade"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/e496f585d25f24510c7db2cb09a3d7b1be4aa70c",
-                "reference": "e496f585d25f24510c7db2cb09a3d7b1be4aa70c",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/090f8bcc6688f0a0e1f25ad33da933606019cade",
+                "reference": "090f8bcc6688f0a0e1f25ad33da933606019cade",
                 "shasum": ""
             },
             "require": {
@@ -48,23 +48,23 @@
             ],
             "description": "DataMapper style ORM Core Componenets",
             "support": {
-                "source": "https://github.com/harp-orm/core/tree/master",
+                "source": "https://github.com/harp-orm/core/tree/0.3.1",
                 "issues": "https://github.com/harp-orm/core/issues"
             },
-            "time": "2014-06-23 07:14:50"
+            "time": "2014-06-23 18:45:49"
         },
         {
             "name": "harp-orm/query",
-            "version": "dev-master",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/query.git",
-                "reference": "6a9149eff64b397fade0ca12c75b8f6fcf3a384d"
+                "reference": "940064a69ac18a2b477d495045c177b8f3adb0ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/query/zipball/6a9149eff64b397fade0ca12c75b8f6fcf3a384d",
-                "reference": "6a9149eff64b397fade0ca12c75b8f6fcf3a384d",
+                "url": "https://api.github.com/repos/harp-orm/query/zipball/940064a69ac18a2b477d495045c177b8f3adb0ed",
+                "reference": "940064a69ac18a2b477d495045c177b8f3adb0ed",
                 "shasum": ""
             },
             "require": {
@@ -80,6 +80,7 @@
                     "Harp\\Query\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -87,20 +88,18 @@
                 {
                     "name": "Ivan Kerin",
                     "email": "ikerin@gmail.com",
+                    "homepage": "http://www.openbuildings.com",
                     "role": "Author"
                 },
                 {
                     "name": "Haralan Dobrev",
                     "email": "hkdobrev@gmail.com",
+                    "homepage": "http://hkdobrev.blogspot.com",
                     "role": "Developer"
                 }
             ],
             "description": "SQL Builder for PDO",
-            "support": {
-                "source": "https://github.com/harp-orm/query/tree/master",
-                "issues": "https://github.com/harp-orm/query/issues"
-            },
-            "time": "2014-06-22 09:47:12"
+            "time": "2014-06-23 11:33:59"
         },
         {
             "name": "harp-orm/serializer",
@@ -253,10 +252,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "harp-orm/core": 20,
-        "harp-orm/query": 20
-    },
+    "stability-flags": [
+
+    ],
     "platform": {
         "php": ">=5.4.0"
     },

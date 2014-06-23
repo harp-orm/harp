@@ -14,14 +14,10 @@ use Harp\Validate\Assert;
  */
 class Tag extends AbstractRepo {
 
-    public static function newInstance()
-    {
-        return new Tag('Harp\Harp\Test\Model\Tag');
-    }
-
     public function initialize()
     {
         $this
+            ->setModelClass('Harp\Harp\Test\Model\Tag')
             ->addRels([
                 new Rel\HasMany('postTags', $this, PostTag::get()),
                 new Rel\HasManyThrough('posts', $this, Post::get(), 'postTags'),

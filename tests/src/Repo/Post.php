@@ -14,15 +14,12 @@ use Harp\Validate\Assert;
  */
 class Post extends AbstractRepo {
 
-    public static function newInstance()
-    {
-        return new Post('Harp\Harp\Test\Model\Post');
-    }
-
     public function initialize()
     {
         $this
             ->setInherited(true)
+
+            ->setModelClass('Harp\Harp\Test\Model\Post')
 
             ->addRels([
                 new Rel\BelongsTo('user', $this, User::get()),

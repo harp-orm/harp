@@ -18,14 +18,11 @@ class User extends AbstractRepo {
 
     use NestedRepoTrait;
 
-    public static function newInstance()
-    {
-        return new User('Harp\Harp\Test\Model\User');
-    }
-
     public function initialize()
     {
         $this
+            ->setModelClass('Harp\Harp\Test\Model\User')
+
             ->setSoftDelete(true)
 
             ->addRels([

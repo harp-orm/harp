@@ -3,7 +3,6 @@
 namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\AbstractModel;
-use Harp\Harp\Test\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -12,10 +11,7 @@ use Harp\Harp\Test\Repo;
  */
 class PostTag extends AbstractModel {
 
-    public function getRepo()
-    {
-        return Repo\PostTag::get();
-    }
+    const REPO = 'Harp\Harp\Test\Repo\PostTag';
 
     public $id;
     public $postId;

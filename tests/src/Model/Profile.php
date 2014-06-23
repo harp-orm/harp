@@ -3,7 +3,7 @@
 namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\AbstractModel;
-use Harp\Harp\Test\Repo;
+
 /**
  * @author     Ivan Kerin
  * @copyright  (c) 2014 Clippings Ltd.
@@ -11,10 +11,7 @@ use Harp\Harp\Test\Repo;
  */
 class Profile extends AbstractModel {
 
-    public function getRepo()
-    {
-        return Repo\Profile::get();
-    }
+    const REPO = 'Harp\Harp\Test\Repo\Profile';
 
     /**
      * @var integer

@@ -179,7 +179,7 @@ class HasManyThroughTest extends AbstractTestCase
      */
     public function testJoinSoftDelete()
     {
-        $repo = new Repo\Post('Harp\Harp\Test\Model\Tag');
+        $repo = new Repo\Tag();
         $repo->setSoftDelete(true);
 
         $rel = new HasManyThrough('tags', Repo\Post::get(), $repo, 'postTags');

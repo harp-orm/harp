@@ -14,14 +14,9 @@ use Harp\Validate\Assert;
  */
 class Country extends AbstractRepo {
 
-    public static function newInstance()
-    {
-        return new Country('Harp\Harp\Test\Model\Country');
-    }
-
-
     public function initialize()
     {
-
+        $this
+            ->setModelClass('Harp\Harp\Test\Model\Country');
     }
 }

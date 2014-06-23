@@ -14,14 +14,10 @@ use Harp\Harp\Rel;
  */
 class PostTag extends AbstractRepo {
 
-    public static function newInstance()
-    {
-        return new PostTag('Harp\Harp\Test\Model\PostTag');
-    }
-
     public function initialize()
     {
         $this
+            ->setModelClass('Harp\Harp\Test\Model\PostTag')
             ->addRels([
                 new Rel\BelongsTo('post', $this, Post::get()),
                 new Rel\BelongsTo('tag', $this, Tag::get()),

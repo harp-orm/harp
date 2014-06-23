@@ -12,10 +12,7 @@ use Harp\Harp\Test\Repo;
  */
 class User extends AbstractModel {
 
-    public function getRepo()
-    {
-        return Repo\User::get();
-    }
+    const REPO = 'Harp\Harp\Test\Repo\User';
 
     use NestedTrait;
 

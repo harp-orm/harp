@@ -11,16 +11,12 @@ use Harp\Harp\Field;
  */
 class BlogPost extends Post {
 
-    public static function newInstance()
-    {
-        return new BlogPost('Harp\Harp\Test\Model\BlogPost');
-    }
-
     public function initialize()
     {
         parent::initialize();
 
         $this
+            ->setModelClass('Harp\Harp\Test\Model\BlogPost')
             ->setRootRepo(Post::get());
     }
 

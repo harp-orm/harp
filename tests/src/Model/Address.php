@@ -3,7 +3,6 @@
 namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\AbstractModel;
-use Harp\Harp\Test\Repo;
 
 /**
  * @author     Ivan Kerin
@@ -12,10 +11,7 @@ use Harp\Harp\Test\Repo;
  */
 class Address extends AbstractModel {
 
-    public function getRepo()
-    {
-        return Repo\Address::get();
-    }
+    const REPO = 'Harp\Harp\Test\Repo\Address';
 
     /**
      * @var integer

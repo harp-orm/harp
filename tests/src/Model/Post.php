@@ -3,7 +3,6 @@
 namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\AbstractModel;
-use Harp\Harp\Test\Repo;
 use Harp\Core\Model\InheritedTrait;
 
 /**
@@ -12,6 +11,8 @@ use Harp\Core\Model\InheritedTrait;
  * @license    http://www.opensource.org/licenses/isc-license.txt
  */
 class Post extends AbstractModel {
+
+    const REPO = 'Harp\Harp\Test\Repo\Post';
 
     use InheritedTrait;
 
@@ -24,11 +25,6 @@ class Post extends AbstractModel {
     public $updatedAt;
     public $publishedAt;
     public $userId;
-
-    public function getRepo()
-    {
-        return Repo\Post::get();
-    }
 
     public function getUser()
     {

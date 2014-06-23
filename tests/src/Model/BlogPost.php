@@ -11,10 +11,7 @@ use Harp\Harp\Test\Repo;
  */
 class BlogPost extends Post {
 
-    public function getRepo()
-    {
-        return Repo\BlogPost::get();
-    }
+    const REPO = 'Harp\Harp\Test\Repo\BlogPost';
 
     public $isPublished = false;
 }

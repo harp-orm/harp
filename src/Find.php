@@ -179,6 +179,18 @@ class Find extends AbstractFind
     }
 
     /**
+     * @param  string $property
+     * @param  mixed  $value
+     * @return Find   $this
+     */
+    public function havingLike($property, $value)
+    {
+        $this->select->havingLike($property, $value);
+
+        return $this;
+    }
+
+    /**
      * @return Find   $this
      */
     public function clearHaving()
@@ -211,8 +223,8 @@ class Find extends AbstractFind
     }
 
     /**
-     * @param  string|\Harp\Query\SQL\SQL  $column
-     * @param  string                      $direction
+     * @param  string $column
+     * @param  string $direction
      * @return Find
      */
     public function order($column, $direction = null)
@@ -292,7 +304,7 @@ class Find extends AbstractFind
     }
 
     /**
-     * @return Find   $this
+     * @return Find $this
      */
     public function clearLimit()
     {

@@ -14,14 +14,10 @@ use Harp\Validate\Assert;
  */
 class Profile extends AbstractRepo {
 
-    public static function newInstance()
-    {
-        return new Profile('Harp\Harp\Test\Model\Profile');
-    }
-
     public function initialize()
     {
         $this
+            ->setModelClass('Harp\Harp\Test\Model\Profile')
             ->addRels([
                 new Rel\BelongsTo('user', $this, User::get()),
             ])

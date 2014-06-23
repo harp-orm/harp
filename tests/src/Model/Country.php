@@ -11,10 +11,7 @@ use Harp\Harp\Test\Repo;
  */
 class Country extends AbstractModel implements LocationInterface {
 
-    public function getRepo()
-    {
-        return Repo\Country::get();
-    }
+    const REPO = 'Harp\Harp\Test\Repo\Country';
 
     public $id;
     public $name;

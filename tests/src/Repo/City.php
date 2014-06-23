@@ -14,14 +14,10 @@ use Harp\Validate\Assert;
  */
 class City extends AbstractRepo {
 
-    public static function newInstance()
-    {
-        return new City('Harp\Harp\Test\Model\City');
-    }
-
     public function initialize()
     {
         $this
+            ->setModelClass('Harp\Harp\Test\Model\City')
             ->addRels([
                 new Rel\HasMany('users', $this, User::get()),
                 new Rel\BelongsTo('country', $this, Country::get()),

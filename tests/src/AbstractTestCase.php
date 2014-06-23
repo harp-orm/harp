@@ -31,13 +31,13 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
 
         $this->logger = new TestLogger();
 
-        DB::setConfig('default', array(
+        DB::setConfig([
             'dsn' => 'mysql:dbname=harp-orm/harp;host=127.0.0.1',
             'username' => 'root',
-        ));
+        ]);
 
-        DB::get()->execute('ALTER TABLE Post AUTO_INCREMENT = 5', array());
-        DB::get()->execute('ALTER TABLE PostTag AUTO_INCREMENT = 4', array());
+        DB::get()->execute('ALTER TABLE Post AUTO_INCREMENT = 5');
+        DB::get()->execute('ALTER TABLE PostTag AUTO_INCREMENT = 4');
         DB::get()->setLogger($this->logger);
         DB::get()->beginTransaction();
 

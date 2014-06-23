@@ -4,6 +4,7 @@ namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Test\Repo;
+use Harp\Core\Model\InheritedTrait;
 
 /**
  * @author     Ivan Kerin
@@ -12,10 +13,7 @@ use Harp\Harp\Test\Repo;
  */
 class Post extends AbstractModel {
 
-    public function getRepo()
-    {
-        return Repo\Post::get();
-    }
+    use InheritedTrait;
 
     public $id;
     public $title;
@@ -26,7 +24,11 @@ class Post extends AbstractModel {
     public $updatedAt;
     public $publishedAt;
     public $userId;
-    public $class;
+
+    public function getRepo()
+    {
+        return Repo\Post::get();
+    }
 
     public function getUser()
     {

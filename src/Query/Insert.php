@@ -7,9 +7,9 @@ use Harp\Harp\AbstractRepo;
 use Harp\Core\Model\Models;
 
 /**
- * @author     Ivan Kerin
+ * @author     Ivan Kerin <ikerin@gmail.com>
  * @copyright  (c) 2014 Clippings Ltd.
- * @license    http://www.opensource.org/licenses/isc-license.txt
+ * @license    http://spdx.org/licenses/BSD-3-Clause
  */
 class Insert extends \Harp\Query\Insert {
 

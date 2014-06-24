@@ -46,10 +46,10 @@ class UserRepo extends AbstractRepo
 
 // Saving new model
 $user = new UserModel(['name' => 'my name']);
-UserRepo::get()->save($user);
+UserRepo::save($user);
 
 // Loading model
-$loadedUser = UserRepo::get()->find(1);
+$loadedUser = UserRepo::find(1);
 var_dump($loadedUser);
 
 // Loading related model
@@ -96,7 +96,6 @@ Here's an example model class. It is useful to place models in a "Model" namespa
 namespace Model;
 
 use Harp\Harp\AbstractModel;
-use Repo;
 
 class User extends AbstractModel
 {
@@ -172,24 +171,24 @@ Configuration options:
 
 ## Retrieving from the database
 
-Retrieving models from the database (as well as saving but on that later) are handled from the repo object. To find models by their primary key use the ``find`` method.
+Retrieving models from the database (as well as saving but on that later) are handled with static methods on the model class. To find models by their primary key use the ``find`` method.
 
 ```php
-$user1 = Repo\User::get()->find(8);
-$user2 = Repo\User::get()->find(23);
+$user1 = Model\User::find(8);
+$user2 = Model\User::find(23);
 ```
 
 If the model has a "name" property (or a nameKey configured) you can use ``findByName`` method.
 
 ```php
-$user1 = Repo\User::get()->findByName('Tom');
-$user2 = Repo\User::get()->findByName('John');
+$user1 = Model\User::findByName('Tom');
+$user2 = Model\User::findByName('John');
 ```
 
 For more complex retrieving you can use the ``findAll`` method, which returns a 'Find' object. It has a rich interface of methods for constructing an sql query:
 
 ```php
-$select = Repo\User::get()->findAll();
+$select = Model\User::findAll();
 $select
     ->where('name', 'John')
     ->whereIn('type', [1, 4])
@@ -226,27 +225,40 @@ Here are the methods for building the query:
 
 ## Persisting Models
 
-When models have been created, modified or deleted they usually need to be persisted again. Since loading was done using the repo object, saving must be done with that object too.
+When models have been created, modified or deleted they usually need to be persisted again. Since loading was done using static methods, saving must be done with static methods as well.
 
 ```php
-$user = Repo\User::get()->find(10);
+$user = Repo\User::find(10);
 $user->name = 'new name';
 
 $address = new Model\Address(['location' => 'home']);
 $user->setAddress($address);
 
 // This will save the user, the address and the link between them.
-Repo\User::get()->save($user);
+Repo\User::save($user);
 
-$user2 = Repo\User::get()->find(20);
+$user2 = Repo\User::find(20);
 $user2->delete();
 
 // This will remove the deleted user from the database.
-Repo\User::get()->save($user2);
-
+Repo\User::save($user2);
 ```
 
 When you add / remove or otherwise modify related models they will be saved alongside your main model.
+
+### Preserving multiple models
+
+You can presever multiple models of the same repo at once (with query grouping) using the ``getSave`` method. This will return a ``Save`` class that you can add your models to, then call ``execute``.
+
+```php
+$save = Repo\User::get()->getSave();
+
+$save
+    ->add($user1)
+    ->add($user2)
+    ->add($user3)
+    ->execute();
+```
 
 ## Relations
 
@@ -254,12 +266,13 @@ When you configure your model repo objects you need to define the relationships 
 
 These objects can are:
 
-- BelongsTo
-- BelongsToPolymorphic
-- HasMany
-- HasManyExclusive
-- HasManyThrough
-- HasOne
+- [BelongsTo](#belongs-to-rel)
+- [BelongsToPolymorphic](#belongs-to-polymorphic)
+- [HasMany](#has-many)
+- [HasManyExclusive](#has-many-exclusive)
+- [HasManyThrough](#has-many-through)
+- [HasOne](#has-one)
+
 
 ## License
 

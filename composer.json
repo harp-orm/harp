@@ -18,7 +18,7 @@
     "require": {
         "php": ">=5.4.0",
         "psr/log": "~1.0",
-        "harp-orm/core": "~0.3.1",
+        "harp-orm/core": "dev-master",
         "harp-orm/query": "~0.2.1"
     },
     "autoload": {

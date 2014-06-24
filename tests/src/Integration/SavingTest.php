@@ -18,11 +18,11 @@ class SavingTest extends AbstractTestCase {
      */
     public function testBasic()
     {
-        $user = Repo\User::get()->find(1);
+        $user = Model\User::find(1);
         $user->name = 'New Name';
         $user->isBlocked = true;
 
-        Repo\User::get()->save($user);
+        Model\User::save($user);
 
         $this->assertQueries([
             'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
@@ -35,7 +35,7 @@ class SavingTest extends AbstractTestCase {
      */
     public function testRels()
     {
-        $user = Repo\User::get()->find(1);
+        $user = Model\User::find(1);
         $user->name = 'New Name';
         $user->isBlocked = true;
         $user->object = new SaveableObject();
@@ -58,7 +58,7 @@ class SavingTest extends AbstractTestCase {
 
         $posts->add($post);
 
-        $tags = Repo\Tag::get()->findAll()->whereIn('id', [1, 2])->load();
+        $tags = Model\Tag::whereIn('id', [1, 2])->load();
 
         $post->getTags()->addModels($tags);
 
@@ -69,7 +69,7 @@ class SavingTest extends AbstractTestCase {
             'SELECT Tag.* FROM Tag WHERE (id IN (1, 2))',
         ]);
 
-        Repo\User::get()->save($user);
+        Model\User::save($user);
 
         $this->assertQueries([
             'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
@@ -84,12 +84,12 @@ class SavingTest extends AbstractTestCase {
             'UPDATE PostTag SET postId = CASE id WHEN 4 THEN "5" WHEN 5 THEN "5" ELSE postId END WHERE (id IN (4, 5))',
         ]);
 
-        Repo\User::get()->getIdentityMap()->clear();
-        Repo\Address::get()->getIdentityMap()->clear();
-        Repo\Post::get()->getIdentityMap()->clear();
-        Repo\Tag::get()->getIdentityMap()->clear();
+        Repo\User::get()->clear();
+        Repo\Address::get()->clear();
+        Repo\Post::get()->clear();
+        Repo\Tag::get()->clear();
 
-        $user = Repo\User::get()->find(1);
+        $user = Model\User::find(1);
         $this->assertEquals('New Name', $user->name);
         $this->assertEquals('value', $user->object->getVar());
         $this->assertEquals(true, $user->isBlocked);
@@ -103,7 +103,7 @@ class SavingTest extends AbstractTestCase {
 
         $this->assertEquals('Changed Body', $post->body);
 
-        $newPost = Repo\Post::get()->findAll()->where('title', 'new post')->loadFirst();
+        $newPost = Model\Post::where('title', 'new post')->loadFirst();
 
         $this->assertTrue($posts->has($newPost));
 

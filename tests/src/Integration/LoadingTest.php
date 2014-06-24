@@ -3,11 +3,15 @@
 namespace Harp\Harp\Test\Integration;
 
 use Harp\Harp\Test\AbstractTestCase;
-use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Query\SQL\SQL;
 
 /**
  * @group integration
+ *
+ * @author     Ivan Kerin <ikerin@gmail.com>
+ * @copyright  (c) 2014 Clippings Ltd.
+ * @license    http://spdx.org/licenses/BSD-3-Clause
  */
 class LoadingTest extends AbstractTestCase {
 
@@ -16,9 +20,9 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testFind()
     {
-        $user = Repo\User::get()->find(1);
+        $user = Model\User::find(1);
 
-        $address = Repo\Address::get()->find(1);
+        $address = Model\Address::find(1);
 
         $this->assertInstanceOf('Harp\Harp\Test\Model\User', $user);
         $this->assertInstanceOf('Harp\Harp\Test\Model\Address', $address);
@@ -61,7 +65,7 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testFindAll()
     {
-        $cities = Repo\City::get()->findAll()->where('countryId', 1)->load();
+        $cities = Model\City::where('countryId', 1)->load();
 
         $this->assertInstanceOf('Harp\Core\Model\Models', $cities);
         $this->assertCount(2, $cities);
@@ -98,7 +102,7 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testComplexFindAll()
     {
-        $users = Repo\User::get()->findAll()
+        $users = Model\User::findAll()
             ->where('name', 'User 1')
             ->whereNot('addressId', null)
             ->limit(2)
@@ -148,20 +152,20 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testJoinRels()
     {
-        $users = Repo\User::get()->findAll()
+        $users = Model\User::findAll()
             ->joinRels(['posts' => 'tags'])
             ->group('User.id')
             ->load();
 
-        $expected = Repo\User::get()->find(1);
+        $expected = Model\User::find(1);
 
         $this->assertSame($expected, $users->getFirst());
 
-        $addresses = Repo\Address::get()->findAll()
+        $addresses = Model\Address::findAll()
             ->joinRels(['user' => 'posts'])
             ->load();
 
-        $expected = Repo\Address::get()->find(1);
+        $expected = Model\Address::find(1);
 
         $this->assertSame($expected, $addresses->getFirst());
 
@@ -178,7 +182,7 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testLoadIds()
     {
-        $ids = Repo\City::get()->findAll()->where('countryId', 2)->loadIds();
+        $ids = Model\City::where('countryId', 2)->loadIds();
 
         $expected = [3, 4];
 
@@ -194,7 +198,7 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testLoadCount()
     {
-        $count = Repo\City::get()->findAll()->where('countryId', 2)->loadCount();
+        $count = Model\City::where('countryId', 2)->loadCount();
 
         $this->assertSame(2, $count);
 
@@ -208,7 +212,7 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testLoadWith()
     {
-        $users = Repo\User::get()->findAll()
+        $users = Model\User::findAll()
             ->loadWith(['address', 'posts' => 'tags']);
 
         $this->assertCount(4, $users);

@@ -19,18 +19,15 @@ class HasMany extends AbstractRelMany implements RelInterface, UpdateManyInterfa
 {
     protected $foreignKey;
 
-    public function __construct($name, AbstractRepo $repo, AbstractRepo $foreignRepo, array $options = array())
-    {
-        $this->foreignKey = lcfirst($repo->getName()).'Id';
-
-        parent::__construct($name, $repo, $foreignRepo, $options);
-    }
-
     /**
      * @return string
      */
     public function getForeignKey()
     {
+        if (! $this->foreignKey) {
+            $this->foreignKey = lcfirst($this->getRepo()->getTable()).'Id';
+        }
+
         return $this->foreignKey;
     }
 
@@ -62,7 +59,7 @@ class HasMany extends AbstractRelMany implements RelInterface, UpdateManyInterfa
 
         return $this->getForeignRepo()
             ->findAll()
-            ->whereIn($this->foreignKey, $keys)
+            ->whereIn($this->getForeignKey(), $keys)
             ->loadRaw($flags);
     }
 

@@ -25,8 +25,6 @@ class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteMany
     public function __construct($name, AbstractRepo $repo, AbstractRepo $foreignRepo, $through, array $options = array())
     {
         $this->through = $through;
-        $this->foreignKey = lcfirst($foreignRepo->getName()).'Id';
-        $this->key = lcfirst($repo->getName()).'Id';
 
         parent::__construct($name, $repo, $foreignRepo, $options);
     }
@@ -36,6 +34,10 @@ class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteMany
      */
     public function getForeignKey()
     {
+        if (! $this->foreignKey) {
+            $this->foreignKey = lcfirst($this->getForeignRepo()->getTable()).'Id';
+        }
+
         return $this->foreignKey;
     }
 
@@ -44,6 +46,10 @@ class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteMany
      */
     public function getKey()
     {
+        if (! $this->key) {
+            $this->key = lcfirst($this->getRepo()->getTable()).'Id';
+        }
+
         return $this->key;
     }
 
@@ -96,13 +102,13 @@ class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteMany
     public function loadForeign(Models $models, $flags = null)
     {
         $throughKey = $this->getThroughTable().'.'.$this->getThroughRel()->getForeignKey();
-        $throughForeignKey = $this->getThroughTable().'.'.$this->key;
+        $throughForeignKey = $this->getThroughTable().'.'.$this->getKey();
         $repo = $this->getForeignRepo();
 
         $keys = $models->getIds();
 
         $select = $repo->findAll()
-            ->column($throughKey, $this->getTHroughKey())
+            ->column($throughKey, $this->getThroughKey())
             ->joinRels([$this->through])
             ->whereIn($throughForeignKey, $keys);
 
@@ -144,7 +150,7 @@ class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteMany
         $removedIds = $link->getRemoved()->getIds();
 
         $removedItems = $through->get()->filter(function ($item) use ($removedIds) {
-            return in_array($item->{$this->foreignKey}, $removedIds);
+            return in_array($item->{$this->getForeignKey()}, $removedIds);
         });
 
         $through->get()->removeAll($removedItems);
@@ -166,8 +172,8 @@ class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteMany
 
             foreach ($link->getAdded() as $added) {
                 $inserted->add($repo->newModel([
-                    $this->key => $link->getModel()->getId(),
-                    $this->foreignKey => $added->getId(),
+                    $this->getKey() => $link->getModel()->getId(),
+                    $this->getForeignKey() => $added->getId(),
                 ]));
             }
 

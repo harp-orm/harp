@@ -20,7 +20,6 @@ use Harp\Harp\Test\AbstractTestCase;
 class HasOneTest extends AbstractTestCase
 {
     /**
-     * @covers ::__construct
      * @covers ::getKey
      * @covers ::getForeignKey
      */

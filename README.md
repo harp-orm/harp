@@ -90,35 +90,21 @@ const REPO = 'UserRepo';
 
 ### The model class
 
-Here's an example model class. It is useful to place models in a "Model" namespace and repos in "Repo" namespace - this way the two classes can have the same name.
+Here's an example model class.
 
 ```php
-namespace Model;
-
 use Harp\Harp\AbstractModel;
 
 class User extends AbstractModel
 {
     // Repo class
-    const REPO = 'Repo\User';
+    const REPO = 'UserRepo';
 
     // Public properties persisted as columns in the table
     public $id;
     public $name;
     public $email;
     public $addressId;
-
-    // Having an explicit method that returns an Address model object
-    // allows for setting a correct docblock, and easer to read interface
-    public function getAddress()
-    {
-        return $this->getLink('address')->get();
-    }
-
-    public function setAddress(Address $address)
-    {
-        return $this->getLink('address')->set($address);
-    }
 }
 ```
 
@@ -131,18 +117,17 @@ All the public properties get persisted in the database, using the native types 
 The repo class holds all the configuration of the corresponding model - table name, associations, validation, serialization etc. Here is a repo class for the model class above:
 
 ```php
-namespace Repo;
 
 use Harp\Harp\AbstractRepo;
 use Harp\Harp\Rel;
 use Harp\Validate\Assert;
 
-class User extends AbstractRepo
+class UserRepo extends AbstractRepo
 {
     public function initialize()
     {
         $this
-            ->setModelClass('User\Model')
+            ->setModelClass('User')
             ->addRel(new Rel\BelongsTo('address', $this, AddressRepo::get()));
             ->addAssert(new Assert\Present('name'))
             ->addAssert(new Assert\Email('name'));
@@ -174,21 +159,21 @@ Configuration options:
 Retrieving models from the database (as well as saving but on that later) are handled with static methods on the model class. To find models by their primary key use the ``find`` method.
 
 ```php
-$user1 = Model\User::find(8);
-$user2 = Model\User::find(23);
+$user1 = User::find(8);
+$user2 = User::find(23);
 ```
 
 If the model has a "name" property (or a nameKey configured) you can use ``findByName`` method.
 
 ```php
-$user1 = Model\User::findByName('Tom');
-$user2 = Model\User::findByName('John');
+$user1 = User::findByName('Tom');
+$user2 = User::findByName('John');
 ```
 
 For more complex retrieving you can use the ``findAll`` method, which returns a 'Find' object. It has a rich interface of methods for constructing an sql query:
 
 ```php
-$select = Model\User::findAll();
+$select = User::findAll();
 $select
     ->where('name', 'John')
     ->whereIn('type', [1, 4])
@@ -228,51 +213,31 @@ Here are the methods for building the query:
 When models have been created, modified or deleted they usually need to be persisted again. Since loading was done using static methods, saving must be done with static methods as well.
 
 ```php
-$user = Repo\User::find(10);
+$user = User::find(10);
 $user->name = 'new name';
 
 $address = new Model\Address(['location' => 'home']);
 $user->setAddress($address);
 
 // This will save the user, the address and the link between them.
-Repo\User::save($user);
+User::save($user);
 
-$user2 = Repo\User::find(20);
+$user2 = User::find(20);
 $user2->delete();
 
 // This will remove the deleted user from the database.
-Repo\User::save($user2);
+User::save($user2);
 ```
 
 When you add / remove or otherwise modify related models they will be saved alongside your main model.
 
 ### Preserving multiple models
 
-You can presever multiple models of the same repo at once (with query grouping) using the ``getSave`` method. This will return a ``Save`` class that you can add your models to, then call ``execute``.
+You can presever multiple models of the same repo at once (with query grouping) using the ``saveArray`` method. Just pass an array of models.
 
 ```php
-$save = Repo\User::get()->getSave();
-
-$save
-    ->add($user1)
-    ->add($user2)
-    ->add($user3)
-    ->execute();
+$save = User::saveArray([$user1, $user2, $user3]);
 ```
-
-## Relations
-
-When you configure your model repo objects you need to define the relationships with other models. This is done with the "Rel" objects which you add to the configuration.
-
-These objects can are:
-
-- [BelongsTo](#belongs-to-rel)
-- [BelongsToPolymorphic](#belongs-to-polymorphic)
-- [HasMany](#has-many)
-- [HasManyExclusive](#has-many-exclusive)
-- [HasManyThrough](#has-many-through)
-- [HasOne](#has-one)
-
 
 ## License
 

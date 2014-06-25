@@ -17,6 +17,7 @@ These objects can are:
 A BelongsTo relation sets up a one-to-one connection with another model, such that each instance of the declaring model "belongs to" one instance of the other model. For example, if your application includes customers and orders, and each order can be assigned to exactly one customer, you’d declare the order model this way:
 
 ```php
+// Model File
 use Harp\Harp\AbstractModel;
 
 class Order extends AbstractModel
@@ -27,8 +28,8 @@ class Order extends AbstractModel
     public $orderKey;
     public $customerId;
 }
-```
 
+// Repo File
 use Harp\Harp\AbstractRepo;
 use Harp\Harp\Rel\BelongsTo;
 
@@ -41,8 +42,7 @@ class OrderRepo extends AbstractRepo {
     }
 }
 ```
-
-<pre>
+```
 ┌───────────────────────┐
 │ Model: Order          │
 │ BelongsTo: Customer   │    ┌───────────────────────┐
@@ -51,7 +51,7 @@ class OrderRepo extends AbstractRepo {
 │ customerId  │ ingeter │───>│ id          | ingeter │
 │ orderKey    │ string  │    │ name        | string  │
 └─────────────┴─────────┘    └───────────────────────┘
-</pre>
+```
 
 To retrieve the relation and to modify use the ``getLink`` method on the model. It will return a ``LinkOne`` object that has some useful method, that described in detail afterwords.
 
@@ -88,6 +88,7 @@ $order->setCustomer($customer2);
 HasOne relation also sets up a one-to-one connection with another model, but with somewhat different semantics (and consequences). This relation indicates that each instance of a model possesses one instance of another model. For example, if each supplier in your application has only one account, you'd declare the supplier model like this:
 
 ```php
+// Model File
 use Harp\Harp\AbstractModel;
 
 class Supplier extends AbstractModel
@@ -97,8 +98,8 @@ class Supplier extends AbstractModel
     public $id;
     public $name;
 }
-```
 
+// Repo File
 use Harp\Harp\AbstractRepo;
 use Harp\Harp\Rel\HasOne;
 
@@ -111,8 +112,7 @@ class SupplierRepo extends AbstractRepo {
     }
 }
 ```
-
-<pre>
+```
 ┌───────────────────────┐    ┌───────────────────────┐
 │ Model: Supplier       │    │ Model: Account        │
 │ HasOne: Account       │    ├─────────────┬─────────│
@@ -120,7 +120,7 @@ class SupplierRepo extends AbstractRepo {
 │ id          │ ingeter │◄───│ supplierId  │ ingeter │
 │ name        │ string  │    │ accountNum  │ string  │
 └─────────────┴─────────┘    └─────────────┴─────────┘
-</pre>
+```
 
 To retrieve the relation and to modify use the ``getLink`` method on the model. It will return a ``LinkOne`` object that has some useful method, that described in detail afterwords.
 
@@ -157,6 +157,7 @@ $supplier->setAccount($account2);
 A ``HasMany`` relation indicates a one-to-many connection with another model. You'll often find this association on the "other side" of a ``BelongsTo`` relation. This relation indicates that each instance of the model has zero or more instances of another model. For example, in an application containing customers and orders, the customer model could be declared like this:
 
 ```php
+// Model File
 use Harp\Harp\AbstractModel;
 
 class Customer extends AbstractModel
@@ -166,8 +167,8 @@ class Customer extends AbstractModel
     public $id;
     public $name;
 }
-```
 
+// Repo File
 use Harp\Harp\AbstractRepo;
 use Harp\Harp\Rel\HasMany;
 
@@ -180,8 +181,7 @@ class CustomerRepo extends AbstractRepo {
     }
 }
 ```
-
-<pre>
+```
 ┌───────────────────────┐    ┌───────────────────────┐
 │ Model: Customer       │    │ Model: Order          │
 │ HasMany: Orders       │    ├─────────────┬─────────┤
@@ -189,4 +189,4 @@ class CustomerRepo extends AbstractRepo {
 │ id          │ ingeter │◄───│ supplierId  │ ingeter │
 │ name        │ string  │    │ accountNum  │ string  │
 └─────────────┴─────────┘    └─────────────┴─────────┘
-</pre>
+```

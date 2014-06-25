@@ -190,3 +190,119 @@ class CustomerRepo extends AbstractRepo {
 │ name        │ string  │    │ accountNum  │ string  │
 └─────────────┴─────────┘    └─────────────┴─────────┘
 ```
+
+To retrieve the relation and to modify use the ``getLink`` method on the model. It will return a ``LinkMany`` object that has some useful method, that described in detail afterwords.
+
+```php
+$orders = $customer->getLink('orders');
+foreach ($orders as $order) {
+    var_dump($order);
+}
+$customer->getLink('orders')->add($order2);
+```
+
+You could also add a method to your model to make working with ``HasMany`` relations easier and safer:
+
+```php
+use Harp\Harp\AbstractModel;
+
+class Customer extends AbstractModel
+{
+    // ...
+    public function getOrders()
+    {
+        return $this->getLink('orders');
+    }
+}
+
+$orders = $customer->getOrders();
+foreach ($orders as $order) {
+    var_dump($order);
+}
+$customer->getOrders()->add($order2);
+```
+
+## Has Many Through
+
+A ``HasManyThrough`` relation creates a many-to-many connection with another model. For example, if your application includes assemblies and parts, with each assembly having many parts and each part appearing in many assemblies, you could declare the models this way:
+
+```php
+// Model File
+use Harp\Harp\AbstractModel;
+
+class Assembly extends AbstractModel
+{
+    const REPO = 'AssemblyRepo';
+
+    public $id;
+    public $name;
+}
+
+// Repo File
+use Harp\Harp\AbstractRepo;
+use Harp\Harp\Rel\HasManyThrough;
+use Harp\Harp\Rel\HasMany;
+
+class AssemblyRepo extends AbstractRepo {
+
+    public function initialize()
+    {
+        $this
+            ->addRels([
+                new HasManyThrough('parts', $this, PartRepo::get(), 'assemblyParts')),
+                new HasMany('assemblyParts', $this, AssemblyPartRepo::get()))
+            ]);
+    }
+}
+```
+```
+┌────────────────────────────┐
+│ Model: Assembly            │
+│ HasManyThrough: parts      │
+│ HasMany: assemblyParts     │
+├─────────────┬──────────────┤      ┌────────────────────────┐
+│ id          │ ingeter      │◄──┐  │ Table: AssemblyPart    │
+│ name        │ string       │   │  ├─────────────┬──────────┤
+└─────────────┴──────────────┘   │  │ id          │ integer  │
+                                 └──│ assemblyId  │ ingeter  │
+┌────────────────────────────┐   ┌──│ partId      │ string   │
+│ Model: Parts               │   │  └─────────────┴──────────┘
+│ HasManyThrough: assemblies │   │
+│ HasMany: assemblyParts     │   │
+├─────────────┬──────────────┤   │
+│ id          │ ingeter      │◄──┘
+│ name        │ string       │
+└─────────────┴──────────────┘
+```
+
+To retrieve the relation and to modify use the ``getLink`` method on the model. It will return a ``LinkMany`` object that has some useful method, that described in detail afterwords.
+
+```php
+$parts = $assembly->getLink('parts');
+foreach ($parts as $part) {
+    var_dump($part);
+}
+$assembly->getLink('parts')->add($part2);
+```
+
+You could also add a method to your model to make working with ``HasManyThrough`` relations easier and safer:
+
+```php
+use Harp\Harp\AbstractModel;
+
+class Assembly extends AbstractModel
+{
+    // ...
+    public function getParts()
+    {
+        return $this->getLink('parts');
+    }
+}
+
+$parts = $customer->getParts();
+foreach ($parts as $part) {
+    var_dump($part);
+}
+$customer->getParts()->add($part2);
+```
+

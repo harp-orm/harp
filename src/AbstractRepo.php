@@ -20,16 +20,13 @@ abstract class AbstractRepo extends AbstractSaveRepo
     private $db = 'default';
     private $fields = array();
 
-    public function beforeInitialize()
-    {
-        parent::beforeInitialize();
-
-        $this->table = $this->getName();
-    }
-
     public function afterInitialize()
     {
         parent::afterInitialize();
+
+        if (! $this->table) {
+            $this->table = $this->getModelReflection()->getShortName();
+        }
 
         if (! $this->fields) {
             $properties = $this->getModelReflection()->getProperties(ReflectionProperty::IS_PUBLIC);

@@ -170,26 +170,7 @@ foreach ($users as $user) {
 }
 ```
 
-Here are the methods for building the query:
-
-- __column__($column, $alias = null) - add a custom column to the list, if none is set, will use "table name".*
-- __prependColumn__($column, $alias = null) - prepend a custom column to the list
-- __where__($column, $value) - add a condition (=)
-- __whereNot__($column, $value) - add a negative condition (!=)
-- __whereIn__($column, array $values) - add "in array" condition (IN)
-- __whereLike__($column, $value) - add a like condition (LIKE)
-- __whereKey__($key) - add a condition for a primary key (id = value)
-- __having__($column, $value) - add a condition (=) to HAVING
-- __havingNot__($column, $value) - add a negative (!=) to HAVING
-- __havingIn__($column, array $values) - add an "in array" condition (IN) to HAVING
-- __havingLike__($column, $value) - add a like condition (LIKE) to HAVING
-- __group__($column, $direction = null) - add a GROUP BY
-- __order__($column, $direction = null) - add an ORDER BY
-- __join__($table, $conditions, $type = null) - add a JOIN to another table
-- __joinAliased__($table, $alias, $conditions, $type = null) - the same as __join__, but the table will have an alias
-- __joinRels__(array $rels) join related models if they have a proper configuration. Argument can be a nested array.
-- __limit__($limit)
-- __offset__($offset)
+Detailed [docs for findAll](/docs/Find.md)
 
 ## Persisting Models
 

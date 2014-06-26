@@ -1,23 +1,23 @@
 # Repo
 
-Configuration Method               | Description
------------------------------------|-------------
-setModelClass($class)              | Set the corresponding model class, required. Must contain the namespace
-setTable($table)                   | Set the name of the database table, defaults to the short class name of the model
-setDb($dbName)                     | Set alternative database connection, this will tap into alternative database configurations you've setup
-setSoftDelete($isSoftDelete)       | Set to true if you want this model to be soft deleted. More on [soft delete later](/docs/SoftDelete.md)
-setInherited($isInherited)         | Set to true if this repo will be inherited by other repo using [Single table inheritance](/docs/Inherited.md)
-setRootRepo(AbstractRepo $repo)    | Used for children in single table inheritence
-setPrimaryKey($primaryKey)         | Sets the property/column to be used for primary key, "id" by default
-setNameKey($nameKey)               | Sets the property/column to be used for name key - will be used for findByName method on the repo. Defaults to "name"
-addRel(AbstractRel $rel)           | Add a link to a related model. Read about [Relations](/docs/Relations.md)
-addRels(array $rels)               | Add multiple rel objects.
-addAssert(AbstractAssert $assert)  | Add an assertion for this model. Read about [Assertions](/docs/Assertions.md)
-addAsserts(array $asserts)         | Add multiple asserts
-addSerializer(AbstractSerializer)  | Add a property serializer. Read about [Serializers](/docs/Serializers.md)
-addSerializers(array $serializers) | Add multiple serializer objects
-addEventBefore($event, $callback)  | Add event listener, to be triggered before a specific event
-addEventAfter($event, $callback)   | Add event listener to be triggered after a specific event
+Configuration Method                   | Description
+---------------------------------------|-------------
+__setModelClass__($class)              | Set the corresponding model class, required. Must contain the namespace
+__setTable__($table)                   | Set the name of the database table, defaults to the short class name of the model
+__setDb__($dbName)                     | Set alternative database connection, this will tap into alternative database configurations you've setup
+__setSoftDelete__($isSoftDelete)       | Set to true if you want this model to be soft deleted. More on [soft delete later](/docs/SoftDelete.md)
+__setInherited__($isInherited)         | Set to true if this repo will be inherited by other repo using [Single table inheritance](/docs/Inherited.md)
+__setRootRepo__(AbstractRepo $repo)    | Used for children in single table inheritence
+__setPrimaryKey__($primaryKey)         | Sets the property/column to be used for primary key, "id" by default
+__setNameKey__($nameKey)               | Sets the property/column to be used for name key - will be used for findByName method on the repo. Defaults to "name"
+__addRel__(AbstractRel $rel)           | Add a link to a related model. Read about [Relations](/docs/Relations.md)
+__addRels__(array $rels)               | Add multiple rel objects.
+__addAssert__(AbstractAssert $assert)  | Add an assertion for this model. Read about [Assertions](/docs/Assertions.md)
+__addAsserts__(array $asserts)         | Add multiple asserts
+__addSerializer__(AbstractSerializer)  | Add a property serializer. Read about [Serializers](/docs/Serializers.md)
+__addSerializers__(array $serializers) | Add multiple serializer objects
+__addEventBefore__($event, $callback)  | Add event listener, to be triggered before a specific event
+__addEventAfter__($event, $callback)   | Add event listener to be triggered after a specific event
 
 ## Custom Finders
 

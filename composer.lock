@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "456a4d123ede7cd5c10ad7e77563df20",
+    "hash": "541831cc1f1f710744a3cbe691179a65",
     "packages": [
         {
             "name": "harp-orm/core",
-            "version": "dev-master",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/core.git",
-                "reference": "7d35a448ae08fe7a7341e5f60be2bf9b7a00d610"
+                "reference": "db7511aba14554f08bb7f0862e523027d0b252bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/7d35a448ae08fe7a7341e5f60be2bf9b7a00d610",
-                "reference": "7d35a448ae08fe7a7341e5f60be2bf9b7a00d610",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/db7511aba14554f08bb7f0862e523027d0b252bd",
+                "reference": "db7511aba14554f08bb7f0862e523027d0b252bd",
                 "shasum": ""
             },
             "require": {
@@ -48,10 +48,10 @@
             ],
             "description": "DataMapper style ORM Core Componenets",
             "support": {
-                "source": "https://github.com/harp-orm/core/tree/master",
+                "source": "https://github.com/harp-orm/core/tree/0.1.0",
                 "issues": "https://github.com/harp-orm/core/issues"
             },
-            "time": "2014-06-26 09:00:59"
+            "time": "2014-06-26 12:44:21"
         },
         {
             "name": "harp-orm/query",
@@ -252,9 +252,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "harp-orm/core": 20
-    },
+    "stability-flags": [
+
+    ],
     "platform": {
         "php": ">=5.4.0"
     },

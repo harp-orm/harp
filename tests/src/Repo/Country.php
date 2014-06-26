@@ -17,6 +17,9 @@ class Country extends AbstractRepo {
     public function initialize()
     {
         $this
-            ->setModelClass('Harp\Harp\Test\Model\Country');
+            ->setModelClass('Harp\Harp\Test\Model\Country')
+            ->addRels([
+                new Rel\HasManyAs('users', $this, User::get(), 'location'),
+            ]);
     }
 }

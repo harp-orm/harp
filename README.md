@@ -239,6 +239,24 @@ You can presever multiple models of the same repo at once (with query grouping) 
 $save = User::saveArray([$user1, $user2, $user3]);
 ```
 
+## Soft deletion
+
+If you need to keep the models in the database even after they are deleted - e.g. logical deltion, you can use the ``SoftDeleteTrait``
+
+```php
+// Model File
+use Harp\Harp\AbstractModel;
+use Harp\Core\Model\SoftDeleteTrait;
+
+class Order extends AbstractModel
+{
+    // ...
+    use SoftDeleteTrait;
+}
+```
+
+This adds a varaety of methods to your model, read about [soft deletion in detail here](/docs/SoftDelete.md)
+
 ## License
 
 Copyright (c) 2014, Clippings Ltd. Developed by Ivan Kerin as part of [clippings.com](http://clippings.com)

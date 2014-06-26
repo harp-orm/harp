@@ -19,7 +19,7 @@ class City extends AbstractRepo {
         $this
             ->setModelClass('Harp\Harp\Test\Model\City')
             ->addRels([
-                new Rel\HasMany('users', $this, User::get()),
+                new Rel\HasManyAs('users', $this, User::get(), 'location'),
                 new Rel\BelongsTo('country', $this, Country::get()),
             ])
             ->addAsserts([

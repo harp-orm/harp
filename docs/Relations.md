@@ -60,6 +60,7 @@ class OrderRepo extends AbstractRepo {
     public function initialize()
     {
         $this
+            ->setModelClass('Order')
             ->addRel(new BelongsTo('customer', $this, CustomerRepo::get()));
     }
 }
@@ -70,6 +71,12 @@ $order->setCustomer($customer2);
 ```
 
 > __Tip__ Though you could use the ``getLink`` method directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
+
+By default the name of the column use for the foreign key is defined as "foreign model" + "Id", but you can configure that with a "key" option e.g.
+
+```php
+$rel = new BelongsTo('customer', $this, CustomerRepo::get(), ['key' => 'otherId']);
+```
 
 ## Has One
 
@@ -117,6 +124,7 @@ class SupplierRepo extends AbstractRepo {
     public function initialize()
     {
         $this
+            ->setModelClass('Supplier')
             ->addRel(new HasOne('account', $this, AccountRepo::get()));
     }
 }
@@ -127,6 +135,12 @@ $supplier->setAccount($account2);
 ```
 
 > __Tip__ Though you could use the ``getLink`` method directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
+
+By default the name of the column use for the foreign key is defined as "foreign model" + "Id", but you can configure that with a "foreignKey" option e.g.
+
+```php
+$rel = new HasOne('account', $this, AccountRepo::get(), ['foreignKey' => 'otherId']);
+```
 
 ## Has Many
 
@@ -169,6 +183,7 @@ class CustomerRepo extends AbstractRepo {
     public function initialize()
     {
         $this
+            ->setModelClass('Customer')
             ->addRel(new HasMany('orders', $this, OrderRepo::get()));
     }
 }
@@ -182,9 +197,15 @@ $customer->getOrders()->add($order2);
 
 > __Tip__ Though you could use the ``getLink`` method directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
 
+By default the name of the column use for the foreign key is defined as "foreign model" + "Id", but you can configure that with a "foreignKey" option e.g.
+
+```php
+$rel = new HasMany('orders', $this, OrderRepo::get(), ['foreignKey' => 'otherId']);
+```
+
 ## Has Many Through
 
-A ``HasManyThrough`` relation creates a many-to-many connection with another model. For example, if your application includes assemblies and parts, with each assembly having many parts and each part appearing in many assemblies, you could declare the models this way:
+A ``HasManyThrough`` relation creates a many-to-many connection with another model. For example, if your application includes assemblies and parts, with each assembly having many parts and each part appearing in many assemblies. This requires a "through" model which is related with a ``HasMany`` relation - in this case AssemblyPart model. You could declare it this way:
 
 __Database Tables:__
 ```
@@ -234,6 +255,7 @@ class AssemblyRepo extends AbstractRepo {
     public function initialize()
     {
         $this
+            ->setModelClass('Assembly')
             ->addRels([
                 new HasManyThrough('parts', $this, PartRepo::get(), 'assemblyParts')),
                 new HasMany('assemblyParts', $this, AssemblyPartRepo::get()))
@@ -249,3 +271,99 @@ $customer->getParts()->add($part2);
 ```
 
 > __Tip__ Though you could use the ``getLink`` method directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
+
+By default the name of the columns use for the foreign keys in the "through" model are "model" + "Id" and "foreign model"  + "Id", but you can configure that with a "key" and "foreignKey" options e.g.
+
+```php
+$rel = new HasManyThrough(
+    'parts',
+    $this,
+    PartRepo::get(),
+    'assemblyParts',
+    [
+        'key' => 'otherAssemblyId',
+        'foreignKey' => 'otherPartId',
+    ]
+));
+```
+
+## Has Many Exclusive
+
+The "HasManyExclusive" relation is exactly the same as HasMany, with one exception. When a model is removed from the relation, it is deleted.
+
+```php
+// Repo File
+use Harp\Harp\AbstractRepo;
+use Harp\Harp\Rel\HasMany;
+
+class CustomerRepo extends AbstractRepo {
+
+    public function initialize()
+    {
+        $this
+            ->setModelClass('Customer')
+            ->addRel(new HasManyExclusive('orders', $this, OrderRepo::get()));
+    }
+}
+```
+
+## Belongs To Polymorphic
+
+A slightly more advanced twist on relations is the ``BlongsToPolymorphic`` relation. With polymorphic associations, a model can belong to more than one other model, on a single association. For example, you might have a picture model that belongs to either an employee model or a product model. Here's how this could be declared:
+
+__Database Tables:__
+```
+┌───────────────────────────────────┐
+│ Table: Employee                   │
+│ HasManyAs: pictures, parent       │      ┌──────────────────────────────┐
+├─────────────────────────┬─────────┤      │ Table: Pircture              │
+│ id                      │ ingeter │◄──┐  │ BelongsToPolymorphic: parent │
+│ name                    │ string  │   │  ├────────────────┬─────────────┤
+└─────────────────────────┴─────────┘   │  │ id             │ ingeter     │
+                                        │  │ name           │ string      │
+┌───────────────────────────────────┐   ├──│ parentId       │ ingeter     │
+│ Table: Product                    │   │  │ parentClass    │ string      │
+│ HasManyAs: pictures, parent       │   │  └────────────────┴─────────────┘
+├─────────────────────────┬─────────┤   │
+│ id                      │ ingeter │◄──┘
+│ name                    │ string  │
+└─────────────────────────┴─────────┘
+```
+```php
+class PictureRepo extends AbstractRepo
+{
+    public function initialize()
+    {
+        // ...
+        $this
+            ->addRel(new BelongsToPolymorphic('parent', $this, ProductRepo::get());
+    }
+}
+
+class EmployeeRepo extends AbstractRepo
+{
+    public function initialize()
+    {
+        // ...
+        $this
+            ->addRel(new HasManyAs('pictures', $this, PictureRepo::get(), 'parent');
+    }
+}
+
+class ProductRepo extends AbstractRepo
+{
+    public function initialize()
+    {
+        // ...
+        $this
+            ->addRel(new HasManyAs('pictures', $this, PictureRepo::get(), 'parent');
+    }
+}
+```
+
+You can think of a polymorphic belongsto declaration as setting up an interface that any other model can use. From an instance of the ``Employee`` model, you can retrieve a collection of pictures: ``$employee->getPictures()``.
+
+Similarly, you can retrieve ``$product->getPictures()``.
+
+If you have an instance of the ``Picture`` model, you can get to its parent via ``$picture->getParent()``.
+

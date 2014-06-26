@@ -158,21 +158,22 @@ class FindTest extends PHPUnit_Framework_TestCase
     public function dataFilters()
     {
         return [
-            ['onlySaved', 'where', [$this->equalTo('User.deletedAt'), $this->equalTo(null)]],
-            ['onlyDeleted', 'whereNot', [$this->equalTo('User.deletedAt'), $this->equalTo(null)]],
+            [State::SAVED, 'where', [$this->equalTo('User.deletedAt'), $this->equalTo(null)]],
+            [State::DELETED, 'whereNot', [$this->equalTo('User.deletedAt'), $this->equalTo(null)]],
         ];
     }
 
     /**
-     * @covers ::onlySaved
-     * @covers ::onlyDeleted
+     * @covers ::applyFlags
      * @dataProvider dataFilters
      */
-    public function testFilters($method, $expectedMethod, $expectedArguments)
+    public function testFilters($flags, $expectedMethod, $expectedArguments)
     {
         $find = $this->getFindSelectTest($expectedMethod, $expectedArguments);
+        $find->getRepo()->setSoftDelete(true);
+        $find->setFlags($flags);
 
-        $find->$method();
+        $find->applyFlags();
     }
 
     /**

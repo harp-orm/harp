@@ -22,6 +22,7 @@ use Harp\Harp\Test\AbstractTestCase;
 class HasManyThroughTest extends AbstractTestCase
 {
     /**
+     * @covers ::__construct
      * @covers ::getKey
      * @covers ::getForeignKey
      * @covers ::getThroughRel

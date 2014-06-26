@@ -3,6 +3,7 @@
 namespace Harp\Harp;
 
 use Harp\Core\Save\AbstractFind;
+use Harp\Core\Model\State;
 use PDO;
 
 /**
@@ -335,21 +336,17 @@ class Find extends AbstractFind
     }
 
     /**
-     * @return Find   $this
+     * @return AbstractFind $this
      */
-    public function onlySaved()
+    public function applyFlags()
     {
-        $this->where($this->getTable().'.deletedAt', null);
-
-        return $this;
-    }
-
-    /**
-     * @return Find   $this
-     */
-    public function onlyDeleted()
-    {
-        $this->whereNot($this->getTable().'.deletedAt', null);
+        if ($this->getRepo()->getSoftDelete()) {
+            if ($this->getFlags() === State::SAVED) {
+                $this->where($this->getTable().'.deletedAt', null);
+            } elseif ($this->getFlags() === State::DELETED) {
+                $this->whereNot($this->getTable().'.deletedAt', null);
+            }
+        }
 
         return $this;
     }

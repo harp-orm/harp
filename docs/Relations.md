@@ -1,4 +1,3 @@
-
 # Relations
 
 When you configure your model repo objects you need to define the relationships with other models. This is done with the "Rel" objects which you add to the configuration.

@@ -4,6 +4,18 @@ Sometimes you need to "delete" models without actually deleting them from the da
 
 In order to implement "soft delete" you need to add the ``SoftDeleteTrait`` to the model, and call ``setSoftDelete(true)`` in the repo:
 
+__Database Table:__
+
+```
+┌─────────────────────────┐
+│ Table: Order            │
+├─────────────┬───────────┤
+│ id          │ ingeter   │
+│ deletedAt   │ timestamp │
+│ orderKey    │ string    │
+└─────────────┴───────────┘
+```
+
 ```php
 // Model File
 use Harp\Harp\AbstractModel;

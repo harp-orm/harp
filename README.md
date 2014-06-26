@@ -255,7 +255,14 @@ class Order extends AbstractModel
 }
 ```
 
-This adds a varaety of methods to your model, read about [soft deletion in detail here](/docs/SoftDelete.md)
+This adds a some of methods to your model. Read about [soft deletion in detail here](/docs/SoftDelete.md)
+
+## Inherited
+
+Sometimes you need several models to share the same database table - e.g. if there is just a slight variation of the same functionality. This is called Single Table Inheritence.
+
+Harp ORM supports inhereting models (and repos) out of the box. Read about [ineritence in detail here](/docs/Inherited.md)
+
 
 ## License
 

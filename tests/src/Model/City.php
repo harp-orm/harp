@@ -20,12 +20,12 @@ class City extends AbstractModel implements LocationInterface {
 
     public function getCountry()
     {
-        return $this->getLink('country')->get();
+        return $this->getLinkedModel('country');
     }
 
     public function setCountry(Country $country)
     {
-        $this->getLink('country')->set($country);
+        $this->setLinkedModel('country', $user);
 
         return $this;
     }

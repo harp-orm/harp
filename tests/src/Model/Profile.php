@@ -38,7 +38,7 @@ class Profile extends AbstractModel {
      */
     public function getUser()
     {
-        return $this->getLink('user')->get();
+        return $this->getLinkedModel('user');
     }
 
     /**
@@ -46,7 +46,7 @@ class Profile extends AbstractModel {
      */
     public function setUser(User $user)
     {
-        $this->getLink('user')->set($user);
+        $this->getLinkedModel('user', $user);
 
         return $this;
     }

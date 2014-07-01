@@ -18,11 +18,11 @@ class Tag extends AbstractModel {
 
     public function getPostTags()
     {
-        return $this->getLink('postTags');
+        return $this->getLinkMany('postTags');
     }
 
     public function getPosts()
     {
-        return $this->getLink('posts');
+        return $this->getLinkMany('posts');
     }
 }

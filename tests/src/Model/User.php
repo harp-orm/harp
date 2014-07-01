@@ -29,42 +29,42 @@ class User extends AbstractModel {
 
     public function getAddress()
     {
-        return $this->getLink('address')->get();
+        return $this->getLinkedModel('address');
     }
 
     public function setAddress(Address $address)
     {
-        $this->getLink('address')->set($address);
+        $this->setLinkedModel('address', $address);
 
         return $this;
     }
 
     public function getLocation()
     {
-        return $this->getLink('location')->get();
+        return $this->getLinkedModel('location');
     }
 
     public function setLocation(LocationInterface $location)
     {
-        $this->getLink('location')->set($location);
+        $this->setLinkedModel('location', $location);
 
         return $this;
     }
 
     public function getProfile()
     {
-        return $this->getLink('profile')->get();
+        return $this->getLinkedModel('profile');
     }
 
     public function setProfile(Profile $profile)
     {
-        $this->getLink('profile')->set($profile);
+        $this->setLinkedModel('profile', $profile);
 
         return $this;
     }
 
     public function getPosts()
     {
-        return $this->getLink('posts');
+        return $this->getLinkMany('posts');
     }
 }

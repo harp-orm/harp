@@ -28,22 +28,22 @@ class Post extends AbstractModel {
 
     public function getUser()
     {
-        return $this->getLink('user')->get();
+        return $this->getLinkedModel('user');
     }
 
     public function getTags()
     {
-        return $this->getLink('tags');
+        return $this->getLinkMany('tags');
     }
 
     public function getPostTags()
     {
-        return $this->getLink('postTags');
+        return $this->getLinkMany('postTags');
     }
 
     public function setUser(User $user)
     {
-        $this->getLink('user')->set($user);
+        $this->getLinkedModel('user', $user);
 
         return $this;
     }

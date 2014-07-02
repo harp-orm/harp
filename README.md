@@ -26,7 +26,12 @@ class UserModel extends AbstractModel
 
     public function getAddress()
     {
-        return $this->getLink('address')->get();
+        return $this->getLinkedModel('address');
+    }
+
+    public function setAddress(Address $address)
+    {
+        return $this->setLinkedModel('address', $address);
     }
 }
 
@@ -71,6 +76,15 @@ Why another ORM? At present there are no ORMs that use the latest PHP features. 
 - Save all associated models with a single command, with query grouping under the hood.
 - Fully extensible interface. Uses native PHP5 constructs to allow extending with traits and interfaces
 - All methods have proper docblocks so that static code analyses of code built on top of this is more accurate.
+
+## Subsections
+
+- [Find](/docs/Find.md)
+- [Inherited](/docs/Inherited.md)
+- [Relations](/docs/Relations.md)
+- [Repo](/docs/Repo.md)
+- [SoftDelete](/docs/SoftDelete.md)
+- [Extending](/docs/Extending.md)
 
 ## Defining Models
 
@@ -223,9 +237,17 @@ This adds a some of methods to your model. Read about [soft deletion in detail h
 
 ## Inherited
 
-Sometimes you need several models to share the same database table - e.g. if there is just a slight variation of the same functionality. This is called Single Table Inheritence.
+Sometimes you need several models to share the same database table - e.g. if there is just a slight variation of the same functionality. This is called Single Table Inheritance.
 
-Harp ORM supports inhereting models (and repos) out of the box. Read about [ineritence in detail here](/docs/Inherited.md)
+Harp ORM supports inheriting models (and repos) out of the box. Read about [inexperience in detail here](/docs/Inherited.md)
+
+## Extending
+
+When you want to write packages that extend functionality of Harp ORM, or simple share code between your models, you can use [PHP's native Traits](http://www.php.net/manual/en/language.oop5.traits.php). They allow you to statically extends classes. All of the internals of Harp ORM are built around allowing you to accomplish this easily as this is the preferred way of writing "behaviours/templates".
+
+Apart from that you will be able to add event listeners for various events in the life-cycle of models.
+
+Read about [extending in detail here](/docs/Extending.md)
 
 
 ## License

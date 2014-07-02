@@ -41,12 +41,12 @@ class Order extends AbstractModel
 
     public function getCustomer()
     {
-        return $this->getLink('customer')->get();
+        return $this->getLinkedModel('customer');
     }
 
     public function setCustomer(Customer $customer)
     {
-        return $this->getLink('customer')->set($customer);
+        return $this->setLinkedModel('customer', $customer);
     }
 }
 
@@ -105,12 +105,12 @@ class Supplier extends AbstractModel
 
     public function getAccount()
     {
-        return $this->getLink('account')->get();
+        return $this->getLinkedModel('account');
     }
 
     public function setAccount(Account $account)
     {
-        return $this->getLink('account')->set($account);
+        return $this->setLinkedModel('account', $account);
     }
 }
 
@@ -169,7 +169,7 @@ class Customer extends AbstractModel
 
     public function getOrders()
     {
-        return $this->getLink('orders');
+        return $this->getLinkMany('orders');
     }
 }
 
@@ -240,7 +240,7 @@ class Assembly extends AbstractModel
 
     public function getParts()
     {
-        return $this->getLink('parts');
+        return $this->getLinkMany('parts');
     }
 }
 

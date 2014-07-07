@@ -10,13 +10,30 @@ namespace Harp\Harp;
 abstract class AbstractModel extends \Harp\Core\Model\AbstractModel
 {
     /**
+     * @return Find
+     */
+    public static function findAll()
+    {
+        return new Find(self::getRepo());
+    }
+
+    /**
+     * @param  string $class
+     * @return Repo
+     */
+    public static function newRepo($class)
+    {
+        return new Repo($class);
+    }
+
+    /**
      * @param  string $property
      * @param  mixed  $value
      * @return Find   $this
      */
     public static function where($property, $value)
     {
-        return static::getRepoStatic()->findAll()->where($property, $value);
+        return static::findAll()->where($property, $value);
     }
 
     /**
@@ -26,7 +43,7 @@ abstract class AbstractModel extends \Harp\Core\Model\AbstractModel
      */
     public static function whereRaw($property, $value)
     {
-        return static::getRepoStatic()->findAll()->whereRaw($property, $value);
+        return static::findAll()->whereRaw($property, $value);
     }
 
     /**
@@ -36,7 +53,7 @@ abstract class AbstractModel extends \Harp\Core\Model\AbstractModel
      */
     public static function whereNot($property, $value)
     {
-        return static::getRepoStatic()->findAll()->whereNot($property, $value);
+        return static::findAll()->whereNot($property, $value);
     }
 
     /**
@@ -46,7 +63,7 @@ abstract class AbstractModel extends \Harp\Core\Model\AbstractModel
      */
     public static function whereIn($property, array $values)
     {
-        return static::getRepoStatic()->findAll()->whereIn($property, $values);
+        return static::findAll()->whereIn($property, $values);
     }
 
     /**
@@ -56,6 +73,6 @@ abstract class AbstractModel extends \Harp\Core\Model\AbstractModel
      */
     public static function whereLike($property, $value)
     {
-        return static::getRepoStatic()->findAll()->whereLike($property, $value);
+        return static::findAll()->whereLike($property, $value);
     }
 }

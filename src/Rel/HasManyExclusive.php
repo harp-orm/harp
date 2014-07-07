@@ -2,7 +2,6 @@
 
 namespace Harp\Harp\Rel;
 
-use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkMany;
 use Harp\Core\Rel\DeleteManyInterface;

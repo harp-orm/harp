@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Query;
 
-use Harp\Core\Repo\AbstractRepo;
+use Harp\Harp\Repo;
 use Harp\Util\Arr;
 
 /**
@@ -13,7 +13,7 @@ use Harp\Util\Arr;
 trait JoinRelTrait
 {
     /**
-     * @return AbstractRepo
+     * @return Repo
      */
     abstract public function getRepo();
 
@@ -30,11 +30,11 @@ trait JoinRelTrait
     }
 
     /**
-     * @param  AbstractRepo $repo
+     * @param  Repo $repo
      * @param  array        $rels
      * @param  string       $parent
      */
-    private function joinNestedRels(AbstractRepo $repo, array $rels, $parent)
+    private function joinNestedRels(Repo $repo, array $rels, $parent)
     {
         foreach ($rels as $name => $childRels)
         {

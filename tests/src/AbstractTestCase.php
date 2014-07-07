@@ -3,7 +3,7 @@
 namespace Harp\Harp\Test;
 
 use Harp\Query\DB;
-use Harp\Harp\Test\Repo;
+use Harp\Core\Repo\Container;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -34,6 +34,7 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
         DB::setConfig([
             'dsn' => 'mysql:dbname=harp-orm/harp;host=127.0.0.1',
             'username' => 'root',
+            'escaping' => DB::ESCAPING_MYSQL,
         ]);
 
         DB::get()->execute('ALTER TABLE Post AUTO_INCREMENT = 5');
@@ -41,15 +42,7 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase {
         DB::get()->setLogger($this->logger);
         DB::get()->beginTransaction();
 
-        Repo\Address::get()->clear();
-        Repo\BlogPost::get()->clear();
-        Repo\City::get()->clear();
-        Repo\Country::get()->clear();
-        Repo\Post::get()->clear();
-        Repo\PostTag::get()->clear();
-        Repo\Profile::get()->clear();
-        Repo\Tag::get()->clear();
-        Repo\User::get()->clear();
+        Container::clear();
     }
 
     public function tearDown()

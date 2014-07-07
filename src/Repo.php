@@ -3,7 +3,7 @@
 namespace Harp\Harp;
 
 use Harp\Core\Save\AbstractSaveRepo;
-use Harp\Core\Repo;
+use Harp\Core\Repo\AbstractRepo;
 use Harp\Core\Model\Models;
 use Harp\Harp\Query;
 use Harp\Query\DB;
@@ -14,26 +14,22 @@ use ReflectionProperty;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-abstract class AbstractRepo extends AbstractSaveRepo
+class Repo extends AbstractSaveRepo
 {
     private $table;
     private $db = 'default';
     private $fields = array();
 
-    public function afterInitialize()
+    public function __construct($class)
     {
-        parent::afterInitialize();
+        parent::__construct($class);
 
-        if (! $this->table) {
-            $this->table = $this->getModelReflection()->getShortName();
-        }
+        $this->table = $this->getModelReflection()->getShortName();
 
-        if (! $this->fields) {
-            $properties = $this->getModelReflection()->getProperties(ReflectionProperty::IS_PUBLIC);
+        $properties = $this->getModelReflection()->getProperties(ReflectionProperty::IS_PUBLIC);
 
-            foreach ($properties as $property) {
-                $this->fields []= $property->getName();
-            }
+        foreach ($properties as $property) {
+            $this->fields []= $property->getName();
         }
     }
 
@@ -44,9 +40,9 @@ abstract class AbstractRepo extends AbstractSaveRepo
         return $this->table;
     }
 
-    public function setRootRepo(Repo\AbstractRepo $rootRepo)
+    public function setRootRepo(AbstractRepo $rootRepo)
     {
-        if ($rootRepo instanceof AbstractRepo) {
+        if ($rootRepo instanceof Repo) {
             $this->table = $rootRepo->getTable();
         }
 
@@ -109,11 +105,6 @@ abstract class AbstractRepo extends AbstractSaveRepo
     public function getRelOrError($name)
     {
         return parent::getRelOrError($name);
-    }
-
-    public function findAll()
-    {
-        return new Find($this);
     }
 
     public function selectAll()

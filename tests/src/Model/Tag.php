@@ -3,6 +3,9 @@
 namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\AbstractModel;
+use Harp\Harp\Repo;
+use Harp\Harp\Rel;
+use Harp\Validate\Assert;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -11,7 +14,17 @@ use Harp\Harp\AbstractModel;
  */
 class Tag extends AbstractModel {
 
-    const REPO = 'Harp\Harp\Test\Repo\Tag';
+    public static function initialize(Repo $repo)
+    {
+        $repo
+            ->addRels([
+                new Rel\HasMany('postTags', $repo, PostTag::getRepo()),
+                new Rel\HasManyThrough('posts', $repo, Post::getRepo(), 'postTags'),
+            ])
+            ->addAsserts([
+                new Assert\Present('name'),
+            ]);
+    }
 
     public $id;
     public $name;

@@ -2,13 +2,14 @@
 
 namespace Harp\Harp\Rel;
 
-use Harp\Harp\AbstractRepo;
+use Harp\Harp\Repo;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkMany;
 use Harp\Core\Rel\AbstractRelMany;
 use Harp\Core\Rel\UpdateManyInterface;
 use Harp\Query\AbstractWhere;
+use Harp\Query\SQL\SQL;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -22,8 +23,8 @@ class HasManyAs extends AbstractRelMany implements RelInterface, UpdateManyInter
 
     public function __construct(
         $name,
-        AbstractRepo $store,
-        AbstractRepo $foreignRepo,
+        Repo $store,
+        Repo $foreignRepo,
         $foreignKeyName,
         array $options = array()
     )
@@ -100,14 +101,17 @@ class HasManyAs extends AbstractRelMany implements RelInterface, UpdateManyInter
     public function join(AbstractWhere $query, $parent)
     {
         $alias = $this->getName();
-        $condition = "ON $alias.{$this->getForeignKey()} = $parent.{$this->getKey()}"
-            ." AND $alias.{$this->getForeignClassKey()} = \"{$this->getRepo()->getModelClass()}\"";
+
+        $conditions = [
+            "$alias.{$this->getForeignKey()}" => "$parent.{$this->getKey()}",
+            "$alias.{$this->getForeignClassKey()}" => new SQL('= ?', [$this->getRepo()->getModelClass()]),
+        ];
 
         if ($this->getForeignRepo()->getSoftDelete()) {
-            $condition .= " AND $alias.deletedAt IS NULL";
+            $conditions["$alias.deletedAt"] = new SQL('IS NULL');
         }
 
-        $query->joinAliased($this->getForeignRepo()->getTable(), $alias, $condition);
+        $query->joinAliased($this->getForeignRepo()->getTable(), $alias, $conditions);
     }
 
     /**

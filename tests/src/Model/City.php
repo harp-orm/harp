@@ -3,7 +3,9 @@
 namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\AbstractModel;
-use Harp\Harp\Test\Repo;
+use Harp\Harp\Repo;
+use Harp\Harp\Rel;
+use Harp\Validate\Assert;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -12,7 +14,17 @@ use Harp\Harp\Test\Repo;
  */
 class City extends AbstractModel implements LocationInterface {
 
-    const REPO = 'Harp\Harp\Test\Repo\City';
+    public static function initialize(Repo $repo)
+    {
+        $repo
+            ->addRels([
+                new Rel\HasManyAs('users', $repo, User::getRepo(), 'location'),
+                new Rel\BelongsTo('country', $repo, Country::getRepo()),
+            ])
+            ->addAsserts([
+                new Assert\Present('location'),
+            ]);
+    }
 
     public $id;
     public $name;
@@ -20,12 +32,12 @@ class City extends AbstractModel implements LocationInterface {
 
     public function getCountry()
     {
-        return $this->getLinkedModel('country');
+        return $this->get('country');
     }
 
     public function setCountry(Country $country)
     {
-        $this->setLinkedModel('country', $user);
+        $this->set('country', $country);
 
         return $this;
     }

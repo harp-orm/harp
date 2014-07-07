@@ -3,7 +3,7 @@
 namespace Harp\Harp\Rel;
 
 use Harp\Util\Arr;
-use Harp\Harp\AbstractRepo;
+use Harp\Harp\Repo;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkOne;
@@ -22,7 +22,7 @@ class BelongsToPolymorphic extends AbstractRelOne implements RelInterface, Updat
     protected $key;
     protected $classKey;
 
-    public function __construct($name, AbstractRepo $store, AbstractRepo $defaultForeignRepo, array $options = array())
+    public function __construct($name, Repo $store, Repo $defaultForeignRepo, array $options = array())
     {
         $this->key = $name.'Id';
         $this->classKey = $name.'Class';

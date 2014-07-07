@@ -2,7 +2,6 @@
 
 namespace Harp\Harp\Test\Unit\Rel;
 
-use Harp\Harp\Test\Repo;
 use Harp\Harp\Test\Model;
 use Harp\Core\Repo\LinkOne;
 use Harp\Core\Model\Models;
@@ -26,15 +25,15 @@ class BelongsToTest extends AbstractTestCase
      */
     public function testConstruct()
     {
-        $rel = new BelongsTo('test', Repo\City::get(), Repo\Country::get());
+        $rel = new BelongsTo('test', Model\City::getRepo(), Model\Country::getRepo());
 
         $this->assertSame('test', $rel->getName());
-        $this->assertSame(Repo\City::get(), $rel->getRepo());
-        $this->assertSame(Repo\Country::get(), $rel->getForeignRepo());
+        $this->assertSame(Model\City::getRepo(), $rel->getRepo());
+        $this->assertSame(Model\Country::getRepo(), $rel->getForeignRepo());
         $this->assertSame('testId', $rel->getKey());
         $this->assertSame('id', $rel->getForeignKey());
 
-        $rel = new BelongsTo('test', Repo\City::get(), Repo\Country::get(), array('key' => 'test'));
+        $rel = new BelongsTo('test', Model\City::getRepo(), Model\Country::getRepo(), array('key' => 'test'));
         $this->assertSame('test', $rel->getKey());
     }
 
@@ -43,7 +42,7 @@ class BelongsToTest extends AbstractTestCase
      */
     public function testHasForeign()
     {
-        $rel = new BelongsTo('country', Repo\City::get(), Repo\Country::get());
+        $rel = new BelongsTo('country', Model\City::getRepo(), Model\Country::getRepo());
 
         $models = new Models([
             new Model\City(),
@@ -65,7 +64,7 @@ class BelongsToTest extends AbstractTestCase
      */
     public function testLoadForeign()
     {
-        $rel = new BelongsTo('country', Repo\City::get(), Repo\Country::get());
+        $rel = new BelongsTo('country', Model\City::getRepo(), Model\Country::getRepo());
 
         $models = new Models([
             new Model\City(['countryId' => null]),
@@ -96,7 +95,7 @@ class BelongsToTest extends AbstractTestCase
      */
     public function testAreLinked($model, $foreign, $expected)
     {
-        $rel = new BelongsTo('country', Repo\City::get(), Repo\Country::get());
+        $rel = new BelongsTo('country', Model\City::getRepo(), Model\Country::getRepo());
 
         $this->assertEquals($expected, $rel->areLinked($model, $foreign));
     }
@@ -106,7 +105,7 @@ class BelongsToTest extends AbstractTestCase
      */
     public function testUpdate()
     {
-        $rel = new BelongsTo('country', Repo\City::get(), Repo\Country::get());
+        $rel = new BelongsTo('country', Model\City::getRepo(), Model\Country::getRepo());
 
         $model = new Model\City(['countryId' => 2]);
         $foreign = new Model\Country(['id' => 20]);
@@ -122,14 +121,14 @@ class BelongsToTest extends AbstractTestCase
      */
     public function testJoin()
     {
-        $rel = new BelongsTo('country', Repo\City::get(), Repo\Country::get());
+        $rel = new BelongsTo('country', Model\City::getRepo(), Model\Country::getRepo());
 
-        $select = new Select(Repo\City::get());
+        $select = new Select(Model\City::getRepo());
 
         $rel->join($select, 'City');
 
         $this->assertEquals(
-            'SELECT City.* FROM City JOIN Country AS country ON country.id = City.countryId',
+            'SELECT `City`.* FROM `City` JOIN `Country` AS `country` ON `country`.`id` = `City`.`countryId`',
             $select->humanize()
         );
     }
@@ -139,14 +138,14 @@ class BelongsToTest extends AbstractTestCase
      */
     public function testJoinSoftDelete()
     {
-        $rel = new BelongsTo('user', Repo\Address::get(), Repo\User::get());
+        $rel = new BelongsTo('user', Model\Address::getRepo(), Model\User::getRepo());
 
-        $select = new Select(Repo\Address::get());
+        $select = new Select(Model\Address::getRepo());
 
         $rel->join($select, 'Address');
 
         $this->assertEquals(
-            'SELECT Address.* FROM Address JOIN User AS user ON user.id = Address.userId AND user.deletedAt IS NULL',
+            'SELECT `Address`.* FROM `Address` JOIN `User` AS `user` ON `user`.`id` = `Address`.`userId` AND `user`.`deletedAt` IS NULL',
             $select->humanize()
         );
     }

@@ -2,11 +2,11 @@
 
 namespace Harp\Harp\Test\Unit;
 
-use Harp\Harp\Test\Repo;
+use Harp\Harp\Test\Model;
 use Harp\Core\Model\State;
 use Harp\Harp\Find;
 use Harp\Harp\Query\Select;
-use PHPUnit_Framework_TestCase;
+use Harp\Harp\Test\AbstractTestCase;
 
 /**
  * @coversDefaultClass Harp\Harp\Find
@@ -15,14 +15,14 @@ use PHPUnit_Framework_TestCase;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class FindTest extends PHPUnit_Framework_TestCase
+class FindTest extends AbstractTestCase
 {
     public function getFindSelectTest($method, array $asserts = null, $return = null)
     {
         $select = $this->getMock(
             'Harp\Harp\Query\Select',
             [$method],
-            [Repo\User::get()]
+            [Model\User::getRepo()]
         );
 
         $method = $select
@@ -32,7 +32,7 @@ class FindTest extends PHPUnit_Framework_TestCase
 
         call_user_func_array([$method, 'with'], $asserts);
 
-        $find = new Find(Repo\User::get());
+        $find = new Find(Model\User::getRepo());
         $find->setSelect($select);
 
         return $find;
@@ -46,7 +46,7 @@ class FindTest extends PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $repo = Repo\User::get();
+        $repo = Model\User::getRepo();
 
         $find = new Find($repo);
 
@@ -71,6 +71,7 @@ class FindTest extends PHPUnit_Framework_TestCase
             ['prependColumn', ['name']],
             ['where', ['name', 'val']],
             ['whereNot', ['name', 'val2']],
+            ['whereRaw', ['test = ?', ['val2']]],
             ['whereIn', ['name', ['arr1', 'arr2']]],
             ['whereLike', ['name', 'val3']],
             ['having', ['name' ,'val']],
@@ -96,6 +97,7 @@ class FindTest extends PHPUnit_Framework_TestCase
      * @covers ::where
      * @covers ::whereNot
      * @covers ::whereIn
+     * @covers ::whereRaw
      * @covers ::whereLike
      * @covers ::having
      * @covers ::havingNot
@@ -216,7 +218,7 @@ class FindTest extends PHPUnit_Framework_TestCase
      */
     public function testExecuteNormal()
     {
-        $find = new Find(Repo\Country::get());
+        $find = new Find(Model\Country::getRepo());
 
         $models = $find->execute();
         $this->assertContainsOnlyInstancesOf('Harp\Harp\Test\Model\Country', $models);
@@ -228,7 +230,7 @@ class FindTest extends PHPUnit_Framework_TestCase
      */
     public function testExecuteInherited()
     {
-        $find = new Find(Repo\Post::get());
+        $find = new Find(Model\Post::getRepo());
 
         $models = $find->execute();
         $this->assertContainsOnlyInstancesOf('Harp\Harp\Test\Model\Post', $models);
@@ -242,7 +244,7 @@ class FindTest extends PHPUnit_Framework_TestCase
      */
     public function testLoadIds()
     {
-        $find = $this->getMock('Harp\Harp\Find', ['applyFlags'], [Repo\Post::get()]);
+        $find = $this->getMock('Harp\Harp\Find', ['applyFlags'], [Model\Post::getRepo()]);
 
         $find
             ->expects($this->once())
@@ -260,7 +262,7 @@ class FindTest extends PHPUnit_Framework_TestCase
      */
     public function testLoadCount()
     {
-        $find = $this->getMock('Harp\Harp\Find', ['applyFlags'], [Repo\Post::get()]);
+        $find = $this->getMock('Harp\Harp\Find', ['applyFlags'], [Model\Post::getRepo()]);
 
         $find
             ->expects($this->once())
@@ -270,5 +272,9 @@ class FindTest extends PHPUnit_Framework_TestCase
         $count = $find->loadCount(State::DELETED);
 
         $this->assertEquals(4, $count);
+
+        $this->assertQueries([
+            'SELECT COUNT(`Post`.`id`) AS `countAll` FROM `Post`'
+        ]);
     }
 }

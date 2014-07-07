@@ -3,6 +3,10 @@
 namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\AbstractModel;
+use Harp\Harp\Repo;
+use Harp\Harp\Rel;
+use Harp\Validate\Assert;
+
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -11,7 +15,16 @@ use Harp\Harp\AbstractModel;
  */
 class Address extends AbstractModel {
 
-    const REPO = 'Harp\Harp\Test\Repo\Address';
+    public static function initialize(Repo $repo)
+    {
+        $repo
+            ->addRels([
+                new Rel\HasOne('user', $repo, User::getRepo()),
+            ])
+            ->addAsserts([
+                new Assert\Present('location'),
+            ]);
+    }
 
     /**
      * @var integer
@@ -33,12 +46,12 @@ class Address extends AbstractModel {
      */
     public function getUser()
     {
-        return $this->getLinkedModel('user');
+        return $this->get('user');
     }
 
     public function setUser(User $user)
     {
-        $this->setLinkedModel('user', $user);
+        $this->set('user', $user);
 
         return $this;
     }

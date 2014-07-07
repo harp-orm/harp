@@ -2,12 +2,11 @@
 
 namespace Harp\Harp\Test\Unit;
 
-use Harp\Harp\Test\Repo;
-use Harp\Harp\Test\Model;
+use Harp\Harp\Test\Model\User;
 use Harp\Core\Model\State;
 use Harp\Core\Model\Models;
 use Harp\Query\DB;
-use PHPUnit_Framework_TestCase;
+use Harp\Harp\Test\AbstractTestCase;
 
 /**
  * @coversDefaultClass Harp\Harp\AbstractModel
@@ -16,74 +15,78 @@ use PHPUnit_Framework_TestCase;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class AbstractModelTest extends PHPUnit_Framework_TestCase
+class AbstractModelTest extends AbstractTestCase
 {
     /**
-     * @covers ::where
-     * @covers ::whereRaw
-     * @covers ::whereLike
-     * @covers ::whereNot
-     * @covers ::whereIn
+     * @covers ::findAll
      */
     public function testFind()
     {
-        $repo = $this->getMock('Harp\Harp\Test\Repo\User', ['findAll']);
+        $find = User::findAll();
 
-        ModelMock::setRepoStatic($repo);
-
-        $find = $this->getMock(
-            'Harp\Harp\Find',
-            [
-                'where',
-                'whereNot',
-                'whereIn',
-                'whereLike',
-                'whereRaw'
-            ],
-            [$repo]
-        );
-
-        $repo
-            ->expects($this->exactly(5))
-            ->method('findAll')
-            ->will($this->returnValue($find));
-
-        $find
-            ->expects($this->once())
-            ->method('where')
-            ->with($this->equalTo('test'), $this->equalTo('val'))
-            ->will($this->returnSelf());
-
-        $find
-            ->expects($this->once())
-            ->method('whereNot')
-            ->with($this->equalTo('test'), $this->equalTo('val'))
-            ->will($this->returnSelf());
-
-        $find
-            ->expects($this->once())
-            ->method('whereLike')
-            ->with($this->equalTo('test'), $this->equalTo('val'))
-            ->will($this->returnSelf());
-
-        $find
-            ->expects($this->once())
-            ->method('whereRaw')
-            ->with($this->equalTo('query'), $this->equalTo(['val']))
-            ->will($this->returnSelf());
-
-        $find
-            ->expects($this->once())
-            ->method('whereIn')
-            ->with($this->equalTo('test'), $this->equalTo(['val']))
-            ->will($this->returnSelf());
-
-
-        $this->assertSame($find, ModelMock::where('test', 'val'));
-        $this->assertSame($find, ModelMock::whereNot('test', 'val'));
-        $this->assertSame($find, ModelMock::whereLike('test', 'val'));
-        $this->assertSame($find, ModelMock::whereRaw('query', ['val']));
-        $this->assertSame($find, ModelMock::whereIn('test', ['val']));
+        $this->assertInstanceOf('Harp\Harp\Find', $find);
+        $this->assertSame(User::getRepo(), $find->getRepo());
     }
 
+    /**
+     * @covers ::newRepo
+     */
+    public function testNewRepo()
+    {
+        $repo = User::newRepo('Harp\Harp\Test\Model\User');
+
+        $this->assertInstanceOf('Harp\Harp\Repo', $repo);
+        $this->assertEquals('Harp\Harp\Test\Model\User', $repo->getModelClass());
+        $this->assertTrue($repo->getSoftDelete());
+    }
+
+    /**
+     * @covers ::where
+     */
+    public function testWhere()
+    {
+        $find = User::where('name', 'test');
+
+        $this->assertEquals('SELECT `User`.* FROM `User` WHERE (`name` = "test")', $find->humanize());
+    }
+
+    /**
+     * @covers ::whereRaw
+     */
+    public function testWhereRaw()
+    {
+        $find = User::whereRaw('name != ?', ['big']);
+
+        $this->assertEquals('SELECT `User`.* FROM `User` WHERE (name != "big")', $find->humanize());
+    }
+
+    /**
+     * @covers ::whereNot
+     */
+    public function testWhereNot()
+    {
+        $find = User::whereNot('name', 'test');
+
+        $this->assertEquals('SELECT `User`.* FROM `User` WHERE (`name` != "test")', $find->humanize());
+    }
+
+    /**
+     * @covers ::whereIn
+     */
+    public function testWhereIn()
+    {
+        $find = User::whereIn('name', ['test', 'test2']);
+
+        $this->assertEquals('SELECT `User`.* FROM `User` WHERE (`name` IN ("test", "test2"))', $find->humanize());
+    }
+
+    /**
+     * @covers ::whereLike
+     */
+    public function testWhereLike()
+    {
+        $find = User::whereLike('name', '%test');
+
+        $this->assertEquals('SELECT `User`.* FROM `User` WHERE (`name` LIKE "%test")', $find->humanize());
+    }
 }

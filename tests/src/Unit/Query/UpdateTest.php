@@ -2,13 +2,12 @@
 
 namespace Harp\Harp\Test\Unit\Query;
 
-use Harp\Harp\Test\Repo;
 use Harp\Harp\Test\Model;
 use Harp\Core\Model\Models;
 use Harp\Core\Model\State;
 use Harp\Query\SQL;
 use Harp\Harp\Query\Update;
-use PHPUnit_Framework_TestCase;
+use Harp\Harp\Test\AbstractTestCase;
 
 /**
  * @coversDefaultClass Harp\Harp\Query\Update
@@ -17,7 +16,7 @@ use PHPUnit_Framework_TestCase;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class UpdateTest extends PHPUnit_Framework_TestCase
+class UpdateTest extends AbstractTestCase
 {
     /**
      * @covers ::__construct
@@ -25,12 +24,12 @@ class UpdateTest extends PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $repo = new Repo\City('Harp\Harp\Test\Model\City');
+        $repo = Model\City::getRepo();
 
-        $Update = new Update($repo);
+        $update = new Update($repo);
 
-        $this->assertSame($repo, $Update->getRepo());
-        $this->assertEquals([new SQL\Aliased('City')], $Update->getTable());
+        $this->assertSame($repo, $update->getRepo());
+        $this->assertEquals([new SQL\Aliased('City')], $update->getTable());
     }
 
     /**
@@ -38,7 +37,7 @@ class UpdateTest extends PHPUnit_Framework_TestCase
      */
     public function testModels()
     {
-        $repo = new Repo\Country('Harp\Harp\Test\Model\Country');
+        $repo = Model\Country::getRepo();
 
         $update = new Update($repo);
 
@@ -53,7 +52,7 @@ class UpdateTest extends PHPUnit_Framework_TestCase
         $update->models($models);
 
         $this->assertEquals(
-            'UPDATE Country SET name = CASE id WHEN 1 THEN "test" WHEN 2 THEN "test2" ELSE name END WHERE (id IN (1, 2))',
+            'UPDATE `Country` SET `name` = CASE `id` WHEN 1 THEN "test" WHEN 2 THEN "test2" ELSE `name` END WHERE (`id` IN (1, 2))',
             $update->humanize()
         );
     }

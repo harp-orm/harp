@@ -2,7 +2,6 @@
 
 namespace Harp\Harp\Test\Unit\Rel;
 
-use Harp\Harp\Test\Repo;
 use Harp\Harp\Test\Model;
 use Harp\Core\Repo\LinkMany;
 use Harp\Core\Model\Models;
@@ -32,23 +31,23 @@ class HasManyThroughTest extends AbstractTestCase
      */
     public function testConstruct()
     {
-        $rel = new HasManyThrough('tags', Repo\Post::get(), Repo\Tag::get(), 'postTags');
+        $rel = new HasManyThrough('tags', Model\Post::getRepo(), Model\Tag::getRepo(), 'postTags');
 
         $this->assertSame('tags', $rel->getName());
-        $this->assertSame(Repo\Post::get(), $rel->getRepo());
-        $this->assertSame(Repo\Tag::get(), $rel->getForeignRepo());
+        $this->assertSame(Model\Post::getRepo(), $rel->getRepo());
+        $this->assertSame(Model\Tag::getRepo(), $rel->getForeignRepo());
         $this->assertSame('postId', $rel->getKey());
         $this->assertSame('tagId', $rel->getForeignKey());
         $this->assertSame('tagsKey', $rel->getThroughKey());
         $this->assertSame('postTags', $rel->getThroughTable());
 
-        $this->assertSame(Repo\Post::get()->getRel('postTags'), $rel->getThroughRel());
-        $this->assertSame(Repo\PostTag::get(), $rel->getThroughRepo());
+        $this->assertSame(Model\Post::getRepo()->getRel('postTags'), $rel->getThroughRel());
+        $this->assertSame(Model\PostTag::getRepo(), $rel->getThroughRepo());
 
         $rel = new HasManyThrough(
             'tags',
-            Repo\Post::get(),
-            Repo\Tag::get(),
+            Model\Post::getRepo(),
+            Model\Tag::getRepo(),
             'postTags',
             ['key' => 'test', 'foreignKey' => 'test2']
         );
@@ -61,7 +60,7 @@ class HasManyThroughTest extends AbstractTestCase
      */
     public function testHasForeign()
     {
-        $rel = new HasManyThrough('tags', Repo\Post::get(), Repo\Tag::get(), 'postTags');
+        $rel = new HasManyThrough('tags', Model\Post::getRepo(), Model\Tag::getRepo(), 'postTags');
 
         $models = new Models([
             new Model\Post(),
@@ -83,7 +82,7 @@ class HasManyThroughTest extends AbstractTestCase
      */
     public function testLoadForeign()
     {
-        $rel = new HasManyThrough('tags', Repo\Post::get(), Repo\Tag::get(), 'postTags');
+        $rel = new HasManyThrough('tags', Model\Post::getRepo(), Model\Tag::getRepo(), 'postTags');
 
         $models = new Models([
             new Model\Post(['id' => 1]),
@@ -115,7 +114,7 @@ class HasManyThroughTest extends AbstractTestCase
      */
     public function testAreLinked($model, $foreign, $expected)
     {
-        $rel = new HasManyThrough('tags', Repo\Post::get(), Repo\Tag::get(), 'postTags');
+        $rel = new HasManyThrough('tags', Model\Post::getRepo(), Model\Tag::getRepo(), 'postTags');
 
         $this->assertEquals($expected, $rel->areLinked($model, $foreign));
     }
@@ -126,7 +125,7 @@ class HasManyThroughTest extends AbstractTestCase
      */
     public function testUpdate()
     {
-        $rel = new HasManyThrough('tags', Repo\Post::get(), Repo\Tag::get(), 'postTags');
+        $rel = new HasManyThrough('tags', Model\Post::getRepo(), Model\Tag::getRepo(), 'postTags');
 
         $model = new Model\Post(['id' => 2]);
         $foreign1 = new Model\Tag(['id' => 5]);
@@ -136,8 +135,8 @@ class HasManyThroughTest extends AbstractTestCase
         $link1 = new Model\PostTag(['tagId' => 5, 'postId' => 2], State::SAVED);
         $link2 = new Model\PostTag(['tagId' => 6, 'postId' => 2], State::SAVED);
 
-        $postTagsLink = new LinkMany($model, Repo\Post::get()->getRel('postTags'), [$link1, $link2]);
-        Repo\Post::get()->addLink($postTagsLink);
+        $postTagsLink = new LinkMany($model, Model\Post::getRepo()->getRel('postTags'), [$link1, $link2]);
+        Model\Post::getRepo()->addLink($postTagsLink);
 
         $link = new LinkMany($model, $rel, [$foreign1, $foreign2]);
         $link->remove($foreign1);
@@ -166,14 +165,14 @@ class HasManyThroughTest extends AbstractTestCase
      */
     public function testJoin()
     {
-        $rel = new HasManyThrough('tags', Repo\Post::get(), Repo\Tag::get(), 'postTags');
+        $rel = new HasManyThrough('tags', Model\Post::getRepo(), Model\Tag::getRepo(), 'postTags');
 
-        $select = new Select(Repo\Post::get());
+        $select = new Select(Model\Post::getRepo());
 
         $rel->join($select, 'Post');
 
         $this->assertEquals(
-            'SELECT Post.* FROM Post JOIN PostTag AS postTags ON postTags.postId = Post.id JOIN Tag AS tags ON tags.id = postTags.tagId',
+            'SELECT `Post`.* FROM `Post` JOIN `PostTag` AS `postTags` ON `postTags`.`postId` = `Post`.`id` JOIN `Tag` AS `tags` ON `tags`.`id` = `postTags`.`tagId`',
             $select->humanize()
         );
     }
@@ -183,17 +182,17 @@ class HasManyThroughTest extends AbstractTestCase
      */
     public function testJoinSoftDelete()
     {
-        $repo = new Repo\Tag();
+        $repo = Model\Tag::getRepo();
         $repo->setSoftDelete(true);
 
-        $rel = new HasManyThrough('tags', Repo\Post::get(), $repo, 'postTags');
+        $rel = new HasManyThrough('tags', Model\Post::getRepo(), $repo, 'postTags');
 
-        $select = new Select(Repo\Post::get());
+        $select = new Select(Model\Post::getRepo());
 
         $rel->join($select, 'Address');
 
         $this->assertEquals(
-            'SELECT Post.* FROM Post JOIN PostTag AS postTags ON postTags.postId = Address.id JOIN Tag AS tags ON tags.id = postTags.tagId AND tags.deletedAt IS NULL',
+            'SELECT `Post`.* FROM `Post` JOIN `PostTag` AS `postTags` ON `postTags`.`postId` = `Address`.`id` JOIN `Tag` AS `tags` ON `tags`.`id` = `postTags`.`tagId` AND `tags`.`deletedAt` IS NULL',
             $select->humanize()
         );
     }

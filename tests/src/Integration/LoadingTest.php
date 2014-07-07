@@ -54,10 +54,9 @@ class LoadingTest extends AbstractTestCase {
         $this->assertEquals($addressProps, $address->getProperties());
 
         $this->assertQueries([
-            'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
-            'SELECT Address.* FROM Address WHERE (id = 1) LIMIT 1'
+            'SELECT `User`.* FROM `User` WHERE (`id` = 1) AND (`User`.`deletedAt` IS NULL) LIMIT 1',
+            'SELECT `Address`.* FROM `Address` WHERE (`id` = 1) LIMIT 1'
         ]);
-
     }
 
     /**
@@ -93,7 +92,7 @@ class LoadingTest extends AbstractTestCase {
         );
 
         $this->assertQueries([
-            'SELECT City.* FROM City WHERE (countryId = 1)',
+            'SELECT `City`.* FROM `City` WHERE (`countryId` = 1)',
         ]);
     }
 
@@ -111,7 +110,7 @@ class LoadingTest extends AbstractTestCase {
             ->having('password', null)
             ->group('User.id')
             ->column(new SQL('CONCAT(name, "test")'), 'param')
-            ->prependColumn('COUNT(addressId)', 'param2')
+            ->prependColumn(new SQL('COUNT(addressId)'), 'param2')
             ->load();
 
         $user = $users->getFirst();
@@ -143,7 +142,7 @@ class LoadingTest extends AbstractTestCase {
         $this->assertSame($userUnmapped, $user->getUnmapped());
 
         $this->assertQueries([
-            'SELECT COUNT(addressId) AS param2, User.*, CONCAT(name, "test") AS param FROM User JOIN Address AS adr ON addressId = adr.id WHERE (name = "User 1") AND (addressId IS NOT NULL) AND (User.deletedAt IS NULL) GROUP BY User.id HAVING (password IS NULL) ORDER BY isBlocked DESC LIMIT 2',
+            'SELECT COUNT(addressId) AS `param2`, `User`.*, CONCAT(name, "test") AS `param` FROM `User` JOIN `Address` AS `adr` ON `addressId` = `adr`.`id` WHERE (`name` = "User 1") AND (`addressId` IS NOT NULL) AND (`User`.`deletedAt` IS NULL) GROUP BY `User`.`id` HAVING (`password` IS NULL) ORDER BY `isBlocked` DESC LIMIT 2',
         ]);
     }
 
@@ -170,10 +169,10 @@ class LoadingTest extends AbstractTestCase {
         $this->assertSame($expected, $addresses->getFirst());
 
         $this->assertQueries([
-            'SELECT User.* FROM User JOIN Post AS posts ON posts.userId = User.id JOIN PostTag AS postTags ON postTags.postId = posts.id JOIN Tag AS tags ON tags.id = postTags.tagId WHERE (User.deletedAt IS NULL) GROUP BY User.id',
-            'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
-            'SELECT Address.* FROM Address JOIN User AS user ON user.addressId = Address.id AND user.deletedAt IS NULL JOIN Post AS posts ON posts.userId = user.id',
-            'SELECT Address.* FROM Address WHERE (id = 1) LIMIT 1',
+            'SELECT `User`.* FROM `User` JOIN `Post` AS `posts` ON `posts`.`userId` = `User`.`id` JOIN `PostTag` AS `postTags` ON `postTags`.`postId` = `posts`.`id` JOIN `Tag` AS `tags` ON `tags`.`id` = `postTags`.`tagId` WHERE (`User`.`deletedAt` IS NULL) GROUP BY `User`.`id`',
+            'SELECT `User`.* FROM `User` WHERE (`id` = 1) AND (`User`.`deletedAt` IS NULL) LIMIT 1',
+            'SELECT `Address`.* FROM `Address` JOIN `User` AS `user` ON `user`.`addressId` = `Address`.`id` AND `user`.`deletedAt` IS NULL JOIN `Post` AS `posts` ON `posts`.`userId` = `user`.`id`',
+            'SELECT `Address`.* FROM `Address` WHERE (`id` = 1) LIMIT 1',
         ]);
     }
 
@@ -189,7 +188,7 @@ class LoadingTest extends AbstractTestCase {
         $this->assertSame($expected, $ids);
 
         $this->assertQueries([
-            'SELECT City.id AS id FROM City WHERE (countryId = 2)',
+            'SELECT `City`.`id` AS `id` FROM `City` WHERE (`countryId` = 2)',
         ]);
     }
 
@@ -203,7 +202,7 @@ class LoadingTest extends AbstractTestCase {
         $this->assertSame(2, $count);
 
         $this->assertQueries([
-            'SELECT COUNT(City.id) AS countAll FROM City WHERE (countryId = 2)',
+            'SELECT COUNT(`City`.`id`) AS `countAll` FROM `City` WHERE (`countryId` = 2)',
         ]);
     }
 
@@ -263,10 +262,10 @@ class LoadingTest extends AbstractTestCase {
         $this->assertEquals([2], $post->getTags()->get()->getIds());
 
         $this->assertQueries([
-            'SELECT User.* FROM User WHERE (User.deletedAt IS NULL)',
-            'SELECT Address.* FROM Address WHERE (id IN (1, 2))',
-            'SELECT Post.class, Post.* FROM Post WHERE (userId IN (1, 2, 3, 4))',
-            'SELECT Tag.*, postTags.postId AS tagsKey FROM Tag JOIN PostTag AS postTags ON postTags.tagId = Tag.id WHERE (postTags.postId IN (1, 2, 3, 4))',
+            'SELECT `User`.* FROM `User` WHERE (`User`.`deletedAt` IS NULL)',
+            'SELECT `Address`.* FROM `Address` WHERE (`id` IN (1, 2))',
+            'SELECT `Post`.`class`, `Post`.* FROM `Post` WHERE (`userId` IN (1, 2, 3, 4))',
+            'SELECT `Tag`.*, `postTags`.`postId` AS `tagsKey` FROM `Tag` JOIN `PostTag` AS `postTags` ON `postTags`.`tagId` = `Tag`.`id` WHERE (`postTags`.`postId` IN (1, 2, 3, 4))',
         ]);
     }
 }

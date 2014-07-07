@@ -2,7 +2,6 @@
 
 namespace Harp\Harp\Test\Unit\Rel;
 
-use Harp\Harp\Test\Repo;
 use Harp\Harp\Test\Model;
 use Harp\Core\Repo\LinkMany;
 use Harp\Core\Model\Models;
@@ -24,7 +23,7 @@ class HasManyExclusiveTest extends AbstractTestCase
      */
     public function testDelete()
     {
-        $rel = new HasManyExclusive('test', Repo\Country::get(), Repo\City::get());
+        $rel = new HasManyExclusive('test', Model\Country::getRepo(), Model\City::getRepo());
 
         $model = new Model\Country();
         $foreign1 = new Model\City([], State::SAVED);
@@ -48,7 +47,7 @@ class HasManyExclusiveTest extends AbstractTestCase
      */
     public function testUpdate()
     {
-        $rel = new HasManyExclusive('cities', Repo\Country::get(), Repo\City::get());
+        $rel = new HasManyExclusive('cities', Model\Country::getRepo(), Model\City::getRepo());
 
         $model = new Model\Country(['id' => 2]);
         $foreign1 = new Model\City(['countryId' => 2]);

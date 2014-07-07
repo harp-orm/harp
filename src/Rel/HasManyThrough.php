@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Rel;
 
-use Harp\Harp\AbstractRepo;
+use Harp\Harp\Repo;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkMany;
@@ -10,6 +10,7 @@ use Harp\Core\Rel\AbstractRelMany;
 use Harp\Core\Rel\DeleteManyInterface;
 use Harp\Core\Rel\InsertManyInterface;
 use Harp\Query\AbstractWhere;
+use Harp\Query\SQL\SQL;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -22,7 +23,7 @@ class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteMany
     protected $foreignKey;
     protected $through;
 
-    public function __construct($name, AbstractRepo $repo, AbstractRepo $foreignRepo, $through, array $options = array())
+    public function __construct($name, Repo $repo, Repo $foreignRepo, $through, array $options = array())
     {
         $this->through = $through;
 
@@ -62,7 +63,7 @@ class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteMany
     }
 
     /**
-     * @return AbstractRepo
+     * @return Repo
      */
     public function getThroughRepo()
     {
@@ -132,16 +133,18 @@ class HasManyThrough extends AbstractRelMany implements RelInterface, DeleteMany
     public function join(AbstractWhere $query, $parent)
     {
         $alias = $this->getName();
-        $condition = "ON $alias.{$this->getForeignRepo()->getPrimaryKey()} = {$this->through}.{$this->getForeignKey()}";
+        $conditions = [
+            "$alias.{$this->getForeignRepo()->getPrimaryKey()}" => "{$this->through}.{$this->getForeignKey()}"
+        ];
 
         if ($this->getForeignRepo()->getSoftDelete()) {
-            $condition .= " AND $alias.deletedAt IS NULL";
+            $conditions["$alias.deletedAt"] = new SQL('IS NULL');
         }
 
         $this->getThroughRel()->join($query, $parent);
 
         $query
-            ->joinAliased($this->getForeignRepo()->getTable(), $alias, $condition);
+            ->joinAliased($this->getForeignRepo()->getTable(), $alias, $conditions);
     }
 
     public function delete(LinkMany $link)

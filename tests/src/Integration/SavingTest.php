@@ -5,6 +5,7 @@ namespace Harp\Harp\Test\Integration;
 use Harp\Harp\Test\AbstractTestCase;
 use Harp\Harp\Test\Repo;
 use Harp\Harp\Test\Model;
+use Harp\Core\Repo\Container;
 use Harp\Query\SQL\SQL;
 use stdClass;
 
@@ -29,8 +30,8 @@ class SavingTest extends AbstractTestCase {
         Model\User::save($user);
 
         $this->assertQueries([
-            'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
-            'UPDATE User SET name = "New Name", isBlocked = 1 WHERE (id = 1)',
+            'SELECT `User`.* FROM `User` WHERE (`id` = 1) AND (`User`.`deletedAt` IS NULL) LIMIT 1',
+            'UPDATE `User` SET `name` = "New Name", `isBlocked` = 1 WHERE (`id` = 1)',
         ]);
     }
 
@@ -67,31 +68,28 @@ class SavingTest extends AbstractTestCase {
         $post->getTags()->addModels($tags);
 
         $this->assertQueries([
-            'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
-            'SELECT Address.* FROM Address WHERE (id IN (1))',
-            'SELECT Post.class, Post.* FROM Post WHERE (userId IN (1))',
-            'SELECT Tag.* FROM Tag WHERE (id IN (1, 2))',
+            'SELECT `User`.* FROM `User` WHERE (`id` = 1) AND (`User`.`deletedAt` IS NULL) LIMIT 1',
+            'SELECT `Address`.* FROM `Address` WHERE (`id` IN (1))',
+            'SELECT `Post`.`class`, `Post`.* FROM `Post` WHERE (`userId` IN (1))',
+            'SELECT `Tag`.* FROM `Tag` WHERE (`id` IN (1, 2))',
         ]);
 
         Model\User::save($user);
 
         $this->assertQueries([
-            'SELECT User.* FROM User WHERE (id = 1) AND (User.deletedAt IS NULL) LIMIT 1',
-            'SELECT Address.* FROM Address WHERE (id IN (1))',
-            'SELECT Post.class, Post.* FROM Post WHERE (userId IN (1))',
-            'SELECT Tag.* FROM Tag WHERE (id IN (1, 2))',
-            'INSERT INTO Post (id, title, body, price, tags, createdAt, updatedAt, publishedAt, userId, class) VALUES (NULL, "new post", "Lorem Ipsum", "123.23", NULL, NULL, NULL, NULL, NULL, "Harp\\Harp\\Test\\Model\\Post")',
-            'INSERT INTO PostTag (id, postId, tagId) VALUES (NULL, NULL, 1), (NULL, NULL, 2)',
-            'UPDATE User SET name = "New Name", isBlocked = 1, object = "C:41:"Harp\Harp\Test\Integration\SaveableObject":22:{a:1:{i:0;s:5:"value";}}" WHERE (id = 1)',
-            'UPDATE Address SET zipCode = "1234", location = "Somewhere else" WHERE (id = 1)',
-            'UPDATE Post SET body = CASE id WHEN 1 THEN "Changed Body" ELSE body END, userId = CASE id WHEN 5 THEN 1 ELSE userId END WHERE (id IN (1, 5))',
-            'UPDATE PostTag SET postId = CASE id WHEN 4 THEN "5" WHEN 5 THEN "5" ELSE postId END WHERE (id IN (4, 5))',
+            'SELECT `User`.* FROM `User` WHERE (`id` = 1) AND (`User`.`deletedAt` IS NULL) LIMIT 1',
+            'SELECT `Address`.* FROM `Address` WHERE (`id` IN (1))',
+            'SELECT `Post`.`class`, `Post`.* FROM `Post` WHERE (`userId` IN (1))',
+            'SELECT `Tag`.* FROM `Tag` WHERE (`id` IN (1, 2))',
+            'INSERT INTO `Post` (`id`, `title`, `body`, `price`, `tags`, `createdAt`, `updatedAt`, `publishedAt`, `userId`, `class`) VALUES (NULL, "new post", "Lorem Ipsum", "123.23", NULL, NULL, NULL, NULL, NULL, "Harp\\Harp\\Test\\Model\\Post")',
+            'INSERT INTO `PostTag` (`id`, `postId`, `tagId`) VALUES (NULL, NULL, 1), (NULL, NULL, 2)',
+            'UPDATE `User` SET `name` = "New Name", `isBlocked` = 1, `object` = "C:41:"Harp\Harp\Test\Integration\SaveableObject":22:{a:1:{i:0;s:5:"value";}}" WHERE (`id` = 1)',
+            'UPDATE `Address` SET `zipCode` = "1234", `location` = "Somewhere else" WHERE (`id` = 1)',
+            'UPDATE `Post` SET `body` = CASE `id` WHEN 1 THEN "Changed Body" ELSE `body` END, `userId` = CASE `id` WHEN 5 THEN 1 ELSE `userId` END WHERE (`id` IN (1, 5))',
+            'UPDATE `PostTag` SET `postId` = CASE `id` WHEN 4 THEN "5" WHEN 5 THEN "5" ELSE `postId` END WHERE (`id` IN (4, 5))',
         ]);
 
-        Repo\User::get()->clear();
-        Repo\Address::get()->clear();
-        Repo\Post::get()->clear();
-        Repo\Tag::get()->clear();
+        Container::clear();
 
         $user = Model\User::find(1);
         $this->assertEquals('New Name', $user->name);

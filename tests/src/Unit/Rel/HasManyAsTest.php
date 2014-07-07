@@ -27,19 +27,19 @@ class HasManyAsTest extends AbstractTestCase
      */
     public function testConstruct()
     {
-        $rel = new HasManyAs('test', Repo\Country::get(), Repo\City::get(), 'parent');
+        $rel = new HasManyAs('test', Model\Country::getRepo(), Model\City::getRepo(), 'parent');
 
         $this->assertSame('test', $rel->getName());
-        $this->assertSame(Repo\Country::get(), $rel->getRepo());
-        $this->assertSame(Repo\City::get(), $rel->getForeignRepo());
+        $this->assertSame(Model\Country::getRepo(), $rel->getRepo());
+        $this->assertSame(Model\City::getRepo(), $rel->getForeignRepo());
         $this->assertSame('id', $rel->getKey());
         $this->assertSame('parentId', $rel->getForeignKey());
         $this->assertSame('parentClass', $rel->getForeignClassKey());
 
         $rel = new HasManyAs(
             'test',
-            Repo\City::get(),
-            Repo\Country::get(),
+            Model\City::getRepo(),
+            Model\Country::getRepo(),
             'parent',
             ['foreignKey' => 'test', 'foreignClassKey' => 'testClass']
         );
@@ -52,7 +52,7 @@ class HasManyAsTest extends AbstractTestCase
      */
     public function testHasForeign()
     {
-        $rel = new HasManyAs('users', Repo\City::get(), Repo\User::get(), 'location');
+        $rel = new HasManyAs('users', Model\City::getRepo(), Model\User::getRepo(), 'location');
 
         $models = new Models([
             new Model\City(),
@@ -74,7 +74,7 @@ class HasManyAsTest extends AbstractTestCase
      */
     public function testLoadForeign()
     {
-        $rel = new HasManyAs('users', Repo\City::get(), Repo\User::get(), 'location');
+        $rel = new HasManyAs('users', Model\City::getRepo(), Model\User::getRepo(), 'location');
 
         $models = new Models([
             new Model\City(['id' => 1]),
@@ -119,7 +119,7 @@ class HasManyAsTest extends AbstractTestCase
      */
     public function testAreLinked($model, $foreign, $expected)
     {
-        $rel = new HasManyAs('users', Repo\City::get(), Repo\User::get(), 'location');
+        $rel = new HasManyAs('users', Model\City::getRepo(), Model\User::getRepo(), 'location');
 
         $this->assertEquals($expected, $rel->areLinked($model, $foreign));
     }
@@ -129,7 +129,7 @@ class HasManyAsTest extends AbstractTestCase
      */
     public function testUpdate()
     {
-        $rel = new HasManyAs('users', Repo\City::get(), Repo\User::get(), 'location');
+        $rel = new HasManyAs('users', Model\City::getRepo(), Model\User::getRepo(), 'location');
 
         $model = new Model\City(['id' => 2]);
         $foreign1 = new Model\User(['locationId' => 2, 'locationClass' => 'Harp\Harp\Test\Model\City']);
@@ -155,14 +155,14 @@ class HasManyAsTest extends AbstractTestCase
      */
     public function testJoin()
     {
-        $rel = new HasManyAs('users', Repo\City::get(), Repo\User::get(), 'location');
+        $rel = new HasManyAs('users', Model\City::getRepo(), Model\User::getRepo(), 'location');
 
-        $select = new Select(Repo\City::get());
+        $select = new Select(Model\City::getRepo());
 
         $rel->join($select, 'City');
 
         $this->assertEquals(
-            'SELECT City.* FROM City JOIN User AS users ON users.locationId = City.id AND users.locationClass = "Harp\Harp\Test\Model\City" AND users.deletedAt IS NULL',
+            'SELECT `City`.* FROM `City` JOIN `User` AS `users` ON `users`.`locationId` = `City`.`id` AND `users`.`locationClass` = "Harp\Harp\Test\Model\City" AND `users`.`deletedAt` IS NULL',
             $select->humanize()
         );
     }

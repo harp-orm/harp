@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Test\Model;
 
-use Harp\Harp\Test\Repo;
+use Harp\Harp\Repo;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -11,7 +11,13 @@ use Harp\Harp\Test\Repo;
  */
 class BlogPost extends Post {
 
-    const REPO = 'Harp\Harp\Test\Repo\BlogPost';
+    public static function initialize(Repo $repo)
+    {
+        parent::initialize($repo);
+
+        $repo
+            ->setRootRepo(Post::getRepo());
+    }
 
     public $isPublished = false;
 }

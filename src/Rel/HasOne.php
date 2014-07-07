@@ -2,13 +2,13 @@
 
 namespace Harp\Harp\Rel;
 
-use Harp\Harp\AbstractRepo;
 use Harp\Core\Model\AbstractModel;
 use Harp\Core\Model\Models;
 use Harp\Core\Repo\LinkOne;
 use Harp\Core\Rel\AbstractRelOne;
 use Harp\Core\Rel\UpdateOneInterface;
 use Harp\Query\AbstractWhere;
+use Harp\Query\SQL\SQL;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -89,12 +89,12 @@ class HasOne extends AbstractRelOne implements RelInterface, UpdateOneInterface
     public function join(AbstractWhere $query, $parent)
     {
         $alias = $this->getName();
-        $condition = "ON $alias.{$this->getForeignKey()} = $parent.{$this->getKey()}";
+        $conditions = ["$alias.{$this->getForeignKey()}" => "$parent.{$this->getKey()}"];
 
         if ($this->getForeignRepo()->getSoftDelete()) {
-            $condition .= " AND $alias.deletedAt IS NULL";
+            $conditions["$alias.deletedAt"] = new SQL('IS NULL');
         }
 
-        $query->joinAliased($this->getForeignRepo()->getTable(), $alias, $condition);
+        $query->joinAliased($this->getForeignRepo()->getTable(), $alias, $conditions);
     }
 }

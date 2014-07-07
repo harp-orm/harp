@@ -2,12 +2,11 @@
 
 namespace Harp\Harp\Test\Unit\Query;
 
-use Harp\Harp\Test\Repo;
 use Harp\Harp\Test\Model;
 use Harp\Core\Model\Models;
 use Harp\Query\SQL;
 use Harp\Harp\Query\Delete;
-use PHPUnit_Framework_TestCase;
+use Harp\Harp\Test\AbstractTestCase;
 
 /**
  * @coversDefaultClass Harp\Harp\Query\Delete
@@ -16,7 +15,7 @@ use PHPUnit_Framework_TestCase;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class DeleteTest extends PHPUnit_Framework_TestCase
+class DeleteTest extends AbstractTestCase
 {
     /**
      * @covers ::__construct
@@ -24,7 +23,7 @@ class DeleteTest extends PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $repo = new Repo\City('Harp\Harp\Test\Model\City');
+        $repo = Model\City::getRepo();
 
         $delete = new Delete($repo);
 
@@ -37,7 +36,7 @@ class DeleteTest extends PHPUnit_Framework_TestCase
      */
     public function testModels()
     {
-        $repo = new Repo\City('Harp\Harp\Test\Model\City');
+        $repo = Model\City::getRepo();
 
         $delete = new Delete($repo);
 
@@ -45,6 +44,6 @@ class DeleteTest extends PHPUnit_Framework_TestCase
 
         $delete->models($models);
 
-        $this->assertEquals('DELETE FROM City WHERE (id IN (5, 12))',$delete->humanize());
+        $this->assertEquals('DELETE FROM `City` WHERE (`id` IN (5, 12))',$delete->humanize());
     }
 }

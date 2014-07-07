@@ -3,7 +3,8 @@
 namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\AbstractModel;
-use Harp\Harp\Test\Repo;
+use Harp\Harp\Rel;
+use Harp\Harp\Repo;
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
  * @copyright  (c) 2014 Clippings Ltd.
@@ -11,7 +12,13 @@ use Harp\Harp\Test\Repo;
  */
 class Country extends AbstractModel implements LocationInterface {
 
-    const REPO = 'Harp\Harp\Test\Repo\Country';
+    public static function initialize(Repo $repo)
+    {
+        $repo
+            ->addRels([
+                new Rel\HasManyAs('users', $repo, User::getRepo(), 'location'),
+            ]);
+    }
 
     public $id;
     public $name;

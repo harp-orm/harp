@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "78c47de503aea53c4986812fe6b50a65",
+    "hash": "89715bc8e6eed46b64a6509c9a4c24ec",
     "packages": [
         {
             "name": "harp-orm/core",
-            "version": "0.1.1",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/core.git",
-                "reference": "2258d7063829537ea5153028e1029901bbc9dbed"
+                "reference": "07b2bb5705925501540f2ce6d1b3937f5a6620d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/2258d7063829537ea5153028e1029901bbc9dbed",
-                "reference": "2258d7063829537ea5153028e1029901bbc9dbed",
+                "url": "https://api.github.com/repos/harp-orm/core/zipball/07b2bb5705925501540f2ce6d1b3937f5a6620d5",
+                "reference": "07b2bb5705925501540f2ce6d1b3937f5a6620d5",
                 "shasum": ""
             },
             "require": {
@@ -49,20 +49,20 @@
                 }
             ],
             "description": "DataMapper style ORM Core Componenets",
-            "time": "2014-07-01 12:42:16"
+            "time": "2014-07-07 14:56:40"
         },
         {
             "name": "harp-orm/query",
-            "version": "0.2.2",
+            "version": "0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/query.git",
-                "reference": "63a3354e87e381614b48796ef335fc23d8c9e5ac"
+                "reference": "a0627bedc11d062580fc33b71e57f9d8df45bdbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/query/zipball/63a3354e87e381614b48796ef335fc23d8c9e5ac",
-                "reference": "63a3354e87e381614b48796ef335fc23d8c9e5ac",
+                "url": "https://api.github.com/repos/harp-orm/query/zipball/a0627bedc11d062580fc33b71e57f9d8df45bdbc",
+                "reference": "a0627bedc11d062580fc33b71e57f9d8df45bdbc",
                 "shasum": ""
             },
             "require": {
@@ -97,7 +97,7 @@
                 }
             ],
             "description": "SQL Builder for PDO",
-            "time": "2014-07-01 12:56:49"
+            "time": "2014-07-07 11:52:30"
         },
         {
             "name": "harp-orm/serializer",

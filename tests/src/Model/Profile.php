@@ -3,6 +3,9 @@
 namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\AbstractModel;
+use Harp\Harp\Repo;
+use Harp\Harp\Rel;
+use Harp\Validate\Assert;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -11,7 +14,16 @@ use Harp\Harp\AbstractModel;
  */
 class Profile extends AbstractModel {
 
-    const REPO = 'Harp\Harp\Test\Repo\Profile';
+    public static function initialize(Repo $repo)
+    {
+        $repo
+            ->addRels([
+                new Rel\BelongsTo('user', $repo, User::getRepo()),
+            ])
+            ->addAsserts([
+                new Assert\Present('name'),
+            ]);
+    }
 
     /**
      * @var integer

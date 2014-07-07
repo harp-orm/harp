@@ -2,7 +2,8 @@
 
 namespace Harp\Harp\Query;
 
-use Harp\Harp\AbstractRepo;
+use Harp\Harp\Repo;
+use Harp\Query\SQL\SQL;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -14,22 +15,25 @@ class Select extends \Harp\Query\Select {
     use JoinRelTrait;
 
     /**
-     * @var AbstractRepo
+     * @var Repo
      */
     private $repo;
 
-    public function __construct(AbstractRepo $repo)
+    public function __construct(Repo $repo)
     {
         $this->repo = $repo;
+
+        $table = $this->getDb()->escapeName($repo->getTable());
+
         $this
             ->from($repo->getTable())
-            ->column($repo->getTable().'.*');
+            ->column(new SQL("{$table}.*"));
 
         parent::__construct($repo->getDbInstance());
     }
 
     /**
-     * @return AbstractRepo
+     * @return Repo
      */
     public function getRepo()
     {

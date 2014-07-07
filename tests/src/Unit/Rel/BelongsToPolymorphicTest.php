@@ -2,7 +2,6 @@
 
 namespace Harp\Harp\Test\Unit\Rel;
 
-use Harp\Harp\Test\Repo;
 use Harp\Harp\Test\Model;
 use Harp\Core\Repo\LinkOne;
 use Harp\Core\Model\Models;
@@ -27,19 +26,19 @@ class BelongsToPolymorphicTest extends AbstractTestCase
      */
     public function testConstruct()
     {
-        $rel = new BelongsToPolymorphic('test', Repo\User::get(), Repo\Country::get());
+        $rel = new BelongsToPolymorphic('test', Model\User::getRepo(), Model\Country::getRepo());
 
         $this->assertSame('test', $rel->getName());
-        $this->assertSame(Repo\User::get(), $rel->getRepo());
-        $this->assertSame(Repo\Country::get(), $rel->getForeignRepo());
+        $this->assertSame(Model\User::getRepo(), $rel->getRepo());
+        $this->assertSame(Model\Country::getRepo(), $rel->getForeignRepo());
         $this->assertSame('testId', $rel->getKey());
         $this->assertSame('testClass', $rel->getClassKey());
         $this->assertSame('id', $rel->getForeignKey());
 
         $rel = new BelongsToPolymorphic(
             'test',
-            Repo\City::get(),
-            Repo\Country::get(),
+            Model\City::getRepo(),
+            Model\Country::getRepo(),
             ['key' => 'test', 'classKey' => 'testClass']
         );
 
@@ -52,7 +51,7 @@ class BelongsToPolymorphicTest extends AbstractTestCase
      */
     public function testHasForeign()
     {
-        $rel = new BelongsToPolymorphic('test', Repo\User::get(), Repo\Country::get());
+        $rel = new BelongsToPolymorphic('test', Model\User::getRepo(), Model\Country::getRepo());
 
         $models = new Models([
             new Model\City(),
@@ -82,7 +81,7 @@ class BelongsToPolymorphicTest extends AbstractTestCase
      */
     public function testLoadForeign()
     {
-        $rel = new BelongsToPolymorphic('location', Repo\User::get(), Repo\Country::get());
+        $rel = new BelongsToPolymorphic('location', Model\User::getRepo(), Model\Country::getRepo());
 
         $models = new Models([
             new Model\User(['locationId' => null, 'locationClass' => null]),
@@ -129,7 +128,7 @@ class BelongsToPolymorphicTest extends AbstractTestCase
      */
     public function testAreLinked($model, $foreign, $expected)
     {
-        $rel = new BelongsToPolymorphic('location', Repo\User::get(), Repo\Country::get());
+        $rel = new BelongsToPolymorphic('location', Model\User::getRepo(), Model\Country::getRepo());
 
         $this->assertEquals($expected, $rel->areLinked($model, $foreign));
     }
@@ -139,7 +138,7 @@ class BelongsToPolymorphicTest extends AbstractTestCase
      */
     public function testUpdate()
     {
-        $rel = new BelongsToPolymorphic('location', Repo\User::get(), Repo\Country::get());
+        $rel = new BelongsToPolymorphic('location', Model\User::getRepo(), Model\Country::getRepo());
 
         $model = new Model\User();
         $foreign = new Model\Country(['id' => 20]);
@@ -157,9 +156,9 @@ class BelongsToPolymorphicTest extends AbstractTestCase
      */
     public function testJoin()
     {
-        $rel = new BelongsToPolymorphic('location', Repo\User::get(), Repo\Country::get());
+        $rel = new BelongsToPolymorphic('location', Model\User::getRepo(), Model\Country::getRepo());
 
-        $select = new Select(Repo\User::get());
+        $select = new Select(Model\User::getRepo());
 
         $rel->join($select, 'City');
     }

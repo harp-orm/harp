@@ -25,15 +25,15 @@ class HasOneTest extends AbstractTestCase
      */
     public function testConstruct()
     {
-        $rel = new HasOne('test', Repo\Country::get(), Repo\City::get());
+        $rel = new HasOne('test', Model\Country::getRepo(), Model\City::getRepo());
 
         $this->assertSame('test', $rel->getName());
-        $this->assertSame(Repo\Country::get(), $rel->getRepo());
-        $this->assertSame(Repo\City::get(), $rel->getForeignRepo());
+        $this->assertSame(Model\Country::getRepo(), $rel->getRepo());
+        $this->assertSame(Model\City::getRepo(), $rel->getForeignRepo());
         $this->assertSame('id', $rel->getKey());
         $this->assertSame('countryId', $rel->getForeignKey());
 
-        $rel = new HasOne('test', Repo\Country::get(), Repo\City::get(), array('foreignKey' => 'test'));
+        $rel = new HasOne('test', Model\Country::getRepo(), Model\City::getRepo(), array('foreignKey' => 'test'));
         $this->assertSame('test', $rel->getForeignKey());
     }
 
@@ -42,7 +42,7 @@ class HasOneTest extends AbstractTestCase
      */
     public function testHasForeign()
     {
-        $rel = new HasOne('city', Repo\Country::get(), Repo\City::get());
+        $rel = new HasOne('city', Model\Country::getRepo(), Model\City::getRepo());
 
         $models = new Models([
             new Model\Country(),
@@ -64,7 +64,7 @@ class HasOneTest extends AbstractTestCase
      */
     public function testLoadForeign()
     {
-        $rel = new HasOne('city', Repo\Country::get(), Repo\City::get());
+        $rel = new HasOne('city', Model\Country::getRepo(), Model\City::getRepo());
 
         $models = new Models([
             new Model\Country(['id' => 1]),
@@ -96,7 +96,7 @@ class HasOneTest extends AbstractTestCase
      */
     public function testAreLinked($model, $foreign, $expected)
     {
-        $rel = new HasOne('city', Repo\Country::get(), Repo\City::get());
+        $rel = new HasOne('city', Model\Country::getRepo(), Model\City::getRepo());
 
         $this->assertEquals($expected, $rel->areLinked($model, $foreign));
     }
@@ -106,7 +106,7 @@ class HasOneTest extends AbstractTestCase
      */
     public function testUpdate()
     {
-        $rel = new HasOne('city', Repo\Country::get(), Repo\City::get());
+        $rel = new HasOne('city', Model\Country::getRepo(), Model\City::getRepo());
 
         $model = new Model\Country(['id' => 20]);
         $old = new Model\City(['countryId' => 20]);
@@ -125,14 +125,14 @@ class HasOneTest extends AbstractTestCase
      */
     public function testJoin()
     {
-        $rel = new HasOne('city', Repo\Country::get(), Repo\City::get());
+        $rel = new HasOne('city', Model\Country::getRepo(), Model\City::getRepo());
 
-        $select = new Select(Repo\Country::get());
+        $select = new Select(Model\Country::getRepo());
 
         $rel->join($select, 'Country');
 
         $this->assertEquals(
-            'SELECT Country.* FROM Country JOIN City AS city ON city.countryId = Country.id',
+            'SELECT `Country`.* FROM `Country` JOIN `City` AS `city` ON `city`.`countryId` = `Country`.`id`',
             $select->humanize()
         );
     }
@@ -142,14 +142,14 @@ class HasOneTest extends AbstractTestCase
      */
     public function testJoinSoftDelete()
     {
-        $rel = new HasOne('user', Repo\Address::get(), Repo\User::get());
+        $rel = new HasOne('user', Model\Address::getRepo(), Model\User::getRepo());
 
-        $select = new Select(Repo\Address::get());
+        $select = new Select(Model\Address::getRepo());
 
         $rel->join($select, 'Address');
 
         $this->assertEquals(
-            'SELECT Address.* FROM Address JOIN User AS user ON user.addressId = Address.id AND user.deletedAt IS NULL',
+            'SELECT `Address`.* FROM `Address` JOIN `User` AS `user` ON `user`.`addressId` = `Address`.`id` AND `user`.`deletedAt` IS NULL',
             $select->humanize()
         );
     }

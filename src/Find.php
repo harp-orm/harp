@@ -4,6 +4,7 @@ namespace Harp\Harp;
 
 use Harp\Core\Save\AbstractFind;
 use Harp\Core\Model\State;
+use Harp\Query\SQL\SQL;
 use PDO;
 
 /**
@@ -18,7 +19,7 @@ class Find extends AbstractFind
      */
     private $select;
 
-    public function __construct(AbstractRepo $repo)
+    public function __construct(Repo $repo)
     {
         $this->select = new Query\Select($repo);
 
@@ -93,6 +94,18 @@ class Find extends AbstractFind
     public function where($property, $value)
     {
         $this->select->where($property, $value);
+
+        return $this;
+    }
+
+    /**
+     * @param  string $property
+     * @param  array  $properties
+     * @return Find   $this
+     */
+    public function whereRaw($sql, array $properties = array())
+    {
+        $this->select->whereRaw($sql, $properties);
 
         return $this;
     }
@@ -420,10 +433,12 @@ class Find extends AbstractFind
         $repo = $this->getRepo();
 
         $this->applyFlags($flags);
+        $table = $this->select->getDb()->escapeName($repo->getTable());
+        $primaryKey = $this->select->getDb()->escapeName($repo->getPrimaryKey());
 
         $this->select
             ->clearColumns()
-            ->column("COUNT({$repo->getTable()}.{$repo->getPrimaryKey()})", 'countAll');
+            ->column(new SQL("COUNT($table.$primaryKey)"), 'countAll');
 
         return $this->select->execute()->fetchColumn();
     }

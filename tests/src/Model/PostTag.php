@@ -3,6 +3,9 @@
 namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\AbstractModel;
+use Harp\Harp\Repo;
+use Harp\Harp\Rel;
+
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -11,7 +14,14 @@ use Harp\Harp\AbstractModel;
  */
 class PostTag extends AbstractModel {
 
-    const REPO = 'Harp\Harp\Test\Repo\PostTag';
+    public static function initialize(Repo $repo)
+    {
+        $repo
+            ->addRels([
+                new Rel\BelongsTo('post', $repo, Post::getRepo()),
+                new Rel\BelongsTo('tag', $repo, Tag::getRepo()),
+            ]);
+    }
 
     public $id;
     public $postId;

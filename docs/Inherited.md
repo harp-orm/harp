@@ -22,46 +22,29 @@ __Database Table:__
 // Model File
 use Harp\Harp\AbstractModel;
 use Harp\Core\Model\InheritedTrait;
+use Harp\Harp\Repo;
 
 class Order extends AbstractModel
 {
-    const REPO = 'OrderRepo';
-
     use InheritedTrait;
+
+    public static function initialize(Repo $repo)
+    {
+        InheritedTrait::initialize($repo);
+    }
 
     public $id;
     public $orderKey;
 }
 
-// Root Repo File
-use Harp\Harp\AbstractRepo;
-
-class OrderRepo extends AbstractRepo {
-
-    public function initialize()
-    {
-        $this
-            ->setModelClass('Order')
-            ->setInherited(true);
-    }
-}
-
 // Child Model File
 class BankOrder extends Order
 {
-    const REPO = 'BankOrderRepo';
-}
-
-// Child Repo File
-class BankOrderRepo extends BankOrder {
-
-    public function initialize()
+    public static function initialize(Repo $repo)
     {
-        parent::initialize();
+        parent::initialize($repo);
 
-        $this
-            ->setModelClass('BankOrder')
-            ->setRootRepo(OrderRepo::get());
+        $this->setRootRepo(Order::getRepo());
     }
 }
 

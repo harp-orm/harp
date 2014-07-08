@@ -23,25 +23,15 @@ use Harp\Core\Model\SoftDeleteTrait;
 
 class Order extends AbstractModel
 {
-    const REPO = 'OrderRepo';
-
     use SoftDeleteTrait;
+
+    public static function initialize($repo)
+    {
+        SoftDeleteTrait::initialize($repo);
+    }
 
     public $id;
     public $orderKey;
-}
-
-// Repo File
-use Harp\Harp\AbstractRepo;
-
-class OrderRepo extends AbstractRepo {
-
-    public function initialize()
-    {
-        $this
-            ->setModelClass('Order')
-            ->setSoftDelete(true);
-    }
 }
 ```
 

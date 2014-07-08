@@ -103,20 +103,20 @@ class UserRepo extends AbstractRepo
 
 ## Extending Find
 
-The ``Find`` class has a variety of methods for adding sql constraints. Methods like ``where``, ``join``, ``group``, ``order`` etc. Sometimes you'll want to add your own methods there, specific to the repo. To do this you need to create your own class, extending ``Find``, and modify the "findAll" method on the repo to return your own class.
+The ``Find`` class has a variety of methods for adding sql constraints. Methods like ``where``, ``join``, ``group``, ``order`` etc. Sometimes you'll want to add your own methods there, specific to the repo. To do this you need to create your own class, extending ``Find``, and modify the "findAll" method on the model to return your own class.
 
 
 ```php
 // In the repo
 use Harp\Harp\AbstractRepo;
 
-class UserRepo extends AbstractRepo
+class User extends AbstractModel
 {
     // ...
 
-    public function findAll()
+    public static function findAll()
     {
-        return new MyFind($this);
+        return new MyFind(self::getRepo());
     }
 }
 

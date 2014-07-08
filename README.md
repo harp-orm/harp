@@ -14,10 +14,15 @@ Harp ORM is a light DataMapper persistence layer for php objects.
 ```php
 // Model Class
 use Harp\Harp\AbstractModel;
+use Harp\Harp\Repo;
 
 class UserModel extends AbstractModel
 {
-    const REPO = 'UserRepo';
+    public static function initialize(Repo $repo)
+    {
+        $repo
+            ->addRel(new Rel\BelongsTo('address', $repo, Address::getRepo()));
+    }
 
     public $id;
     public $name;
@@ -26,26 +31,12 @@ class UserModel extends AbstractModel
 
     public function getAddress()
     {
-        return $this->getLinkedModel('address');
+        return $this->get('address');
     }
 
     public function setAddress(Address $address)
     {
-        return $this->setLinkedModel('address', $address);
-    }
-}
-
-// Repo Class
-use Harp\Harp\AbstractRepo;
-use Harp\Harp\Rel;
-
-class UserRepo extends AbstractRepo
-{
-    public function initialize()
-    {
-        $this
-            ->setModelClass('UserModel')
-            ->addRel(new Rel\BelongsTo('address', $this, AddressRepo::get()));
+        return $this->set('address', $address);
     }
 }
 
@@ -88,22 +79,6 @@ Why another ORM? At present there are no ORMs that use the latest PHP features. 
 
 ## Defining Models
 
-Each model has at least 2 classes associated with it. The model itself, and a "repo" class. The repo class holds all the static information about the models, its relation graph, validation rules, how it gets persisted in the database etc. Its a singleton class, so all models for one table belong to one repo object.
-
-Since Harp ORM does not enforce a folder structure, each model must have a link to its repo and vice versa.
-
-You will need to add a const "REPO" in your model, and call setModelClass in the repo, so that they can know about each other.
-
-```php
-// in the Model ...
-const REPO = 'UserRepo';
-
-// in the Repo
-->setModelClass('UserModel');
-```
-
-### The model class
-
 Here's an example model class.
 
 ```php
@@ -111,8 +86,16 @@ use Harp\Harp\AbstractModel;
 
 class User extends AbstractModel
 {
-    // Repo class
-    const REPO = 'UserRepo';
+    // Configure the "Repo" object for this model class
+    // This holds all the database-specific configs,
+    // as well as relations with other models
+    public static function initialize(Repo $repo)
+    {
+        $repo
+            ->addRel(new Rel\BelongsTo('address', $repo, AddressRepo::get()));
+            ->addAssert(new Assert\Present('name'))
+            ->addAssert(new Assert\Email('name'));
+    }
 
     // Public properties persisted as columns in the table
     public $id;
@@ -126,30 +109,26 @@ All the public properties get persisted in the database, using the native types 
 
 > __Tip__ Once related objects have been loaded, they will be cached and returned on further requests, however the data is not kept in the model itself, thus if you do a ``var_dump`` on an model it will return only data of the model itself and will keep your stack traces readable.
 
-### The repo class
+Detailed list of all the configuration methods:
 
-The repo class holds all the configuration of the corresponding model - table name, associations, validation, serialization etc. Here is a repo class for the model class above:
+Configuration Method                   | Description
+---------------------------------------|-------------
+__setTable__($table)                   | Set the name of the database table, defaults to the short class name of the model
+__setDb__($dbName)                     | Set alternative database connection, this will tap into alternative database configurations you've setup
+__setSoftDelete__($isSoftDelete)       | Set to true if you want this model to be soft deleted. More on [soft delete later](/docs/SoftDelete.md)
+__setInherited__($isInherited)         | Set to true if this repo will be inherited by other repo using [Single table inheritance](/docs/Inherited.md)
+__setRootRepo__(AbstractRepo $repo)    | Used for children in single table inheritence
+__setPrimaryKey__($primaryKey)         | Sets the property/column to be used for primary key, "id" by default
+__setNameKey__($nameKey)               | Sets the property/column to be used for name key - will be used for findByName method on the repo. Defaults to "name"
+__addRel__(AbstractRel $rel)           | Add a link to a related model. Read about [Relations](/docs/Relations.md)
+__addRels__(array $rels)               | Add multiple rel objects.
+__addAssert__(AbstractAssert $assert)  | Add an assertion for this model. Read about [Assertions](/docs/Assertions.md)
+__addAsserts__(array $asserts)         | Add multiple asserts
+__addSerializer__(AbstractSerializer)  | Add a property serializer. Read about [Serializers](/docs/Serializers.md)
+__addSerializers__(array $serializers) | Add multiple serializer objects
+__addEventBefore__($event, $callback)  | Add event listener, to be triggered before a specific event
+__addEventAfter__($event, $callback)   | Add event listener to be triggered after a specific event
 
-```php
-
-use Harp\Harp\AbstractRepo;
-use Harp\Harp\Rel;
-use Harp\Validate\Assert;
-
-class UserRepo extends AbstractRepo
-{
-    public function initialize()
-    {
-        $this
-            ->setModelClass('User')
-            ->addRel(new Rel\BelongsTo('address', $this, AddressRepo::get()));
-            ->addAssert(new Assert\Present('name'))
-            ->addAssert(new Assert\Email('name'));
-    }
-}
-```
-
-Read [detailed Repo configuration docs](/docs/Repo.md)
 
 ## Retrieving from the database
 
@@ -228,8 +207,17 @@ use Harp\Core\Model\SoftDeleteTrait;
 
 class Order extends AbstractModel
 {
-    // ...
     use SoftDeleteTrait;
+
+    public static function initialize(Repo $repo)
+    {
+        // The trait has its own initialize method that you'll have to call
+        SoftDeleteTrait::initialize($repo);
+
+        // ...
+    }
+
+    // ...
 }
 ```
 

@@ -30,10 +30,15 @@ __Database Tables:__
 ```php
 // Model File
 use Harp\Harp\AbstractModel;
+use Harp\Harp\Rel\BelongsTo;
 
 class Order extends AbstractModel
 {
-    const REPO = 'OrderRepo';
+    public static function initialize($repo)
+    {
+        $repo
+            ->addRel(new BelongsTo('customer', $repo, Customer::getRepo()));
+    }
 
     public $id;
     public $orderKey;
@@ -41,26 +46,12 @@ class Order extends AbstractModel
 
     public function getCustomer()
     {
-        return $this->getLinkedModel('customer');
+        return $this->get('customer');
     }
 
     public function setCustomer(Customer $customer)
     {
-        return $this->setLinkedModel('customer', $customer);
-    }
-}
-
-// Repo File
-use Harp\Harp\AbstractRepo;
-use Harp\Harp\Rel\BelongsTo;
-
-class OrderRepo extends AbstractRepo {
-
-    public function initialize()
-    {
-        $this
-            ->setModelClass('Order')
-            ->addRel(new BelongsTo('customer', $this, CustomerRepo::get()));
+        return $this->set('customer', $customer);
     }
 }
 
@@ -74,7 +65,7 @@ $order->setCustomer($customer2);
 By default the name of the column use for the foreign key is defined as "foreign model" + "Id", but you can configure that with a "key" option e.g.
 
 ```php
-$rel = new BelongsTo('customer', $this, CustomerRepo::get(), ['key' => 'otherId']);
+new BelongsTo('customer', $repo, Customer::getRepo(), ['key' => 'otherId'])
 ```
 
 ## Has One
@@ -95,36 +86,27 @@ __Database Tables:__
 ```php
 // Model File
 use Harp\Harp\AbstractModel;
+use Harp\Harp\Rel\HasOne;
 
 class Supplier extends AbstractModel
 {
-    const REPO = 'SupplierRepo';
+    public static function initialize($repo)
+    {
+        $this
+            ->addRel(new HasOne('account', $repo, Account::getRepo()));
+    }
 
     public $id;
     public $name;
 
     public function getAccount()
     {
-        return $this->getLinkedModel('account');
+        return $this->get('account');
     }
 
     public function setAccount(Account $account)
     {
-        return $this->setLinkedModel('account', $account);
-    }
-}
-
-// Repo File
-use Harp\Harp\AbstractRepo;
-use Harp\Harp\Rel\HasOne;
-
-class SupplierRepo extends AbstractRepo {
-
-    public function initialize()
-    {
-        $this
-            ->setModelClass('Supplier')
-            ->addRel(new HasOne('account', $this, AccountRepo::get()));
+        return $this->set('account', $account);
     }
 }
 

@@ -60,7 +60,7 @@ $customer = $order->getCustomer();
 $order->setCustomer($customer2);
 ```
 
-> __Tip__ Though you could use the ``getLink`` method directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
+> __Tip__ Though you could use the ``get`` and ``set`` methods directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
 
 By default the name of the column use for the foreign key is defined as "foreign model" + "Id", but you can configure that with a "key" option e.g.
 
@@ -115,7 +115,7 @@ $account = $supplier->getAccount();
 $supplier->setAccount($account2);
 ```
 
-> __Tip__ Though you could use the ``getLink`` method directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
+> __Tip__ Though you could use the ``get`` and ``set`` methods directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
 
 By default the name of the column use for the foreign key is defined as "foreign model" + "Id", but you can configure that with a "foreignKey" option e.g.
 
@@ -141,31 +141,22 @@ __Database Tables:__
 ```php
 // Model File
 use Harp\Harp\AbstractModel;
+use Harp\Harp\Rel\HasMany;
 
 class Customer extends AbstractModel
 {
-    const REPO = 'CustomerRepo';
+    public static function initialize($repo)
+    {
+        $repo
+            ->addRel(new HasMany('orders', $repo, Order::getRepo()));
+    }
 
     public $id;
     public $name;
 
     public function getOrders()
     {
-        return $this->getLinkMany('orders');
-    }
-}
-
-// Repo File
-use Harp\Harp\AbstractRepo;
-use Harp\Harp\Rel\HasMany;
-
-class CustomerRepo extends AbstractRepo {
-
-    public function initialize()
-    {
-        $this
-            ->setModelClass('Customer')
-            ->addRel(new HasMany('orders', $this, OrderRepo::get()));
+        return $this->all('orders');
     }
 }
 
@@ -176,7 +167,7 @@ foreach ($orders as $order) {
 $customer->getOrders()->add($order2);
 ```
 
-> __Tip__ Though you could use the ``getLink`` method directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
+> __Tip__ Though you could use the ``all`` method directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
 
 By default the name of the column use for the foreign key is defined as "foreign model" + "Id", but you can configure that with a "foreignKey" option e.g.
 
@@ -212,35 +203,26 @@ __Database Tables:__
 ```php
 // Model File
 use Harp\Harp\AbstractModel;
+use Harp\Harp\Rel\HasManyThrough;
+use Harp\Harp\Rel\HasMany;
 
 class Assembly extends AbstractModel
 {
-    const REPO = 'AssemblyRepo';
+    public static function initialize($repo)
+    {
+        $this
+            ->addRels([
+                new HasManyThrough('parts', $repo, Part::getRepo(), 'assemblyParts')),
+                new HasMany('assemblyParts', $repo, AssemblyPart::getRepo()))
+            ]);
+    }
 
     public $id;
     public $name;
 
     public function getParts()
     {
-        return $this->getLinkMany('parts');
-    }
-}
-
-// Repo File
-use Harp\Harp\AbstractRepo;
-use Harp\Harp\Rel\HasManyThrough;
-use Harp\Harp\Rel\HasMany;
-
-class AssemblyRepo extends AbstractRepo {
-
-    public function initialize()
-    {
-        $this
-            ->setModelClass('Assembly')
-            ->addRels([
-                new HasManyThrough('parts', $this, PartRepo::get(), 'assemblyParts')),
-                new HasMany('assemblyParts', $this, AssemblyPartRepo::get()))
-            ]);
+        return $this->all('parts');
     }
 }
 
@@ -251,15 +233,15 @@ foreach ($parts as $part) {
 $customer->getParts()->add($part2);
 ```
 
-> __Tip__ Though you could use the ``getLink`` method directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
+> __Tip__ Though you could use the ``all`` method directly to retrieve / change data, it is better to define specific methods for each relation, as is the case in the example above.
 
 By default the name of the columns use for the foreign keys in the "through" model are "model" + "Id" and "foreign model"  + "Id", but you can configure that with a "key" and "foreignKey" options e.g.
 
 ```php
-$rel = new HasManyThrough(
+new HasManyThrough(
     'parts',
-    $this,
-    PartRepo::get(),
+    $repo,
+    Part::getRepo(),
     'assemblyParts',
     [
         'key' => 'otherAssemblyId',
@@ -274,16 +256,15 @@ The "HasManyExclusive" relation is exactly the same as HasMany, with one excepti
 
 ```php
 // Repo File
-use Harp\Harp\AbstractRepo;
-use Harp\Harp\Rel\HasMany;
+use Harp\Harp\AbstractModel;
+use Harp\Harp\Rel\HasManyExclusive;
 
-class CustomerRepo extends AbstractRepo {
+class Customer extends AbstractModel {
 
-    public function initialize()
+    public static function initialize($repo)
     {
-        $this
-            ->setModelClass('Customer')
-            ->addRel(new HasManyExclusive('orders', $this, OrderRepo::get()));
+        $repo
+            ->addRel(new HasManyExclusive('orders', $repo, Order::getRepo()));
     }
 }
 ```
@@ -311,34 +292,42 @@ __Database Tables:__
 └─────────────────────────┴─────────┘
 ```
 ```php
-class PictureRepo extends AbstractRepo
+class Picture extends AbstractModel
 {
-    public function initialize()
+    public static function initialize($repo)
     {
-        // ...
-        $this
-            ->addRel(new BelongsToPolymorphic('parent', $this, ProductRepo::get());
+        $repo
+            ->addRel(new BelongsToPolymorphic('parent', $repo, Product::getRepo());
     }
+
+    public $id;
+    public $name;
+    public $parentId;
+    public $parentClass;
 }
 
-class EmployeeRepo extends AbstractRepo
+class Employee extends AbstractModel
 {
-    public function initialize()
+    public static function initialize($repo)
     {
-        // ...
-        $this
-            ->addRel(new HasManyAs('pictures', $this, PictureRepo::get(), 'parent');
+        $repo
+            ->addRel(new HasManyAs('pictures', $repo, Picture::getRepo(), 'parent');
     }
+
+    public $id;
+    public $name;
 }
 
-class ProductRepo extends AbstractRepo
+class Product extends AbstractModel
 {
-    public function initialize()
+    public function initialize($repo)
     {
-        // ...
-        $this
-            ->addRel(new HasManyAs('pictures', $this, PictureRepo::get(), 'parent');
+        $repo
+            ->addRel(new HasManyAs('pictures', $repo, Picture::getRepo(), 'parent');
     }
+
+    public $id;
+    public $name;
 }
 ```
 

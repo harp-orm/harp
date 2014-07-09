@@ -63,10 +63,9 @@ class BelongsToPolymorphic extends AbstractRelOne implements RelInterface, Updat
         foreach ($groups as $modelClass => & $models) {
 
             $keys = Arr::pluckUniqueProperty($models, $this->key);
-            $repo = (new $modelClass())->getRepo();
 
             if ($keys) {
-                $models = $repo->findAll()
+                $models = $modelClass::findAll()
                     ->whereIn($this->getForeignKey(), $keys)
                     ->loadRaw($flags);
             } else {

@@ -2,6 +2,8 @@
 
 namespace Harp\Harp;
 
+use Harp\Harp\Query;
+
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
  * @copyright  (c) 2014 Clippings Ltd.
@@ -15,6 +17,26 @@ abstract class AbstractModel extends \Harp\Core\Model\AbstractModel
     public static function findAll()
     {
         return new Find(self::getRepo());
+    }
+
+    public static function selectAll()
+    {
+        return new Query\Select(self::getRepo());
+    }
+
+    public static function deleteAll()
+    {
+        return new Query\Delete(self::getRepo());
+    }
+
+    public static function updateAll()
+    {
+        return new Query\Update(self::getRepo());
+    }
+
+    public static function insertAll()
+    {
+        return new Query\Insert(self::getRepo());
     }
 
     /**

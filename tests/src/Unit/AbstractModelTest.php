@@ -28,6 +28,33 @@ class AbstractModelTest extends AbstractTestCase
         $this->assertSame(User::getRepo(), $find->getRepo());
     }
 
+    public function dataGetters()
+    {
+        return [
+            ['Harp\Harp\Find', 'findAll'],
+            ['Harp\Harp\Query\Select', 'selectAll'],
+            ['Harp\Harp\Query\Update', 'updateAll'],
+            ['Harp\Harp\Query\Delete', 'deleteAll'],
+            ['Harp\Harp\Query\Insert', 'insertAll'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataGetters
+     * @covers ::findAll
+     * @covers ::selectAll
+     * @covers ::updateAll
+     * @covers ::deleteAll
+     * @covers ::insertAll
+     */
+    public function testGetters($class, $method)
+    {
+        $obj = User::$method();
+
+        $this->assertInstanceof($class, $obj);
+        $this->assertSame(User::getRepo(), $obj->getRepo());
+    }
+
     /**
      * @covers ::newRepo
      */

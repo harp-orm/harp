@@ -5,7 +5,6 @@ namespace Harp\Harp;
 use Harp\Core\Save\AbstractSaveRepo;
 use Harp\Core\Repo\AbstractRepo;
 use Harp\Core\Model\Models;
-use Harp\Harp\Query;
 use Harp\Query\DB;
 use ReflectionProperty;
 
@@ -107,24 +106,44 @@ class Repo extends AbstractSaveRepo
         return parent::getRelOrError($name);
     }
 
-    public function selectAll()
-    {
-        return new Query\Select($this);
-    }
-
-    public function deleteAll()
-    {
-        return new Query\Delete($this);
-    }
-
+    /**
+     * @return \Harp\Harp\Query\Update
+     */
     public function updateAll()
     {
-        return new Query\Update($this);
+        $class = $this->getModelClass();
+
+        return $class::updateAll();
     }
 
+    /**
+     * @return \Harp\Harp\Query\Delete
+     */
+    public function deleteAll()
+    {
+        $class = $this->getModelClass();
+
+        return $class::deleteAll();
+    }
+
+    /**
+     * @return \Harp\Harp\Query\Select
+     */
+    public function selectAll()
+    {
+        $class = $this->getModelClass();
+
+        return $class::selectAll();
+    }
+
+    /**
+     * @return \Harp\Harp\Query\Insert
+     */
     public function insertAll()
     {
-        return new Query\Insert($this);
+        $class = $this->getModelClass();
+
+        return $class::insertAll();
     }
 
     public function update(Models $models)
@@ -150,8 +169,7 @@ class Repo extends AbstractSaveRepo
 
     public function delete(Models $models)
     {
-        $this
-            ->deleteAll()
+        $this->deleteAll()
             ->models($models)
             ->execute();
     }
@@ -159,7 +177,6 @@ class Repo extends AbstractSaveRepo
     public function insert(Models $models)
     {
         $insert = $this->insertAll();
-
         $insert
             ->models($models)
             ->execute();

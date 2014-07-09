@@ -111,33 +111,56 @@ class AbstractRepoTest extends AbstractTestCase
         $this->assertInstanceof('Harp\Harp\Rel\RelInterface', $repo->getRelOrError('country'));
     }
 
-    public function dataGetters()
-    {
-        return [
-            ['Harp\Harp\Find', 'findAll'],
-            ['Harp\Harp\Query\Select', 'selectAll'],
-            ['Harp\Harp\Query\Update', 'updateAll'],
-            ['Harp\Harp\Query\Delete', 'deleteAll'],
-            ['Harp\Harp\Query\Insert', 'insertAll'],
-        ];
-    }
-
     /**
-     * @dataProvider dataGetters
-     * @covers ::findAll
      * @covers ::selectAll
-     * @covers ::updateAll
-     * @covers ::deleteAll
-     * @covers ::insertAll
      */
-    public function testGetters($class, $method)
+    public function testSelectAll()
     {
         $repo = Model\City::getRepo();
 
-        $obj = $repo->$method();
+        $query = $repo->selectAll();
 
-        $this->assertInstanceof($class, $obj);
-        $this->assertSame($repo, $obj->getRepo());
+        $this->assertInstanceOf('Harp\Harp\Query\Select', $query);
+        $this->assertSame($repo, $query->getRepo());
+    }
+
+    /**
+     * @covers ::insertAll
+     */
+    public function testInsertAll()
+    {
+        $repo = Model\City::getRepo();
+
+        $query = $repo->insertAll();
+
+        $this->assertInstanceOf('Harp\Harp\Query\Insert', $query);
+        $this->assertSame($repo, $query->getRepo());
+    }
+
+    /**
+     * @covers ::deleteAll
+     */
+    public function testDeleteAll()
+    {
+        $repo = Model\City::getRepo();
+
+        $query = $repo->deleteAll();
+
+        $this->assertInstanceOf('Harp\Harp\Query\Delete', $query);
+        $this->assertSame($repo, $query->getRepo());
+    }
+
+    /**
+     * @covers ::updateAll
+     */
+    public function testUpdateAll()
+    {
+        $repo = Model\City::getRepo();
+
+        $query = $repo->updateAll();
+
+        $this->assertInstanceOf('Harp\Harp\Query\Update', $query);
+        $this->assertSame($repo, $query->getRepo());
     }
 
     /**

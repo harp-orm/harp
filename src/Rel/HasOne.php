@@ -82,9 +82,7 @@ class HasOne extends AbstractRelOne implements UpdateOneInterface
      */
     public function join(AbstractWhere $query, $parent)
     {
-        $conditions = [
-            "{$this->getName()}.{$this->getForeignKey()}" => "$parent.{$this->getKey()}",
-        ];
+        $conditions["{$this->getName()}.{$this->getForeignKey()}"] = "$parent.{$this->getKey()}";
 
         $conditions += $this->getSoftDeleteConditions();
 

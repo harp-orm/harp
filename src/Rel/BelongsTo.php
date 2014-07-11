@@ -8,7 +8,6 @@ use Harp\Harp\AbstractModel;
 use Harp\Harp\Model\Models;
 use Harp\Harp\Repo\LinkOne;
 use Harp\Query\AbstractWhere;
-use Harp\Query\SQL\SQL;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>

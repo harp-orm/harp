@@ -64,9 +64,9 @@ class BelongsToPolymorphic extends AbstractRelOne implements UpdateOneInterface
             $keys = Arr::pluckUniqueProperty($models, $this->key);
 
             if ($keys) {
-                $models = $modelClass::findAll()
-                    ->whereIn($this->getForeignKey(), $keys)
-                    ->loadRaw($flags);
+                $models = $modelClass::whereIn($this->getForeignKey(), $keys)
+                    ->setFlags($flags)
+                    ->loadRaw();
             } else {
                 $models = [];
             }

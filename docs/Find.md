@@ -42,7 +42,7 @@ __loadFirst__() | Will add a limit(1) and return the first model. If no model is
 Some examples for working with the Find Object:
 
 ```php
-$orders = Order::findAll()
+$orders = Order::
     ->where('name', 'John')
     ->whereRaw('Order.type = ? OR price < ?', ['big', 20.59]);
 
@@ -98,3 +98,15 @@ foreach ($orders as $order) {
 }
 ```
 
+Shortcut Methods
+----------------
+
+There are some shortcut methods to make it quicker to find models.
+
+```php
+$orders = Order::where('name', 'test')->load();
+$orders = Order::whereIn('name', ['test', 'test2'])->load();
+$orders = Order::whereNot('name', 'test')->load();
+$orders = Order::whereLike('name', 'test')->load();
+$orders = Order::whereRaw('id < ?', [2])->load();
+```

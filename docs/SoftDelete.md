@@ -25,9 +25,9 @@ class Order extends AbstractModel
 {
     use SoftDeleteTrait;
 
-    public static function initialize($repo)
+    public static function initialize($config)
     {
-        SoftDeleteTrait::initialize($repo);
+        SoftDeleteTrait::initialize($config);
     }
 
     public $id;

@@ -34,10 +34,10 @@ use Harp\Harp\Rel\BelongsTo;
 
 class Order extends AbstractModel
 {
-    public static function initialize($repo)
+    public static function initialize($config)
     {
-        $repo
-            ->addRel(new BelongsTo('customer', $repo, Customer::getRepo()));
+        $config
+            ->addRel(new BelongsTo('customer', $config, Customer::getRepo()));
     }
 
     public $id;
@@ -90,10 +90,10 @@ use Harp\Harp\Rel\HasOne;
 
 class Supplier extends AbstractModel
 {
-    public static function initialize($repo)
+    public static function initialize($config)
     {
-        $this
-            ->addRel(new HasOne('account', $repo, Account::getRepo()));
+        $config
+            ->addRel(new HasOne('account', $config, Account::getRepo()));
     }
 
     public $id;
@@ -145,10 +145,10 @@ use Harp\Harp\Rel\HasMany;
 
 class Customer extends AbstractModel
 {
-    public static function initialize($repo)
+    public static function initialize($config)
     {
-        $repo
-            ->addRel(new HasMany('orders', $repo, Order::getRepo()));
+        $config
+            ->addRel(new HasMany('orders', $config, Order::getRepo()));
     }
 
     public $id;
@@ -208,12 +208,12 @@ use Harp\Harp\Rel\HasMany;
 
 class Assembly extends AbstractModel
 {
-    public static function initialize($repo)
+    public static function initialize($config)
     {
-        $this
+        $config
             ->addRels([
-                new HasManyThrough('parts', $repo, Part::getRepo(), 'assemblyParts')),
-                new HasMany('assemblyParts', $repo, AssemblyPart::getRepo()))
+                new HasManyThrough('parts', $config, Part::getRepo(), 'assemblyParts')),
+                new HasMany('assemblyParts', $config, AssemblyPart::getRepo()))
             ]);
     }
 
@@ -240,7 +240,7 @@ By default the name of the columns use for the foreign keys in the "through" mod
 ```php
 new HasManyThrough(
     'parts',
-    $repo,
+    $config,
     Part::getRepo(),
     'assemblyParts',
     [
@@ -261,10 +261,10 @@ use Harp\Harp\Rel\HasManyExclusive;
 
 class Customer extends AbstractModel {
 
-    public static function initialize($repo)
+    public static function initialize($config)
     {
-        $repo
-            ->addRel(new HasManyExclusive('orders', $repo, Order::getRepo()));
+        $config
+            ->addRel(new HasManyExclusive('orders', $config, Order::getRepo()));
     }
 }
 ```
@@ -294,10 +294,10 @@ __Database Tables:__
 ```php
 class Picture extends AbstractModel
 {
-    public static function initialize($repo)
+    public static function initialize($config)
     {
-        $repo
-            ->addRel(new BelongsToPolymorphic('parent', $repo, Product::getRepo());
+        $config
+            ->addRel(new BelongsToPolymorphic('parent', $config, Product::getRepo());
     }
 
     public $id;
@@ -308,10 +308,10 @@ class Picture extends AbstractModel
 
 class Employee extends AbstractModel
 {
-    public static function initialize($repo)
+    public static function initialize($config)
     {
-        $repo
-            ->addRel(new HasManyAs('pictures', $repo, Picture::getRepo(), 'parent');
+        $config
+            ->addRel(new HasManyAs('pictures', $config, Picture::getRepo(), 'parent');
     }
 
     public $id;
@@ -320,10 +320,10 @@ class Employee extends AbstractModel
 
 class Product extends AbstractModel
 {
-    public function initialize($repo)
+    public function initialize($config)
     {
-        $repo
-            ->addRel(new HasManyAs('pictures', $repo, Picture::getRepo(), 'parent');
+        $config
+            ->addRel(new HasManyAs('pictures', $config, Picture::getRepo(), 'parent');
     }
 
     public $id;

@@ -43,8 +43,6 @@ class BankOrder extends Order
     public static function initialize(Repo $repo)
     {
         parent::initialize($repo);
-
-        $this->setRootRepo(Order::getRepo());
     }
 }
 

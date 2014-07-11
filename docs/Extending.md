@@ -2,7 +2,6 @@
 
 Generally extending is accomplished with [PHP's native Traits](http://www.php.net/manual/en/language.oop5.traits.php). You can also add functionality to be called on event trigger e.g. "save", "delete" etc. And you can add your own methods to the ``Find`` classes, by extending it.
 
-
 # Extending with traits
 
 A quick naive implementation of slugs.
@@ -22,7 +21,7 @@ trait ExtensionTrait
     public static function findBySlug($slug)
     {
         // static keyword will refer to the class this trait will be extending
-        return static::getRepoStatic()->findAll()->where('name', $slug)->loadFirst();
+        return static::where('name', $slug)->loadFirst();
     }
 
     // add a method to the model itself

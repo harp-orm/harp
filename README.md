@@ -14,14 +14,13 @@ Harp ORM is a light DataMapper persistence layer for php objects.
 ```php
 // Model Class
 use Harp\Harp\AbstractModel;
-use Harp\Harp\Repo;
 
 class UserModel extends AbstractModel
 {
-    public static function initialize(Repo $repo)
+    public static function initialize($config)
     {
-        $repo
-            ->addRel(new Rel\BelongsTo('address', $repo, Address::getRepo()));
+        $config
+            ->addRel(new Rel\BelongsTo('address', $config, Address::getRepo()));
     }
 
     public $id;
@@ -89,10 +88,10 @@ class User extends AbstractModel
     // Configure the "Repo" object for this model class
     // This holds all the database-specific configs,
     // as well as relations with other models
-    public static function initialize(Repo $repo)
+    public static function initialize($config)
     {
-        $repo
-            ->addRel(new Rel\BelongsTo('address', $repo, AddressRepo::get()));
+        $config
+            ->addRel(new Rel\BelongsTo('address', $config, AddressRepo::get()));
             ->addAssert(new Assert\Present('name'))
             ->addAssert(new Assert\Email('name'));
     }
@@ -117,7 +116,6 @@ __setTable__($table)                   | Set the name of the database table, def
 __setDb__($dbName)                     | Set alternative database connection, this will tap into alternative database configurations you've setup
 __setSoftDelete__($isSoftDelete)       | Set to true if you want this model to be soft deleted. More on [soft delete later](/docs/SoftDelete.md)
 __setInherited__($isInherited)         | Set to true if this repo will be inherited by other repo using [Single table inheritance](/docs/Inherited.md)
-__setRootRepo__(AbstractRepo $repo)    | Used for children in single table inheritence
 __setPrimaryKey__($primaryKey)         | Sets the property/column to be used for primary key, "id" by default
 __setNameKey__($nameKey)               | Sets the property/column to be used for name key - will be used for findByName method on the repo. Defaults to "name"
 __addRel__(AbstractRel $rel)           | Add a link to a related model. Read about [Relations](/docs/Relations.md)
@@ -173,7 +171,7 @@ When models have been created, modified or deleted they usually need to be persi
 $user = User::find(10);
 $user->name = 'new name';
 
-$address = new Model\Address(['location' => 'home']);
+$address = new Address(['location' => 'home']);
 $user->setAddress($address);
 
 // This will save the user, the address and the link between them.
@@ -209,10 +207,10 @@ class Order extends AbstractModel
 {
     use SoftDeleteTrait;
 
-    public static function initialize(Repo $repo)
+    public static function initialize($config)
     {
         // The trait has its own initialize method that you'll have to call
-        SoftDeleteTrait::initialize($repo);
+        SoftDeleteTrait::initialize($config);
 
         // ...
     }
@@ -236,7 +234,6 @@ When you want to write packages that extend functionality of Harp ORM, or simple
 Apart from that you will be able to add event listeners for various events in the life-cycle of models.
 
 Read about [extending in detail here](/docs/Extending.md)
-
 
 ## License
 

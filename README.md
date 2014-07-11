@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/harp-orm/harp.svg?branch=master)](https://travis-ci.org/harp-orm/harp)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/harp-orm/harp/badges/quality-score.png)](https://scrutinizer-ci.com/g/harp-orm/harp/)
-[![Code Coverage](https://scrutinizer-ci.com/g/harp-orm/harp/badges/coverage.png](https://scrutinizer-ci.com/g/harp-orm/harp/)
+[![Code Coverage](https://scrutinizer-ci.com/g/harp-orm/harp/badges/coverage.png)](https://scrutinizer-ci.com/g/harp-orm/harp/)
 [![Latest Stable Version](https://poser.pugx.org/harp-orm/harp/v/stable.svg)](https://packagist.org/packages/harp-orm/harp)
 
 Harp ORM is a light DataMapper persistence layer for php objects.

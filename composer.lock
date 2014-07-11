@@ -4,53 +4,8 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "89715bc8e6eed46b64a6509c9a4c24ec",
+    "hash": "30c7c0cfa1877a9f492530f846ee2ef2",
     "packages": [
-        {
-            "name": "harp-orm/core",
-            "version": "0.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/harp-orm/core.git",
-                "reference": "07b2bb5705925501540f2ce6d1b3937f5a6620d5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/core/zipball/07b2bb5705925501540f2ce6d1b3937f5a6620d5",
-                "reference": "07b2bb5705925501540f2ce6d1b3937f5a6620d5",
-                "shasum": ""
-            },
-            "require": {
-                "harp-orm/serializer": "~0.1.0",
-                "harp-orm/util": "~0.2.0",
-                "harp-orm/validate": "~0.2.0",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "clippings/env-backup": "~0.2.5",
-                "clippings/phpunit-extensions": "dev-master"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Harp\\Core\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Ivan Kerin",
-                    "email": "ikerin@gmail.com",
-                    "homepage": "http://www.openbuildings.com",
-                    "role": "Author"
-                }
-            ],
-            "description": "DataMapper style ORM Core Componenets",
-            "time": "2014-07-07 14:56:40"
-        },
         {
             "name": "harp-orm/query",
             "version": "0.2.3",
@@ -171,16 +126,16 @@
         },
         {
             "name": "harp-orm/validate",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/validate.git",
-                "reference": "5e110e9d195bb3ea36910c99c05a33320c8b7326"
+                "reference": "bc3e94db54fbeb8f68b6e24b674b3382bc314d49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/validate/zipball/5e110e9d195bb3ea36910c99c05a33320c8b7326",
-                "reference": "5e110e9d195bb3ea36910c99c05a33320c8b7326",
+                "url": "https://api.github.com/repos/harp-orm/validate/zipball/bc3e94db54fbeb8f68b6e24b674b3382bc314d49",
+                "reference": "bc3e94db54fbeb8f68b6e24b674b3382bc314d49",
                 "shasum": ""
             },
             "type": "library",
@@ -202,7 +157,7 @@
                 }
             ],
             "description": "Object validaiton library",
-            "time": "2014-06-21 19:53:49"
+            "time": "2014-07-09 14:58:00"
         },
         {
             "name": "psr/log",

@@ -2,190 +2,310 @@
 
 namespace Harp\Harp;
 
-use Harp\Core\Save\AbstractSaveRepo;
-use Harp\Core\Repo\AbstractRepo;
-use Harp\Core\Model\Models;
+use Harp\Harp\Repo\IdentityMap;
+use Harp\Harp\Repo\Event;
+use Harp\Harp\Repo\LinkMap;
+use Harp\Harp\Repo\AbstractLink;
+use Harp\Harp\Model\State;
+use Harp\Harp\Model\RepoProxyTrait;
+use Harp\Harp\Model\Models;
 use Harp\Query\DB;
-use ReflectionProperty;
+use Harp\Util\Arr;
+use InvalidArgumentException;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class Repo extends AbstractSaveRepo
+class Repo
 {
-    private $table;
-    private $db = 'default';
-    private $fields = array();
+    use ConfigProxyTrait;
+    use RepoProxyTrait;
 
-    public function __construct($class)
+    /**
+     * @var IdentityMap
+     */
+    private $identityMap;
+
+    /**
+     * @var LinkMap
+     */
+    private $linkMap;
+
+    /**
+     * @var Config
+     */
+    private $config;
+
+    function __construct($modelClass)
     {
-        parent::__construct($class);
-
-        $this->table = $this->getModelReflection()->getShortName();
-
-        $properties = $this->getModelReflection()->getProperties(ReflectionProperty::IS_PUBLIC);
-
-        foreach ($properties as $property) {
-            $this->fields []= $property->getName();
-        }
+        $this->config = new Config($modelClass);
+        $this->identityMap = new IdentityMap($this);
+        $this->linkMap = new LinkMap($this);
     }
 
-    public function getTable()
+    /**
+     * @return IdentityMap
+     */
+    public function getIdentityMap()
     {
-        $this->initializeOnce();
-
-        return $this->table;
+        return $this->identityMap;
     }
 
-    public function setRootRepo(AbstractRepo $rootRepo)
+    /**
+     * @return LinkMap
+     */
+    public function getLinkMap()
     {
-        if ($rootRepo instanceof Repo) {
-            $this->table = $rootRepo->getTable();
-        }
-
-        return parent::setRootRepo($rootRepo);
+        return $this->linkMap;
     }
 
-    public function setTable($table)
+    /**
+     * @return Config
+     */
+    public function getConfig()
     {
-        $this->table = (string) $table;
-
-        return $this;
+        return $this->config;
     }
 
-    public function getDb()
-    {
-        $this->initializeOnce();
-
-        return $this->db;
-    }
-
-    public function setDb($db)
-    {
-        $this->db = (string) $db;
-
-        return $this;
-    }
-
+    /**
+     * @return DB
+     */
     public function getDbInstance()
     {
         return DB::get($this->getDb());
     }
 
-    public function getFields()
+    /**
+     * @param  AbstractModel $model
+     * @return AbstractRepo  $this
+     */
+    public function initializeModel(AbstractModel $model)
     {
-        $this->initializeOnce();
+        $config = $this->config;
 
-        return $this->fields;
+        $this->getSerializers()->unserialize($model);
+
+        if ($this->getInherited()) {
+            $model->class = $this->getModelClass();
+        }
+
+        $this->dispatchAfterEvent($model, Event::CONSTRUCT);
     }
 
-    public function setFields(array $items)
+    /**
+     * Add an already loaded link. Used in eager loading.
+     *
+     * @param  AbstractLink             $link
+     * @return AbstractSaveRepo         $this
+     * @throws InvalidArgumentException If $model does not belong to repo
+     */
+    public function addLink(AbstractLink $link)
     {
-        $this->fields = $items;
+        $this->getLinkMap()->addLink($link);
 
         return $this;
     }
 
     /**
-     * @param  string $name
-     * @return \Harp\Harp\Rel\RelInterface
+     * @param  AbstractModel            $model
+     * @param  string                   $name
+     * @return AbstractLink
+     * @throws InvalidArgumentException If $model does not belong to repo
      */
-    public function getRel($name)
+    public function loadLink(AbstractModel $model, $name, $flags = null)
     {
-        return parent::getRel($name);
-    }
+        $links = $this->getLinkMap()->get($model);
 
-    /**
-     * @param  string $name
-     * @return \Harp\Harp\Rel\RelInterface
-     */
-    public function getRelOrError($name)
-    {
-        return parent::getRelOrError($name);
-    }
-
-    /**
-     * @return \Harp\Harp\Query\Update
-     */
-    public function updateAll()
-    {
-        $class = $this->getModelClass();
-
-        return $class::updateAll();
-    }
-
-    /**
-     * @return \Harp\Harp\Query\Delete
-     */
-    public function deleteAll()
-    {
-        $class = $this->getModelClass();
-
-        return $class::deleteAll();
-    }
-
-    /**
-     * @return \Harp\Harp\Query\Select
-     */
-    public function selectAll()
-    {
-        $class = $this->getModelClass();
-
-        return $class::selectAll();
-    }
-
-    /**
-     * @return \Harp\Harp\Query\Insert
-     */
-    public function insertAll()
-    {
-        $class = $this->getModelClass();
-
-        return $class::insertAll();
-    }
-
-    public function update(Models $models)
-    {
-        $update = $this->updateAll();
-
-        if ($models->count() > 1) {
-            $update
-                ->models($models);
-        } else {
-            $model = $models->getFirst();
-
-            $data = $model->getChanges();
-            $this->getSerializers()->serialize($data);
-
-            $update
-                ->set($data)
-                ->where($this->getPrimaryKey(), $model->getId());
+        if (! $links->has($name)) {
+            $this->loadRelFor(new Models([$model]), $name, $flags);
         }
 
-        $update->execute();
+        return $links->get($name);
     }
 
-    public function delete(Models $models)
+    /**
+     * Load models for a given relation.
+     *
+     * @param  Models                   $models
+     * @param  string                   $relName
+     * @return Models
+     * @throws InvalidArgumentException If $relName does not belong to repo
+     */
+    public function loadRelFor(Models $models, $relName, $flags = null)
     {
-        $this->deleteAll()
-            ->models($models)
-            ->execute();
+        $rel = $this->getRelOrError($relName);
+
+        $foreign = $rel->loadModelsIfAvailable($models, $flags);
+
+        $rel->linkModels($models, $foreign, function (AbstractLink $link) {
+            $class = get_class($link->getModel());
+            $class::getRepo()->addLink($link);
+        });
+
+        return $foreign;
     }
 
-    public function insert(Models $models)
+    /**
+     * Load all the models for the provided relations. This is the meat of the eager loading
+     *
+     * @param  Models           $models
+     * @param  array            $rels
+     * @param  int              $flags
+     * @return AbstractSaveRepo $this
+     */
+    public function loadAllRelsFor(Models $models, array $rels, $flags = null)
     {
-        $insert = $this->insertAll();
-        $insert
-            ->models($models)
-            ->execute();
+        $rels = Arr::toAssoc($rels);
 
-        $lastInsertId = $insert->getLastInsertId();
+        foreach ($rels as $relName => $childRels) {
+            $foreign = $this->loadRelFor($models, $relName, $flags);
+
+            if ($childRels) {
+                $rel = $this->getRel($relName);
+                $rel->getRepo()->loadAllRelsFor($foreign, $childRels, $flags);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Call all the events associated with model updates. Perform the update itself.
+     *
+     * @param  Models           $models
+     * @return AbstractSaveRepo $this
+     */
+    public function updateModels(Models $models)
+    {
+        foreach ($models as $model) {
+            if ($model->isSoftDeleted()) {
+                $this->dispatchBeforeEvent($model, Event::DELETE);
+            } else {
+                $this->dispatchBeforeEvent($model, Event::UPDATE);
+                $this->dispatchBeforeEvent($model, Event::SAVE);
+            }
+        }
+
+        $this->updateAll()->executeModels($models);
 
         foreach ($models as $model) {
-            $model->setId($lastInsertId);
-            $lastInsertId += 1;
+
+            $model->resetOriginals();
+
+            if ($model->isSoftDeleted()) {
+                $this->dispatchAfterEvent($model, Event::DELETE);
+            } else {
+                $this->dispatchAfterEvent($model, Event::UPDATE);
+                $this->dispatchAfterEvent($model, Event::SAVE);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Call all the events associated with model deletion. Perform the deletion itself.
+     *
+     * @param  Models           $models
+     * @return AbstractSaveRepo $this
+     */
+    public function deleteModels(Models $models)
+    {
+        foreach ($models as $model) {
+            $this->dispatchBeforeEvent($model, Event::DELETE);
+        }
+
+        $this->deleteAll()->executeModels($models);
+
+        foreach ($models as $model) {
+            $this->dispatchAfterEvent($model, Event::DELETE);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Call all the events associated with model insertion. Perform the insertion itself.
+     *
+     * @param  Models           $models
+     * @return AbstractSaveRepo $this
+     */
+    public function insertModels(Models $models)
+    {
+        foreach ($models as $model) {
+            $this->dispatchBeforeEvent($model, Event::INSERT);
+            $this->dispatchBeforeEvent($model, Event::SAVE);
+        }
+
+        $this->insertAll()->executeModels($models);
+
+        foreach ($models as $model) {
+            $model
+                ->resetOriginals()
+                ->setState(State::SAVED);
+
+            $this->dispatchAfterEvent($model, Event::INSERT);
+            $this->dispatchAfterEvent($model, Event::SAVE);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  AbstractModel $model
+     * @param  int           $event
+     * @return AbstractRepo  $this
+     */
+    public function dispatchBeforeEvent($model, $event)
+    {
+        $this->getEventListeners()->dispatchBeforeEvent($model, $event);
+
+        return $this;
+    }
+
+    /**
+     * @param  AbstractModel $model
+     * @param  int           $event
+     * @return AbstractRepo  $this
+     */
+    public function dispatchAfterEvent($model, $event)
+    {
+        $this->getEventListeners()->dispatchAfterEvent($model, $event);
+
+        return $this;
+    }
+
+    /**
+     * @param  array         $fields
+     * @param  int           $state
+     * @return AbstractModel
+     */
+    public function newModel($fields = null, $state = State::PENDING)
+    {
+        return $this->getReflectionModel()->newInstance($fields, $state);
+    }
+
+    /**
+     * @param  array         $fields
+     * @return AbstractModel
+     */
+    public function newVoidModel($fields = null)
+    {
+        return $this->getReflectionModel()->newInstance($fields, State::VOID);
+    }
+
+    /**
+     * @return Repo
+     */
+    public function getRootRepo()
+    {
+        if ($this->getConfig()->isRoot()) {
+            return $this;
+        } else {
+            $class = $this->getConfig()->getRootReflectionClass()->getName();
+            return $class::getRepo();
         }
     }
 }

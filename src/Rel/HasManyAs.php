@@ -2,12 +2,11 @@
 
 namespace Harp\Harp\Rel;
 
+use Harp\Harp\Config;
 use Harp\Harp\Repo;
-use Harp\Core\Model\AbstractModel;
-use Harp\Core\Model\Models;
-use Harp\Core\Repo\LinkMany;
-use Harp\Core\Rel\AbstractRelMany;
-use Harp\Core\Rel\UpdateManyInterface;
+use Harp\Harp\AbstractModel;
+use Harp\Harp\Model\Models;
+use Harp\Harp\Repo\LinkMany;
 use Harp\Query\AbstractWhere;
 use Harp\Query\SQL\SQL;
 
@@ -16,23 +15,17 @@ use Harp\Query\SQL\SQL;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class HasManyAs extends AbstractRelMany implements RelInterface, UpdateManyInterface
+class HasManyAs extends AbstractRelMany implements UpdateManyInterface
 {
     protected $foreignKey;
     protected $foreignClassKey;
 
-    public function __construct(
-        $name,
-        Repo $store,
-        Repo $foreignRepo,
-        $foreignKeyName,
-        array $options = array()
-    )
+    public function __construct($name, Config $config, Repo $repo, $foreignKeyName, array $options = array())
     {
         $this->foreignKey = $foreignKeyName.'Id';
         $this->foreignClassKey = $foreignKeyName.'Class';
 
-        parent::__construct($name, $store, $foreignRepo, $options);
+        parent::__construct($name, $config, $repo, $options);
     }
 
     /**
@@ -53,14 +46,14 @@ class HasManyAs extends AbstractRelMany implements RelInterface, UpdateManyInter
      */
     public function getKey()
     {
-        return $this->getRepo()->getPrimaryKey();
+        return $this->getConfig()->getPrimaryKey();
     }
 
     /**
      * @param  Models  $models
      * @return boolean
      */
-    public function hasForeign(Models $models)
+    public function hasModels(Models $models)
     {
         return ! $models->isEmptyProperty($this->getKey());
     }
@@ -70,14 +63,14 @@ class HasManyAs extends AbstractRelMany implements RelInterface, UpdateManyInter
      * @param  int $flags
      * @return AbstractModel[]
      */
-    public function loadForeign(Models $models, $flags = null)
+    public function loadModels(Models $models, $flags = null)
     {
         $keys = $models->pluckPropertyUnique($this->getKey());
 
-        return $this->getForeignRepo()
+        return $this->getRepo()
             ->findAll()
             ->whereIn($this->getForeignKey(), $keys)
-            ->where($this->getForeignClassKey(), $this->getRepo()->getModelClass())
+            ->where($this->getForeignClassKey(), $this->getConfig()->getModelClass())
             ->loadRaw($flags);
     }
 
@@ -90,7 +83,7 @@ class HasManyAs extends AbstractRelMany implements RelInterface, UpdateManyInter
     {
         return (
             $model->{$this->getKey()} == $foreign->{$this->getForeignKey()}
-            and $this->getRepo()->getModelClass() == $foreign->{$this->getForeignClassKey()}
+            and $this->getConfig()->getModelClass() == $foreign->{$this->getForeignClassKey()}
         );
     }
 
@@ -104,14 +97,14 @@ class HasManyAs extends AbstractRelMany implements RelInterface, UpdateManyInter
 
         $conditions = [
             "$alias.{$this->getForeignKey()}" => "$parent.{$this->getKey()}",
-            "$alias.{$this->getForeignClassKey()}" => new SQL('= ?', [$this->getRepo()->getModelClass()]),
+            "$alias.{$this->getForeignClassKey()}" => new SQL('= ?', [$this->getConfig()->getModelClass()]),
         ];
 
-        if ($this->getForeignRepo()->getSoftDelete()) {
+        if ($this->getRepo()->getSoftDelete()) {
             $conditions["$alias.deletedAt"] = new SQL('IS NULL');
         }
 
-        $query->joinAliased($this->getForeignRepo()->getTable(), $alias, $conditions);
+        $query->joinAliased($this->getRepo()->getTable(), $alias, $conditions);
     }
 
     /**
@@ -121,7 +114,7 @@ class HasManyAs extends AbstractRelMany implements RelInterface, UpdateManyInter
     {
         foreach ($link->getAdded() as $added) {
             $added->{$this->getForeignKey()} = $link->getModel()->{$this->getKey()};
-            $added->{$this->getForeignClassKey()} = $this->getRepo()->getModelClass();
+            $added->{$this->getForeignClassKey()} = $this->getConfig()->getModelClass();
         }
 
         foreach ($link->getRemoved() as $added) {

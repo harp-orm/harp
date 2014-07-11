@@ -21,7 +21,7 @@ __Database Table:__
 ```php
 // Model File
 use Harp\Harp\AbstractModel;
-use Harp\Core\Model\InheritedTrait;
+use Harp\Harp\Model\InheritedTrait;
 use Harp\Harp\Repo;
 
 class Order extends AbstractModel

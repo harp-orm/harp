@@ -19,7 +19,7 @@ __Database Table:__
 ```php
 // Model File
 use Harp\Harp\AbstractModel;
-use Harp\Core\Model\SoftDeleteTrait;
+use Harp\Harp\Model\SoftDeleteTrait;
 
 class Order extends AbstractModel
 {
@@ -49,7 +49,7 @@ $order = Order::find(2);
 echo $order->isVoid(); // Will return true
 
 // You can force finding of deleted models
-use Harp\Core\Model\State;
+use Harp\Harp\Model\State;
 $order = Order::find(2, State::DELETED);
 $order = Order::find(2, State::DELETED | State::SAVED);
 

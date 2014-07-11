@@ -2,10 +2,12 @@
 
 namespace Harp\Harp\Test\Integration;
 
-use Harp\Harp\Test\AbstractTestCase;
+use Harp\Harp\Test\AbstractDbTestCase;
 use Harp\Harp\Test\Repo;
-use Harp\Harp\Test\Model;
-use Harp\Core\Repo\Container;
+use Harp\Harp\Test\TestModel\User;
+use Harp\Harp\Test\TestModel\Tag;
+use Harp\Harp\Test\TestModel\Post;
+use Harp\Harp\Repo\Container;
 use Harp\Query\SQL\SQL;
 use stdClass;
 
@@ -16,18 +18,18 @@ use stdClass;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class SavingTest extends AbstractTestCase {
+class SavingTest extends AbstractDbTestCase {
 
     /**
      * @coversNothing
      */
     public function testBasic()
     {
-        $user = Model\User::find(1);
+        $user = User::find(1);
         $user->name = 'New Name';
         $user->isBlocked = true;
 
-        Model\User::save($user);
+        User::save($user);
 
         $this->assertQueries([
             'SELECT `User`.* FROM `User` WHERE (`id` = 1) AND (`User`.`deletedAt` IS NULL) LIMIT 1',
@@ -40,7 +42,7 @@ class SavingTest extends AbstractTestCase {
      */
     public function testRels()
     {
-        $user = Model\User::find(1);
+        $user = User::find(1);
         $user->name = 'New Name';
         $user->isBlocked = true;
         $user->object = new SaveableObject();
@@ -55,7 +57,7 @@ class SavingTest extends AbstractTestCase {
         $post = $posts->getFirst();
         $post->body = 'Changed Body';
 
-        $post = new Model\Post([
+        $post = new Post([
             'title' => 'new post',
             'body' => 'Lorem Ipsum',
             'price' => 123.23,
@@ -63,7 +65,7 @@ class SavingTest extends AbstractTestCase {
 
         $posts->add($post);
 
-        $tags = Model\Tag::whereIn('id', [1, 2])->load();
+        $tags = Tag::whereIn('id', [1, 2])->load();
 
         $post->getTags()->addModels($tags);
 
@@ -74,14 +76,14 @@ class SavingTest extends AbstractTestCase {
             'SELECT `Tag`.* FROM `Tag` WHERE (`id` IN (1, 2))',
         ]);
 
-        Model\User::save($user);
+        User::save($user);
 
         $this->assertQueries([
             'SELECT `User`.* FROM `User` WHERE (`id` = 1) AND (`User`.`deletedAt` IS NULL) LIMIT 1',
             'SELECT `Address`.* FROM `Address` WHERE (`id` IN (1))',
             'SELECT `Post`.`class`, `Post`.* FROM `Post` WHERE (`userId` IN (1))',
             'SELECT `Tag`.* FROM `Tag` WHERE (`id` IN (1, 2))',
-            'INSERT INTO `Post` (`id`, `title`, `body`, `price`, `tags`, `createdAt`, `updatedAt`, `publishedAt`, `userId`, `class`) VALUES (NULL, "new post", "Lorem Ipsum", "123.23", NULL, NULL, NULL, NULL, NULL, "Harp\\Harp\\Test\\Model\\Post")',
+            'INSERT INTO `Post` (`id`, `title`, `body`, `price`, `tags`, `createdAt`, `updatedAt`, `publishedAt`, `userId`, `class`) VALUES (NULL, "new post", "Lorem Ipsum", "123.23", NULL, NULL, NULL, NULL, NULL, "Harp\\Harp\\Test\\TestModel\\Post")',
             'INSERT INTO `PostTag` (`id`, `postId`, `tagId`) VALUES (NULL, NULL, 1), (NULL, NULL, 2)',
             'UPDATE `User` SET `name` = "New Name", `isBlocked` = 1, `object` = "C:41:"Harp\Harp\Test\Integration\SaveableObject":22:{a:1:{i:0;s:5:"value";}}" WHERE (`id` = 1)',
             'UPDATE `Address` SET `zipCode` = "1234", `location` = "Somewhere else" WHERE (`id` = 1)',
@@ -91,7 +93,7 @@ class SavingTest extends AbstractTestCase {
 
         Container::clear();
 
-        $user = Model\User::find(1);
+        $user = User::find(1);
         $this->assertEquals('New Name', $user->name);
         $this->assertEquals('value', $user->object->getVar());
         $this->assertEquals(true, $user->isBlocked);
@@ -105,7 +107,7 @@ class SavingTest extends AbstractTestCase {
 
         $this->assertEquals('Changed Body', $post->body);
 
-        $newPost = Model\Post::where('title', 'new post')->loadFirst();
+        $newPost = Post::where('title', 'new post')->loadFirst();
 
         $this->assertTrue($posts->has($newPost));
 

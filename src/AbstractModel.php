@@ -2,99 +2,61 @@
 
 namespace Harp\Harp;
 
-use Harp\Harp\Query;
+use Harp\Harp\Model\StateTrait;
+use Harp\Harp\Model\DirtyTrackingTrait;
+use Harp\Harp\Model\UnmappedPropertiesTrait;
+use Harp\Harp\Model\RepoTrait;
+use Harp\Validate\ValidateTrait;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-abstract class AbstractModel extends \Harp\Core\Model\AbstractModel
+abstract class AbstractModel
 {
-    /**
-     * @return Find
-     */
-    public static function findAll()
-    {
-        return new Find(self::getRepo());
-    }
-
-    public static function selectAll()
-    {
-        return new Query\Select(self::getRepo());
-    }
-
-    public static function deleteAll()
-    {
-        return new Query\Delete(self::getRepo());
-    }
-
-    public static function updateAll()
-    {
-        return new Query\Update(self::getRepo());
-    }
-
-    public static function insertAll()
-    {
-        return new Query\Insert(self::getRepo());
-    }
+    use StateTrait;
+    use DirtyTrackingTrait;
+    use UnmappedPropertiesTrait;
+    use RepoTrait;
+    use ValidateTrait;
 
     /**
-     * @param  string $class
-     * @return Repo
+     * Set properties / state, unserialize properties and set original properties.
+     *
+     * @param array $properties
+     * @param int   $state
      */
-    public static function newRepo($class)
+    public function __construct(array $properties = null, $state = null)
     {
-        return new Repo($class);
+        $this->setState($state ?: $this->getDefaultState());
+
+        if (! empty($properties)) {
+            $this->setProperties($properties);
+        }
+
+        self::getRepo()->initializeModel($this);
+
+        $this->resetOriginals();
+    }
+
+    public function hasSavedProperties()
+    {
+        return (bool) $this->getId();
+    }
+
+    public function getValidationAsserts()
+    {
+        return self::getRepo()->getAsserts();
     }
 
     /**
-     * @param  string $property
-     * @param  mixed  $value
-     * @return Find   $this
+     * This method will be overridden by SoftDeleteTrait
+     *
+     * @return boolean
      */
-    public static function where($property, $value)
+    public function isSoftDeleted()
     {
-        return static::findAll()->where($property, $value);
-    }
-
-    /**
-     * @param  string $property
-     * @param  mixed  $value
-     * @return Find   $this
-     */
-    public static function whereRaw($property, $value)
-    {
-        return static::findAll()->whereRaw($property, $value);
-    }
-
-    /**
-     * @param  string $property
-     * @param  mixed  $value
-     * @return Find   $this
-     */
-    public static function whereNot($property, $value)
-    {
-        return static::findAll()->whereNot($property, $value);
-    }
-
-    /**
-     * @param  string $property
-     * @param  array  $value
-     * @return Find   $this
-     */
-    public static function whereIn($property, array $values)
-    {
-        return static::findAll()->whereIn($property, $values);
-    }
-
-    /**
-     * @param  string $property
-     * @param  string $value
-     * @return Find   $this
-     */
-    public static function whereLike($property, $value)
-    {
-        return static::findAll()->whereLike($property, $value);
+        return false;
     }
 }

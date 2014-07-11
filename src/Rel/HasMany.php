@@ -2,11 +2,9 @@
 
 namespace Harp\Harp\Rel;
 
-use Harp\Core\Model\AbstractModel;
-use Harp\Core\Model\Models;
-use Harp\Core\Repo\LinkMany;
-use Harp\Core\Rel\AbstractRelMany;
-use Harp\Core\Rel\UpdateManyInterface;
+use Harp\Harp\AbstractModel;
+use Harp\Harp\Model\Models;
+use Harp\Harp\Repo\LinkMany;
 use Harp\Query\AbstractWhere;
 use Harp\Query\SQL\SQL;
 
@@ -15,7 +13,7 @@ use Harp\Query\SQL\SQL;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class HasMany extends AbstractRelMany implements RelInterface, UpdateManyInterface
+class HasMany extends AbstractRelMany implements UpdateManyInterface
 {
     protected $foreignKey;
 
@@ -25,7 +23,7 @@ class HasMany extends AbstractRelMany implements RelInterface, UpdateManyInterfa
     public function getForeignKey()
     {
         if (! $this->foreignKey) {
-            $this->foreignKey = lcfirst($this->getRepo()->getTable()).'Id';
+            $this->foreignKey = lcfirst($this->getConfig()->getTable()).'Id';
         }
 
         return $this->foreignKey;
@@ -36,14 +34,14 @@ class HasMany extends AbstractRelMany implements RelInterface, UpdateManyInterfa
      */
     public function getKey()
     {
-        return $this->getRepo()->getPrimaryKey();
+        return $this->getConfig()->getPrimaryKey();
     }
 
     /**
      * @param  Models  $models
      * @return boolean
      */
-    public function hasForeign(Models $models)
+    public function hasModels(Models $models)
     {
         return ! $models->isEmptyProperty($this->getKey());
     }
@@ -53,11 +51,11 @@ class HasMany extends AbstractRelMany implements RelInterface, UpdateManyInterfa
      * @param  int $flags
      * @return AbstractModel[]
      */
-    public function loadForeign(Models $models, $flags = null)
+    public function loadModels(Models $models, $flags = null)
     {
         $keys = $models->pluckPropertyUnique($this->getKey());
 
-        return $this->getForeignRepo()
+        return $this->getRepo()
             ->findAll()
             ->whereIn($this->getForeignKey(), $keys)
             ->loadRaw($flags);
@@ -82,11 +80,11 @@ class HasMany extends AbstractRelMany implements RelInterface, UpdateManyInterfa
         $alias = $this->getName();
         $conditions = ["$alias.{$this->getForeignKey()}" => "$parent.{$this->getKey()}"];
 
-        if ($this->getForeignRepo()->getSoftDelete()) {
+        if ($this->getRepo()->getSoftDelete()) {
             $conditions["$alias.deletedAt"] = new SQL('IS NULL');
         }
 
-        $query->joinAliased($this->getForeignRepo()->getTable(), $alias, $conditions);
+        $query->joinAliased($this->getRepo()->getTable(), $alias, $conditions);
     }
 
     /**

@@ -43,7 +43,7 @@ trait JoinRelTrait
             $rel->join($this, $parent);
 
             if ($childRels) {
-                $this->joinNestedRels($rel->getForeignRepo(), $childRels, $name);
+                $this->joinNestedRels($rel->getRepo(), $childRels, $name);
             }
         }
     }

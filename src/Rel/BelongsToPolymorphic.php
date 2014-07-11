@@ -3,12 +3,11 @@
 namespace Harp\Harp\Rel;
 
 use Harp\Util\Arr;
+use Harp\Harp\Config;
 use Harp\Harp\Repo;
-use Harp\Core\Model\AbstractModel;
-use Harp\Core\Model\Models;
-use Harp\Core\Repo\LinkOne;
-use Harp\Core\Rel\AbstractRelOne;
-use Harp\Core\Rel\UpdateOneInterface;
+use Harp\Harp\AbstractModel;
+use Harp\Harp\Model\Models;
+use Harp\Harp\Repo\LinkOne;
 use Harp\Query\AbstractWhere;
 use BadMethodCallException;
 
@@ -17,17 +16,17 @@ use BadMethodCallException;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class BelongsToPolymorphic extends AbstractRelOne implements RelInterface, UpdateOneInterface
+class BelongsToPolymorphic extends AbstractRelOne implements UpdateOneInterface
 {
     protected $key;
     protected $classKey;
 
-    public function __construct($name, Repo $store, Repo $defaultForeignRepo, array $options = array())
+    public function __construct($name, Config $config, Repo $defaultRepo, array $options = array())
     {
         $this->key = $name.'Id';
         $this->classKey = $name.'Class';
 
-        parent::__construct($name, $store, $defaultForeignRepo, $options);
+        parent::__construct($name, $config, $defaultRepo, $options);
     }
 
     public function getKey()
@@ -42,15 +41,15 @@ class BelongsToPolymorphic extends AbstractRelOne implements RelInterface, Updat
 
     public function getForeignKey()
     {
-        return $this->getRepo()->getPrimaryKey();
+        return $this->getConfig()->getPrimaryKey();
     }
 
-    public function hasForeign(Models $models)
+    public function hasModels(Models $models)
     {
         return ! ($models->isEmptyProperty($this->key) or $models->isEmptyProperty($this->classKey));
     }
 
-    public function loadForeign(Models $models, $flags = null)
+    public function loadModels(Models $models, $flags = null)
     {
         $models = $models->filter(function ($model) {
             return $model->{$this->classKey};

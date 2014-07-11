@@ -4,7 +4,7 @@ namespace Harp\Harp\Query;
 
 use Harp\Query;
 use Harp\Harp\Repo;
-use Harp\Core\Model\Models;
+use Harp\Harp\Model\Models;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -54,5 +54,19 @@ class Insert extends \Harp\Query\Insert {
         }
 
         return $this;
+    }
+
+    public function executeModels(Models $models)
+    {
+        $this
+            ->models($models)
+            ->execute();
+
+        $lastInsertId = $this->getLastInsertId();
+
+        foreach ($models as $model) {
+            $model->setId($lastInsertId);
+            $lastInsertId += 1;
+        }
     }
 }

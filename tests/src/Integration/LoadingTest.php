@@ -2,8 +2,10 @@
 
 namespace Harp\Harp\Test\Integration;
 
-use Harp\Harp\Test\AbstractTestCase;
-use Harp\Harp\Test\Model;
+use Harp\Harp\Test\AbstractDbTestCase;
+use Harp\Harp\Test\TestModel\User;
+use Harp\Harp\Test\TestModel\City;
+use Harp\Harp\Test\TestModel\Address;
 use Harp\Query\SQL\SQL;
 
 /**
@@ -13,19 +15,19 @@ use Harp\Query\SQL\SQL;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class LoadingTest extends AbstractTestCase {
-
+class LoadingTest extends AbstractDbTestCase
+{
     /**
      * @coversNothing
      */
     public function testFind()
     {
-        $user = Model\User::find(1);
+        $user = User::find(1);
 
-        $address = Model\Address::find(1);
+        $address = Address::find(1);
 
-        $this->assertInstanceOf('Harp\Harp\Test\Model\User', $user);
-        $this->assertInstanceOf('Harp\Harp\Test\Model\Address', $address);
+        $this->assertInstanceOf('Harp\Harp\Test\TestModel\User', $user);
+        $this->assertInstanceOf('Harp\Harp\Test\TestModel\Address', $address);
 
         $obj = new SaveableObject();
         $obj->setVar('test1');
@@ -38,7 +40,7 @@ class LoadingTest extends AbstractTestCase {
             'isBlocked' => 0,
             'deletedAt' => null,
             'locationId' => 1,
-            'locationClass' => 'Harp\\Harp\\Test\\Model\\City',
+            'locationClass' => 'Harp\\Harp\\Test\\TestModel\\City',
             'test' => null,
             'object' => $obj,
             'parentId' => null,
@@ -64,9 +66,9 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testFindAll()
     {
-        $cities = Model\City::where('countryId', 1)->load();
+        $cities = City::where('countryId', 1)->load();
 
-        $this->assertInstanceOf('Harp\Core\Model\Models', $cities);
+        $this->assertInstanceOf('Harp\Harp\Model\Models', $cities);
         $this->assertCount(2, $cities);
 
         $cities->rewind();
@@ -101,7 +103,7 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testComplexFindAll()
     {
-        $users = Model\User::findAll()
+        $users = User::findAll()
             ->where('name', 'User 1')
             ->whereNot('addressId', null)
             ->limit(2)
@@ -126,7 +128,7 @@ class LoadingTest extends AbstractTestCase {
             'isBlocked' => 0,
             'deletedAt' => null,
             'locationId' => 1,
-            'locationClass' => 'Harp\\Harp\\Test\\Model\\City',
+            'locationClass' => 'Harp\\Harp\\Test\\TestModel\\City',
             'test' => null,
             'object' => $obj,
             'parentId' => null,
@@ -151,20 +153,20 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testJoinRels()
     {
-        $users = Model\User::findAll()
+        $users = User::findAll()
             ->joinRels(['posts' => 'tags'])
             ->group('User.id')
             ->load();
 
-        $expected = Model\User::find(1);
+        $expected = User::find(1);
 
         $this->assertSame($expected, $users->getFirst());
 
-        $addresses = Model\Address::findAll()
+        $addresses = Address::findAll()
             ->joinRels(['user' => 'posts'])
             ->load();
 
-        $expected = Model\Address::find(1);
+        $expected = Address::find(1);
 
         $this->assertSame($expected, $addresses->getFirst());
 
@@ -181,7 +183,7 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testLoadIds()
     {
-        $ids = Model\City::where('countryId', 2)->loadIds();
+        $ids = City::where('countryId', 2)->loadIds();
 
         $expected = [3, 4];
 
@@ -197,7 +199,7 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testLoadCount()
     {
-        $count = Model\City::where('countryId', 2)->loadCount();
+        $count = City::where('countryId', 2)->loadCount();
 
         $this->assertSame(2, $count);
 
@@ -211,7 +213,7 @@ class LoadingTest extends AbstractTestCase {
      */
     public function testLoadWith()
     {
-        $users = Model\User::findAll()
+        $users = User::findAll()
             ->loadWith(['address', 'posts' => 'tags']);
 
         $this->assertCount(4, $users);
@@ -237,7 +239,7 @@ class LoadingTest extends AbstractTestCase {
         $this->assertTrue($user->getAddress()->isVoid());
         $this->assertCount(1, $user->getPosts());
 
-        $this->assertInstanceof('Harp\Harp\Test\Model\BlogPost', $user->getPosts()->getFirst());
+        $this->assertInstanceof('Harp\Harp\Test\TestModel\BlogPost', $user->getPosts()->getFirst());
         $this->assertEquals(4, $user->getPosts()->getFirst()->id);
         $this->assertCount(0, $user->getPosts()->getFirst()->getTags());
 

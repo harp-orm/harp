@@ -203,7 +203,7 @@ If you need to keep the models in the database even after they are deleted - e.g
 ```php
 // Model File
 use Harp\Harp\AbstractModel;
-use Harp\Core\Model\SoftDeleteTrait;
+use Harp\Harp\Model\SoftDeleteTrait;
 
 class Order extends AbstractModel
 {

@@ -3,11 +3,10 @@
 namespace Harp\Harp\Rel;
 
 use Harp\Harp\Repo;
-use Harp\Core\Model\AbstractModel;
-use Harp\Core\Model\Models;
-use Harp\Core\Repo\LinkOne;
-use Harp\Core\Rel\AbstractRelOne;
-use Harp\Core\Rel\UpdateOneInterface;
+use Harp\Harp\Config;
+use Harp\Harp\AbstractModel;
+use Harp\Harp\Model\Models;
+use Harp\Harp\Repo\LinkOne;
 use Harp\Query\AbstractWhere;
 use Harp\Query\SQL\SQL;
 
@@ -16,25 +15,25 @@ use Harp\Query\SQL\SQL;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class BelongsTo extends AbstractRelOne implements RelInterface, UpdateOneInterface
+class BelongsTo extends AbstractRelOne implements UpdateOneInterface
 {
     /**
      * @var string
      */
     protected $key;
 
-    public function __construct($name, Repo $store, Repo $foreignRepo, array $options = array())
+    public function __construct($name, Config $config, Repo $repo, array $options = array())
     {
         $this->key = $name.'Id';
 
-        parent::__construct($name, $store, $foreignRepo, $options);
+        parent::__construct($name, $config, $repo, $options);
     }
 
     /**
      * @param  Models  $models
      * @return boolean
      */
-    public function hasForeign(Models $models)
+    public function hasModels(Models $models)
     {
         return ! $models->isEmptyProperty($this->key);
     }
@@ -44,11 +43,11 @@ class BelongsTo extends AbstractRelOne implements RelInterface, UpdateOneInterfa
      * @param  int $flags
      * @return AbstractModel[]
      */
-    public function loadForeign(Models $models, $flags = null)
+    public function loadModels(Models $models, $flags = null)
     {
         $keys = $models->pluckPropertyUnique($this->key);
 
-        return $this->getForeignRepo()
+        return $this->getRepo()
             ->findAll()
             ->whereIn($this->getForeignKey(), $keys)
             ->loadRaw($flags);
@@ -77,7 +76,7 @@ class BelongsTo extends AbstractRelOne implements RelInterface, UpdateOneInterfa
      */
     public function getForeignKey()
     {
-        return $this->getRepo()->getPrimaryKey();
+        return $this->getConfig()->getPrimaryKey();
     }
 
     /**
@@ -97,11 +96,11 @@ class BelongsTo extends AbstractRelOne implements RelInterface, UpdateOneInterfa
         $alias = $this->getName();
         $conditions = ["$alias.{$this->getForeignKey()}" => "$parent.{$this->getKey()}"];
 
-        if ($this->getForeignRepo()->getSoftDelete()) {
+        if ($this->getRepo()->getSoftDelete()) {
             $conditions["$alias.deletedAt"] = new SQL('IS NULL');
         }
 
-        $query->joinAliased($this->getForeignRepo()->getTable(), $this->getName(), $conditions);
+        $query->joinAliased($this->getRepo()->getTable(), $this->getName(), $conditions);
     }
 
 }

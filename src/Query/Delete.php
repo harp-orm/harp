@@ -3,7 +3,7 @@
 namespace Harp\Harp\Query;
 
 use Harp\Harp\Repo;
-use Harp\Core\Model\Models;
+use Harp\Harp\Model\Models;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -45,4 +45,10 @@ class Delete extends \Harp\Query\Delete {
         return $this;
     }
 
+    public function executeModels(Models $models)
+    {
+        $this
+            ->models($models)
+            ->execute();
+    }
 }

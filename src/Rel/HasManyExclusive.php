@@ -2,9 +2,8 @@
 
 namespace Harp\Harp\Rel;
 
-use Harp\Core\Model\Models;
-use Harp\Core\Repo\LinkMany;
-use Harp\Core\Rel\DeleteManyInterface;
+use Harp\Harp\Model\Models;
+use Harp\Harp\Repo\LinkMany;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>

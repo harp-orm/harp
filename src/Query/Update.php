@@ -3,7 +3,8 @@
 namespace Harp\Harp\Query;
 
 use Harp\Harp\Repo;
-use Harp\Core\Model\Models;
+use Harp\Harp\Model\Models;
+use Harp\Harp\AbstractModel;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -52,5 +53,28 @@ class Update extends \Harp\Query\Update {
             ->whereIn($key, array_keys($changes));
 
         return $this;
+    }
+
+    public function model(AbstractModel $model)
+    {
+        $data = $model->getChanges();
+        $model->getRepo()->getSerializers()->serialize($data);
+
+        $this
+            ->set($data)
+            ->where($model->getRepo()->getPrimaryKey(), $model->getId());
+
+        return $this;
+    }
+
+    public function executeModels(Models $models)
+    {
+        if ($models->count() == 1) {
+            $this->model($models->getFirst());
+        } else {
+            $this->models($models);
+        }
+
+        $this->execute();
     }
 }

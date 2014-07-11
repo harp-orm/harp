@@ -71,7 +71,7 @@ class UserRepo extends AbstractRepo
 
 ## Using events
 
-You can subscribe to several events that get triggered in the life-cycle of models. All of these events are in the Harp\Core\Repo\Event class:
+You can subscribe to several events that get triggered in the life-cycle of models. All of these events are in the Harp\Harp\Repo\Event class:
 
 Event            | Action
 -----------------|-----------------

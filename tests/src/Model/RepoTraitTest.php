@@ -208,7 +208,7 @@ class RepoTraitTest extends AbstractDbTestCase
 
         $this->assertSame($country2, $link->get());
 
-        $this->setExpectedException('LogicException', 'Rel cities for Harp\Harp\Test\TestModel\Country must be a valid RelOne');
+        $this->setExpectedException('LogicException', 'Rel cities in Harp\Harp\Test\TestModel\Country must be a link of a BelongsTo, HasOne or other AbstractRelOne');
 
         $country->get('cities');
     }
@@ -225,7 +225,7 @@ class RepoTraitTest extends AbstractDbTestCase
 
         $this->assertSame($cities, Country::getRepo()->loadLink($country, 'cities'));
 
-        $this->setExpectedException('LogicException', 'Rel country for Harp\Harp\Test\TestModel\City must be a valid RelMany');
+        $this->setExpectedException('LogicException', 'Rel country in Harp\Harp\Test\TestModel\City must be a link of a HasMany, HasManyThrough or other AbstractRelMany');
 
         $city->all('country');
     }

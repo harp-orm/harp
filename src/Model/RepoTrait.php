@@ -3,6 +3,9 @@
 namespace Harp\Harp\Model;
 
 use Harp\Harp\Repo;
+use Harp\Harp\Repo\Container;
+use Harp\Harp\Repo\LinkOne;
+use Harp\Harp\Repo\LinkMany;
 use Harp\Harp\Save;
 use Harp\Harp\Find;
 use Harp\Harp\Query;
@@ -20,11 +23,11 @@ use LogicException;
 trait RepoTrait
 {
     /**
-     * @return AbstractRepo
+     * @return Repo
      */
     public static function getRepo()
     {
-        return Repo\Container::get(get_called_class());
+        return Container::get(get_called_class());
     }
 
     /**
@@ -142,7 +145,7 @@ trait RepoTrait
 
     /**
      * @param  string $property
-     * @param  array  $value
+     * @param  array  $values
      * @return Find   $this
      */
     public static function whereIn($property, array $values)
@@ -219,16 +222,15 @@ trait RepoTrait
 
     /**
      * @param  string  $name
-     * @return Repo\LinkOne
+     * @return LinkOne
      */
     public function getLinkOne($name)
     {
         $link = $this->getLink($name);
 
-        if (! $link instanceof Repo\LinkOne) {
-            throw new LogicException(
-                sprintf('Rel %s for %s must be a valid RelOne', $name, get_class($this))
-            );
+        if (! $link instanceof LinkOne) {
+            $message = 'Rel %s in %s must be a link of a BelongsTo, HasOne or other AbstractRelOne';
+            throw new LogicException(sprintf($message, $name, get_class($this)));
         }
 
         return $link;
@@ -256,16 +258,15 @@ trait RepoTrait
 
     /**
      * @param  string   $name
-     * @return Repo\LinkMany
+     * @return LinkMany
      */
     public function all($name)
     {
         $link = $this->getLink($name);
 
-        if (! $link instanceof Repo\LinkMany) {
-            throw new LogicException(
-                sprintf('Rel %s for %s must be a valid RelMany', $name, get_class($this))
-            );
+        if (! $link instanceof LinkMany) {
+            $message = 'Rel %s in %s must be a link of a HasMany, HasManyThrough or other AbstractRelMany';
+            throw new LogicException(sprintf($message, $name, get_class($this)));
         }
 
         return $link;

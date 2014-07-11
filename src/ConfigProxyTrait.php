@@ -79,7 +79,7 @@ trait ConfigProxyTrait
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getPrimaryKey()
     {
@@ -95,7 +95,7 @@ trait ConfigProxyTrait
     }
 
     /**
-     * @return array
+     * @return Rel\AbstractRel[]
      */
     public function getRels()
     {
@@ -128,7 +128,7 @@ trait ConfigProxyTrait
     }
 
     /**
-     * @return array
+     * @return \Harp\Validate\Asserts
      */
     public function getAsserts()
     {
@@ -136,7 +136,7 @@ trait ConfigProxyTrait
     }
 
     /**
-     * @return array
+     * @return \Harp\Serializer\Serializers
      */
     public function getSerializers()
     {
@@ -144,7 +144,7 @@ trait ConfigProxyTrait
     }
 
     /**
-     * @return array
+     * @return Repo\EventListeners
      */
     public function getEventListeners()
     {

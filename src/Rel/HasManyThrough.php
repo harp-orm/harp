@@ -53,7 +53,7 @@ class HasManyThrough extends AbstractRelMany implements DeleteManyInterface, Ins
     }
 
     /**
-     * @return RelInterface
+     * @return AbstractRel|null
      */
     public function getThroughRel()
     {
@@ -106,12 +106,13 @@ class HasManyThrough extends AbstractRelMany implements DeleteManyInterface, Ins
 
         $keys = $models->getIds();
 
-        $select = $repo->findAll()
+        return $repo->findAll()
             ->column($throughKey, $this->getThroughKey())
             ->joinRels([$this->through])
-            ->whereIn($throughForeignKey, $keys);
+            ->whereIn($throughForeignKey, $keys)
+            ->setFlags($flags)
+            ->loadRaw();
 
-        return $select->loadRaw($flags);
     }
 
     /**

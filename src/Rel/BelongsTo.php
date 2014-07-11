@@ -50,7 +50,8 @@ class BelongsTo extends AbstractRelOne implements UpdateOneInterface
         return $this->getRepo()
             ->findAll()
             ->whereIn($this->getForeignKey(), $keys)
-            ->loadRaw($flags);
+            ->setFlags($flags)
+            ->loadRaw();
     }
 
     /**

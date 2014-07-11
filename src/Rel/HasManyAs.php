@@ -71,7 +71,8 @@ class HasManyAs extends AbstractRelMany implements UpdateManyInterface
             ->findAll()
             ->whereIn($this->getForeignKey(), $keys)
             ->where($this->getForeignClassKey(), $this->getConfig()->getModelClass())
-            ->loadRaw($flags);
+            ->setFlags($flags)
+            ->loadRaw();
     }
 
     /**

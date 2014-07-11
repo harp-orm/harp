@@ -49,7 +49,7 @@ class HasOne extends AbstractRelOne implements UpdateOneInterface
     /**
      * @param  Models $models
      * @param  int    $flags
-     * @return AbstractModelsp[]
+     * @return AbstractModel[]
      */
     public function loadModels(Models $models, $flags = null)
     {
@@ -58,7 +58,8 @@ class HasOne extends AbstractRelOne implements UpdateOneInterface
         return $this->getRepo()
             ->findAll()
             ->whereIn($this->getForeignKey(), $keys)
-            ->loadRaw($flags);
+            ->setFlags($flags)
+            ->loadRaw();
     }
 
     /**

@@ -38,6 +38,9 @@ class Repo
      */
     private $config;
 
+    /**
+     * @param string $modelClass
+     */
     function __construct($modelClass)
     {
         $this->config = new Config($modelClass);
@@ -83,8 +86,6 @@ class Repo
      */
     public function initializeModel(AbstractModel $model)
     {
-        $config = $this->config;
-
         $this->getSerializers()->unserialize($model);
 
         if ($this->getInherited()) {
@@ -98,7 +99,7 @@ class Repo
      * Add an already loaded link. Used in eager loading.
      *
      * @param  AbstractLink             $link
-     * @return AbstractSaveRepo         $this
+     * @return Repo         $this
      * @throws InvalidArgumentException If $model does not belong to repo
      */
     public function addLink(AbstractLink $link)
@@ -153,7 +154,7 @@ class Repo
      * @param  Models           $models
      * @param  array            $rels
      * @param  int              $flags
-     * @return AbstractSaveRepo $this
+     * @return Repo $this
      */
     public function loadAllRelsFor(Models $models, array $rels, $flags = null)
     {
@@ -175,7 +176,7 @@ class Repo
      * Call all the events associated with model updates. Perform the update itself.
      *
      * @param  Models           $models
-     * @return AbstractSaveRepo $this
+     * @return Repo $this
      */
     public function updateModels(Models $models)
     {
@@ -209,7 +210,7 @@ class Repo
      * Call all the events associated with model deletion. Perform the deletion itself.
      *
      * @param  Models           $models
-     * @return AbstractSaveRepo $this
+     * @return Repo $this
      */
     public function deleteModels(Models $models)
     {
@@ -230,7 +231,7 @@ class Repo
      * Call all the events associated with model insertion. Perform the insertion itself.
      *
      * @param  Models           $models
-     * @return AbstractSaveRepo $this
+     * @return Repo $this
      */
     public function insertModels(Models $models)
     {
@@ -256,7 +257,7 @@ class Repo
     /**
      * @param  AbstractModel $model
      * @param  int           $event
-     * @return AbstractRepo  $this
+     * @return Repo  $this
      */
     public function dispatchBeforeEvent($model, $event)
     {
@@ -268,7 +269,7 @@ class Repo
     /**
      * @param  AbstractModel $model
      * @param  int           $event
-     * @return AbstractRepo  $this
+     * @return Repo  $this
      */
     public function dispatchAfterEvent($model, $event)
     {

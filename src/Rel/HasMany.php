@@ -58,7 +58,8 @@ class HasMany extends AbstractRelMany implements UpdateManyInterface
         return $this->getRepo()
             ->findAll()
             ->whereIn($this->getForeignKey(), $keys)
-            ->loadRaw($flags);
+            ->setFlags($flags)
+            ->loadRaw();
     }
 
     /**

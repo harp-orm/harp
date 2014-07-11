@@ -23,6 +23,9 @@ class ReflectionModel extends ReflectionClass
         return Arr::invoke($properties, 'getName');
     }
 
+    /**
+     * @param \Harp\Harp\Config $subject
+     */
     public function initialize($subject)
     {
         if ($this->hasMethod('initialize')) {

@@ -8,7 +8,6 @@ use Harp\Harp\AbstractModel;
 use Harp\Harp\Rel\AbstractRel;
 use Harp\Harp\Repo\ReflectionModel;
 use Harp\Harp\Repo\EventListeners;
-use LogicException;
 use InvalidArgumentException;
 
 /**
@@ -187,7 +186,7 @@ class Config
     }
 
     /**
-     * @return ReflectionClass
+     * @return \ReflectionClass
      */
     public function getRootReflectionClass()
     {
@@ -219,7 +218,7 @@ class Config
      * You will need to add the SoftDeleteTrait to the model class too.
      *
      * @param  boolean      $softDelete
-     * @return AbstractRepo $this
+     * @return Config $this
      */
     public function setSoftDelete($softDelete)
     {
@@ -243,7 +242,7 @@ class Config
      * You will need to call setRootRepo on all the child repos.
      *
      * @param  boolean      $inherited
-     * @return AbstractRepo $this
+     * @return Config $this
      */
     public function setInherited($inherited)
     {
@@ -269,7 +268,7 @@ class Config
 
     /**
      * @param string
-     * @return AbstractRepo $this
+     * @return Config $this
      */
     public function setPrimaryKey($primaryKey)
     {
@@ -290,7 +289,7 @@ class Config
 
     /**
      * @param string
-     * @return AbstractRepo $this
+     * @return Config $this
      */
     public function setNameKey($nameKey)
     {
@@ -301,7 +300,7 @@ class Config
 
     /**
      * @param  AbstractRel  $rel
-     * @return AbstractRepo $this
+     * @return Config $this
      */
     public function addRel(AbstractRel $rel)
     {
@@ -385,7 +384,7 @@ class Config
 
     /**
      * @param  \Harp\Validate\Assert\AbstractAssert[] $asserts
-     * @return AbstractRepo                           $this
+     * @return Config                           $this
      */
     public function addAsserts(array $asserts)
     {
@@ -408,7 +407,7 @@ class Config
 
     /**
      * @param  \Harp\Serializer\AbstractSerializer[] $serializers
-     * @return AbstractRepo                          $this
+     * @return Config                          $this
      */
     public function addSerializers(array $serializers)
     {
@@ -422,7 +421,7 @@ class Config
     /**
      * @param  integer              $event
      * @param  Closure|string|array $callback
-     * @return AbstractRepo         $this
+     * @return Config         $this
      */
     public function addEventBefore($event, $callback)
     {
@@ -434,7 +433,7 @@ class Config
     /**
      * @param  integer              $event
      * @param  Closure|string|array $callback
-     * @return AbstractRepo         $this
+     * @return Config         $this
      */
     public function addEventAfter($event, $callback)
     {

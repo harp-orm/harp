@@ -47,11 +47,7 @@ class BelongsTo extends AbstractRelOne implements UpdateOneInterface
     {
         $keys = $models->pluckPropertyUnique($this->key);
 
-        return $this->getRepo()
-            ->findAll()
-            ->whereIn($this->getForeignKey(), $keys)
-            ->setFlags($flags)
-            ->loadRaw();
+        return $this->findAllWhereIn($this->getForeignKey(), $keys, $flags)->loadRaw();
     }
 
     /**
@@ -94,12 +90,10 @@ class BelongsTo extends AbstractRelOne implements UpdateOneInterface
      */
     public function join(AbstractWhere $query, $parent)
     {
-        $alias = $this->getName();
-        $conditions = ["$alias.{$this->getForeignKey()}" => "$parent.{$this->getKey()}"];
-
-        if ($this->getRepo()->getSoftDelete()) {
-            $conditions["$alias.deletedAt"] = new SQL('IS NULL');
-        }
+        $conditions = [
+            "{$this->getName()}.{$this->getForeignKey()}" => "$parent.{$this->getKey()}",
+        ];
+        $conditions += $this->getSoftDeleteConditions();
 
         $query->joinAliased($this->getRepo()->getTable(), $this->getName(), $conditions);
     }

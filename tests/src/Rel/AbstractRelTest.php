@@ -5,10 +5,13 @@ namespace Harp\Harp\Test\Rel;
 use Harp\Harp\Rel\AbstractRel;
 use Harp\Harp\Rel\AbstractRelMany;
 use Harp\Harp\Model\Models;
+use Harp\Harp\Model\State;
 use Harp\Harp\Repo\LinkMany;
 use Harp\Harp\Test\Repo\TestRepo;
 use Harp\Harp\Test\AbstractTestCase;
 use Harp\Harp\Test\TestModel\City;
+use Harp\Harp\Test\TestModel\User;
+use Harp\Query\SQL\SQL;
 
 /**
  * @coversDefaultClass Harp\Harp\Rel\AbstractRel
@@ -137,5 +140,42 @@ class AbstractRelTest extends AbstractTestCase
             $this->assertSame($links[$i], $link);
             $i++;
         });
+    }
+
+    /**
+     * @covers ::getSoftDeleteConditions
+     */
+    public function testGetSoftDeleteConditions()
+    {
+        $rel = $this->getMockForAbstractClass(
+            'Harp\Harp\Rel\AbstractRel',
+            ['test', City::getRepo()->getConfig(), City::getRepo()]
+        );
+
+        $this->assertEquals([], $rel->getSoftDeleteConditions());
+
+        $rel = $this->getMockForAbstractClass(
+            'Harp\Harp\Rel\AbstractRel',
+            ['test', User::getRepo()->getConfig(), User::getRepo()]
+        );
+
+        $this->assertEquals(['test.deletedAt' => new SQL('IS NULL')], $rel->getSoftDeleteConditions());
+    }
+
+    /**
+     * @covers ::findAllWhereIn
+     */
+    public function testFindAllWhereIn()
+    {
+        $rel = $this->getMockForAbstractClass(
+            'Harp\Harp\Rel\AbstractRel',
+            ['test', User::getRepo()->getConfig(), User::getRepo()]
+        );
+
+        $find = $rel->findAllWhereIn('name', [10, 13], State::DELETED);
+
+        $expected = 'SELECT `User`.* FROM `User` WHERE (`name` IN (10, 13)) AND (`User`.`deletedAt` IS NOT NULL)';
+
+        $this->assertEquals($expected, $find->applyFlags()->humanize());
     }
 }

@@ -8,7 +8,6 @@ use Harp\Harp\AbstractModel;
 use Harp\Harp\Model\Models;
 use Harp\Harp\Repo\LinkMany;
 use Harp\Query\AbstractWhere;
-use Harp\Query\SQL\SQL;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -102,17 +101,14 @@ class HasManyThrough extends AbstractRelMany implements DeleteManyInterface, Ins
     {
         $throughKey = $this->getThroughTable().'.'.$this->getThroughRel()->getForeignKey();
         $throughForeignKey = $this->getThroughTable().'.'.$this->getKey();
-        $repo = $this->getRepo();
 
         $keys = $models->getIds();
 
-        return $repo->findAll()
+        return $this
+            ->findAllWhereIn($throughForeignKey, $keys, $flags)
             ->column($throughKey, $this->getThroughKey())
             ->joinRels([$this->through])
-            ->whereIn($throughForeignKey, $keys)
-            ->setFlags($flags)
             ->loadRaw();
-
     }
 
     /**
@@ -136,14 +132,11 @@ class HasManyThrough extends AbstractRelMany implements DeleteManyInterface, Ins
             "$alias.{$this->getRepo()->getPrimaryKey()}" => "{$this->through}.{$this->getForeignKey()}"
         ];
 
-        if ($this->getRepo()->getSoftDelete()) {
-            $conditions["$alias.deletedAt"] = new SQL('IS NULL');
-        }
+        $conditions += $this->getSoftDeleteConditions();
 
         $this->getThroughRel()->join($query, $parent);
 
-        $query
-            ->joinAliased($this->getRepo()->getTable(), $alias, $conditions);
+        $query->joinAliased($this->getRepo()->getTable(), $alias, $conditions);
     }
 
     public function delete(LinkMany $link)

@@ -67,11 +67,9 @@ class HasManyAs extends AbstractRelMany implements UpdateManyInterface
     {
         $keys = $models->pluckPropertyUnique($this->getKey());
 
-        return $this->getRepo()
-            ->findAll()
-            ->whereIn($this->getForeignKey(), $keys)
+        return $this
+            ->findAllWhereIn($this->getForeignKey(), $keys, $flags)
             ->where($this->getForeignClassKey(), $this->getConfig()->getModelClass())
-            ->setFlags($flags)
             ->loadRaw();
     }
 
@@ -101,11 +99,10 @@ class HasManyAs extends AbstractRelMany implements UpdateManyInterface
             "$alias.{$this->getForeignClassKey()}" => new SQL('= ?', [$this->getConfig()->getModelClass()]),
         ];
 
-        if ($this->getRepo()->getSoftDelete()) {
-            $conditions["$alias.deletedAt"] = new SQL('IS NULL');
-        }
+        $conditions += $this->getSoftDeleteConditions();
 
         $query->joinAliased($this->getRepo()->getTable(), $alias, $conditions);
+
     }
 
     /**

@@ -6,7 +6,6 @@ use Harp\Harp\AbstractModel;
 use Harp\Harp\Model\Models;
 use Harp\Harp\Repo\LinkOne;
 use Harp\Query\AbstractWhere;
-use Harp\Query\SQL\SQL;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -55,11 +54,7 @@ class HasOne extends AbstractRelOne implements UpdateOneInterface
     {
         $keys = $models->pluckPropertyUnique($this->getKey());
 
-        return $this->getRepo()
-            ->findAll()
-            ->whereIn($this->getForeignKey(), $keys)
-            ->setFlags($flags)
-            ->loadRaw();
+        return $this->findAllWhereIn($this->getForeignKey(), $keys, $flags)->loadRaw();
     }
 
     /**
@@ -87,13 +82,12 @@ class HasOne extends AbstractRelOne implements UpdateOneInterface
      */
     public function join(AbstractWhere $query, $parent)
     {
-        $alias = $this->getName();
-        $conditions = ["$alias.{$this->getForeignKey()}" => "$parent.{$this->getKey()}"];
+        $conditions = [
+            "{$this->getName()}.{$this->getForeignKey()}" => "$parent.{$this->getKey()}",
+        ];
 
-        if ($this->getRepo()->getSoftDelete()) {
-            $conditions["$alias.deletedAt"] = new SQL('IS NULL');
-        }
+        $conditions += $this->getSoftDeleteConditions();
 
-        $query->joinAliased($this->getRepo()->getTable(), $alias, $conditions);
+        $query->joinAliased($this->getRepo()->getTable(), $this->getName(), $conditions);
     }
 }

@@ -7,6 +7,7 @@ use Harp\Harp\Config;
 use Harp\Harp\Repo;
 use Harp\Harp\Model\Models;
 use Harp\Query\AbstractWhere;
+use Harp\Query\SQL\SQL;
 use Closure;
 
 /**
@@ -99,6 +100,34 @@ abstract class AbstractRel
         } else {
             return new Models();
         }
+    }
+
+    /**
+     * @param  string $column
+     * @param  array  $keys
+     * @param  int    $flags
+     * @return \Harp\Harp\Find
+     */
+    public function findAllWhereIn($column, array $keys, $flags)
+    {
+        return $this->getRepo()
+            ->findAll()
+            ->whereIn($column, $keys)
+            ->setFlags($flags);
+    }
+
+    /**
+     * @return array
+     */
+    public function getSoftDeleteConditions()
+    {
+        $conditions = [];
+
+        if ($this->getRepo()->getSoftDelete()) {
+            $conditions["{$this->getName()}.deletedAt"] = new SQL('IS NULL');
+        }
+
+        return $conditions;
     }
 
     /**

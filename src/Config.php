@@ -383,7 +383,7 @@ class Config
     }
 
     /**
-     * @param  \Harp\Validate\Assert\AbstractAssert[] $asserts
+     * @param  \Harp\Validate\Assert\AbstractAssertion[] $asserts
      * @return Config                           $this
      */
     public function addAsserts(array $asserts)

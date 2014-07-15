@@ -1,6 +1,13 @@
 ## Query
 
-Custom queries extend corresponding Query objects from [harp-orm/query](https://github.com/harp-orm/query).
+Internal Query objects extend corresponding Query objects from [harp-orm/query](https://github.com/harp-orm/query). You can use them directly by calling the methods.
+
+Method        | Description
+--------------|------------------------------------------------
+__updateAll__ | Return an Update Query object for the given model
+__selectAll__ | Return an Select Query object for the given model
+__insertAll__ | Return an Insert Query object for the given model
+__deleteAll__ | Return an Delete Query object for the given model
 
 ## Select
 

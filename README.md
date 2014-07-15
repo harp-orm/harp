@@ -267,7 +267,7 @@ Harp ORM supports inheriting models out of the box. Read about [inexperience in 
 
 ## Extending
 
-When you want to write packages that extend functionality of Harp ORM, or simple share code between your models, you can use [PHP's native Traits](http://www.php.net/manual/en/language.oop5.traits.php). They allow you to statically extends classes. All of the internals of Harp ORM are built around allowing you to accomplish this easily as this is the preferred way of writing "behaviours/templates".
+When you want to write packages that extend functionality of Harp ORM, or simply share code between your models, you can use [PHP's native Traits](http://www.php.net/manual/en/language.oop5.traits.php). They allow you to statically extends classes. All of the internals of Harp ORM are built around allowing you to accomplish this easily as this is the preferred way of writing "behaviours" or "templates".
 
 Apart from that you will be able to add event listeners for various events in the life-cycle of models.
 

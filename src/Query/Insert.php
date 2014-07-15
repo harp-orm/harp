@@ -13,8 +13,6 @@ use Harp\Harp\Model\Models;
  */
 class Insert extends \Harp\Query\Insert {
 
-    use JoinRelTrait;
-
     /**
      * @var Repo
      */

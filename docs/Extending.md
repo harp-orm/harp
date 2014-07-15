@@ -60,7 +60,7 @@ class UserRepo extends AbstractRepo
 
     public function initialize()
     {
-        // Call the initialize method from the repo triat.
+        // Call the initialize method from the repo trait.
         $this->initializeExtension();
 
         // ...

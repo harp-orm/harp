@@ -98,8 +98,7 @@ foreach ($orders as $order) {
 }
 ```
 
-Shortcut Methods
-----------------
+## Shortcut Methods
 
 There are some shortcut methods to make it quicker to find models.
 
@@ -110,3 +109,26 @@ $orders = Order::whereNot('name', 'test')->load();
 $orders = Order::whereLike('name', 'test')->load();
 $orders = Order::whereRaw('id < ?', [2])->load();
 ```
+
+## Working with Models
+
+The result of a "find" is a "RepoModels" object which represents a collection of models, from a single model class. It is a countable and an iterator, so you can pass it directly to foreach, It also has some other useful methods.
+
+Method                             | Description
+-----------------------------------|------------------------------------------------
+__has__(AbstractModel $model)      | Check if a model is in this collection of models
+__hasId__($id)                     | Check if a model with specific id exists in the collection
+__getFirst__()                     | Get the first model of the collection. If it is an empty collection, will return a void model from the repo
+__getNext__()                      | After you've called the "getFirst" you can get the other models by calling "getNext" multiple times. When you've reached the end of the collection it will start returning void models.
+__count__()                        | Will return how many items are in the collection. Implements Countable interface
+__all__()                          | Get the underlying SplObjectStorage that holds the models
+__toArray__()                      | Get an array with all the models in the collection
+__isEmpty__()                      | Returns true if the collection is empty
+__getIds__()                       | Retrieve an array with all the ids of the models
+__filter__(Closure $filter)        | Filter the models and return a new collection with the models, for which the filter closure has returned true
+__invoke__($method)                | Call a method for each model and return an array of all the results
+__map__(Closure $map)              | Call a closure for each item and return an array with the result.
+__pluckProperty__($property)       | Retrieve a given property of each model and return them as an array
+__isEmptyProperty__($property)     | Return true if the property for all the models is false / null
+__pluckPropertyUnique__($property) | The same as pluckProperty, but filter out nulls and return only unique values
+

@@ -337,3 +337,40 @@ Similarly, you can retrieve ``$product->getPictures()``.
 
 If you have an instance of the ``Picture`` model, you can get to its parent via ``$picture->getParent()``.
 
+
+## Working with relation collections
+
+HasMany, HasManyThrough and other relations to multiple models will return a "LinkMany" object which is used to add, remove or otherwise manipulate the relation. The object is an iterator and implements countable as well, so you can call ``count($products)`` as well as put it directly in a ``foreach``.
+
+```php
+$products = $store->get('products');
+
+$newProduct = new Product();
+
+$products->add($newProduct);
+```
+
+Method                             | Description
+-----------------------------------|------------------------------------------------
+__has__(AbstractModel $model)      | Check if a model is in this collection of models
+__getRel__()                       | Get the relation object
+__get__()                          | Get the internal Models object, holding information of the current state of the relation
+__getOriginal__()                  | Get the internal Models object, with the models that were loaded originally from the database
+__isChanged__()                    | Check if any models have been added / removed from the relation
+__getAdded__()                     | Get a Models object containing all the models added to this relation
+__getRemoved__()                   | Get a Models object containing all the models removed from this relation
+__getFirst__()                     | Get the first model in the collection of this relation. Will return a void model if the collection is empty
+__getNext__()                      | Get the next model in the collection of this relation, after a call getFirst. Will return a void model when the end of the collection is reached
+__addArray__(array $models)        | Add several models to the relation at once using an array
+__addModels__(Models $models)      | Add several models to the relation at once using an Models object
+__add__(AbstractModel $model)      | Add a model to the relation
+__toArray__()                      | Get an array with all the models in the colleciton
+__remove__(AbstractModel $model)   | Remove a model from the relation
+__isEmpty__()                      | Return true if the relation is empty
+__clear__()                        | Remove all the models from this relation.
+__has__(AbstractModel $model)      | Return true if the model is in this relation.
+__filter__(Closure $filter)        | Filter the models and return a new collection with the models, for which the filter closure has returned true
+__invoke__($method)                | Call a method for each model and return an array of all the results
+__map__(Closure $map)              | Call a closure for each item and return an array with the result.
+
+

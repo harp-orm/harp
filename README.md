@@ -67,6 +67,26 @@ Why another ORM? At present there are no ORMs that use the latest PHP features. 
 - Fully extensible interface. Uses native PHP5 constructs to allow extending with traits and interfaces
 - All methods have proper docblocks so that static code analyses of code built on top of this is more accurate.
 
+## Instalation
+
+Harp uses composer so intalling it is as easy as:
+
+```bash
+composer require harp-orm/harp:~0.3.0
+```
+
+It uses harp-orm/query for connecting to the database, so you'll also need to configure the connection:
+
+```php
+use Harp\Query\DB;
+
+DB::setConfig([
+    'dsn' => 'mysql:dbname=harp-orm/harp;host=127.0.0.1',
+    'username' => 'root',
+    'password' => 'root',
+]);
+```
+
 ## Subsections
 
 - [Find](/docs/Find.md)
@@ -113,9 +133,9 @@ Detailed list of all the configuration methods:
 Configuration Method                   | Description
 ---------------------------------------|-------------
 __setTable__($table)                   | Set the name of the database table, defaults to the short class name of the model
-__setDb__($dbName)                     | Set alternative database connection, this will tap into alternative database configurations you've setup
-__setSoftDelete__($isSoftDelete)       | Set to true if you want this model to be soft deleted. More on [soft delete later](/docs/SoftDelete.md)
-__setInherited__($isInherited)         | Set to true if this repo will be inherited by other repo using [Single table inheritance](/docs/Inherited.md)
+__setDb__($dbName)                     | Set alternative database connection, this will use alternative database configurations you've setup
+__setSoftDelete__($isSoftDelete)       | Set to true if you want this model to be soft deleted. This is configured automatically by the SoftDeleteTrait. More on [soft delete later](/docs/SoftDelete.md)
+__setInherited__($isInherited)         | Set to true if this repo will be inherited by other repo using [Single table inheritance](/docs/Inherited.md). This is configured automatically by the InheritedTrait.
 __setPrimaryKey__($primaryKey)         | Sets the property/column to be used for primary key, "id" by default
 __setNameKey__($nameKey)               | Sets the property/column to be used for name key - will be used for findByName method on the repo. Defaults to "name"
 __addRel__(AbstractRel $rel)           | Add a link to a related model. Read about [Relations](/docs/Relations.md)
@@ -161,11 +181,21 @@ foreach ($users as $user) {
 }
 ```
 
+All the models retrieved from the database are stored in an "identity map". So that if at a later time, the same model is loaded again. It will return the same php object, associated with the db row.
+
+```php
+$user1 = User::find(10);
+$user2 = User::find(10);
+
+// Will return true
+echo $user1 === $user2;
+```
+
 Detailed [docs for findAll](/docs/Find.md)
 
 ## Persisting Models
 
-When models have been created, modified or deleted they usually need to be persisted again. Since loading was done using static methods, saving must be done with static methods as well.
+When models have been created, modified or deleted they usually need to be persisted again. This is done with the "save" method on the model.
 
 ```php
 $user = User::find(10);
@@ -211,12 +241,20 @@ class Order extends AbstractModel
     {
         // The trait has its own initialize method that you'll have to call
         SoftDeleteTrait::initialize($config);
-
-        // ...
     }
-
-    // ...
 }
+
+$order = Order::find(2);
+
+$order->delete();
+
+// This will issue an UPDATE instaead of a DELETE, marking this row as "deleted".
+Order::save($order);
+
+$order = Order::find(2);
+
+// This will return true
+echo $order->isVoid();
 ```
 
 This adds a some of methods to your model. Read about [soft deletion in detail here](/docs/SoftDelete.md)
@@ -225,7 +263,7 @@ This adds a some of methods to your model. Read about [soft deletion in detail h
 
 Sometimes you need several models to share the same database table - e.g. if there is just a slight variation of the same functionality. This is called Single Table Inheritance.
 
-Harp ORM supports inheriting models (and repos) out of the box. Read about [inexperience in detail here](/docs/Inherited.md)
+Harp ORM supports inheriting models out of the box. Read about [inexperience in detail here](/docs/Inherited.md)
 
 ## Extending
 
@@ -234,6 +272,27 @@ When you want to write packages that extend functionality of Harp ORM, or simple
 Apart from that you will be able to add event listeners for various events in the life-cycle of models.
 
 Read about [extending in detail here](/docs/Extending.md)
+
+## Direct database access.
+
+There are times when you'll need to get to the bare metal and write custom sqls. To help you do that you can use the internal Query classes directly.
+
+```php
+$update = User::insertAll()
+    ->columns(['name', 'id'])
+    ->select(
+        Profile::selectAll()
+            ->clearColumns()
+            ->column('name')
+            ->column('id')
+            ->where('name', 'LIKE', '%test')
+    );
+
+// INSERT INTO User (name, id) SELECT name, id FROM Profile WHERE name LIKE '%test'
+$update->execute();
+```
+
+More details about custom queries you can read the [Query section](/docs/Query.md)
 
 ## License
 

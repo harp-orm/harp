@@ -61,9 +61,9 @@ Why another ORM? At present there are no ORMs that use the latest PHP features. 
 - Proper __soft delete__, which every part of the code is aware of
 - __Lazy loading__ and __eager loading__, which works for polymorphic relations
 - __Save multiple models__ with __grouped queries__ for increased performance
-- No enforcement of folder structure, place your classes wherever you want
-- Uses __PSR coding style__ and __symfony naming__ conventions for more clean and readable codebase
-- Save all associated models with a single command, with query grouping under the hood.
+- No enforcement of folder structure, __place your classes wherever you want__
+- Uses __PSR coding style__ and __symfony naming conventions__ for more clean and readable codebase
+- Save all associated models with a single command, with __query grouping__ under the hood.
 - Fully extensible interface. Uses native PHP5 constructs to allow __extending with traits and interfaces__
 - All methods have __proper docblocks__ so that static code analyses of code built on top of this is more accurate.
 
@@ -150,7 +150,6 @@ __addSerializer__(AbstractSerializer)  | Add a property serializer. Read about [
 __addSerializers__(array $serializers) | Add multiple serializer objects
 __addEventBefore__($event, $callback)  | Add event listener, to be triggered before a specific event
 __addEventAfter__($event, $callback)   | Add event listener to be triggered after a specific event
-
 
 ## Retrieving from the database
 
@@ -268,6 +267,73 @@ This adds a some of methods to your model. Read about [soft deletion in detail h
 Sometimes you need several models to share the same database table - e.g. if there is just a slight variation of the same functionality. This is called Single Table Inheritance.
 
 Harp ORM supports inheriting models out of the box. Read about [inexperience in detail here](/docs/Inherited.md)
+
+## Model states
+
+Throughout their lives Models have different states (Harp\Harp\Model\State). They can be:
+
+State             | Description
+------------------|--------------------
+State::PENDING    | Still not persisted in the database. This is the default state of models. Will be inserted in the database when persisted
+State::DELETED    | Marked for deletion. When persisted will execute a DELETE query
+State::SAVED      | Retrieved from the database. When is changed
+State::VOID       | This represents a "non-existing" model, e.g. when you try to retrieve a model that does not exists
+
+There are several methods for working with model states:
+
+Method                | Description
+----------------------|-------------
+__setState__($state)  | Set the state on the model
+__getState__()        | Retrieve the current state
+__isSaved__()         | Return true if state is State::SAVED
+__isPending__()       | Return true if state is State::PENDING
+__isDeleted__()       | Return true if state is State::DELETED
+__isVoid__()          | Return true if state is State::VOID
+
+## Dirty Tracking
+
+Models track all the changes to their public properties to minimise updates to the database. You can use that functionality yourself by calling these methods:
+
+Method                               | Description
+-------------------------------------|------------------
+__getOriginals__()                   | Get an array with all the original values of the properties
+__getOriginal__($name)               | Get a specific original value, returns null if value does not exist
+__getChange__($name)                 | Returns an array with [original, changed], or null if there is no change
+__getChanges__()                     | Return an array with [name => new value] for all the changes
+__hasChange__($name)                 | Return true if the property has been changed
+__isEmptyChanges__()                 | Return true if there are __no__ changes
+__isChanged__()                      | Return true if there are __any__ changes
+__resetOriginals__()                 | Set the current property values as the "original". This is called when a model has been saved
+__getProperties__()                  | Get an array with the current values of all the public properties
+__setProperties__(array $properties) | Set public properties with a [property name => value] array
+
+Example:
+
+```php
+$user = User::find(10);
+
+// returns false
+echo $user->isChanged();
+
+$user->name = 'new test';
+
+// returns true
+$user->isChanged();
+
+// returns true
+$user->hasChange('name');
+
+// returns ['name' => 'new test']
+$user->getChanges();
+
+// returns original name
+$user->getOriginal('name');
+
+$user->resetOriginal();
+
+// returns 'new test'
+$user->getOriginal('name');
+```
 
 ## Extending
 

@@ -18,10 +18,11 @@ Executing the object will return a [PDOStatement](http://php.net/manual/en/class
 ```php
 $select = User::selectAll();
 
+// SELECT User.* FROM User JOIN Profile ON Profile.id = profileId WHERE id IN (1, 2, 3) AND Profile.name LIKE '%test'
 $result = $select
-    ->join('profile', ['id' => 'profileId'])
+    ->join('Profile', ['Profile.id' => 'profileId'])
     ->whereIn('id', [1, 2, 3])
-    ->whereLike('profile.name', '%test')
+    ->whereLike('Profile.name', '%test')
     ->execute();
 
 foreach ($result as $row)
@@ -42,11 +43,12 @@ __joinRels__(array|string $rels) | Perform join on relations, configured in the 
 
 ## Update
 
-To create a Update object for a specific Model, you can use the ``updateAll`` static method. This will pre-populate the "table" part of the query.
+To create an Update object for a specific Model, you can use the ``updateAll`` static method. This will pre-populate the "table" part of the query.
 
 ```php
 $update = User::updateAll();
 
+// UPDATE TABLE User SET name = 'new name' WHERE id IN (1, 2, 3)
 $update
     ->set(['name' => 'new name'])
     ->whereIn('id', [1, 2, 3])
@@ -71,6 +73,7 @@ To create a Delete object for a specific Model, you can use the ``deleteAll`` st
 ```php
 $delete = User::deleteAll();
 
+// UPDATE TABLE User SET name = 'new name' WHERE id IN (1, 2, 3)
 $delete
     ->whereIn('id', [1, 2, 3])
     ->execute();
@@ -95,6 +98,11 @@ To create a Insert object for a specific Model, you can use the ``insertAll`` st
 ```php
 $insert = User::insertAll();
 
+// INSERT INTO User (id, 'name', 'email')
+// VALUES
+// (1, 'John', 'john@example.com'),
+// (2, 'Julie', 'julie@example.com'),
+// (3, 'Tom', 'tom@example.com');
 $insert
     ->columns(['id', 'name', 'email'])
     ->values([1, 'John', 'john@example.com'])

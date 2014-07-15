@@ -13,11 +13,21 @@ __deleteAll__ | Return an Delete Query object for the given model
 
 To create a Select object for a specific Model, you can use the ``selectAll`` static method. This will pre-populate the "from" and "columns" parts of the query.
 
+Executing the object will return a [PDOStatement](http://php.net/manual/en/class.pdostatement.php) object which you can foreach, or call fetchAll.
+
 ```php
 $select = User::selectAll();
 
-// SELECT User.* FROM User
-echo $select->humanize();
+$result = $select
+    ->join('profile', ['id' => 'profileId'])
+    ->whereIn('id', [1, 2, 3])
+    ->whereLike('profile.name', '%test')
+    ->execute();
+
+foreach ($result as $row)
+{
+    echo $row['name'];
+}
 ```
 
 You can read the [docs for Select Query here](harp-orm/query/master/docs/Select.md)
@@ -37,8 +47,10 @@ To create a Update object for a specific Model, you can use the ``updateAll`` st
 ```php
 $update = User::updateAll();
 
-// UPDATE User
-echo $update->humanize();
+$update
+    ->set(['name' => 'new name'])
+    ->whereIn('id', [1, 2, 3])
+    ->execute();
 ```
 
 You can read the [docs for Update Query here](harp-orm/query/master/docs/Update.md)
@@ -59,8 +71,9 @@ To create a Delete object for a specific Model, you can use the ``deleteAll`` st
 ```php
 $delete = User::deleteAll();
 
-// DELETE FROM User
-echo $delete->humanize();
+$delete
+    ->whereIn('id', [1, 2, 3])
+    ->execute();
 ```
 
 You can read the [docs for Delete Query here](harp-orm/query/master/docs/Delete.md)
@@ -82,8 +95,12 @@ To create a Insert object for a specific Model, you can use the ``insertAll`` st
 ```php
 $insert = User::insertAll();
 
-// INSERT INTO User
-echo $insert->humanize();
+$insert
+    ->columns(['id', 'name', 'email'])
+    ->values([1, 'John', 'john@example.com'])
+    ->values([2, 'Julie', 'julie@example.com'])
+    ->values([3, 'Tom', 'tom@example.com'])
+    ->execute();
 ```
 
 You can read the [docs for Insert Query here](harp-orm/query/master/docs/Insert.md)

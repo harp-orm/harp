@@ -56,16 +56,16 @@ var_dump($loadedUser->getAddress());
 
 Why another ORM? At present there are no ORMs that use the latest PHP features. Recent advancements in the php language itself (e.g. traits), and external static analysis tools allow for writing applications that can be easily verified to be correct, however currently available ORMs don't use them which makes static code analysis not very useful. This package aims to fix this. Here's the elevator pitch:
 
-- Uses harp-orm/query and PDO as much as possible greatly increasing performance. It has some very useful features that are not used by current ORMs
-- Full polymorphism support - both "belongs to polymorphic" and "single table inheritance"
-- Proper soft deletes, which every part of the code is aware of
-- Lazy loading and eager loading, which works for polymorphic relations
-- Save multiple models with grouped queries for increased performance
+- Uses harp-orm/query and __PDO__ as much as possible greatly increasing performance. It has some very useful features that are not used by current ORMs
+- Full __polymorphism__ support - both "belongs to polymorphic" and "single table inheritance"
+- Proper __soft delete__, which every part of the code is aware of
+- __Lazy loading__ and __eager loading__, which works for polymorphic relations
+- __Save multiple models__ with __grouped queries__ for increased performance
 - No enforcement of folder structure, place your classes wherever you want
-- Uses PSR coding style and symfony naming conventions for more clean and readable codebase
+- Uses __PSR coding style__ and __symfony naming__ conventions for more clean and readable codebase
 - Save all associated models with a single command, with query grouping under the hood.
-- Fully extensible interface. Uses native PHP5 constructs to allow extending with traits and interfaces
-- All methods have proper docblocks so that static code analyses of code built on top of this is more accurate.
+- Fully extensible interface. Uses native PHP5 constructs to allow __extending with traits and interfaces__
+- All methods have __proper docblocks__ so that static code analyses of code built on top of this is more accurate.
 
 ## Instalation
 
@@ -75,7 +75,7 @@ Harp uses composer so intalling it is as easy as:
 composer require harp-orm/harp:~0.3.0
 ```
 
-It uses harp-orm/query for connecting to the database, so you'll also need to configure the connection:
+It uses [harp-orm/query](http://github.com/harp-orm/query) for connecting to the database, so you'll also need to configure the connection:
 
 ```php
 use Harp\Query\DB;
@@ -111,7 +111,11 @@ class User extends AbstractModel
     public static function initialize($config)
     {
         $config
+
+            // Configure relations
             ->addRel(new Rel\BelongsTo('address', $config, AddressRepo::get()));
+
+            // Configure validations
             ->addAssert(new Assert\Present('name'))
             ->addAssert(new Assert\Email('name'));
     }

@@ -11,8 +11,8 @@ use Harp\Harp\Model\Models;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class Insert extends \Harp\Query\Insert {
-
+class Insert extends \Harp\Query\Insert
+{
     /**
      * @var Repo
      */

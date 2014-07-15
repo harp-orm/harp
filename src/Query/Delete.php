@@ -10,8 +10,8 @@ use Harp\Harp\Model\Models;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class Delete extends \Harp\Query\Delete {
-
+class Delete extends \Harp\Query\Delete
+{
     use JoinRelTrait;
 
     /**

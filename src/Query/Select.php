@@ -10,8 +10,8 @@ use Harp\Query\SQL\SQL;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class Select extends \Harp\Query\Select {
-
+class Select extends \Harp\Query\Select
+{
     use JoinRelTrait;
 
     /**

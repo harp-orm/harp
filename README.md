@@ -54,7 +54,7 @@ var_dump($loadedUser->getAddress());
 
 ## Why?
 
-Why another ORM? At present there are no ORMs that use the latest PHP features. Recent advancements in the php language itself (e.g. traits), and external static analysis tools allow for writing applications that can be easily verified to be correct, however currently available ORMs don't use them which makes static code analysis not very useful. This package aims to fix this. Here's the elevator pitch:
+Why another ORM? At present there are no ORMs that use the latest PHP features. Recent advancements in the php language itself (e.g. traits), and external static analysis tools allow for writing applications that can be easily verified to be correct, however most available ORMs don't use them which makes static code analysis not very useful. And lastly, this package aims to be closer to the metal, smartly using existing PHP classes and extensions to make your models fast, without sacraficing features. Here's the elevator pitch:
 
 - Uses harp-orm/query and __PDO__ as much as possible greatly increasing performance. It has some very useful features that are not used by current ORMs
 - Full __polymorphism__ support - both "belongs to polymorphic" and "single table inheritance"
@@ -150,6 +150,8 @@ __addSerializer__(AbstractSerializer)  | Add a property serializer. Read about [
 __addSerializers__(array $serializers) | Add multiple serializer objects
 __addEventBefore__($event, $callback)  | Add event listener, to be triggered before a specific event
 __addEventAfter__($event, $callback)   | Add event listener to be triggered after a specific event
+
+For more about events, read [Extending using events](/docs/Extending.md#using-events)
 
 ## Retrieving from the database
 

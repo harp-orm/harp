@@ -27,6 +27,8 @@ class AbstractRelTest extends AbstractTestCase
      * @covers ::getName
      * @covers ::getConfig
      * @covers ::getRepo
+     * @covers ::getInverseOf
+     * @covers ::getInverseOfRel
      */
     public function testConstruct()
     {
@@ -36,12 +38,14 @@ class AbstractRelTest extends AbstractTestCase
 
         $rel = $this->getMockForAbstractClass(
             'Harp\Harp\Rel\AbstractRel',
-            [$name, $config, $repo, ['test' => 'test option']]
+            [$name, $config, $repo, ['test' => 'test option', 'inverseOf' => 'country']]
         );
 
         $this->assertSame($name, $rel->getName());
         $this->assertSame($config, $rel->getConfig());
         $this->assertSame($repo, $rel->getRepo());
+        $this->assertSame('country', $rel->getInverseOf());
+        $this->assertSame(City::getRepo()->getRel('country'), $rel->getInverseOfRel());
         $this->assertSame('test option', $rel->test);
     }
 

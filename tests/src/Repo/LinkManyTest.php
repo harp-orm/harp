@@ -7,6 +7,8 @@ use Harp\Harp\Model\Models;
 use Harp\Harp\Test\AbstractTestCase;
 use Harp\Harp\Test\TestModel\City;
 use Harp\Harp\Test\TestModel\Country;
+use Harp\Harp\Test\TestModel\User;
+use Harp\Harp\Test\TestModel\Post;
 
 /**
  * @coversDefaultClass Harp\Harp\Repo\LinkMany
@@ -210,6 +212,19 @@ class LinkManyTest extends AbstractTestCase
         $link->add($model);
 
         $this->assertSame([$model], $link->toArray());
+    }
+
+    /**
+     * @covers ::add
+     */
+    public function testAddWithInverse()
+    {
+        $user = new User();
+        $post = new Post();
+
+        $user->getPosts()->add($post);
+
+        $this->assertSame($user, $post->getUser());
     }
 
     /**

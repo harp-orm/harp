@@ -4,6 +4,8 @@ namespace Harp\Harp\Test\Rel;
 
 use Harp\Harp\Test\AbstractTestCase;
 use Harp\Harp\Test\TestModel\City;
+use Harp\Harp\Test\TestModel\User;
+use Harp\Harp\Test\TestModel\Post;
 use Harp\Harp\Repo\LinkOne;
 use Harp\Harp\Model\Models;
 use Harp\Util\Objects;
@@ -51,6 +53,18 @@ class AbstractRelOneTest extends AbstractTestCase
         $this->assertInstanceof('Harp\Harp\Repo\LinkOne', $result3);
         $this->assertInstanceof('Harp\Harp\Test\TestModel\City', $result3->get());
         $this->assertTrue($result3->get()->isVoid());
+    }
 
+    /**
+     * @covers ::updateInverse
+     */
+    public function testUpdateInverse()
+    {
+        $user = new User();
+        $post = new Post();
+
+        $post->getRepo()->getRel('user')->updateInverse($user, $post);
+
+        $this->assertSame($post->getUser(), $user);
     }
 }

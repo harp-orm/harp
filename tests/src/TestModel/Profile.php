@@ -17,7 +17,7 @@ class Profile extends AbstractModel {
     {
         $config
             ->addRels([
-                new Rel\BelongsTo('user', $config, User::getRepo()),
+                new Rel\BelongsTo('user', $config, User::getRepo(), ['inverseOf' => 'profile']),
             ])
             ->addAsserts([
                 new Assert\Present('name'),
@@ -49,7 +49,7 @@ class Profile extends AbstractModel {
      */
     public function getUser()
     {
-        return $this->getLinkedModel('user');
+        return $this->get('user');
     }
 
     /**
@@ -57,7 +57,7 @@ class Profile extends AbstractModel {
      */
     public function setUser(User $user)
     {
-        $this->getLinkedModel('user', $user);
+        $this->set('user', $user);
 
         return $this;
     }

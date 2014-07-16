@@ -7,6 +7,8 @@ use Harp\Harp\Model\Models;
 use Harp\Harp\Test\AbstractTestCase;
 use Harp\Harp\Test\TestModel\City;
 use Harp\Harp\Test\TestModel\Country;
+use Harp\Harp\Test\TestModel\User;
+use Harp\Harp\Test\TestModel\Profile;
 
 /**
  * @coversDefaultClass Harp\Harp\Repo\LinkOne
@@ -115,7 +117,7 @@ class LinkOneTest extends AbstractTestCase
 
         $link = new LinkOne(new City, $rel, new Country());
 
-        $result = $link->delete();
+        $result = $link->insert();
         $this->assertNull($result);
     }
 
@@ -175,7 +177,6 @@ class LinkOneTest extends AbstractTestCase
 
         $link = new LinkOne(new City(), City::getRepo()->getRel('country'), $model);
 
-
         $this->assertFalse($link->isChanged());
 
         $link->set($model);
@@ -187,6 +188,19 @@ class LinkOneTest extends AbstractTestCase
         $this->assertTrue($link->isChanged());
         $this->assertSame($model2, $link->get());
         $this->assertSame($model, $link->getOriginal());
+    }
+
+    /**
+     * @covers ::set
+     */
+    public function testSetInverse()
+    {
+        $user = new User();
+        $profile = new Profile();
+
+        $user->setProfile($profile);
+
+        $this->assertSame($user, $profile->getUser());
     }
 
     /**

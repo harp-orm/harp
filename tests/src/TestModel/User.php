@@ -26,8 +26,11 @@ class User extends AbstractModel
             ->addRels([
                 new Rel\BelongsTo('address', $config, Address::getRepo()),
                 new Rel\BelongsToPolymorphic('location', $config, City::getRepo()),
-                new Rel\HasMany('posts', $config, Post::getRepo(), ['linkClass' => __NAMESPACE__.'\LinkManyPosts']),
-                new Rel\HasOne('profile', $config, Profile::getRepo()),
+                new Rel\HasMany('posts', $config, Post::getRepo(), [
+                    'inverseOf' => 'user',
+                    'linkClass' => __NAMESPACE__.'\LinkManyPosts'
+                ]),
+                new Rel\HasOne('profile', $config, Profile::getRepo(), ['inverseOf' => 'user']),
             ])
 
             ->addAsserts([

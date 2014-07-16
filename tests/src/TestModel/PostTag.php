@@ -28,24 +28,24 @@ class PostTag extends AbstractModel {
 
     public function getTag()
     {
-        return $this->getLinkedModel('tag');
+        return $this->get('tag');
     }
 
     public function setTag(Tag $tag)
     {
-        $this->setLinkedModel('tag', $tag);
+        $this->set('tag', $tag);
 
         return $this;
     }
 
     public function getPost()
     {
-        return $this->getLinkedModel('post');
+        return $this->get('post');
     }
 
     public function setPost(Post $post)
     {
-        $this->setLinkedModel('post', $post);
+        $this->set('post', $post);
 
         return $this;
     }

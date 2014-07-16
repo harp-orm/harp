@@ -30,11 +30,11 @@ class Tag extends AbstractModel {
 
     public function getPostTags()
     {
-        return $this->getLinkMany('postTags');
+        return $this->all('postTags');
     }
 
     public function getPosts()
     {
-        return $this->getLinkMany('posts');
+        return $this->all('posts');
     }
 }

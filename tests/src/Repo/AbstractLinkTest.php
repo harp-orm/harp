@@ -3,6 +3,8 @@
 namespace Harp\Harp\Test\Repo;
 
 use Harp\Harp\Test\TestModel\City;
+use Harp\Harp\Test\TestModel\User;
+use Harp\Harp\Test\TestModel\Post;
 use Harp\Harp\Test\AbstractTestCase;
 use Harp\Harp\Rel\BelongsTo;
 
@@ -28,5 +30,19 @@ class AbstractRelTest extends AbstractTestCase
         $link = $this->getMockForAbstractClass('Harp\Harp\Repo\AbstractLink', [$city, $rel]);
         $this->assertSame($rel, $link->getRel());
         $this->assertSame($city, $link->getModel());
+    }
+
+
+    /**
+     * @covers ::updateInverse
+     */
+    public function testUpdateInverse()
+    {
+        $user = new User();
+        $post = new Post();
+
+        $user->getPosts()->add($post);
+
+        $this->assertSame($user, $post->getUser());
     }
 }

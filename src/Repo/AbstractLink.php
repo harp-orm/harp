@@ -3,6 +3,7 @@
 namespace Harp\Harp\Repo;
 
 use Harp\Harp\Rel\AbstractRel;
+use Harp\Harp\Rel\UpdateInverseInterface;
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Model\Models;
 
@@ -42,6 +43,20 @@ abstract class AbstractLink
     public function getRel()
     {
         return $this->rel;
+    }
+
+    /**
+     * Call updateInverse on the rel
+     *
+     * @param  AbstractModel $foreign
+     */
+    public function updateInverse(AbstractModel $foreign)
+    {
+        $rel = $this->getRel()->getInverseOfRel();
+
+        if ($rel instanceof UpdateInverseInterface) {
+            $rel->updateInverse($this->getModel(), $foreign);
+        }
     }
 
     /**

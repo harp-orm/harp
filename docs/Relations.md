@@ -337,6 +337,37 @@ Similarly, you can retrieve ``$product->getPictures()``.
 
 If you have an instance of the ``Picture`` model, you can get to its parent via ``$picture->getParent()``.
 
+## Inverse Relations
+
+When you set up relations you might want to specify the "inverse" relation also, so it will be set properly when working with unsaved models. This works only on RelOne inverse relations.
+
+Here's where this is useful:
+
+```php
+class User extends AbstractModel
+{
+    public static function initialize($config)
+    {
+        $config->addRel(new HasMany('posts', $config, Post::getRepo(), ['inverseOf' => 'user']);
+    }
+}
+
+class Post extends AbstractModel
+{
+    public static function initialize($config)
+    {
+        $config->addRel(new HasMany('user', $config, User::getRepo());
+    }
+}
+
+$user = new User();
+$post = new Post();
+
+$user->getPosts()->add($post);
+
+// This will be true
+$post->getUser() === $user;
+```
 
 ## Working with relation collections
 

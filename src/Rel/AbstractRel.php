@@ -36,6 +36,11 @@ abstract class AbstractRel
      */
     private $config;
 
+    /**
+     * @var string
+     */
+    private $inverseOf;
+
     abstract public function areLinked(AbstractModel $model, AbstractModel $foreignModel);
     abstract public function hasModels(Models $models);
     abstract public function loadModels(Models $models, $flags = null);
@@ -77,6 +82,24 @@ abstract class AbstractRel
     public function getRepo()
     {
         return $this->repo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInverseOf()
+    {
+        return $this->inverseOf;
+    }
+
+    /**
+     * @return AbstractRel|null
+     */
+    public function getInverseOfRel()
+    {
+        return $this->inverseOf
+            ? $this->getRepo()->getRelOrError($this->inverseOf)
+            : null;
     }
 
     /**

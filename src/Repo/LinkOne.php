@@ -6,6 +6,7 @@ use Harp\Harp\Rel\AbstractRelOne;
 use Harp\Harp\Rel\DeleteOneInterface;
 use Harp\Harp\Rel\InsertOneInterface;
 use Harp\Harp\Rel\UpdateOneInterface;
+use Harp\Harp\Rel\UpdateInverseInterface;
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Model\Models;
 
@@ -59,6 +60,12 @@ class LinkOne extends AbstractLink
     public function set(AbstractModel $current)
     {
         $this->current = $current;
+
+        $rel = $this->getRel()->getInverseOfRel();
+
+        if ($rel instanceof UpdateInverseInterface) {
+            $rel->updateInverse($this->getModel(), $current);
+        }
 
         return $this;
     }

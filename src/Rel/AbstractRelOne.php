@@ -14,7 +14,7 @@ use Harp\Harp\Repo\LinkOne;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-abstract class AbstractRelOne extends AbstractRel
+abstract class AbstractRelOne extends AbstractRel implements UpdateInverseInterface
 {
     /**
      * Return a LinkOne based on the linked model. Only the first linked model is considered,
@@ -37,5 +37,18 @@ abstract class AbstractRelOne extends AbstractRel
         }
 
         return new LinkOne($model, $this, $foreign);
+    }
+
+    /**
+     * @param  AbstractModel $model
+     * @param  AbstractModel $foreign
+     */
+    public function updateInverse(AbstractModel $model, AbstractModel $foreign)
+    {
+        $link = $foreign->getLinkOne($this->getName());
+
+        if ($link->get() !== $model) {
+            $link->set($model);
+        }
     }
 }

@@ -6,6 +6,7 @@ use Harp\Harp\Rel\AbstractRelMany;
 use Harp\Harp\Rel\DeleteManyInterface;
 use Harp\Harp\Rel\InsertManyInterface;
 use Harp\Harp\Rel\UpdateManyInterface;
+use Harp\Harp\Rel\UpdateInverseInterface;
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Model\Models;
 use Countable;
@@ -206,6 +207,12 @@ class LinkMany extends AbstractLink implements Countable, Iterator
     public function add(AbstractModel $model)
     {
         $this->current->add($model);
+
+        $rel = $this->getRel()->getInverseOfRel();
+
+        if ($rel instanceof UpdateInverseInterface) {
+            $rel->updateInverse($this->getModel(), $model);
+        }
 
         return $this;
     }

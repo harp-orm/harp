@@ -2,10 +2,12 @@
 
 namespace Harp\Harp\Repo;
 
+use Harp\Util\Objects;
 use Harp\Harp\Model\Models;
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Repo;
 use InvalidArgumentException;
+use Closure;
 
 /**
  * Represnts Models for a specific repo.
@@ -56,6 +58,19 @@ class RepoModels extends Models
         }
 
         return parent::add($model);
+    }
+
+    /**
+     * @param  Closure $filter
+     * @return RepoModels
+     */
+    public function filter(Closure $filter)
+    {
+        $filtered = new RepoModels($this->repo);
+
+        $filtered->addObjects(Objects::filter($this->all(), $filter));
+
+        return $filtered;
     }
 
     /**

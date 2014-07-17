@@ -92,6 +92,28 @@ class ModelsTest extends AbstractTestCase
     }
 
     /**
+     * @covers ::filter
+     */
+    public function testFilter()
+    {
+        $source = [
+            new City(['name' => 'test1']),
+            new City(['name' => 'test1']),
+            new City(['name' => 'test2']),
+        ];
+
+        $models = new RepoModels(City::getRepo(), $source);
+
+        $filtered = $models->filter(function($model){
+            return $model->name !== 'test1';
+        });
+
+        $this->assertInstanceOf('Harp\Harp\Repo\RepoModels', $filtered);
+        $this->assertSame(City::getRepo(), $filtered->getRepo());
+        $this->assertEquals([$source[2]], Objects::toArray($filtered->all()));
+    }
+
+    /**
      * @covers ::add
      */
     public function testAdd()

@@ -226,11 +226,26 @@ class Models implements Countable, Iterator
      */
     public function filter(Closure $filter)
     {
-        $filtered = new Models();
+        $filtered = clone $this;
 
-        $filtered->addObjects(Objects::filter($this->models, $filter));
+        $filtered->models = Objects::filter($filtered->models, $filter);
 
         return $filtered;
+    }
+
+    /**
+     * Sort the models collection using a comparation closure
+     *
+     * @param  Closure $closure
+     * @return array
+     */
+    public function sort(Closure $closure)
+    {
+        $sorted = clone $this;
+
+        $sorted->models = Objects::sort($sorted->models, $closure);
+
+        return $sorted;
     }
 
     /**

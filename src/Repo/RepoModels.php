@@ -60,18 +60,6 @@ class RepoModels extends Models
         return parent::add($model);
     }
 
-    /**
-     * @param  Closure $filter
-     * @return RepoModels
-     */
-    public function filter(Closure $filter)
-    {
-        $filtered = new RepoModels($this->repo);
-
-        $filtered->addObjects(Objects::filter($this->all(), $filter));
-
-        return $filtered;
-    }
 
     /**
      * If model doesn't exist, return a void model

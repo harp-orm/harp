@@ -14,7 +14,7 @@
         "harp-orm/validate": "~0.2.0",
         "harp-orm/query": "~0.2.0",
         "harp-orm/serializer": "~0.1.0",
-        "harp-orm/util": "~0.2.0"
+        "harp-orm/util": "~0.2.2"
     },
     "autoload": {
         "psr-4": {"Harp\\Harp\\": "src/"}

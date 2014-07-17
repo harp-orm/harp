@@ -235,6 +235,27 @@ class ModelsTest extends AbstractTestCase
     }
 
     /**
+     * @covers ::sort
+     */
+    public function testSort()
+    {
+        $city1 = new City(['id' => 1]);
+        $city2 = new City(['id' => 3]);
+        $city3 = new City(['id' => 8]);
+
+        $source = [$city1, $city3, $city2];
+
+        $models = new Models($source);
+
+        $sorted = $models->sort(function ($city1, $city2) {
+            return $city1->id - $city2->id;
+        });
+
+        $this->assertInstanceOf('Harp\Harp\Model\Models', $sorted);
+        $this->assertEquals([$city1, $city2, $city3], Objects::toArray($sorted->all()));
+    }
+
+    /**
      * @covers ::invoke
      */
     public function testInvoke()

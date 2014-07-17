@@ -92,7 +92,7 @@ class ModelsTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::filter
+     * @coversNothing
      */
     public function testFilter()
     {
@@ -111,6 +111,28 @@ class ModelsTest extends AbstractTestCase
         $this->assertInstanceOf('Harp\Harp\Repo\RepoModels', $filtered);
         $this->assertSame(City::getRepo(), $filtered->getRepo());
         $this->assertEquals([$source[2]], Objects::toArray($filtered->all()));
+    }
+
+    /**
+     * @coversNothing
+     */
+    public function testSort()
+    {
+        $city1 = new City(['id' => 1]);
+        $city2 = new City(['id' => 3]);
+        $city3 = new City(['id' => 8]);
+
+        $source = [$city1, $city3, $city2];
+
+        $models = new RepoModels(City::getRepo(), $source);
+
+        $sorted = $models->sort(function ($city1, $city2) {
+            return $city1->id - $city2->id;
+        });
+
+        $this->assertInstanceOf('Harp\Harp\Repo\RepoModels', $sorted);
+        $this->assertSame(City::getRepo(), $sorted->getRepo());
+        $this->assertEquals([$city1, $city2, $city3], Objects::toArray($sorted->all()));
     }
 
     /**

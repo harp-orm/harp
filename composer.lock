@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "30c7c0cfa1877a9f492530f846ee2ef2",
+    "hash": "bb269b307ce537cfb6c5bf960f3fbe4e",
     "packages": [
         {
             "name": "harp-orm/query",
@@ -56,16 +56,16 @@
         },
         {
             "name": "harp-orm/serializer",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/serializer.git",
-                "reference": "1cbef206aa54cfc79dc4051d8bdc62d15681db93"
+                "reference": "652a190ceabb4f3c55a41f33e0b23ba5197bd964"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/serializer/zipball/1cbef206aa54cfc79dc4051d8bdc62d15681db93",
-                "reference": "1cbef206aa54cfc79dc4051d8bdc62d15681db93",
+                "url": "https://api.github.com/repos/harp-orm/serializer/zipball/652a190ceabb4f3c55a41f33e0b23ba5197bd964",
+                "reference": "652a190ceabb4f3c55a41f33e0b23ba5197bd964",
                 "shasum": ""
             },
             "type": "library",
@@ -87,20 +87,20 @@
                 }
             ],
             "description": "Serialize object properties",
-            "time": "2014-06-21 17:01:33"
+            "time": "2014-07-17 11:30:08"
         },
         {
             "name": "harp-orm/util",
-            "version": "0.2.1",
+            "version": "0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/util.git",
-                "reference": "66de94b09e584b00d1a67090e72f0e31454fab15"
+                "reference": "b077d11dd15bf111313484aa427825a54808671d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/util/zipball/66de94b09e584b00d1a67090e72f0e31454fab15",
-                "reference": "66de94b09e584b00d1a67090e72f0e31454fab15",
+                "url": "https://api.github.com/repos/harp-orm/util/zipball/b077d11dd15bf111313484aa427825a54808671d",
+                "reference": "b077d11dd15bf111313484aa427825a54808671d",
                 "shasum": ""
             },
             "type": "library",
@@ -122,7 +122,7 @@
                 }
             ],
             "description": "General purpose helper methods",
-            "time": "2014-06-12 07:03:18"
+            "time": "2014-07-17 15:29:20"
         },
         {
             "name": "harp-orm/validate",

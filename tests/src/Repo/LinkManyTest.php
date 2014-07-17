@@ -433,6 +433,24 @@ class LinkManyTest extends AbstractTestCase
     }
 
     /**
+     * @covers ::sort
+     */
+    public function testSort()
+    {
+        $city1 = new City(['id' => 10]);
+        $city2 = new City(['id' => 20]);
+
+        $models = [$city2, $city1];
+        $link = new LinkMany(new Country(), Country::getRepo()->getRel('cities'), $models);
+
+        $result = $link->sort(function ($item1, $item2) {
+            return $item1->id - $item2->id;
+        });
+
+        $this->assertSame([$city1, $city2], $result->toArray());
+    }
+
+    /**
      * @covers ::map
      */
     public function testMap()

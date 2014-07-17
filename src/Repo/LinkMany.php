@@ -251,15 +251,27 @@ class LinkMany extends AbstractLink implements Countable, Iterator
     }
 
     /**
-     * Return a new Models object with only the models that pass the filter callback
+     * Return a new RepoModels object with only the models that pass the filter callback
      * (Filter callback returned true).
      *
      * @param  Closure $filter must return true for each item
-     * @return Models  Filtered models
+     * @return RepoModels  Filtered models
      */
     public function filter(Closure $filter)
     {
         return $this->current->filter($filter);
+    }
+
+
+    /**
+     * Return a new RepoModels object with models sorted using the compare closure
+     *
+     * @param  Closure $closure must return true for each item
+     * @return RepoModels  Filtered models
+     */
+    public function sort(Closure $closure)
+    {
+        return $this->current->sort($closure);
     }
 
     /**

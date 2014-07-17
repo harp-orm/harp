@@ -29,6 +29,20 @@ class ConfigTest extends AbstractTestCase
     }
 
     /**
+     * @covers ::getRepo
+     */
+    public function testGetRepo()
+    {
+        $config = new Config(__NAMESPACE__.'\TestModel\Post');
+
+        $this->assertSame($config->getRepo(), Post::getRepo());
+
+        $config = new Config(__NAMESPACE__.'\TestModel\BlogPost');
+
+        $this->assertSame($config->getRepo(), BlogPost::getRepo());
+    }
+
+    /**
      * @covers ::getPrimaryKey
      * @covers ::setPrimaryKey
      */
@@ -132,21 +146,21 @@ class ConfigTest extends AbstractTestCase
      * @covers ::getInherited
      * @covers ::setInherited
      * @covers ::isRoot
-     * @covers ::getRootReflectionClass
+     * @covers ::getRootConfig
      */
     public function testInherited()
     {
         $config = new Config(__NAMESPACE__.'\TestModel\City');
 
         $this->assertEquals(false, $config->getInherited());
-        $this->assertEquals(__NAMESPACE__.'\TestModel\City', $config->getRootReflectionClass()->getName());
+        $this->assertEquals(__NAMESPACE__.'\TestModel\City', $config->getRootConfig()->getModelClass());
         $this->assertTrue($config->isRoot());
 
         $config = new Config(__NAMESPACE__.'\TestModel\BlogPost');
         $this->assertFalse($config->isRoot());
 
         $this->assertEquals(true, $config->getInherited());
-        $this->assertEquals(__NAMESPACE__.'\TestModel\Post', $config->getRootReflectionClass()->getName());
+        $this->assertEquals(__NAMESPACE__.'\TestModel\Post', $config->getRootConfig()->getModelClass());
     }
 
     /**

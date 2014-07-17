@@ -59,7 +59,7 @@ class ConfigTest extends AbstractTestCase
     /**
      * @covers ::getRoot
      */
-    public function testGetRootClass()
+    public function testGetRoot()
     {
         $post = new ReflectionModel('Harp\Harp\Test\TestModel\Post');
 

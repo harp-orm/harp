@@ -48,7 +48,7 @@ class ConfigProxyTraitTest extends AbstractTestCase
             ['getTable', [], 'test'],
             ['getDb', [], 'test'],
             ['getReflectionModel', [], 'test'],
-            ['getRootReflectionClass', [], 'test'],
+            ['getRootConfig', [], 'test'],
             ['getSoftDelete', [], 'test'],
             ['getInherited', [], 'test'],
             ['getPrimaryKey', [], 'test'],
@@ -75,7 +75,7 @@ class ConfigProxyTraitTest extends AbstractTestCase
      * @covers ::getTable
      * @covers ::getDb
      * @covers ::getReflectionModel
-     * @covers ::getRootReflectionClass
+     * @covers ::getRootConfig
      * @covers ::getSoftDelete
      * @covers ::getInherited
      * @covers ::getPrimaryKey

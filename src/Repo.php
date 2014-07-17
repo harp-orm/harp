@@ -302,11 +302,6 @@ class Repo
      */
     public function getRootRepo()
     {
-        if ($this->getConfig()->isRoot()) {
-            return $this;
-        } else {
-            $class = $this->getConfig()->getRootReflectionClass()->getName();
-            return $class::getRepo();
-        }
+        return $this->getRootConfig()->getRepo();
     }
 }

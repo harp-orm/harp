@@ -55,11 +55,11 @@ trait ConfigProxyTrait
     }
 
     /**
-     * @return ReflectionClass
+     * @return Config
      */
-    public function getRootReflectionClass()
+    public function getRootConfig()
     {
-        return $this->getConfig()->getRootReflectionClass();
+        return $this->getConfig()->getRootConfig();
     }
 
     /**

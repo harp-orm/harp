@@ -8,6 +8,7 @@ use Harp\Harp\AbstractModel;
 use Harp\Harp\Rel\AbstractRel;
 use Harp\Harp\Repo\ReflectionModel;
 use Harp\Harp\Repo\EventListeners;
+use Harp\Harp\Repo\Container;
 use InvalidArgumentException;
 
 /**
@@ -78,9 +79,9 @@ class Config
     private $inherited = false;
 
     /**
-     * @var ReflectionClass
+     * @var Config
      */
-    private $rootReflectionClass;
+    private $rootConfig;
 
     /**
      * @var EventListeners
@@ -102,12 +103,6 @@ class Config
      */
     private $serializers = [];
 
-    /**
-     * @var boolean
-     */
-    private $isRoot;
-
-
     public function __construct($class)
     {
         $this->reflectionModel = new ReflectionModel($class);
@@ -116,7 +111,7 @@ class Config
         $this->asserts = new Asserts();
         $this->name = $this->table = $this->reflectionModel->getShortName();
         $this->fields = $this->reflectionModel->getPublicPropertyNames();
-        $this->isRoot = $this->reflectionModel->isRoot();
+        $this->rootConfig = $this;
     }
 
     /**
@@ -135,6 +130,9 @@ class Config
         return $this->reflectionModel->getName();
     }
 
+    /**
+     * @return string
+     */
     public function getTable()
     {
         $this->initializeOnce();
@@ -142,6 +140,9 @@ class Config
         return $this->table;
     }
 
+    /**
+     * @param string $table
+     */
     public function setTable($table)
     {
         $this->table = (string) $table;
@@ -149,6 +150,9 @@ class Config
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getDb()
     {
         $this->initializeOnce();
@@ -156,6 +160,10 @@ class Config
         return $this->db;
     }
 
+    /**
+     * @param string $db
+     * @return Config
+     */
     public function setDb($db)
     {
         $this->db = (string) $db;
@@ -163,6 +171,9 @@ class Config
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getFields()
     {
         $this->initializeOnce();
@@ -170,6 +181,10 @@ class Config
         return $this->fields;
     }
 
+    /**
+     * @param array $items
+     * @return Config
+     */
     public function setFields(array $items)
     {
         $this->fields = $items;
@@ -186,13 +201,21 @@ class Config
     }
 
     /**
-     * @return \ReflectionClass
+     * @return Config
      */
-    public function getRootReflectionClass()
+    public function getRootConfig()
     {
         $this->initializeOnce();
 
-        return $this->rootReflectionClass ?: $this->reflectionModel;
+        return $this->rootConfig;
+    }
+
+    /**
+     * @return Repo
+     */
+    public function getRepo()
+    {
+        return Container::get($this->getModelClass());
     }
 
     /**
@@ -200,7 +223,7 @@ class Config
      */
     public function isRoot()
     {
-        return $this->isRoot;
+        return $this->getRootConfig() === $this;
     }
 
     /**
@@ -248,9 +271,13 @@ class Config
     {
         $this->inherited = (bool) $inherited;
 
-        if ($inherited and ! $this->reflectionModel->isRoot()) {
-            $this->rootReflectionClass = $this->reflectionModel->getRoot();
-            $this->table = $this->rootReflectionClass->getShortName();
+        if ($inherited) {
+            if (! $this->reflectionModel->isRoot()) {
+                $rootRepo = Container::get($this->reflectionModel->getRoot()->getName());
+                $this->rootConfig = $rootRepo->getConfig();
+            }
+
+            $this->table = $this->rootConfig->getTable();
         }
 
         return $this;
@@ -454,7 +481,7 @@ class Config
             throw new InvalidArgumentException(
                 sprintf(
                     'Model must be instance of %s, but was %s',
-                    $this->getRootReflectionClass()->getName(),
+                    $this->getRootConfig()->getModelClass(),
                     get_class($model)
                 )
             );
@@ -467,7 +494,7 @@ class Config
      */
     public function isModel(AbstractModel $model)
     {
-        return $this->getRootReflectionClass()->isInstance($model);
+        return $this->getRootConfig()->getReflectionModel()->isInstance($model);
     }
 
     /**

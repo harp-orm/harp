@@ -27,7 +27,7 @@ class Container
     private static $actualClasses;
 
     /**
-     * @param  string       $class
+     * @param  string $class
      * @return Repo
      */
     public static function get($class)
@@ -49,8 +49,8 @@ class Container
     }
 
     /**
-     * @param string       $class
-     * @param Repo $repo
+     * @param string $class
+     * @param Repo   $repo
      */
     public static function set($class, Repo $repo)
     {
@@ -58,8 +58,8 @@ class Container
     }
 
     /**
-     * @param string       $class
-     * @param Repo $repo
+     * @param string $class
+     * @param string $alias
      */
     public static function setActualClass($class, $alias)
     {
@@ -67,8 +67,8 @@ class Container
     }
 
     /**
-     * @param  string  $class
-     * @return boolean
+     * @param  string $class
+     * @return string
      */
     public static function getActualClass($class)
     {

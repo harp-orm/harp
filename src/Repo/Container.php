@@ -22,13 +22,27 @@ class Container
     private static $repos;
 
     /**
+     * @var array
+     */
+    private static $actualClasses;
+
+    /**
      * @param  string       $class
      * @return Repo
      */
     public static function get($class)
     {
         if (! self::has($class)) {
-            self::set($class, $class::newRepo($class));
+            if (self::hasActualClass($class)) {
+                $actualClass = self::getActualClass($class);
+                $repo = $actualClass::newRepo($actualClass);
+
+                self::set($actualClass, $repo);
+            } else {
+                $repo = $class::newRepo($class);
+            }
+
+            self::set($class, $repo);
         }
 
         return self::$repos[$class];
@@ -44,6 +58,33 @@ class Container
     }
 
     /**
+     * @param string       $class
+     * @param Repo $repo
+     */
+    public static function setActualClass($class, $alias)
+    {
+        self::$actualClasses[$class] = $alias;
+    }
+
+    /**
+     * @param  string  $class
+     * @return boolean
+     */
+    public static function getActualClass($class)
+    {
+        return self::$actualClasses[$class];
+    }
+
+    /**
+     * @param  string  $class
+     * @return boolean
+     */
+    public static function hasActualClass($class)
+    {
+        return isset(self::$actualClasses[$class]);
+    }
+
+    /**
      * @param  string  $class
      * @return boolean
      */
@@ -55,5 +96,6 @@ class Container
     public static function clear()
     {
         self::$repos = [];
+        self::$actualClasses = [];
     }
 }

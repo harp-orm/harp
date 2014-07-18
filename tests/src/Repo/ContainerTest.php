@@ -24,8 +24,6 @@ class ContainerTest extends AbstractTestCase
      */
     public function testGetterSetter()
     {
-        Container::clear();
-
         $class = 'Harp\Harp\Test\TestModel\City';
 
         $this->assertFalse(Container::has($class));
@@ -47,5 +45,52 @@ class ContainerTest extends AbstractTestCase
         Container::clear();
 
         $this->assertFalse(Container::has($class));
+    }
+
+    /**
+     * @covers ::getActualClass
+     * @covers ::setActualClass
+     * @covers ::hasActualClass
+     */
+    public function testActualClasses()
+    {
+        $class = 'Harp\Harp\Test\TestModel\City';
+        $actual = 'Harp\Harp\Test\TestModel\City';
+
+        $this->assertFalse(Container::hasActualClass($class));
+
+        Container::setActualClass($class, $actual);
+
+        $this->assertTrue(Container::hasActualClass($class));
+
+        $this->assertEquals($actual, Container::getActualClass($class));
+
+        Container::clear();
+
+        $this->assertFalse(Container::hasActualClass($class));
+    }
+
+    /**
+     * @covers ::get
+     */
+    public function testGetActualClasses()
+    {
+        $class = 'Harp\Harp\Test\TestModel\Country';
+        $actual = 'Harp\Harp\Test\TestModel\City';
+
+        $this->assertEquals($class, Container::get($class)->getModelClass());
+
+        Container::setActualClass($class, $actual);
+
+        $this->assertEquals($class, Container::get($class)->getModelClass());
+
+        Container::clear();
+        Container::setActualClass($class, $actual);
+
+        $this->assertEquals($actual, Container::get($class)->getModelClass());
+
+        Container::clear();
+
+        $this->assertEquals($class, Container::get($class)->getModelClass());
     }
 }

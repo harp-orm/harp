@@ -67,6 +67,18 @@ class Container
     }
 
     /**
+     * Set multiple actual classes at once. [class => actual class]
+     *
+     * @param array $actual
+     */
+    public static function setActualClasses(array $actual)
+    {
+        foreach ($actual as $class => $actualClass) {
+            self::setActualClass($class, $actualClass);
+        }
+    }
+
+    /**
      * @param  string $class
      * @return string
      */

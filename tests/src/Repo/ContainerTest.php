@@ -52,14 +52,35 @@ class ContainerTest extends AbstractTestCase
      * @covers ::setActualClass
      * @covers ::hasActualClass
      */
-    public function testActualClasses()
+    public function testActualClass()
     {
         $class = 'Harp\Harp\Test\TestModel\City';
-        $actual = 'Harp\Harp\Test\TestModel\City';
+        $actual = 'Harp\Harp\Test\TestModel\Country';
 
         $this->assertFalse(Container::hasActualClass($class));
 
         Container::setActualClass($class, $actual);
+
+        $this->assertTrue(Container::hasActualClass($class));
+
+        $this->assertEquals($actual, Container::getActualClass($class));
+
+        Container::clear();
+
+        $this->assertFalse(Container::hasActualClass($class));
+    }
+
+    /**
+     * @covers ::setActualClasses
+     */
+    public function testActualClasses()
+    {
+        $class = 'Harp\Harp\Test\TestModel\City';
+        $actual = 'Harp\Harp\Test\TestModel\Country';
+
+        $this->assertFalse(Container::hasActualClass($class));
+
+        Container::setActualClasses([$class => $actual]);
 
         $this->assertTrue(Container::hasActualClass($class));
 

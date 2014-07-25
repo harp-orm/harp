@@ -7,15 +7,21 @@ Generally extending is accomplished with [PHP's native Traits](http://www.php.ne
 A quick naive implementation of slugs.
 
 ```php
-// Extending the model
+use Harp\Harp\Repo\Event;
+
 trait ExtensionTrait
 {
+    public static function initialize($config)
+    {
+        // Here you can work with the config object as if you're in the model's initialize method itself
+        $config->addEventAfter(Event::CONSTRUCT, function ($model) {
+            $model->updateSlug();
+        });
+    }
+
     // Add a property to the model
     // By default all public properties are saved in the database
     public $slug;
-
-    // This will help the static analyzers as well as force this trait to only be added to models
-    abstract public static getRepoStatic();
 
     // adding a new function to search with from the model
     public static function findBySlug($slug)
@@ -31,37 +37,14 @@ trait ExtensionTrait
     }
 }
 
-// Extending the repo
-trait ExtensionRepoTrait
-{
-    // Add a uniquely named initialize method to be called from the repo initialize
-    public function initializeExtension()
-    {
-        // You will be able to configure the repo however you want here,
-        // since you have access to all the repo configuration setters.
-        $this->addEventAfter(Event::CONSTRUCT, function ($model) {
-            $model->updateSlug();
-        });
-    }
-}
-
 // In the model
 class User extends AbstractModel
 {
     use ExtensionTrait;
 
-    // ...
-}
-
-// In the repo
-class UserRepo extends AbstractRepo
-{
-    use ExtensionRepoTrait;
-
-    public function initialize()
+    public static function initialize($config)
     {
-        // Call the initialize method from the repo trait.
-        $this->initializeExtension();
+        ExtensionTrait::initialize($config);
 
         // ...
     }
@@ -86,13 +69,17 @@ All of these events have a "before" and "after" phase. Except "CONSTRUCT", which
 Here's an example:
 
 ```php
-// In the repo
-class UserRepo extends AbstractRepo
+use Harp\Harp\AbstractModel;
+use Harp\Harp\Repo\Event;
+
+class User extends AbstractModel
 {
-    public function initialize()
+    public static function initialize($config)
     {
         $this
-            ->addEventAfter(Event::SAVE, 'Test\Class::myMethod')
+            ->addEventAfter(Event::SAVE, function ($model) {
+                $model->preseveSave();
+            })
             ->addEventBefore(Event::DELETE, function ($model) {
                 $model->cleanUpDelete();
             });
@@ -107,7 +94,7 @@ The ``Find`` class has a variety of methods for adding sql constraints. Methods 
 
 ```php
 // In the repo
-use Harp\Harp\AbstractRepo;
+use Harp\Harp\AbstractModel;
 
 class User extends AbstractModel
 {
@@ -115,7 +102,7 @@ class User extends AbstractModel
 
     public static function findAll()
     {
-        return new MyFind(self::getRepo());
+        return new MyFind(static::getRepo());
     }
 }
 

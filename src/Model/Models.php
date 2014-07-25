@@ -4,11 +4,11 @@ namespace Harp\Harp\Model;
 
 use Harp\Util\Objects;
 use Harp\Harp\AbstractModel;
+use Harp\Harp\InvalidModelException;
 use SplObjectStorage;
 use Closure;
 use Countable;
 use Iterator;
-use LogicException;
 
 /**
  * A collection of model unique objects.
@@ -161,16 +161,16 @@ class Models implements Countable, Iterator
     }
 
     /**
-     * Call "validate" method on all the models, throw a LogicException if any of them has validation errors.
+     * Call "validate" method on all the models, throw a InvalidModelException if any of them has validation errors.
      *
-     * @throws LogicException If a model is invalid
+     * @throws InvalidModelException If a model is invalid
      * @return Models         $this
      */
     public function assertValid()
     {
         foreach ($this->models as $model) {
             if (! $model->validate()) {
-                throw new LogicException(
+                throw new InvalidModelException(
                     sprintf('%s contains errors: %s', $model->getRepo()->getName(), $model->getErrors()->humanize())
                 );
             }

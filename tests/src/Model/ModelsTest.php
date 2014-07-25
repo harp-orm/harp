@@ -47,7 +47,7 @@ class ModelsTest extends AbstractTestCase
 
         $source[0]->name = null;
 
-        $this->setExpectedException('LogicException');
+        $this->setExpectedException('Harp\Harp\InvalidModelException');
 
         $models->assertValid();
     }

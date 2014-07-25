@@ -35,7 +35,12 @@ class Container
         if (! self::has($class)) {
             if (self::hasActualClass($class)) {
                 $actualClass = self::getActualClass($class);
-                $repo = $actualClass::newRepo($actualClass);
+
+                if (self::has($actualClass)) {
+                    $repo = self::get($actualClass);
+                } else {
+                    $repo = $actualClass::newRepo($actualClass);
+                }
 
                 self::set($actualClass, $repo);
             } else {

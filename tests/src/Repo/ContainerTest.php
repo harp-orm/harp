@@ -114,4 +114,22 @@ class ContainerTest extends AbstractTestCase
 
         $this->assertEquals($class, Container::get($class)->getModelClass());
     }
+
+    /**
+     * @covers ::get
+     */
+    public function testGet()
+    {
+        $class1 = 'Harp\Harp\Test\TestModel\Country';
+        $actual1 = 'Harp\Harp\Test\TestModel\City';
+
+        $class2 = 'Harp\Harp\Test\TestModel\User';
+        $actual2 = 'Harp\Harp\Test\TestModel\Profile';
+
+        Container::setActualClass($class1, $actual1);
+        Container::setActualClass($class2, $actual2);
+
+        $this->assertSame(Container::get($class1), Container::get($actual1));
+        $this->assertSame(Container::get($actual2), Container::get($class2));
+    }
 }

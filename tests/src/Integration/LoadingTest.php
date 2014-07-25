@@ -4,6 +4,7 @@ namespace Harp\Harp\Test\Integration;
 
 use Harp\Harp\Test\AbstractDbTestCase;
 use Harp\Harp\Test\TestModel\User;
+use Harp\Harp\Test\TestModel\Profile;
 use Harp\Harp\Test\TestModel\City;
 use Harp\Harp\Test\TestModel\Address;
 use Harp\Query\SQL\SQL;
@@ -17,6 +18,26 @@ use Harp\Query\SQL\SQL;
  */
 class LoadingTest extends AbstractDbTestCase
 {
+    /**
+     * @coversNothing
+     */
+    public function testLoadVoid()
+    {
+        $user = new User();
+
+        $profile = $user->getProfile();
+
+        $this->assertInstanceof('Harp\Harp\Test\TestModel\Profile', $profile);
+        $this->assertTrue($profile->isVoid());
+
+        $profile = new Profile();
+
+        $user = $profile->getUser();
+
+        $this->assertInstanceof('Harp\Harp\Test\TestModel\User', $user);
+        $this->assertTrue($user->isVoid());
+    }
+
     /**
      * @coversNothing
      */

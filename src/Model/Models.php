@@ -161,20 +161,14 @@ class Models implements Countable, Iterator
     }
 
     /**
-     * Call "validate" method on all the models, throw a InvalidModelException if any of them has validation errors.
+     * Call "validate" method on all the models, throw a \Harp\Validate\InvalidException if any of them has validation errors.
      *
-     * @throws InvalidModelException If a model is invalid
+     * @throws \Harp\Validate\InvalidException If a model is invalid
      * @return Models         $this
      */
     public function assertValid()
     {
-        foreach ($this->models as $model) {
-            if (! $model->validate()) {
-                throw new InvalidModelException(
-                    sprintf('%s contains errors: %s', $model->getRepo()->getName(), $model->getErrors()->humanize())
-                );
-            }
-        }
+        Objects::invoke($this->models, 'assertValid');
 
         return $this;
     }

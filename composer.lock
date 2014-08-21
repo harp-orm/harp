@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bb269b307ce537cfb6c5bf960f3fbe4e",
+    "hash": "ec5370f838af5e7b5dd60c1673a77778",
     "packages": [
         {
             "name": "harp-orm/query",
@@ -126,17 +126,11 @@
         },
         {
             "name": "harp-orm/validate",
-            "version": "0.2.1",
+            "version": "0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/validate.git",
-                "reference": "bc3e94db54fbeb8f68b6e24b674b3382bc314d49"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/validate/zipball/bc3e94db54fbeb8f68b6e24b674b3382bc314d49",
-                "reference": "bc3e94db54fbeb8f68b6e24b674b3382bc314d49",
-                "shasum": ""
+                "reference": "fb3f154386a32f3873a3f4468d4c7061eef3a84d"
             },
             "type": "library",
             "autoload": {
@@ -144,7 +138,6 @@
                     "Harp\\Validate\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -152,12 +145,11 @@
                 {
                     "name": "Ivan Kerin",
                     "email": "ikerin@gmail.com",
-                    "homepage": "http://www.openbuildings.com",
                     "role": "Author"
                 }
             ],
             "description": "Object validaiton library",
-            "time": "2014-07-09 14:58:00"
+            "time": "2014-08-21 09:11:35"
         },
         {
             "name": "psr/log",
@@ -208,6 +200,7 @@
     "stability-flags": [
 
     ],
+    "prefer-stable": false,
     "platform": {
         "php": ">=5.4.0"
     },

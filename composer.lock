@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ec5370f838af5e7b5dd60c1673a77778",
+    "hash": "68594efcfc6f1374596faf9f9ba7169c",
     "packages": [
         {
             "name": "harp-orm/query",
@@ -126,11 +126,11 @@
         },
         {
             "name": "harp-orm/validate",
-            "version": "0.2.2",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/validate.git",
-                "reference": "fb3f154386a32f3873a3f4468d4c7061eef3a84d"
+                "reference": "7d23bcabde80eac6072bcbd61f477efaaa598e99"
             },
             "type": "library",
             "autoload": {
@@ -149,7 +149,7 @@
                 }
             ],
             "description": "Object validaiton library",
-            "time": "2014-08-21 09:11:35"
+            "time": "2014-08-21 13:47:40"
         },
         {
             "name": "psr/log",

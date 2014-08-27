@@ -32,7 +32,6 @@ class AbstractRelTest extends AbstractTestCase
         $this->assertSame($city, $link->getModel());
     }
 
-
     /**
      * @covers ::updateInverse
      */

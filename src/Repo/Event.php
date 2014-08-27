@@ -14,5 +14,4 @@ class Event
     const UPDATE = 3;
     const DELETE = 4;
     const SAVE = 5;
-    const VALIDATE = 6;
 }

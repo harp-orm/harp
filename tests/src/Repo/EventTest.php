@@ -22,7 +22,6 @@ class EventTest extends AbstractTestCase
             Event::UPDATE,
             Event::DELETE,
             Event::SAVE,
-            Event::VALIDATE,
         ];
 
         $this->assertEquals(count($events), count(array_unique($events)), 'All events should be unique');

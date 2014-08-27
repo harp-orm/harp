@@ -47,5 +47,4 @@ class TestBelongsTo extends AbstractRelOne implements DeleteOneInterface, Insert
     {
         throw new LogicException('this should not be called');
     }
-
 }

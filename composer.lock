@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ecbe4429403da53ac77b9adc035bff4d",
+    "hash": "b49df40031b3a2fb9d29e935b45cf6af",
     "packages": [
         {
             "name": "harp-orm/query",
@@ -126,16 +126,16 @@
         },
         {
             "name": "harp-orm/validate",
-            "version": "0.4.0",
+            "version": "0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/validate.git",
-                "reference": "c48241562a64ad4bbecc22967b29fdb3ecac118d"
+                "reference": "c9cd4963a15c4311cb665de346502e26b268e205"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/validate/zipball/c48241562a64ad4bbecc22967b29fdb3ecac118d",
-                "reference": "c48241562a64ad4bbecc22967b29fdb3ecac118d",
+                "url": "https://api.github.com/repos/harp-orm/validate/zipball/c9cd4963a15c4311cb665de346502e26b268e205",
+                "reference": "c9cd4963a15c4311cb665de346502e26b268e205",
                 "shasum": ""
             },
             "type": "library",
@@ -144,7 +144,6 @@
                     "Harp\\Validate\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -156,7 +155,11 @@
                 }
             ],
             "description": "Object validaiton library",
-            "time": "2014-08-27 14:14:20"
+            "support": {
+                "source": "https://github.com/harp-orm/validate/tree/0.4",
+                "issues": "https://github.com/harp-orm/validate/issues"
+            },
+            "time": "2014-08-28 08:39:30"
         },
         {
             "name": "psr/log",

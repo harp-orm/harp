@@ -12,8 +12,13 @@ use Harp\Query\AbstractWhere;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class HasOne extends AbstractRelOne implements UpdateOneInterface
+class HasOne extends AbstractRelOne implements UpdateOneInterface, FindModelsInterface
 {
+    use LoadModelsTrait;
+
+    /**
+     * @var string
+     */
     protected $foreignKey;
 
     /**
@@ -34,27 +39,6 @@ class HasOne extends AbstractRelOne implements UpdateOneInterface
     public function getKey()
     {
         return $this->getConfig()->getPrimaryKey();
-    }
-
-    /**
-     * @param  Models  $models
-     * @return boolean
-     */
-    public function hasModels(Models $models)
-    {
-        return ! $models->isEmptyProperty($this->getKey());
-    }
-
-    /**
-     * @param  Models $models
-     * @param  int    $flags
-     * @return AbstractModel[]
-     */
-    public function loadModels(Models $models, $flags = null)
-    {
-        $keys = $models->pluckPropertyUnique($this->getKey());
-
-        return $this->findAllWhereIn($this->getForeignKey(), $keys, $flags)->loadRaw();
     }
 
     /**

@@ -15,9 +15,18 @@ use Harp\Query\SQL\SQL;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class HasManyAs extends AbstractRelMany implements UpdateManyInterface
+class HasManyAs extends AbstractRelMany implements UpdateManyInterface, FindModelsInterface
 {
+    use LoadModelsTrait;
+
+    /**
+     * @var string
+     */
     protected $foreignKey;
+
+    /**
+     * @var string
+     */
     protected $foreignClassKey;
 
     public function __construct($name, Config $config, Repo $repo, $foreignKeyName, array $options = array())
@@ -36,6 +45,9 @@ class HasManyAs extends AbstractRelMany implements UpdateManyInterface
         return $this->foreignKey;
     }
 
+    /**
+     * @return string
+     */
     public function getForeignClassKey()
     {
         return $this->foreignClassKey;
@@ -50,27 +62,17 @@ class HasManyAs extends AbstractRelMany implements UpdateManyInterface
     }
 
     /**
-     * @param  Models  $models
-     * @return boolean
-     */
-    public function hasModels(Models $models)
-    {
-        return ! $models->isEmptyProperty($this->getKey());
-    }
-
-    /**
      * @param  Models $models
-     * @param  int $flags
-     * @return AbstractModel[]
+     * @param  integer $flags
+     * @return \Harp\Harp\Find
      */
-    public function loadModels(Models $models, $flags = null)
+    public function findModels(Models $models, $flags = null)
     {
         $keys = $models->pluckPropertyUnique($this->getKey());
 
         return $this
             ->findAllWhereIn($this->getForeignKey(), $keys, $flags)
-            ->where($this->getForeignClassKey(), $this->getConfig()->getModelClass())
-            ->loadRaw();
+            ->where($this->getForeignClassKey(), $this->getConfig()->getModelClass());
     }
 
     /**

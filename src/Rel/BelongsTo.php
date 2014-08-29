@@ -14,8 +14,10 @@ use Harp\Query\AbstractWhere;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class BelongsTo extends AbstractRelOne implements UpdateOneInterface
+class BelongsTo extends AbstractRelOne implements UpdateOneInterface, FindModelsInterface
 {
+    use LoadModelsTrait;
+
     /**
      * @var string
      */
@@ -26,27 +28,6 @@ class BelongsTo extends AbstractRelOne implements UpdateOneInterface
         $this->key = $name.'Id';
 
         parent::__construct($name, $config, $repo, $options);
-    }
-
-    /**
-     * @param  Models  $models
-     * @return boolean
-     */
-    public function hasModels(Models $models)
-    {
-        return ! $models->isEmptyProperty($this->key);
-    }
-
-    /**
-     * @param  Models $models
-     * @param  int $flags
-     * @return AbstractModel[]
-     */
-    public function loadModels(Models $models, $flags = null)
-    {
-        $keys = $models->pluckPropertyUnique($this->key);
-
-        return $this->findAllWhereIn($this->getForeignKey(), $keys, $flags)->loadRaw();
     }
 
     /**

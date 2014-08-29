@@ -16,8 +16,19 @@ use Harp\Query\AbstractWhere;
  */
 class HasManyThrough extends AbstractRelMany implements DeleteManyInterface, InsertManyInterface
 {
+    /**
+     * @var string
+     */
     protected $key;
+
+    /**
+     * @var string
+     */
     protected $foreignKey;
+
+    /**
+     * @var string
+     */
     protected $through;
 
     public function __construct($name, Config $config, Repo $repo, $through, array $options = array())
@@ -99,6 +110,16 @@ class HasManyThrough extends AbstractRelMany implements DeleteManyInterface, Ins
      */
     public function loadModels(Models $models, $flags = null)
     {
+        return $this->findModels($models, $flags)->loadRaw();
+    }
+
+    /**
+     * @param  Models $models
+     * @param  int $flags
+     * @return \Harp\Harp\Find
+     */
+    public function findModels(Models $models, $flags = null)
+    {
         $throughKey = $this->getThroughTable().'.'.$this->getThroughRel()->getForeignKey();
         $throughForeignKey = $this->getThroughTable().'.'.$this->getKey();
 
@@ -107,9 +128,9 @@ class HasManyThrough extends AbstractRelMany implements DeleteManyInterface, Ins
         return $this
             ->findAllWhereIn($throughForeignKey, $keys, $flags)
             ->column($throughKey, $this->getThroughKey())
-            ->joinRels([$this->through])
-            ->loadRaw();
+            ->joinRels([$this->through]);
     }
+
 
     /**
      * @param  AbstractModel $model

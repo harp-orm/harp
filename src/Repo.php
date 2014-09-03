@@ -2,7 +2,7 @@
 
 namespace Harp\Harp;
 
-use Harp\Harp\Repo\IdentityMap;
+use Harp\IdentityMap\IdentityMap;
 use Harp\Harp\Repo\Event;
 use Harp\Harp\Repo\LinkMap;
 use Harp\Harp\Repo\AbstractLink;
@@ -44,7 +44,7 @@ class Repo
     function __construct($modelClass)
     {
         $this->config = new Config($modelClass);
-        $this->identityMap = new IdentityMap($this);
+        $this->identityMap = new IdentityMap();
         $this->linkMap = new LinkMap($this);
     }
 

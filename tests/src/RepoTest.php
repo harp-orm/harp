@@ -39,8 +39,7 @@ class RepoTest extends AbstractDbTestCase
         $this->assertInstanceof('Harp\Harp\Config', $repo->getConfig());
         $this->assertEquals(__NAMESPACE__.'\TestModel\City', $repo->getConfig()->getModelClass());
 
-        $this->assertInstanceof('Harp\Harp\Repo\IdentityMap', $repo->getIdentityMap());
-        $this->assertSame($repo, $repo->getIdentityMap()->getRepo());
+        $this->assertInstanceof('Harp\IdentityMap\IdentityMap', $repo->getIdentityMap());
 
         $this->assertInstanceof('Harp\Harp\Repo\LinkMap', $repo->getLinkMap());
         $this->assertSame($repo, $repo->getLinkMap()->getRepo());

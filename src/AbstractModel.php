@@ -5,6 +5,7 @@ namespace Harp\Harp;
 use Harp\Harp\Model\StateTrait;
 use Harp\Harp\Model\DirtyTrackingTrait;
 use Harp\Harp\Model\UnmappedPropertiesTrait;
+use Harp\IdentityMap\IdentityMapItemInterface;
 use Harp\Harp\Model\RepoTrait;
 use Harp\Validate\ValidateTrait;
 
@@ -13,7 +14,7 @@ use Harp\Validate\ValidateTrait;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-abstract class AbstractModel
+abstract class AbstractModel implements IdentityMapItemInterface
 {
     use StateTrait;
     use DirtyTrackingTrait;
@@ -58,5 +59,10 @@ abstract class AbstractModel
     public function isSoftDeleted()
     {
         return false;
+    }
+
+    public function getIdentityKey()
+    {
+        return $this->isSaved() ? $this->getId() : null;
     }
 }

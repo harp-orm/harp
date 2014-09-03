@@ -12,6 +12,7 @@
     "require": {
         "php": ">=5.4.0",
         "harp-orm/validate": "~0.4.0",
+        "harp-orm/identity-map": "~0.1.0",
         "harp-orm/query": "~0.2.0",
         "harp-orm/serializer": "~0.1.0",
         "harp-orm/util": "~0.2.2"

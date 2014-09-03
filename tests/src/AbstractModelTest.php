@@ -66,4 +66,23 @@ class AbstractModelTest extends AbstractTestCase
 
         $this->assertFalse($city->isSoftDeleted());
     }
+
+    /**
+     * @covers ::getIdentityKey
+     */
+    public function testGetIdentityKey()
+    {
+        $city = new City();
+
+        $this->assertNull($city->getIdentityKey());
+
+        $city = new City(['id' => 10]);
+
+        $this->assertNull($city->getIdentityKey());
+
+        $city = new City(['id' => 10], State::SAVED);
+
+        $this->assertEquals(10, $city->getIdentityKey());
+
+    }
 }

@@ -72,6 +72,7 @@ class HasManyAsTest extends AbstractDbTestCase
 
     /**
      * @covers ::loadModels
+     * @covers ::findModels
      */
     public function testLoadModels()
     {

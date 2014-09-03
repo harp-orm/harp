@@ -64,6 +64,7 @@ class BelongsToTest extends AbstractDbTestCase
 
     /**
      * @covers ::loadModels
+     * @covers ::findModels
      */
     public function testLoadModels()
     {

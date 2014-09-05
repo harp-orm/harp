@@ -211,21 +211,6 @@ class ConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::getAsserts
-     * @covers ::addAsserts
-     */
-    public function testAsserts()
-    {
-        $config = new Config(__NAMESPACE__.'\TestModel\City');
-
-        $asserts = $config->getAsserts();
-
-        $asserts->rewind();
-
-        $this->assertInstanceof('Harp\Validate\Assert\Present', $asserts->current());
-    }
-
-    /**
      * @covers ::getSerializers
      * @covers ::addSerializers
      */

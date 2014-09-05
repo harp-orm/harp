@@ -3,8 +3,6 @@
 namespace Harp\Harp\Test\TestModel;
 
 use Harp\Harp\AbstractModel;
-use Harp\Harp\Rel;
-
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>

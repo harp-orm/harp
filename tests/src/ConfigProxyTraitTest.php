@@ -16,7 +16,7 @@ class ConfigProxyTraitTest extends AbstractTestCase
 {
     public function getMockForMethod($method, $arguments, $return)
     {
-        $config = $this->getMock('Harp\Harp\Config', [$method], ['Harp\Harp\Test\TestModel\City']);
+        $config = $this->getMock('Harp\Harp\Config', [$method], ['Harp\Harp\Test\TestModel\City'], '', false);
 
         $methodMock = $config
             ->expects($this->once())

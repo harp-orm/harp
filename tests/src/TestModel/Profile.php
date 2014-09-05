@@ -3,8 +3,6 @@
 namespace Harp\Harp\Test\TestModel;
 
 use Harp\Harp\AbstractModel;
-use Harp\Harp\Rel;
-use Harp\Validate\Assert;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -17,9 +15,7 @@ class Profile extends AbstractModel {
     {
         $config
             ->belongsTo('user', __NAMESPACE__.'\User', ['inverseOf' => 'profile'])
-            ->addAsserts([
-                new Assert\Present('name'),
-            ]);
+            ->assertPresent('name');
     }
 
     /**

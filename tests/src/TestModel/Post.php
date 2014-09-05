@@ -4,8 +4,6 @@ namespace Harp\Harp\Test\TestModel;
 
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Model\InheritedTrait;
-use Harp\Harp\Rel;
-use Harp\Validate\Assert;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -24,9 +22,7 @@ class Post extends AbstractModel
             ->belongsTo('user', __NAMESPACE__.'\User')
             ->hasMany('postTags', __NAMESPACE__.'\PostTag')
             ->hasManyThrough('tags', __NAMESPACE__.'\Tag', 'postTags')
-            ->addAsserts([
-                new Assert\Present('title'),
-            ]);
+            ->assertPresent('title');
     }
 
     public $id;

@@ -4,8 +4,6 @@ namespace Harp\Harp\Test\TestModel;
 
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Model\SoftDeleteTrait;
-use Harp\Harp\Rel;
-use Harp\Validate\Assert;
 use Harp\Serializer;
 
 /**
@@ -31,9 +29,7 @@ class User extends AbstractModel
             ])
             ->hasOne('profile', __NAMESPACE__.'\Profile', ['inverseOf' => 'user'])
 
-            ->addAsserts([
-                new Assert\Present('name'),
-            ])
+            ->assertPresent('name')
 
             ->addSerializers([
                 new Serializer\Native('object')

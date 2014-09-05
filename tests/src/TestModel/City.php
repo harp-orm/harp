@@ -3,8 +3,6 @@
 namespace Harp\Harp\Test\TestModel;
 
 use Harp\Harp\AbstractModel;
-use Harp\Harp\Rel;
-use Harp\Validate\Assert;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -18,9 +16,7 @@ class City extends AbstractModel implements LocationInterface {
         $config
             ->hasManyAs('users', __NAMESPACE__.'\User', 'location')
             ->belongsTo('country', __NAMESPACE__.'\Country')
-            ->addAsserts([
-                new Assert\Present('name'),
-            ]);
+            ->assertPresent('name');
     }
 
     public $id;

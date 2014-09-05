@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "82df343c95f28f16fcdb5a5ad077a24f",
+    "hash": "fbfb71ec356a5aa17171052c50834f10",
     "packages": [
         {
             "name": "harp-orm/identity-map",
@@ -163,16 +163,16 @@
         },
         {
             "name": "harp-orm/validate",
-            "version": "0.4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/validate.git",
-                "reference": "c9cd4963a15c4311cb665de346502e26b268e205"
+                "reference": "77c46132a8eb6d0a1421a28896a172a63134772f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/validate/zipball/c9cd4963a15c4311cb665de346502e26b268e205",
-                "reference": "c9cd4963a15c4311cb665de346502e26b268e205",
+                "url": "https://api.github.com/repos/harp-orm/validate/zipball/77c46132a8eb6d0a1421a28896a172a63134772f",
+                "reference": "77c46132a8eb6d0a1421a28896a172a63134772f",
                 "shasum": ""
             },
             "type": "library",
@@ -193,10 +193,10 @@
             ],
             "description": "Object validaiton library",
             "support": {
-                "source": "https://github.com/harp-orm/validate/tree/0.4",
+                "source": "https://github.com/harp-orm/validate/tree/master",
                 "issues": "https://github.com/harp-orm/validate/issues"
             },
-            "time": "2014-08-28 08:39:30"
+            "time": "2014-09-05 13:11:45"
         },
         {
             "name": "psr/log",
@@ -244,9 +244,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "harp-orm/validate": 20
+    },
     "prefer-stable": false,
     "platform": {
         "php": ">=5.4.0"

@@ -3,9 +3,6 @@
 namespace Harp\Harp\Test\TestModel;
 
 use Harp\Harp\AbstractModel;
-use Harp\Harp\Rel;
-use Harp\Validate\Assert;
-
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -18,9 +15,7 @@ class Address extends AbstractModel {
     {
         $config
             ->hasOne('user', __NAMESPACE__.'\User')
-            ->addAsserts([
-                new Assert\Present('location'),
-            ]);
+            ->assertPresent('location');
     }
 
     /**

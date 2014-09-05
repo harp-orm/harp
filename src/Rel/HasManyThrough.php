@@ -31,11 +31,11 @@ class HasManyThrough extends AbstractRelMany implements DeleteManyInterface, Ins
      */
     protected $through;
 
-    public function __construct($name, Config $config, Repo $repo, $through, array $options = array())
+    public function __construct($name, Config $config, $foreignModel, $through, array $options = array())
     {
         $this->through = $through;
 
-        parent::__construct($name, $config, $repo, $options);
+        parent::__construct($name, $config, $foreignModel, $options);
     }
 
     /**

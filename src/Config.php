@@ -6,6 +6,7 @@ use Harp\Validate\Asserts;
 use Harp\Serializer\Serializers;
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Rel\AbstractRel;
+use Harp\Harp\Rel\RelConfigTrait;
 use Harp\Harp\Repo\ReflectionModel;
 use Harp\Harp\Repo\EventListeners;
 use Harp\Harp\Repo\Container;
@@ -28,6 +29,8 @@ use InvalidArgumentException;
  */
 class Config
 {
+    use RelConfigTrait;
+
     /**
      * @var string
      */
@@ -66,11 +69,6 @@ class Config
     /**
      * @var boolean
      */
-    private $initialized = false;
-
-    /**
-     * @var boolean
-     */
     private $softDelete = false;
 
     /**
@@ -87,11 +85,6 @@ class Config
      * @var EventListeners
      */
     private $eventListeners;
-
-    /**
-     * @var AbstractRel[]
-     */
-    private $rels = [];
 
     /**
      * @var Asserts
@@ -112,6 +105,8 @@ class Config
         $this->name = $this->table = $this->reflectionModel->getShortName();
         $this->fields = $this->reflectionModel->getPublicPropertyNames();
         $this->rootConfig = $this;
+
+        $this->reflectionModel->initialize($this);
     }
 
     /**
@@ -135,8 +130,6 @@ class Config
      */
     public function getTable()
     {
-        $this->initializeOnce();
-
         return $this->table;
     }
 
@@ -155,8 +148,6 @@ class Config
      */
     public function getDb()
     {
-        $this->initializeOnce();
-
         return $this->db;
     }
 
@@ -176,8 +167,6 @@ class Config
      */
     public function getFields()
     {
-        $this->initializeOnce();
-
         return $this->fields;
     }
 
@@ -205,8 +194,6 @@ class Config
      */
     public function getRootConfig()
     {
-        $this->initializeOnce();
-
         return $this->rootConfig;
     }
 
@@ -231,8 +218,6 @@ class Config
      */
     public function getSoftDelete()
     {
-        $this->initializeOnce();
-
         return $this->softDelete;
     }
 
@@ -255,8 +240,6 @@ class Config
      */
     public function getInherited()
     {
-        $this->initializeOnce();
-
         return $this->inherited;
     }
 
@@ -288,8 +271,6 @@ class Config
      */
     public function getPrimaryKey()
     {
-        $this->initializeOnce();
-
         return $this->primaryKey;
     }
 
@@ -309,8 +290,6 @@ class Config
      */
     public function getNameKey()
     {
-        $this->initializeOnce();
-
         return $this->nameKey;
     }
 
@@ -326,76 +305,10 @@ class Config
     }
 
     /**
-     * @param  AbstractRel  $rel
-     * @return Config $this
-     */
-    public function addRel(AbstractRel $rel)
-    {
-        $this->initializeOnce();
-
-        $this->rels[$rel->getName()] = $rel;
-
-        return $this;
-    }
-
-    /**
-     * @param AbstractRel[] $rels
-     */
-    public function addRels(array $rels)
-    {
-        foreach ($rels as $rel) {
-            $this->addRel($rel);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return AbstractRel[]
-     */
-    public function getRels()
-    {
-        $this->initializeOnce();
-
-        return $this->rels;
-    }
-
-    /**
-     * @param  string           $name
-     * @return AbstractRel|null
-     */
-    public function getRel($name)
-    {
-        $this->initializeOnce();
-
-        return isset($this->rels[$name]) ? $this->rels[$name] : null;
-    }
-
-    /**
-     * @param  string                   $name
-     * @return AbstractRel
-     * @throws InvalidArgumentException If rel does not exist
-     */
-    public function getRelOrError($name)
-    {
-        $rel = $this->getRel($name);
-
-        if ($rel === null) {
-            throw new InvalidArgumentException(
-                sprintf('Rel %s does not exist in %s Repo', $name, $this->getName())
-            );
-        }
-
-        return $rel;
-    }
-
-    /**
      * @return EventListeners
      */
     public function getEventListeners()
     {
-        $this->initializeOnce();
-
         return $this->eventListeners;
     }
 
@@ -404,8 +317,6 @@ class Config
      */
     public function getAsserts()
     {
-        $this->initializeOnce();
-
         return $this->asserts;
     }
 
@@ -415,9 +326,7 @@ class Config
      */
     public function addAsserts(array $asserts)
     {
-        $this->initializeOnce();
-
-        $this->getAsserts()->set($asserts);
+        $this->asserts->set($asserts);
 
         return $this;
     }
@@ -427,8 +336,6 @@ class Config
      */
     public function getSerializers()
     {
-        $this->initializeOnce();
-
         return $this->serializers;
     }
 
@@ -438,9 +345,7 @@ class Config
      */
     public function addSerializers(array $serializers)
     {
-        $this->initializeOnce();
-
-        $this->getSerializers()->set($serializers);
+        $this->serializers->set($serializers);
 
         return $this;
     }
@@ -452,7 +357,7 @@ class Config
      */
     public function addEventBefore($event, $callback)
     {
-        $this->getEventListeners()->addBefore($event, $callback);
+        $this->eventListeners->addBefore($event, $callback);
 
         return $this;
     }
@@ -464,7 +369,7 @@ class Config
      */
     public function addEventAfter($event, $callback)
     {
-        $this->getEventListeners()->addAfter($event, $callback);
+        $this->eventListeners->addAfter($event, $callback);
 
         return $this;
     }
@@ -495,26 +400,5 @@ class Config
     public function isModel(AbstractModel $model)
     {
         return $this->getRootConfig()->getReflectionModel()->isInstance($model);
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getInitialized()
-    {
-        return $this->initialized;
-    }
-
-    /**
-     * Call "initialize" method only once,
-     * this is determined by the "initialized" property.
-     */
-    public function initializeOnce()
-    {
-        if (! $this->initialized) {
-            $this->initialized = true;
-
-            $this->reflectionModel->initialize($this);
-        }
     }
 }

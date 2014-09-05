@@ -23,15 +23,13 @@ class User extends AbstractModel
         SoftDeleteTrait::initialize($config);
 
         $config
-            ->addRels([
-                new Rel\BelongsTo('address', $config, Address::getRepo()),
-                new Rel\BelongsToPolymorphic('location', $config, City::getRepo()),
-                new Rel\HasMany('posts', $config, Post::getRepo(), [
-                    'inverseOf' => 'user',
-                    'linkClass' => __NAMESPACE__.'\LinkManyPosts'
-                ]),
-                new Rel\HasOne('profile', $config, Profile::getRepo(), ['inverseOf' => 'user']),
+            ->belongsTo('address', __NAMESPACE__.'\Address')
+            ->belongsToPolymorphic('location', __NAMESPACE__.'\City')
+            ->hasMany('posts', __NAMESPACE__.'\Post', [
+                'inverseOf' => 'user',
+                'linkClass' => __NAMESPACE__.'\LinkManyPosts'
             ])
+            ->hasOne('profile', __NAMESPACE__.'\Profile', ['inverseOf' => 'user'])
 
             ->addAsserts([
                 new Assert\Present('name'),

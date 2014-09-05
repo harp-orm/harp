@@ -28,7 +28,7 @@ class HasOneTest extends AbstractDbTestCase
      */
     public function testConstruct()
     {
-        $rel = new HasOne('test', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasOne('test', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $this->assertSame('test', $rel->getName());
         $this->assertSame(Country::getRepo()->getConfig(), $rel->getConfig());
@@ -36,7 +36,7 @@ class HasOneTest extends AbstractDbTestCase
         $this->assertSame('id', $rel->getKey());
         $this->assertSame('countryId', $rel->getForeignKey());
 
-        $rel = new HasOne('test', Country::getRepo()->getConfig(), City::getRepo(), array('foreignKey' => 'test'));
+        $rel = new HasOne('test', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City', array('foreignKey' => 'test'));
         $this->assertSame('test', $rel->getForeignKey());
     }
 
@@ -45,7 +45,7 @@ class HasOneTest extends AbstractDbTestCase
      */
     public function testHasModels()
     {
-        $rel = new HasOne('city', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasOne('city', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $models = new Models([
             new Country(),
@@ -67,7 +67,7 @@ class HasOneTest extends AbstractDbTestCase
      */
     public function testLoadModels()
     {
-        $rel = new HasOne('city', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasOne('city', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $models = new Models([
             new Country(['id' => 1]),
@@ -99,7 +99,7 @@ class HasOneTest extends AbstractDbTestCase
      */
     public function testAreLinked($model, $foreign, $expected)
     {
-        $rel = new HasOne('city', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasOne('city', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $this->assertEquals($expected, $rel->areLinked($model, $foreign));
     }
@@ -109,7 +109,7 @@ class HasOneTest extends AbstractDbTestCase
      */
     public function testUpdate()
     {
-        $rel = new HasOne('city', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasOne('city', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $model = new Country(['id' => 20]);
         $old = new City(['countryId' => 20]);
@@ -128,7 +128,7 @@ class HasOneTest extends AbstractDbTestCase
      */
     public function testJoin()
     {
-        $rel = new HasOne('city', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasOne('city', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $select = new Select(Country::getRepo());
 
@@ -145,7 +145,7 @@ class HasOneTest extends AbstractDbTestCase
      */
     public function testJoinSoftDelete()
     {
-        $rel = new HasOne('user', Address::getRepo()->getConfig(), User::getRepo());
+        $rel = new HasOne('user', Address::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\User');
 
         $select = new Select(Address::getRepo());
 

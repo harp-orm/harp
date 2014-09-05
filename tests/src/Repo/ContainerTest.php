@@ -3,6 +3,7 @@
 namespace Harp\Harp\Test\Repo;
 
 use Harp\Harp\Test\TestModel\City;
+use Harp\Harp\Config;
 use Harp\Harp\Repo;
 use Harp\Harp\Test\AbstractTestCase;
 use Harp\Harp\Repo\Container;
@@ -36,7 +37,7 @@ class ContainerTest extends AbstractTestCase
 
         $this->assertSame($repo, Container::get($class));
 
-        $repo2 = new Repo($class);
+        $repo2 = new Repo(new Config($class));
 
         Container::set($class, $repo2);
 
@@ -45,6 +46,31 @@ class ContainerTest extends AbstractTestCase
         Container::clear();
 
         $this->assertFalse(Container::has($class));
+    }
+
+    /**
+     * @covers ::newRepo
+     * @covers ::setConfigClass
+     */
+    public function testNewRepo()
+    {
+        $repo = Container::newRepo('Harp\Harp\Test\TestModel\City');
+
+        $this->assertInstanceOf('Harp\Harp\Repo', $repo);
+        $this->assertInstanceOf('Harp\Harp\Config', $repo->getConfig());
+
+        $this->assertEquals('Harp\Harp\Test\TestModel\City', $repo->getModelClass());
+
+        Container::setConfigClass('Harp\Harp\Test\Repo\TestConfig');
+
+        $repo = Container::newRepo('Harp\Harp\Test\TestModel\City');
+
+        $this->assertInstanceOf('Harp\Harp\Repo', $repo);
+        $this->assertInstanceOf('Harp\Harp\Test\Repo\TestConfig', $repo->getConfig());
+
+        $this->setExpectedException('InvalidArgumentException', 'Config class Harp\Harp\Test\TestModel\City must be a subclass of Harp\Harp\Config');
+
+        Container::setConfigClass('Harp\Harp\Test\TestModel\City');
     }
 
     /**

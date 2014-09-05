@@ -38,7 +38,7 @@ class AbstractRelTest extends AbstractTestCase
 
         $rel = $this->getMockForAbstractClass(
             'Harp\Harp\Rel\AbstractRel',
-            [$name, $config, $repo, ['test' => 'test option', 'inverseOf' => 'country']]
+            [$name, $config, 'Harp\Harp\Test\TestModel\City', ['test' => 'test option', 'inverseOf' => 'country']]
         );
 
         $this->assertSame($name, $rel->getName());
@@ -108,7 +108,7 @@ class AbstractRelTest extends AbstractTestCase
 
         $rel = $this->getMockForAbstractClass(
             'Harp\Harp\Rel\AbstractRelMany',
-            ['test name', City::getRepo()->getConfig(), City::getRepo()],
+            ['test name', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City'],
             '',
             true,
             true,
@@ -153,14 +153,14 @@ class AbstractRelTest extends AbstractTestCase
     {
         $rel = $this->getMockForAbstractClass(
             'Harp\Harp\Rel\AbstractRel',
-            ['test', City::getRepo()->getConfig(), City::getRepo()]
+            ['test', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City']
         );
 
         $this->assertEquals([], $rel->getSoftDeleteConditions());
 
         $rel = $this->getMockForAbstractClass(
             'Harp\Harp\Rel\AbstractRel',
-            ['test', User::getRepo()->getConfig(), User::getRepo()]
+            ['test', User::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\User']
         );
 
         $this->assertEquals(['test.deletedAt' => new SQL('IS NULL')], $rel->getSoftDeleteConditions());
@@ -173,7 +173,7 @@ class AbstractRelTest extends AbstractTestCase
     {
         $rel = $this->getMockForAbstractClass(
             'Harp\Harp\Rel\AbstractRel',
-            ['test', User::getRepo()->getConfig(), User::getRepo()]
+            ['test', User::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\User']
         );
 
         $find = $rel->findAllWhereIn('name', [10, 13], State::DELETED);

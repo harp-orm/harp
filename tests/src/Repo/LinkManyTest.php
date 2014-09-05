@@ -52,7 +52,7 @@ class LinkManyTest extends AbstractTestCase
         $rel = $this->getMock(
             'Harp\Harp\Rel\HasManyThrough',
             ['delete'],
-            ['cities', Country::getRepo()->getConfig(), City::getRepo(), 'test']
+            ['cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City', 'test']
         );
 
         $link = new LinkMany(new Country(), $rel, $models);
@@ -76,7 +76,7 @@ class LinkManyTest extends AbstractTestCase
         $rel = $this->getMock(
             'Harp\Harp\Rel\HasMany',
             ['delete'],
-            ['cities', Country::getRepo()->getConfig(), City::getRepo()]
+            ['cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City']
         );
 
         $link = new LinkMany(new Country(), $rel, [new City()]);
@@ -94,7 +94,7 @@ class LinkManyTest extends AbstractTestCase
         $rel = $this->getMock(
             'Harp\Harp\Rel\HasManyThrough',
             ['insert'],
-            ['cities', Country::getRepo()->getConfig(), City::getRepo(), 'test']
+            ['cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City', 'test']
         );
 
         $link = new LinkMany(new Country(), $rel, [new City()]);
@@ -119,7 +119,7 @@ class LinkManyTest extends AbstractTestCase
         $rel = $this->getMock(
             'Harp\Harp\Rel\HasMany',
             ['insert'],
-            ['cities', Country::getRepo()->getConfig(), City::getRepo()]
+            ['cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City']
         );
 
         $link = new LinkMany(new Country(), $rel, [new City()]);
@@ -137,7 +137,7 @@ class LinkManyTest extends AbstractTestCase
         $rel = $this->getMock(
             'Harp\Harp\Rel\HasMany',
             ['update'],
-            ['cities', Country::getRepo()->getConfig(), City::getRepo()]
+            ['cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City']
         );
 
         $link = new LinkMany(new Country(), $rel, [new City()]);
@@ -162,7 +162,7 @@ class LinkManyTest extends AbstractTestCase
         $rel = $this->getMock(
             'Harp\Harp\Rel\HasManyThrough',
             ['update'],
-            ['cities', Country::getRepo()->getConfig(), City::getRepo(), 'test']
+            ['cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City', 'test']
         );
 
         $link = new LinkMany(new Country(), $rel, [new City()]);

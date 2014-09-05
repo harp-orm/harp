@@ -24,7 +24,7 @@ class HasManyExclusiveTest extends AbstractDbTestCase
      */
     public function testDelete()
     {
-        $rel = new HasManyExclusive('test', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasManyExclusive('test', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $model = new Country();
         $foreign1 = new City([], State::SAVED);
@@ -48,7 +48,7 @@ class HasManyExclusiveTest extends AbstractDbTestCase
      */
     public function testUpdate()
     {
-        $rel = new HasManyExclusive('cities', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasManyExclusive('cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $model = new Country(['id' => 2]);
         $foreign1 = new City(['countryId' => 2]);

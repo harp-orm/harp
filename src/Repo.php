@@ -41,9 +41,9 @@ class Repo
     /**
      * @param string $modelClass
      */
-    function __construct($modelClass)
+    function __construct(Config $config)
     {
-        $this->config = new Config($modelClass);
+        $this->config = $config;
         $this->identityMap = new IdentityMap();
         $this->linkMap = new LinkMap($this);
     }

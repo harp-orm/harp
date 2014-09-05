@@ -28,7 +28,7 @@ class HasManyAsTest extends AbstractDbTestCase
      */
     public function testConstruct()
     {
-        $rel = new HasManyAs('test', Country::getRepo()->getConfig(), City::getRepo(), 'parent');
+        $rel = new HasManyAs('test', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City', 'parent');
 
         $this->assertSame('test', $rel->getName());
         $this->assertSame(Country::getRepo()->getConfig(), $rel->getConfig());
@@ -53,7 +53,7 @@ class HasManyAsTest extends AbstractDbTestCase
      */
     public function testHasModels()
     {
-        $rel = new HasManyAs('users', City::getRepo()->getConfig(), User::getRepo(), 'location');
+        $rel = new HasManyAs('users', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Repo', 'location');
 
         $models = new Models([
             new City(),
@@ -76,7 +76,7 @@ class HasManyAsTest extends AbstractDbTestCase
      */
     public function testLoadModels()
     {
-        $rel = new HasManyAs('users', City::getRepo()->getConfig(), User::getRepo(), 'location');
+        $rel = new HasManyAs('users', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\User', 'location');
 
         $models = new Models([
             new City(['id' => 1]),
@@ -121,7 +121,7 @@ class HasManyAsTest extends AbstractDbTestCase
      */
     public function testAreLinked($model, $foreign, $expected)
     {
-        $rel = new HasManyAs('users', City::getRepo()->getConfig(), User::getRepo(), 'location');
+        $rel = new HasManyAs('users', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\User', 'location');
 
         $this->assertEquals($expected, $rel->areLinked($model, $foreign));
     }
@@ -131,7 +131,7 @@ class HasManyAsTest extends AbstractDbTestCase
      */
     public function testUpdate()
     {
-        $rel = new HasManyAs('users', City::getRepo()->getConfig(), User::getRepo(), 'location');
+        $rel = new HasManyAs('users', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\User', 'location');
 
         $model = new City(['id' => 2]);
         $foreign1 = new User(['locationId' => 2, 'locationClass' => 'Harp\Harp\Test\TestModel\City']);
@@ -157,7 +157,7 @@ class HasManyAsTest extends AbstractDbTestCase
      */
     public function testJoin()
     {
-        $rel = new HasManyAs('users', City::getRepo()->getConfig(), User::getRepo(), 'location');
+        $rel = new HasManyAs('users', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\User', 'location');
 
         $select = new Select(City::getRepo());
 

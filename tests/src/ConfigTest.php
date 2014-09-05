@@ -211,29 +211,6 @@ class ConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::getRels
-     * @covers ::getRel
-     * @covers ::addRels
-     * @covers ::addRel
-     * @covers ::getRelOrError
-     * @expectedException InvalidArgumentException
-     */
-    public function testRels()
-    {
-        $config = new Config(__NAMESPACE__.'\TestModel\City');
-
-        $rels = $config->getRels();
-
-        $this->assertSame($rels['country'], $config->getRel('country'));
-        $this->assertSame($rels['country'], $config->getRelOrError('country'));
-        $this->assertNull($config->getRel('other'));
-
-        $this->setExpectedException('InvalidArgumentException');
-
-        $config->getRelOrError('other');
-    }
-
-    /**
      * @covers ::getAsserts
      * @covers ::addAsserts
      */
@@ -292,24 +269,5 @@ class ConfigTest extends AbstractTestCase
 
         $this->assertEquals($expectedBefore, $config->getEventListeners()->getBefore());
         $this->assertEquals($expectedAfter, $config->getEventListeners()->getAfter());
-    }
-
-    /**
-     * @covers ::getInitialized
-     * @covers ::initializeOnce
-     */
-    public function testGetInitialized()
-    {
-        $config = new Config(__NAMESPACE__.'\TestModel\City');
-
-        $this->assertFalse($config->getInitialized());
-
-        $config->initializeOnce();
-
-        $this->assertTrue($config->getInitialized());
-
-        $config->initializeOnce();
-
-        $this->assertTrue($config->getInitialized(), 'Should remaind initialized, but initializeAll Should be called only once');
     }
 }

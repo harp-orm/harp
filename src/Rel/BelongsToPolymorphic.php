@@ -21,12 +21,12 @@ class BelongsToPolymorphic extends AbstractRelOne implements UpdateOneInterface
     protected $key;
     protected $classKey;
 
-    public function __construct($name, Config $config, Repo $defaultRepo, array $options = array())
+    public function __construct($name, Config $config, $defaultForeignModel, array $options = array())
     {
         $this->key = $name.'Id';
         $this->classKey = $name.'Class';
 
-        parent::__construct($name, $config, $defaultRepo, $options);
+        parent::__construct($name, $config, $defaultForeignModel, $options);
     }
 
     public function getKey()

@@ -15,10 +15,8 @@ class Country extends AbstractModel implements LocationInterface {
     public static function initialize($config)
     {
         $config
-            ->addRels([
-                new Rel\HasManyAs('users', $config, User::getRepo(), 'location'),
-                new Rel\HasMany('cities', $config, City::getRepo()),
-            ]);
+            ->hasManyAs('users', __NAMESPACE__.'\User', 'location')
+            ->hasMany('cities', __NAMESPACE__.'\City');
     }
 
     public $id;

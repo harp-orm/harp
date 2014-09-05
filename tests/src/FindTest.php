@@ -9,6 +9,7 @@ use Harp\Harp\Model\State;
 use Harp\Harp\Model\Models;
 use Harp\Harp\Repo\RepoModels;
 use Harp\Harp\Find;
+use Harp\Harp\Config;
 use Harp\Harp\Query\Select;
 use Harp\Harp\Test\AbstractDbTestCase;
 
@@ -274,7 +275,7 @@ class FindTest extends AbstractDbTestCase
      */
     public function testLoadWith()
     {
-        $repo = $this->getMock('Harp\Harp\Repo', ['loadAllRelsFor'], ['Harp\Harp\Test\TestModel\Country']);
+        $repo = $this->getMock('Harp\Harp\Repo', ['loadAllRelsFor'], [new Config('Harp\Harp\Test\TestModel\Country')]);
         $find = $this->getMock('Harp\Harp\Find', ['load'], [$repo]);
 
         $rels = ['one' => 'many'];

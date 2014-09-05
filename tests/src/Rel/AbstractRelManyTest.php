@@ -21,7 +21,7 @@ class AbstractRelManyTest extends AbstractTestCase
     {
         return $this->getMockForAbstractClass(
             'Harp\Harp\Rel\AbstractRelMany',
-            ['test name', City::getRepo()->getConfig(), City::getRepo()]
+            ['test name', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City']
         );
     }
 

@@ -4,6 +4,7 @@ namespace Harp\Harp\Rel;
 
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Config;
+use Harp\Harp\Repo\Container;
 use Harp\Harp\Repo;
 use Harp\Harp\Model\Models;
 use Harp\Query\AbstractWhere;
@@ -27,9 +28,9 @@ abstract class AbstractRel
     private $name;
 
     /**
-     * @var Repo
+     * @var string
      */
-    private $repo;
+    private $foreignModelClass;
 
     /**
      * @var Config
@@ -54,14 +55,14 @@ abstract class AbstractRel
      *
      * @param string $name        Unique rel name
      * @param Config $config
-     * @param Repo   $repo
+     * @param string $foreignModelClass
      * @param array  $properties  Added as is to the rel's properties.
      */
-    public function __construct($name, Config $config, Repo $repo, array $properties = array())
+    public function __construct($name, Config $config, $foreignModelClass, array $properties = array())
     {
         $this->name = $name;
         $this->config = $config;
-        $this->repo = $repo;
+        $this->foreignModelClass = $foreignModelClass;
 
         foreach ($properties as $name => $value) {
             $this->$name = $value;
@@ -81,7 +82,7 @@ abstract class AbstractRel
      */
     public function getRepo()
     {
-        return $this->repo;
+        return Container::get($this->foreignModelClass);
     }
 
     /**

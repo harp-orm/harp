@@ -27,7 +27,7 @@ class HasManyTest extends AbstractDbTestCase
      */
     public function testConstruct()
     {
-        $rel = new HasMany('test', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasMany('test', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $this->assertSame('test', $rel->getName());
         $this->assertSame(Country::getRepo()->getConfig(), $rel->getConfig());
@@ -35,7 +35,7 @@ class HasManyTest extends AbstractDbTestCase
         $this->assertSame('id', $rel->getKey());
         $this->assertSame('countryId', $rel->getForeignKey());
 
-        $rel = new HasMany('test', City::getRepo()->getConfig(), Country::getRepo(), array('foreignKey' => 'test'));
+        $rel = new HasMany('test', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Country', array('foreignKey' => 'test'));
         $this->assertSame('test', $rel->getForeignKey());
     }
 
@@ -44,7 +44,7 @@ class HasManyTest extends AbstractDbTestCase
      */
     public function testHasModels()
     {
-        $rel = new HasMany('cities', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasMany('cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $models = new Models([
             new Country(),
@@ -67,7 +67,7 @@ class HasManyTest extends AbstractDbTestCase
      */
     public function testModels()
     {
-        $rel = new HasMany('cities', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasMany('cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $models = new Models([
             new Country(['id' => 1]),
@@ -99,7 +99,7 @@ class HasManyTest extends AbstractDbTestCase
      */
     public function testAreLinked($model, $foreign, $expected)
     {
-        $rel = new HasMany('cities', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasMany('cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $this->assertEquals($expected, $rel->areLinked($model, $foreign));
     }
@@ -109,7 +109,7 @@ class HasManyTest extends AbstractDbTestCase
      */
     public function testUpdate()
     {
-        $rel = new HasMany('cities', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasMany('cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $model = new Country(['id' => 2]);
         $foreign1 = new City(['countryId' => 2]);
@@ -132,7 +132,7 @@ class HasManyTest extends AbstractDbTestCase
      */
     public function testJoin()
     {
-        $rel = new HasMany('cities', Country::getRepo()->getConfig(), City::getRepo());
+        $rel = new HasMany('cities', Country::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\City');
 
         $select = new Select(Country::getRepo());
 
@@ -149,7 +149,7 @@ class HasManyTest extends AbstractDbTestCase
      */
     public function testJoinSoftDelete()
     {
-        $rel = new HasMany('users', Address::getRepo()->getConfig(), User::getRepo());
+        $rel = new HasMany('users', Address::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\User');
 
         $select = new Select(Address::getRepo());
 

@@ -16,9 +16,7 @@ class Profile extends AbstractModel {
     public static function initialize($config)
     {
         $config
-            ->addRels([
-                new Rel\BelongsTo('user', $config, User::getRepo(), ['inverseOf' => 'profile']),
-            ])
+            ->belongsTo('user', __NAMESPACE__.'\User', ['inverseOf' => 'profile'])
             ->addAsserts([
                 new Assert\Present('name'),
             ]);

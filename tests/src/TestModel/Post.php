@@ -21,11 +21,9 @@ class Post extends AbstractModel
         InheritedTrait::initialize($config);
 
         $config
-            ->addRels([
-                new Rel\BelongsTo('user', $config, User::getRepo()),
-                new Rel\HasMany('postTags', $config, PostTag::getRepo()),
-                new Rel\HasManyThrough('tags', $config, Tag::getRepo(), 'postTags'),
-            ])
+            ->belongsTo('user', __NAMESPACE__.'\User')
+            ->hasMany('postTags', __NAMESPACE__.'\PostTag')
+            ->hasManyThrough('tags', __NAMESPACE__.'\Tag', 'postTags')
             ->addAsserts([
                 new Assert\Present('title'),
             ]);

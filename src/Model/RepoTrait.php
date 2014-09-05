@@ -105,15 +105,6 @@ trait RepoTrait
     }
 
     /**
-     * @param  string $class
-     * @return Repo
-     */
-    public static function newRepo($class)
-    {
-        return new Repo($class);
-    }
-
-    /**
      * @param  string $property
      * @param  mixed  $value
      * @return Find   $this

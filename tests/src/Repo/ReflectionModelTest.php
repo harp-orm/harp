@@ -35,11 +35,7 @@ class ConfigTest extends AbstractTestCase
 
         $reflection = new ReflectionModel('Harp\Harp\Test\TestModel\City');
 
-        $this->assertFalse(City::getRepo()->getInitialized());
-
         $reflection->initialize(City::getRepo()->getConfig());
-
-        $this->assertTrue(City::getRepo()->getInitialized());
     }
 
     /**

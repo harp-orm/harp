@@ -34,7 +34,7 @@ class RepoTest extends AbstractDbTestCase
      */
     public function testConstruct()
     {
-        $repo = new Repo(__NAMESPACE__.'\TestModel\City');
+        $repo = new Repo(new Config(__NAMESPACE__.'\TestModel\City'));
 
         $this->assertInstanceof('Harp\Harp\Config', $repo->getConfig());
         $this->assertEquals(__NAMESPACE__.'\TestModel\City', $repo->getConfig()->getModelClass());
@@ -79,7 +79,7 @@ class RepoTest extends AbstractDbTestCase
 
         $city = new City();
 
-        $repo = $this->getMock('Harp\Harp\Repo', ['getEventListeners'], [__NAMESPACE__.'\TestModel\City']);
+        $repo = $this->getMock('Harp\Harp\Repo', ['getEventListeners'], [new Config(__NAMESPACE__.'\TestModel\City')]);
 
         $repo
             ->expects($this->exactly(2))
@@ -106,7 +106,7 @@ class RepoTest extends AbstractDbTestCase
      */
     public function testNewModel()
     {
-        $repo = new Repo(__NAMESPACE__.'\TestModel\City');
+        $repo = new Repo(new Config(__NAMESPACE__.'\TestModel\City'));
 
         $model = $repo->newModel();
 
@@ -124,7 +124,7 @@ class RepoTest extends AbstractDbTestCase
      */
     public function testNewVoidModel()
     {
-        $repo = new Repo(__NAMESPACE__.'\TestModel\City');
+        $repo = new Repo(new Config(__NAMESPACE__.'\TestModel\City'));
 
         $model = $repo->newVoidModel();
 
@@ -231,16 +231,16 @@ class RepoTest extends AbstractDbTestCase
      */
     public function testLoadAllRelsFor()
     {
-        $repo1 = $this->getMock('Harp\Harp\Repo', ['loadRelFor'], [__NAMESPACE__.'\TestModel\City']);
-        $repo2 = $this->getMock('Harp\Harp\Repo', ['loadRelFor'], [__NAMESPACE__.'\TestModel\Country']);
-        $repo3 = $this->getMock('Harp\Harp\Repo', ['loadRelFor'], [__NAMESPACE__.'\TestModel\User']);
+        $repo1 = $this->getMock('Harp\Harp\Repo', ['loadRelFor'], [new Config(__NAMESPACE__.'\TestModel\City')]);
+        $repo2 = $this->getMock('Harp\Harp\Repo', ['loadRelFor'], [new Config(__NAMESPACE__.'\TestModel\Country')]);
+        $repo3 = $this->getMock('Harp\Harp\Repo', ['loadRelFor'], [new Config(__NAMESPACE__.'\TestModel\User')]);
 
         Container::set(__NAMESPACE__.'\TestModel\City', $repo1);
         Container::set(__NAMESPACE__.'\TestModel\Country', $repo2);
         Container::set(__NAMESPACE__.'\TestModel\User', $repo3);
 
-        $repo1->getConfig()->addRel(new Rel\BelongsTo('one', $repo1->getConfig(), $repo2));
-        $repo2->getConfig()->addRel(new Rel\HasMany('many', $repo2->getConfig(), $repo3));
+        $repo1->getConfig()->addRel(new Rel\BelongsTo('one', $repo1->getConfig(), __NAMESPACE__.'\TestModel\Country'));
+        $repo2->getConfig()->addRel(new Rel\HasMany('many', $repo2->getConfig(), __NAMESPACE__.'\TestModel\User'));
 
         $models1 = new Models([new City()]);
         $models2 = new Models([new Country()]);
@@ -270,7 +270,7 @@ class RepoTest extends AbstractDbTestCase
         $repo = $this->getMock(
             'Harp\Harp\Repo',
             ['updateAll', 'dispatchBeforeEvent', 'dispatchAfterEvent'],
-            [__NAMESPACE__.'\TestModel\City']
+            [new Config(__NAMESPACE__.'\TestModel\City')]
         );
 
         $update = $this->getMock('Harp\Harp\Query\Update', ['executeModels'], [$repo]);
@@ -334,7 +334,7 @@ class RepoTest extends AbstractDbTestCase
         $repo = $this->getMock(
             'Harp\Harp\Repo',
             ['deleteAll', 'dispatchBeforeEvent', 'dispatchAfterEvent'],
-            [__NAMESPACE__.'\TestModel\City']
+            [new Config(__NAMESPACE__.'\TestModel\City')]
         );
 
         $delete = $this->getMock('Harp\Harp\Query\Delete', ['executeModels'], [$repo]);
@@ -388,7 +388,7 @@ class RepoTest extends AbstractDbTestCase
         $repo = $this->getMock(
             'Harp\Harp\Repo',
             ['insertAll', 'dispatchBeforeEvent', 'dispatchAfterEvent'],
-            [__NAMESPACE__.'\TestModel\City']
+            [new Config(__NAMESPACE__.'\TestModel\City')]
         );
 
         $insert = $this->getMock('Harp\Harp\Query\Insert', ['executeModels'], [$repo]);

@@ -3,6 +3,7 @@
 namespace Harp\Harp\Test;
 
 use Harp\Harp\Test\TestModel\City;
+use Harp\Harp\Repo;
 
 /**
  * @coversDefaultClass Harp\Harp\ConfigProxyTrait
@@ -15,8 +16,6 @@ class ConfigProxyTraitTest extends AbstractTestCase
 {
     public function getMockForMethod($method, $arguments, $return)
     {
-        $repo = $this->getMock('Harp\Harp\Repo', ['getConfig'], ['Harp\Harp\Test\TestModel\City']);
-
         $config = $this->getMock('Harp\Harp\Config', [$method], ['Harp\Harp\Test\TestModel\City']);
 
         $methodMock = $config
@@ -32,12 +31,7 @@ class ConfigProxyTraitTest extends AbstractTestCase
             call_user_func_array([$methodMock, 'with'], $argumentConstraints);
         }
 
-        $repo
-            ->expects($this->once())
-            ->method('getConfig')
-            ->will($this->returnValue($config));
-
-        return $repo;
+        return new Repo($config);
     }
 
     public function dataMethods()
@@ -58,8 +52,6 @@ class ConfigProxyTraitTest extends AbstractTestCase
             ['getAsserts', [], 'test'],
             ['getSerializers', [], 'test'],
             ['getEventListeners', [], 'test'],
-            ['getInitialized', [], 'test'],
-
             ['getRel', ['testRelName'], 'test'],
             ['getRelOrError', ['testRelName'], 'test'],
             ['isModel', [new City()], true],
@@ -85,7 +77,6 @@ class ConfigProxyTraitTest extends AbstractTestCase
      * @covers ::getAsserts
      * @covers ::getSerializers
      * @covers ::getEventListeners
-     * @covers ::getInitialized
      * @covers ::getRel
      * @covers ::getRelOrError
      * @covers ::isModel

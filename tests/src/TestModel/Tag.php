@@ -16,10 +16,8 @@ class Tag extends AbstractModel {
     public static function initialize($config)
     {
         $config
-            ->addRels([
-                new Rel\HasMany('postTags', $config, PostTag::getRepo()),
-                new Rel\HasManyThrough('posts', $config, Post::getRepo(), 'postTags'),
-            ])
+            ->hasMany('postTags', __NAMESPACE__.'\PostTag')
+            ->hasManyThrough('tags', __NAMESPACE__.'\Post', 'postTags')
             ->addAsserts([
                 new Assert\Present('name'),
             ]);

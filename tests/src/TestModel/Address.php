@@ -17,9 +17,7 @@ class Address extends AbstractModel {
     public static function initialize($config)
     {
         $config
-            ->addRels([
-                new Rel\HasOne('user', $config, User::getRepo()),
-            ])
+            ->hasOne('user', __NAMESPACE__.'\User')
             ->addAsserts([
                 new Assert\Present('location'),
             ]);

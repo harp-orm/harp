@@ -16,10 +16,8 @@ class PostTag extends AbstractModel {
     public static function initialize($config)
     {
         $config
-            ->addRels([
-                new Rel\BelongsTo('post', $config, Post::getRepo()),
-                new Rel\BelongsTo('tag', $config, Tag::getRepo()),
-            ]);
+            ->belongsTo('post', __NAMESPACE__.'\Post')
+            ->belongsTo('tag', __NAMESPACE__.'\Tag');
     }
 
     public $id;

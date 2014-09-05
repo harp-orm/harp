@@ -154,14 +154,6 @@ trait ConfigProxyTrait
     /**
      * @return boolean
      */
-    public function getInitialized()
-    {
-        return $this->getConfig()->getInitialized();
-    }
-
-    /**
-     * @return boolean
-     */
     public function isModel(AbstractModel $model)
     {
         return $this->getConfig()->isModel($model);

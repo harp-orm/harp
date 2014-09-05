@@ -16,10 +16,8 @@ class City extends AbstractModel implements LocationInterface {
     public static function initialize($config)
     {
         $config
-            ->addRels([
-                new Rel\HasManyAs('users', $config, User::getRepo(), 'location'),
-                new Rel\BelongsTo('country', $config, Country::getRepo()),
-            ])
+            ->hasManyAs('users', __NAMESPACE__.'\User', 'location')
+            ->belongsTo('country', __NAMESPACE__.'\Country')
             ->addAsserts([
                 new Assert\Present('name'),
             ]);

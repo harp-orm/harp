@@ -8,6 +8,7 @@ use Harp\Harp\Test\TestModel\PostTag;
 use Harp\Harp\Repo\LinkMany;
 use Harp\Harp\Model\Models;
 use Harp\Harp\Model\State;
+use Harp\Harp\Config;
 use Harp\Harp\Rel\HasMany;
 use Harp\Harp\Rel\HasManyThrough;
 use Harp\Harp\Query\Select;
@@ -33,7 +34,7 @@ class HasManyThroughTest extends AbstractDbTestCase
      */
     public function testConstruct()
     {
-        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), Tag::getRepo(), 'postTags');
+        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Tag', 'postTags');
 
         $this->assertSame('tags', $rel->getName());
         $this->assertSame(Post::getRepo()->getConfig(), $rel->getConfig());
@@ -62,7 +63,7 @@ class HasManyThroughTest extends AbstractDbTestCase
      */
     public function testHasModels()
     {
-        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), Tag::getRepo(), 'postTags');
+        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Tag', 'postTags');
 
         $models = new Models([
             new Post(),
@@ -85,7 +86,7 @@ class HasManyThroughTest extends AbstractDbTestCase
      */
     public function testModels()
     {
-        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), Tag::getRepo(), 'postTags');
+        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Tag', 'postTags');
 
         $models = new Models([
             new Post(['id' => 1]),
@@ -117,7 +118,7 @@ class HasManyThroughTest extends AbstractDbTestCase
      */
     public function testAreLinked($model, $foreign, $expected)
     {
-        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), Tag::getRepo(), 'postTags');
+        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Tag', 'postTags');
 
         $this->assertEquals($expected, $rel->areLinked($model, $foreign));
     }
@@ -128,7 +129,7 @@ class HasManyThroughTest extends AbstractDbTestCase
      */
     public function testUpdate()
     {
-        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), Tag::getRepo(), 'postTags');
+        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Tag', 'postTags');
 
         $model = new Post(['id' => 2]);
         $foreign1 = new Tag(['id' => 5]);
@@ -168,7 +169,7 @@ class HasManyThroughTest extends AbstractDbTestCase
      */
     public function testJoin()
     {
-        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), Tag::getRepo(), 'postTags');
+        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Tag', 'postTags');
 
         $select = new Select(Post::getRepo());
 
@@ -188,7 +189,7 @@ class HasManyThroughTest extends AbstractDbTestCase
         $repo = Tag::getRepo();
         $repo->getConfig()->setSoftDelete(true);
 
-        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), $repo, 'postTags');
+        $rel = new HasManyThrough('tags', Post::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Tag', 'postTags');
 
         $select = new Select(Post::getRepo());
 

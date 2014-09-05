@@ -23,11 +23,11 @@ class BelongsTo extends AbstractRelOne implements UpdateOneInterface, FindModels
      */
     protected $key;
 
-    public function __construct($name, Config $config, Repo $repo, array $options = array())
+    public function __construct($name, Config $config, $foreignModel, array $options = array())
     {
         $this->key = $name.'Id';
 
-        parent::__construct($name, $config, $repo, $options);
+        parent::__construct($name, $config, $foreignModel, $options);
     }
 
     /**

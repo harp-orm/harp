@@ -28,7 +28,7 @@ class BelongsToTest extends AbstractDbTestCase
      */
     public function testConstruct()
     {
-        $rel = new BelongsTo('test', City::getRepo()->getConfig(), Country::getRepo());
+        $rel = new BelongsTo('test', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Country');
 
         $this->assertSame('test', $rel->getName());
         $this->assertSame(City::getRepo()->getConfig(), $rel->getConfig());
@@ -36,7 +36,7 @@ class BelongsToTest extends AbstractDbTestCase
         $this->assertSame('testId', $rel->getKey());
         $this->assertSame('id', $rel->getForeignKey());
 
-        $rel = new BelongsTo('test', City::getRepo()->getConfig(), Country::getRepo(), array('key' => 'test'));
+        $rel = new BelongsTo('test', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Country', array('key' => 'test'));
         $this->assertSame('test', $rel->getKey());
     }
 
@@ -45,7 +45,7 @@ class BelongsToTest extends AbstractDbTestCase
      */
     public function testHasModels()
     {
-        $rel = new BelongsTo('country', City::getRepo()->getConfig(), Country::getRepo());
+        $rel = new BelongsTo('country', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Country');
 
         $models = new Models([
             new City(),
@@ -68,7 +68,7 @@ class BelongsToTest extends AbstractDbTestCase
      */
     public function testLoadModels()
     {
-        $rel = new BelongsTo('country', City::getRepo()->getConfig(), Country::getRepo());
+        $rel = new BelongsTo('country', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Country');
 
         $models = new Models([
             new City(['countryId' => null]),
@@ -99,7 +99,7 @@ class BelongsToTest extends AbstractDbTestCase
      */
     public function testAreLinked($model, $foreign, $expected)
     {
-        $rel = new BelongsTo('country', City::getRepo()->getConfig(), Country::getRepo());
+        $rel = new BelongsTo('country', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Country');
 
         $this->assertEquals($expected, $rel->areLinked($model, $foreign));
     }
@@ -109,7 +109,7 @@ class BelongsToTest extends AbstractDbTestCase
      */
     public function testUpdate()
     {
-        $rel = new BelongsTo('country', City::getRepo()->getConfig(), Country::getRepo());
+        $rel = new BelongsTo('country', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Country');
 
         $model = new City(['countryId' => 2]);
         $foreign = new Country(['id' => 20]);
@@ -125,7 +125,7 @@ class BelongsToTest extends AbstractDbTestCase
      */
     public function testJoin()
     {
-        $rel = new BelongsTo('country', City::getRepo()->getConfig(), Country::getRepo());
+        $rel = new BelongsTo('country', City::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\Country');
 
         $select = new Select(City::getRepo());
 
@@ -142,7 +142,7 @@ class BelongsToTest extends AbstractDbTestCase
      */
     public function testJoinSoftDelete()
     {
-        $rel = new BelongsTo('user', Address::getRepo()->getConfig(), User::getRepo());
+        $rel = new BelongsTo('user', Address::getRepo()->getConfig(), 'Harp\Harp\Test\TestModel\User');
 
         $select = new Select(Address::getRepo());
 

@@ -3,6 +3,7 @@
 namespace Harp\Harp\Test;
 
 use Harp\Harp\Save;
+use Harp\Harp\Config;
 use Harp\Harp\Repo\Event;
 use Harp\Harp\Repo\LinkOne;
 use Harp\Harp\Repo\LinkMany;
@@ -302,7 +303,7 @@ class SaveTest extends AbstractTestCase
         $repo1 = $this->getMock(
             'Harp\Harp\Repo',
             ['deleteModels', 'insertModels', 'updateModels', 'get'],
-            [__NAMESPACE__.'\TestModel\Country']
+            [new Config(__NAMESPACE__.'\TestModel\Country')]
         );
 
         $repo1
@@ -313,7 +314,7 @@ class SaveTest extends AbstractTestCase
         $repo2 = $this->getMock(
             'Harp\Harp\Repo',
             ['deleteModels', 'insertModels', 'updateModels', 'get'],
-            [__NAMESPACE__.'\TestModel\User']
+            [new Config(__NAMESPACE__.'\TestModel\User')]
         );
 
         $repo2

@@ -29,12 +29,12 @@ class HasManyAs extends AbstractRelMany implements UpdateManyInterface, FindMode
      */
     protected $foreignClassKey;
 
-    public function __construct($name, Config $config, Repo $repo, $foreignKeyName, array $options = array())
+    public function __construct($name, Config $config, $foreignModel, $foreignKeyName, array $options = array())
     {
         $this->foreignKey = $foreignKeyName.'Id';
         $this->foreignClassKey = $foreignKeyName.'Class';
 
-        parent::__construct($name, $config, $repo, $options);
+        parent::__construct($name, $config, $foreignModel, $options);
     }
 
     /**

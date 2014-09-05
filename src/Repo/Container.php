@@ -3,6 +3,8 @@
 namespace Harp\Harp\Repo;
 
 use Harp\Harp\Repo;
+use Harp\Harp\Config;
+use InvalidArgumentException;
 
 /**
  * A dependancy injection container for Repo objects
@@ -27,6 +29,11 @@ class Container
     private static $actualClasses;
 
     /**
+     * @var string
+     */
+    private static $configClass;
+
+    /**
      * @param  string $class
      * @return Repo
      */
@@ -39,18 +46,39 @@ class Container
                 if (self::has($actualClass)) {
                     $repo = self::get($actualClass);
                 } else {
-                    $repo = $actualClass::newRepo($actualClass);
+                    $repo = self::newRepo($actualClass);
                 }
 
                 self::set($actualClass, $repo);
             } else {
-                $repo = $class::newRepo($class);
+                $repo = self::newRepo($class);
             }
 
             self::set($class, $repo);
         }
 
         return self::$repos[$class];
+    }
+
+    public static function newRepo($class)
+    {
+        if (self::$configClass) {
+            $configClass = self::$configClass;
+            return new Repo(new $configClass($class));
+        } else {
+            return new Repo(new Config($class));
+        }
+    }
+
+    public static function setConfigClass($class)
+    {
+        if (! is_subclass_of($class, 'Harp\Harp\Config')) {
+            throw new InvalidArgumentException(
+                sprintf('Config class %s must be a subclass of Harp\Harp\Config', $class)
+            );
+        }
+
+        self::$configClass = $class;
     }
 
     /**
@@ -112,6 +140,7 @@ class Container
 
     public static function clear()
     {
+        self::$configClass = null;
         self::$repos = [];
         self::$actualClasses = [];
     }

@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "42ca42cf9f9718c98224293f7d76ea5b",
+    "hash": "82df343c95f28f16fcdb5a5ad077a24f",
     "packages": [
         {
             "name": "harp-orm/identity-map",

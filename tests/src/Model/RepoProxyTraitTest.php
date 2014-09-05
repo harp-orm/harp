@@ -4,6 +4,7 @@ namespace Harp\Harp\Test\Model;
 
 use Harp\Harp\Test\AbstractTestCase;
 use Harp\Harp\Model\State;
+use Harp\Harp\Config;
 
 /**
  * @coversDefaultClass Harp\Harp\Model\RepoProxyTrait
@@ -16,7 +17,7 @@ class RepoProxyTraitTest extends AbstractTestCase
 {
     public function getMockForMethod($method, $arguments)
     {
-        $repo = $this->getMock('Harp\Harp\Repo', ['getModelClass'], ['Harp\Harp\Test\TestModel\City']);
+        $repo = $this->getMock('Harp\Harp\Repo', ['getModelClass'], [new Config('Harp\Harp\Test\TestModel\City')]);
 
         $repo
             ->expects($this->once())

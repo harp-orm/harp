@@ -4,7 +4,6 @@ namespace Harp\Harp\Test\TestModel;
 
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Model\SoftDeleteTrait;
-use Harp\Serializer;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -31,9 +30,7 @@ class User extends AbstractModel
 
             ->assertPresent('name')
 
-            ->addSerializers([
-                new Serializer\Native('object')
-            ]);
+            ->serializeNative('object');
     }
 
     public $id;

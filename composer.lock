@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fbfb71ec356a5aa17171052c50834f10",
+    "hash": "42b9b65d7aad0ca8780f807230505216",
     "packages": [
         {
             "name": "harp-orm/identity-map",
@@ -93,16 +93,16 @@
         },
         {
             "name": "harp-orm/serializer",
-            "version": "0.1.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/serializer.git",
-                "reference": "652a190ceabb4f3c55a41f33e0b23ba5197bd964"
+                "reference": "94b437b818a17cf9a2b805909333b11acb795dd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/serializer/zipball/652a190ceabb4f3c55a41f33e0b23ba5197bd964",
-                "reference": "652a190ceabb4f3c55a41f33e0b23ba5197bd964",
+                "url": "https://api.github.com/repos/harp-orm/serializer/zipball/94b437b818a17cf9a2b805909333b11acb795dd2",
+                "reference": "94b437b818a17cf9a2b805909333b11acb795dd2",
                 "shasum": ""
             },
             "type": "library",
@@ -111,7 +111,6 @@
                     "Harp\\Serializer\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -119,12 +118,15 @@
                 {
                     "name": "Ivan Kerin",
                     "email": "ikerin@gmail.com",
-                    "homepage": "http://www.openbuildings.com",
                     "role": "Author"
                 }
             ],
             "description": "Serialize object properties",
-            "time": "2014-07-17 11:30:08"
+            "support": {
+                "source": "https://github.com/harp-orm/serializer/tree/master",
+                "issues": "https://github.com/harp-orm/serializer/issues"
+            },
+            "time": "2014-09-08 08:20:46"
         },
         {
             "name": "harp-orm/util",
@@ -245,7 +247,8 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "harp-orm/validate": 20
+        "harp-orm/validate": 20,
+        "harp-orm/serializer": 20
     },
     "prefer-stable": false,
     "platform": {

@@ -211,23 +211,6 @@ class ConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::getSerializers
-     * @covers ::addSerializers
-     */
-    public function testSerializers()
-    {
-        $config = new Config(__NAMESPACE__.'\TestModel\User');
-
-        $this->assertInstanceof('Harp\Serializer\Serializers', $config->getSerializers());
-
-        $serializers = $config->getSerializers();
-
-        $serializers->rewind();
-
-        $this->assertInstanceof('Harp\Serializer\Native', $serializers->current());
-    }
-
-    /**
      * @covers ::getEventListeners
      * @covers ::addEventBefore
      * @covers ::addEventAfter

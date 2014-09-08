@@ -3,7 +3,7 @@
 namespace Harp\Harp;
 
 use Harp\Validate\AssertsTrait;
-use Harp\Serializer\Serializers;
+use Harp\Serializer\SerializersTrait;
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Rel\AbstractRel;
 use Harp\Harp\Rel\RelConfigTrait;
@@ -31,6 +31,7 @@ class Config
 {
     use RelConfigTrait;
     use AssertsTrait;
+    use SerializersTrait;
 
     /**
      * @var string
@@ -87,16 +88,10 @@ class Config
      */
     private $eventListeners;
 
-    /**
-     * @var Serializers
-     */
-    private $serializers = [];
-
     public function __construct($class)
     {
         $this->reflectionModel = new ReflectionModel($class);
         $this->eventListeners = new EventListeners();
-        $this->serializers = new Serializers();
         $this->name = $this->table = $this->reflectionModel->getShortName();
         $this->fields = $this->reflectionModel->getPublicPropertyNames();
         $this->rootConfig = $this;
@@ -305,25 +300,6 @@ class Config
     public function getEventListeners()
     {
         return $this->eventListeners;
-    }
-
-    /**
-     * @return Serializers
-     */
-    public function getSerializers()
-    {
-        return $this->serializers;
-    }
-
-    /**
-     * @param  \Harp\Serializer\AbstractSerializer[] $serializers
-     * @return Config                          $this
-     */
-    public function addSerializers(array $serializers)
-    {
-        $this->serializers->set($serializers);
-
-        return $this;
     }
 
     /**

@@ -4,11 +4,11 @@ namespace Harp\Harp;
 
 use Harp\Validate\AssertsTrait;
 use Harp\Serializer\SerializersTrait;
+use Harp\EventListeners\EventListenersTrait;
+use Harp\Harp\Rel\RelConfigTrait;
 use Harp\Harp\AbstractModel;
 use Harp\Harp\Rel\AbstractRel;
-use Harp\Harp\Rel\RelConfigTrait;
 use Harp\Harp\Repo\ReflectionModel;
-use Harp\Harp\Repo\EventListeners;
 use Harp\Harp\Repo\Container;
 use InvalidArgumentException;
 
@@ -32,6 +32,7 @@ class Config
     use RelConfigTrait;
     use AssertsTrait;
     use SerializersTrait;
+    use EventListenersTrait;
 
     /**
      * @var string
@@ -83,15 +84,9 @@ class Config
      */
     private $rootConfig;
 
-    /**
-     * @var EventListeners
-     */
-    private $eventListeners;
-
     public function __construct($class)
     {
         $this->reflectionModel = new ReflectionModel($class);
-        $this->eventListeners = new EventListeners();
         $this->name = $this->table = $this->reflectionModel->getShortName();
         $this->fields = $this->reflectionModel->getPublicPropertyNames();
         $this->rootConfig = $this;
@@ -290,38 +285,6 @@ class Config
     public function setNameKey($nameKey)
     {
         $this->nameKey = $nameKey;
-
-        return $this;
-    }
-
-    /**
-     * @return EventListeners
-     */
-    public function getEventListeners()
-    {
-        return $this->eventListeners;
-    }
-
-    /**
-     * @param  integer              $event
-     * @param  Closure|string|array $callback
-     * @return Config         $this
-     */
-    public function addEventBefore($event, $callback)
-    {
-        $this->eventListeners->addBefore($event, $callback);
-
-        return $this;
-    }
-
-    /**
-     * @param  integer              $event
-     * @param  Closure|string|array $callback
-     * @return Config         $this
-     */
-    public function addEventAfter($event, $callback)
-    {
-        $this->eventListeners->addAfter($event, $callback);
 
         return $this;
     }

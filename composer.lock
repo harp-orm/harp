@@ -4,8 +4,45 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "42b9b65d7aad0ca8780f807230505216",
+    "hash": "3e767132bb8608fde104b6e72387d765",
     "packages": [
+        {
+            "name": "harp-orm/event-listeners",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/harp-orm/event-listeners.git",
+                "reference": "3868deed35c9ef5b659aa820f663d921c3d281fe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/harp-orm/event-listeners/zipball/3868deed35c9ef5b659aa820f663d921c3d281fe",
+                "reference": "3868deed35c9ef5b659aa820f663d921c3d281fe",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Harp\\EventListeners\\": "src/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Kerin",
+                    "email": "ikerin@gmail.com",
+                    "role": "Author"
+                }
+            ],
+            "description": "Simple event listeners with Closures",
+            "support": {
+                "source": "https://github.com/harp-orm/event-listeners/tree/master",
+                "issues": "https://github.com/harp-orm/event-listeners/issues"
+            },
+            "time": "2014-09-08 11:11:24"
+        },
         {
             "name": "harp-orm/identity-map",
             "version": "0.1.0",
@@ -248,7 +285,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "harp-orm/validate": 20,
-        "harp-orm/serializer": 20
+        "harp-orm/serializer": 20,
+        "harp-orm/event-listeners": 20
     },
     "prefer-stable": false,
     "platform": {

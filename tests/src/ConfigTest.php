@@ -209,33 +209,4 @@ class ConfigTest extends AbstractTestCase
 
         $config->assertModel($other);
     }
-
-    /**
-     * @covers ::getEventListeners
-     * @covers ::addEventBefore
-     * @covers ::addEventAfter
-     */
-    public function testEventListeners()
-    {
-        $config = new Config(__NAMESPACE__.'\TestModel\City');
-
-        $this->assertInstanceof('Harp\Harp\Repo\EventListeners', $config->getEventListeners());
-
-        $config
-            ->addEventBefore(Event::SAVE, 'before save callback')
-            ->addEventBefore(Event::INSERT, 'before insert callback')
-            ->addEventAfter(Event::DELETE, 'after delete callback');
-
-        $expectedBefore = [
-            Event::SAVE   => ['before save callback'],
-            Event::INSERT => ['before insert callback'],
-        ];
-
-        $expectedAfter = [
-            Event::DELETE => ['after delete callback'],
-        ];
-
-        $this->assertEquals($expectedBefore, $config->getEventListeners()->getBefore());
-        $this->assertEquals($expectedAfter, $config->getEventListeners()->getAfter());
-    }
 }

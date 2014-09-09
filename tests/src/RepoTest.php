@@ -75,7 +75,7 @@ class RepoTest extends AbstractDbTestCase
      */
     public function testDispatchEvents()
     {
-        $eventListener = $this->getMock('Harp\Harp\Repo\EventListeners');
+        $eventListener = $this->getMock('Harp\EventListeners\EventListeners');
 
         $city = new City();
 

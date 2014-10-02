@@ -17,6 +17,10 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/harp-orm/query"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/harp-orm/serializer"
         },
         {
@@ -28,7 +32,7 @@
         "php": ">=5.4.0",
         "harp-orm/validate": "dev-master",
         "harp-orm/identity-map": "~0.1.0",
-        "harp-orm/query": "~0.2.0",
+        "harp-orm/query": "dev-maaster",
         "harp-orm/serializer": "dev-master",
         "harp-orm/event-listeners": "dev-master",
         "harp-orm/util": "~0.2.2"

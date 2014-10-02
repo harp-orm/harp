@@ -55,11 +55,6 @@ class Config
     private $table;
 
     /**
-     * @var string
-     */
-    private $db = 'default';
-
-    /**
      * @var ReflectionModel
      */
     private $reflectionModel;
@@ -124,25 +119,6 @@ class Config
     public function setTable($table)
     {
         $this->table = (string) $table;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDb()
-    {
-        return $this->db;
-    }
-
-    /**
-     * @param string $db
-     * @return Config
-     */
-    public function setDb($db)
-    {
-        $this->db = (string) $db;
 
         return $this;
     }

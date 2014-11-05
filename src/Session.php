@@ -16,9 +16,14 @@ use InvalidArgumentException;
  */
 class Session
 {
+    public static function getInstance($instanceId)
+    {
+        return self::$instances[$this->instanceId];
+    }
+
     private static $instances;
 
-    private $id;
+    private $instanceId;
 
     private $configs;
 
@@ -37,6 +42,7 @@ class Session
     public function __construct(DB $db)
     {
         $this->db = $db;
+        $this->configs = new ModelConfigs();
         $this->identityMap = new IdentityMap();
         $this->new = new SplObjectStorage();
         $this->deleted = new SplObjectStorage();
@@ -45,9 +51,11 @@ class Session
         self::$instances[$this->instanceId] = $this;
     }
 
-    /**
-     * @return DB
-     */
+    public function getInstanceId()
+    {
+        return $this->instanceId;
+    }
+
     public function add(AbstractModel $model)
     {
         if ($this->identityMap->hasIdentityKey($model)) {
@@ -61,45 +69,52 @@ class Session
         return $this;
     }
 
-    public function attach($model)
+    public function attach(AbstractModel $model)
     {
         $model->sessionId = $this->instanceId;
 
         return $this;
     }
 
-
-
-
-    public function getModelClass($name)
+    public function delete(AbstractModel $model)
     {
-        return ($this->alias AND isset($this->alias[$name]))
-            ? $this->alias[$name]
-            : $name;
-    }
-
-    public function getConfig($class)
-    {
-        if (! isset($this->repos[$class])) {
-            $class = $this->getModelClass();
-
-            $this->repos[$class] = new Repo(new Config($class));
+        if ($this->identityMap->hasIdentityKey($model)) {
+            $model = $this->identityMap->get($model);
+        } else {
+            throw new Exception('Cannot delete unsaved model');
         }
 
-        return $this->repos[$class];
+        $this->deleted->attach($model);
+        $this->attach($model);
     }
 
-    public function getSelect($class)
+    public function find($class, $id)
     {
-        $repo = $this->getRepo($class);
+        $config = $this->configs->get($class);
 
-        return new Select($repo);
+        $select = new Select($config);
+
+        return $select->limit(1)->whereKey($id)->getFirst();
     }
 
-    public function delete($class)
+    public function selectAll($class)
     {
-        $repo = $this->getRepo($class);
+        $config = $this->configs->get($class);
 
-        return new Select($repo);
+        return new Select($config);
+    }
+
+    public function deleteAll()
+    {
+        $config = $this->configs->get($class);
+
+        return new Delete($config);
+    }
+
+    public function updateAll()
+    {
+        $config = $this->configs->get($class);
+
+        return new Update($config);
     }
 }

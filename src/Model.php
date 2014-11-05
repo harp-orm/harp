@@ -14,13 +14,16 @@ use Harp\Validate\ValidateTrait;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-abstract class AbstractModel implements IdentityMapItemInterface
+class Model implements IdentityMapItemInterface
 {
-    use StateTrait;
     use DirtyTrackingTrait;
     use UnmappedPropertiesTrait;
     use RepoTrait;
     use ValidateTrait;
+
+    private $isVoid;
+
+    private $sessionId;
 
     /**
      * Set properties / state, unserialize properties and set original properties.
@@ -28,9 +31,9 @@ abstract class AbstractModel implements IdentityMapItemInterface
      * @param array $properties
      * @param int   $state
      */
-    public function __construct(array $properties = null, $state = null)
+    public function __construct(array $properties = null, $isVoid = false)
     {
-        $this->setState($state ?: $this->getDefaultState());
+        $this->isVoid = $isVoid;
 
         if (! empty($properties)) {
             $this->setProperties($properties);
@@ -39,6 +42,23 @@ abstract class AbstractModel implements IdentityMapItemInterface
         self::getRepo()->initializeModel($this);
 
         $this->resetOriginals();
+    }
+
+    public function setSession(Session $session)
+    {
+        $this->sessionId = $session->getInstanceId();
+
+        return $this;
+    }
+
+    public function getSession()
+    {
+        return Session::getInstance($this->sessionId);
+    }
+
+    public function isVoid()
+    {
+        return $isVoid;
     }
 
     public function hasSavedProperties()

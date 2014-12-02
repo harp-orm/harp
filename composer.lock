@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3e767132bb8608fde104b6e72387d765",
+    "hash": "e2f7871bcd038f8855c672dc59882eac",
     "packages": [
         {
             "name": "harp-orm/event-listeners",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/event-listeners.git",
-                "reference": "3868deed35c9ef5b659aa820f663d921c3d281fe"
+                "reference": "cda3501c05a52375382a91bbdc3d7c77a977221e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/event-listeners/zipball/3868deed35c9ef5b659aa820f663d921c3d281fe",
-                "reference": "3868deed35c9ef5b659aa820f663d921c3d281fe",
+                "url": "https://api.github.com/repos/harp-orm/event-listeners/zipball/cda3501c05a52375382a91bbdc3d7c77a977221e",
+                "reference": "cda3501c05a52375382a91bbdc3d7c77a977221e",
                 "shasum": ""
             },
             "type": "library",
@@ -41,20 +41,20 @@
                 "source": "https://github.com/harp-orm/event-listeners/tree/master",
                 "issues": "https://github.com/harp-orm/event-listeners/issues"
             },
-            "time": "2014-09-08 11:11:24"
+            "time": "2014-09-09 08:47:29"
         },
         {
             "name": "harp-orm/identity-map",
-            "version": "0.1.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/identity-map.git",
-                "reference": "eb41803dfec9b0492cf697739745022dd0c53b50"
+                "reference": "8f7f677ec3071f518890c2a0a7efc2793b198320"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/identity-map/zipball/eb41803dfec9b0492cf697739745022dd0c53b50",
-                "reference": "eb41803dfec9b0492cf697739745022dd0c53b50",
+                "url": "https://api.github.com/repos/harp-orm/identity-map/zipball/8f7f677ec3071f518890c2a0a7efc2793b198320",
+                "reference": "8f7f677ec3071f518890c2a0a7efc2793b198320",
                 "shasum": ""
             },
             "type": "library",
@@ -78,20 +78,20 @@
                 "source": "https://github.com/harp-orm/identity-map/tree/master",
                 "issues": "https://github.com/harp-orm/identity-map/issues"
             },
-            "time": "2014-09-03 12:55:26"
+            "time": "2014-11-06 22:00:28"
         },
         {
             "name": "harp-orm/query",
-            "version": "0.2.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/query.git",
-                "reference": "a0627bedc11d062580fc33b71e57f9d8df45bdbc"
+                "reference": "b7d486e280122d0e96187e3e196b3723932b3879"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/query/zipball/a0627bedc11d062580fc33b71e57f9d8df45bdbc",
-                "reference": "a0627bedc11d062580fc33b71e57f9d8df45bdbc",
+                "url": "https://api.github.com/repos/harp-orm/query/zipball/b7d486e280122d0e96187e3e196b3723932b3879",
+                "reference": "b7d486e280122d0e96187e3e196b3723932b3879",
                 "shasum": ""
             },
             "require": {
@@ -107,7 +107,6 @@
                     "Harp\\Query\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -115,18 +114,20 @@
                 {
                     "name": "Ivan Kerin",
                     "email": "ikerin@gmail.com",
-                    "homepage": "http://www.openbuildings.com",
                     "role": "Author"
                 },
                 {
                     "name": "Haralan Dobrev",
                     "email": "hkdobrev@gmail.com",
-                    "homepage": "http://hkdobrev.blogspot.com",
                     "role": "Developer"
                 }
             ],
             "description": "SQL Builder for PDO",
-            "time": "2014-07-07 11:52:30"
+            "support": {
+                "source": "https://github.com/harp-orm/query/tree/master",
+                "issues": "https://github.com/harp-orm/query/issues"
+            },
+            "time": "2014-11-06 15:55:09"
         },
         {
             "name": "harp-orm/serializer",
@@ -134,12 +135,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/harp-orm/serializer.git",
-                "reference": "94b437b818a17cf9a2b805909333b11acb795dd2"
+                "reference": "0e1a1f0258aad3ac656169b37dc7509782fb893a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/harp-orm/serializer/zipball/94b437b818a17cf9a2b805909333b11acb795dd2",
-                "reference": "94b437b818a17cf9a2b805909333b11acb795dd2",
+                "url": "https://api.github.com/repos/harp-orm/serializer/zipball/0e1a1f0258aad3ac656169b37dc7509782fb893a",
+                "reference": "0e1a1f0258aad3ac656169b37dc7509782fb893a",
                 "shasum": ""
             },
             "type": "library",
@@ -163,7 +164,7 @@
                 "source": "https://github.com/harp-orm/serializer/tree/master",
                 "issues": "https://github.com/harp-orm/serializer/issues"
             },
-            "time": "2014-09-08 08:20:46"
+            "time": "2014-09-09 08:48:17"
         },
         {
             "name": "harp-orm/util",
@@ -276,15 +277,13 @@
             "time": "2012-12-21 11:40:51"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "harp-orm/validate": 20,
+        "harp-orm/identity-map": 20,
+        "harp-orm/query": 20,
         "harp-orm/serializer": 20,
         "harp-orm/event-listeners": 20
     },
@@ -292,7 +291,5 @@
     "platform": {
         "php": ">=5.4.0"
     },
-    "platform-dev": [
-
-    ]
+    "platform-dev": []
 }

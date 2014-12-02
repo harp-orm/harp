@@ -2,9 +2,8 @@
 
 namespace Harp\Harp\Query;
 
-use Harp\Harp\Repo;
-use Harp\Harp\Model\Models;
-use Harp\Harp\AbstractModel;
+use Harp\Harp\Config;
+use Harp\Query\DBl;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -16,65 +15,65 @@ class Update extends \Harp\Query\Update
     use JoinRelTrait;
 
     /**
-     * @var Repo
+     * @var Config
      */
-    private $repo;
+    private $config;
 
-    public function __construct(Repo $repo)
+    public function __construct(DB $db, Config $config)
     {
-        $this->repo = $repo;
-        $this->table($repo->getTable());
+        parent::__construct($db);
 
-        parent::__construct($repo->getDbInstance());
+        $this->config = $config;
+        $this->table($config->getTable());
     }
 
     /**
-     * @return Repo
+     * @return Config
      */
-    public function getRepo()
+    public function getConfig()
     {
-        return $this->repo;
+        return $this->config;
     }
 
-    public function models(Models $models)
-    {
-        $changes = array();
+    // public function models(Models $models)
+    // {
+    //     $changes = array();
 
-        foreach ($models as $model) {
-            $data = $model->getChanges();
-            $model->getRepo()->getSerializers()->serialize($data);
-            $changes[$model->getId()] = $data;
-        }
+    //     foreach ($models as $model) {
+    //         $data = $model->getChanges();
+    //         $model->getConfig()->getSerializers()->serialize($data);
+    //         $changes[$model->getId()] = $data;
+    //     }
 
-        $key = $this->repo->getPrimaryKey();
+    //     $key = $this->config->getPrimaryKey();
 
-        $this
-            ->setMultiple($changes, $key)
-            ->whereIn($key, array_keys($changes));
+    //     $this
+    //         ->setMultiple($changes, $key)
+    //         ->whereIn($key, array_keys($changes));
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function model(AbstractModel $model)
-    {
-        $data = $model->getChanges();
-        $model->getRepo()->getSerializers()->serialize($data);
+    // public function model(AbstractModel $model)
+    // {
+    //     $data = $model->getChanges();
+    //     $model->getConfig()->getSerializers()->serialize($data);
 
-        $this
-            ->set($data)
-            ->where($model->getRepo()->getPrimaryKey(), $model->getId());
+    //     $this
+    //         ->set($data)
+    //         ->where($model->getConfig()->getPrimaryKey(), $model->getId());
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function executeModels(Models $models)
-    {
-        if ($models->count() == 1) {
-            $this->model($models->getFirst());
-        } else {
-            $this->models($models);
-        }
+    // public function executeModels(Models $models)
+    // {
+    //     if ($models->count() == 1) {
+    //         $this->model($models->getFirst());
+    //     } else {
+    //         $this->models($models);
+    //     }
 
-        $this->execute();
-    }
+    //     $this->execute();
+    // }
 }

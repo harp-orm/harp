@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Test\TestModel;
 
-use Harp\Harp\AbstractModel;
+use Harp\Harp\Model;
 use Harp\Harp\Model\InheritedTrait;
 
 /**
@@ -10,18 +10,16 @@ use Harp\Harp\Model\InheritedTrait;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class Post extends AbstractModel
+class Post extends Model
 {
     use InheritedTrait;
 
     public static function initialize($config)
     {
-        InheritedTrait::initialize($config);
-
         $config
-            ->belongsTo('user', __NAMESPACE__.'\User')
-            ->hasMany('postTags', __NAMESPACE__.'\PostTag')
-            ->hasManyThrough('tags', __NAMESPACE__.'\Tag', 'postTags')
+            // ->belongsTo('user', __NAMESPACE__.'\User')
+            // ->hasMany('postTags', __NAMESPACE__.'\PostTag')
+            // ->hasManyThrough('tags', __NAMESPACE__.'\Tag', 'postTags')
             ->assertPresent('title');
     }
 

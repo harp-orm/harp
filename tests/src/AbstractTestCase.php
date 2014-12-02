@@ -2,7 +2,8 @@
 
 namespace Harp\Harp\Test;
 
-use Harp\Harp\Repo\Container;
+use Harp\Harp\Session;
+use Harp\Query\DB;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -11,15 +12,28 @@ use PHPUnit_Framework_TestCase;
  */
 abstract class AbstractTestCase extends PHPUnit_Framework_TestCase
 {
+    public function getSession()
+    {
+        return $this->session;
+    }
+
     public function getDb()
     {
-        return $this->db;
+        return $this->getSession()->getDb();
     }
 
     public function setUp()
     {
-        $this->db = new Session();
-        $this->db->setAliases([
+        $db = new DB(
+            'mysql:dbname=harp-orm/harp;host=127.0.0.1',
+            'root',
+            '',
+            ['escaping' => DB::ESCAPING_MYSQL]
+        );
+
+        $db->setLogger(new TestLogger());
+
+        $this->session = new Session($db, [
             'Address'  => __NAMESPACE__.'\TestModel\Address',
             'BlogPost' => __NAMESPACE__.'\TestModel\BlogPost',
             'City'     => __NAMESPACE__.'\TestModel\City',
@@ -32,7 +46,5 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase
         ]);
 
         parent::setUp();
-
-        Container::clear();
     }
 }

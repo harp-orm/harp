@@ -2,8 +2,9 @@
 
 namespace Harp\Harp\Query;
 
-use Harp\Harp\Repo;
-use Harp\Harp\Model\Models;
+use Harp\Harp\Config;
+// use Harp\Harp\Model\Models;
+use Harp\Query\DB;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -15,40 +16,41 @@ class Delete extends \Harp\Query\Delete
     use JoinRelTrait;
 
     /**
-     * @var Repo
+     * @var Config
      */
-    private $repo;
+    private $config;
 
-    public function __construct(Repo $repo)
+    public function __construct(DB $db, Config $config)
     {
-        $this->repo = $repo;
+        parent::__construct($db);
 
-        $this->from($repo->getTable());
+        $this->config = $config;
 
-        parent::__construct($repo->getDbInstance());
+        $this->from($config->getTable());
+
     }
 
     /**
-     * @return Repo
+     * @return Config
      */
-    public function getRepo()
+    public function getConfig()
     {
-        return $this->repo;
+        return $this->config;
     }
 
-    public function models(Models $models)
-    {
-        $key = $this->getRepo()->getPrimaryKey();
-        $ids = $models->pluckProperty($key);
-        $this->whereIn($key, $ids);
+    // public function models(Models $models)
+    // {
+    //     $key = $this->getConfig()->getPrimaryKey();
+    //     $ids = $models->pluckProperty($key);
+    //     $this->whereIn($key, $ids);
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function executeModels(Models $models)
-    {
-        $this
-            ->models($models)
-            ->execute();
-    }
+    // public function executeModels(Models $models)
+    // {
+    //     $this
+    //         ->models($models)
+    //         ->execute();
+    // }
 }

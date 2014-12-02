@@ -14,11 +14,6 @@ use Harp\Harp\Config;
  */
 trait InheritedTrait
 {
-    public static function initialize(Config $repo)
-    {
-        $repo->setInherited(true);
-    }
-
     /**
      * @var string
      */

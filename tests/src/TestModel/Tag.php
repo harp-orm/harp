@@ -2,20 +2,20 @@
 
 namespace Harp\Harp\Test\TestModel;
 
-use Harp\Harp\AbstractModel;
+use Harp\Harp\Model;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class Tag extends AbstractModel {
+class Tag extends Model {
 
     public static function initialize($config)
     {
         $config
-            ->hasMany('postTags', __NAMESPACE__.'\PostTag')
-            ->hasManyThrough('tags', __NAMESPACE__.'\Post', 'postTags')
+            // ->hasMany('postTags', __NAMESPACE__.'\PostTag')
+            // ->hasManyThrough('tags', __NAMESPACE__.'\Post', 'postTags')
             ->assertPresent('name');
     }
 

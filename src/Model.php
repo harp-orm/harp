@@ -2,11 +2,9 @@
 
 namespace Harp\Harp;
 
-use Harp\Harp\Model\StateTrait;
 use Harp\Harp\Model\DirtyTrackingTrait;
 use Harp\Harp\Model\UnmappedPropertiesTrait;
 use Harp\IdentityMap\IdentityMapItemInterface;
-use Harp\Harp\Model\RepoTrait;
 use Harp\Validate\ValidateTrait;
 
 /**
@@ -14,16 +12,14 @@ use Harp\Validate\ValidateTrait;
  * @copyright  (c) 2014 Clippings Ltd.
  * @license    http://spdx.org/licenses/BSD-3-Clause
  */
-class Model implements IdentityMapItemInterface
+class Model
 {
     use DirtyTrackingTrait;
     use UnmappedPropertiesTrait;
-    use RepoTrait;
     use ValidateTrait;
+    use SessionLinkTrait;
 
     private $isVoid;
-
-    private $sessionId;
 
     /**
      * Set properties / state, unserialize properties and set original properties.
@@ -35,54 +31,38 @@ class Model implements IdentityMapItemInterface
     {
         $this->isVoid = $isVoid;
 
-        if (! empty($properties)) {
+        if (false === empty($properties)) {
             $this->setProperties($properties);
         }
-
-        self::getRepo()->initializeModel($this);
 
         $this->resetOriginals();
     }
 
-    public function setSession(Session $session)
+    public function getId()
     {
-        $this->sessionId = $session->getInstanceId();
-
-        return $this;
-    }
-
-    public function getSession()
-    {
-        return Session::getInstance($this->sessionId);
+        return $this->{Config::PRIMARY_KEY};
     }
 
     public function isVoid()
     {
-        return $isVoid;
+        return $this->isVoid;
     }
 
-    public function hasSavedProperties()
+    public function getConfig()
     {
-        return (bool) $this->getId();
+        return $this->getSession()->getConfig(get_called_class())
     }
 
     public function getValidationAsserts()
     {
-        return self::getRepo()->getAsserts();
+        return $this->getConfig()->getAsserts();
     }
 
-    /**
-     * This method will be overridden by SoftDeleteTrait
-     *
-     * @return boolean
-     */
-    public function isSoftDeleted()
+    public function getRelModels($rel)
     {
-        return false;
-    }
+        $rel = $this->getRel($rel);
+        $loader = $rel->getModelLoader();
 
-    public function getIdentityKey()
-    {
-        return $this->isSaved() ? $this->getId() : null;
+        return new RelOne($loader);
     }
 }

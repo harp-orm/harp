@@ -2,9 +2,9 @@
 
 namespace Harp\Harp\Query;
 
-use Harp\Query;
-use Harp\Harp\Repo;
-use Harp\Harp\Model\Models;
+use Harp\Harp\Config;
+// use Harp\Harp\Model\Models;
+use Harp\Query\DB;
 
 /**
  * @author     Ivan Kerin <ikerin@gmail.com>
@@ -14,57 +14,58 @@ use Harp\Harp\Model\Models;
 class Insert extends \Harp\Query\Insert
 {
     /**
-     * @var Repo
+     * @var Config
      */
-    private $repo;
+    private $config;
 
-    public function __construct(Repo $repo)
+    public function __construct(DB $db, Config $config)
     {
-        $this->repo = $repo;
-        $this->into($repo->getTable());
+        parent::__construct($db);
 
-        parent::__construct($repo->getDbInstance());
+        $this->config = $config;
+        $this->into($config->getTable());
+
     }
     /**
-     * @return Repo
+     * @return Config
      */
-    public function getRepo()
+    public function getConfig()
     {
-        return $this->repo;
+        return $this->config;
     }
 
-    /**
-     * @param  Models $models
-     * @return Insert         $this
-     */
-    public function models(Models $models)
-    {
-        $columns = $this->getRepo()->getFields();
-        $columnKeys = array_flip($columns);
+    // /**
+    //  * @param  Models $models
+    //  * @return Insert         $this
+    //  */
+    // public function models(Models $models)
+    // {
+    //     $columns = $this->getConfig()->getFields();
+    //     $columnKeys = array_flip($columns);
 
-        $this->columns($columns);
+    //     $this->columns($columns);
 
-        foreach ($models as $model) {
-            $data = $model->getProperties();
-            $model->getRepo()->getSerializers()->serialize($data);
-            $values = array_intersect_key($data, $columnKeys);
-            $this->values(array_values($values));
-        }
+    //     foreach ($models as $model) {
+    //         $data = $model->getProperties();
+    //         $model->getConfig()->getSerializers()->serialize($data);
+    //         $values = array_intersect_key($data, $columnKeys);
+    //         $this->values(array_values($values));
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function executeModels(Models $models)
-    {
-        $this
-            ->models($models)
-            ->execute();
+    // public function executeModels(Models $models)
+    // {
+    //     $this
+    //         ->models($models)
+    //         ->execute();
 
-        $lastInsertId = $this->getLastInsertId();
+    //     $lastInsertId = $this->getLastInsertId();
 
-        foreach ($models as $model) {
-            $model->setId($lastInsertId);
-            $lastInsertId += 1;
-        }
-    }
+    //     foreach ($models as $model) {
+    //         $model->setId($lastInsertId);
+    //         $lastInsertId += 1;
+    //     }
+    // }
 }

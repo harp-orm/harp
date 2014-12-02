@@ -1,11 +1,14 @@
 <?php
 
-namespace Harp\Harp\Repo;
+namespace Harp\Harp;
 
-use Harp\Harp\Repo;
-use Harp\Harp\Config;
 use Harp\Query\DB;
+use Harp\Harp\Query\Select;
+use Harp\Harp\Query\Delete;
+use Harp\Harp\Query\Update;
+use Harp\IdentityMap\IdentityMap;
 use InvalidArgumentException;
+use SplObjectStorage;
 
 /**
  * A dependancy injection container for Repo objects
@@ -18,14 +21,14 @@ class Session
 {
     public static function getInstance($instanceId)
     {
-        return self::$instances[$this->instanceId];
+        return self::$instances[$instanceId];
     }
 
     private static $instances;
 
     private $instanceId;
 
-    private $configs;
+    private $configContainer;
 
     private $models;
 
@@ -39,14 +42,19 @@ class Session
      */
     private $identityMap;
 
-    public function __construct(DB $db)
+    public function __construct(DB $db, array $aliases = array())
     {
         $this->db = $db;
-        $this->configs = new ModelConfigs();
-        $this->identityMap = new IdentityMap();
+
+        $this->configContainer = new ConfigContainer($this, $aliases);
+
+        $this->identityMap = new IdentityMap(function (Model $model) {
+            return get_class($model).':'.$model->getId();
+        });
+
         $this->new = new SplObjectStorage();
         $this->deleted = new SplObjectStorage();
-        $this->instanceId = count(self::$instances);
+        $this->instanceId = count(self::$instances) + 1;
 
         self::$instances[$this->instanceId] = $this;
     }
@@ -56,65 +64,80 @@ class Session
         return $this->instanceId;
     }
 
-    public function add(AbstractModel $model)
+    public function getConfigContainer()
     {
-        if ($this->identityMap->hasIdentityKey($model)) {
+        return $this->configContainer;
+    }
+
+    public function getDb()
+    {
+        return $this->db;
+    }
+
+    public function getConfig($class)
+    {
+        return $this->configContainer->get($class);
+    }
+
+    public function add(Model $model)
+    {
+        if ($model->getId()) {
             $model = $this->identityMap->get($model);
         } else {
             $this->new->attach($model);
         }
 
-        $this->attach($model);
+        $model->setSession($this);
 
-        return $this;
+        return $model;
     }
 
-    public function attach(AbstractModel $model)
+    public function delete(Model $model)
     {
-        $model->sessionId = $this->instanceId;
-
-        return $this;
-    }
-
-    public function delete(AbstractModel $model)
-    {
-        if ($this->identityMap->hasIdentityKey($model)) {
+        if ($model->getId()) {
             $model = $this->identityMap->get($model);
         } else {
             throw new Exception('Cannot delete unsaved model');
         }
 
         $this->deleted->attach($model);
-        $this->attach($model);
+        $model->setSession($this);
     }
 
-    public function find($class, $id)
+    public function getModel($class, $id)
     {
-        $config = $this->configs->get($class);
+        $config = $this->getConfig($class);
 
-        $select = new Select($config);
+        $select = new Select($this, $config);
 
-        return $select->limit(1)->whereKey($id)->getFirst();
+        return $select->whereKey($id)->fetchFirst();
     }
 
-    public function selectAll($class)
+    public function getSelect($class)
     {
-        $config = $this->configs->get($class);
+        $config = $this->getConfig($class);
 
-        return new Select($config);
+        return new Select($this, $config);
     }
 
-    public function deleteAll()
+    public function getDelete($class)
     {
-        $config = $this->configs->get($class);
+        $config = $this->getConfig($class);
 
-        return new Delete($config);
+        return new Delete($this, $config);
     }
 
-    public function updateAll()
+    public function getUpdate($class)
     {
-        $config = $this->configs->get($class);
+        $config = $this->getConfig($class);
 
-        return new Update($config);
+        return new Update($this, $config);
+    }
+
+    public function getInsert($class)
+    {
+        $config = $this->getConfig($class);
+
+        return new Update($this, $config);
     }
 }

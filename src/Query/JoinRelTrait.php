@@ -2,7 +2,7 @@
 
 namespace Harp\Harp\Query;
 
-use Harp\Harp\Repo;
+use Harp\Harp\Config;
 use Harp\Util\Arr;
 
 /**
@@ -13,38 +13,30 @@ use Harp\Util\Arr;
 trait JoinRelTrait
 {
     /**
-     * @return Repo
+     * @return Config
      */
-    abstract public function getRepo();
+    abstract public function getConfig();
 
-    /**
-     * @param  array|string $rels
-     */
-    public function joinRels($rels)
-    {
-        $rels = Arr::toAssoc((array) $rels);
+    // public function joinRels($rels)
+    // {
+    //     $rels = Arr::toAssoc((array) $rels);
 
-        $this->joinNestedRels($this->getRepo(), $rels, $this->getRepo()->getTable());
+    //     $this->joinNestedRels($this->getConfig(), $rels, $this->getConfig()->getTable());
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    /**
-     * @param  Repo $repo
-     * @param  array        $rels
-     * @param  string       $parent
-     */
-    private function joinNestedRels(Repo $repo, array $rels, $parent)
-    {
-        foreach ($rels as $name => $childRels)
-        {
-            $rel = $repo->getRelOrError($name);
+    // private function joinNestedRels(Config $config, array $rels, $parent)
+    // {
+    //     foreach ($rels as $name => $childRels)
+    //     {
+    //         $rel = $config->getRelOrError($name);
 
-            $rel->join($this, $parent);
+    //         $rel->join($this, $parent);
 
-            if ($childRels) {
-                $this->joinNestedRels($rel->getRepo(), $childRels, $name);
-            }
-        }
-    }
+    //         if ($childRels) {
+    //             $this->joinNestedRels($rel->getConfig(), $childRels, $name);
+    //         }
+    //     }
+    // }
 }

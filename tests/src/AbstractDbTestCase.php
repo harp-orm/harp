@@ -10,40 +10,20 @@ use Harp\Query\DB;
  */
 abstract class AbstractDbTestCase extends AbstractTestCase {
 
-    /**
-     * @var TestLogger
-     */
-    protected $logger;
-
-    /**
-     * @return TestLogger
-     */
-    public function getLogger()
-    {
-        return $this->logger;
-    }
-
     public function setUp()
     {
         parent::setUp();
 
-        $this->logger = new TestLogger();
+        $db = $this->getDb();
 
-        DB::setConfig([
-            'dsn' => 'mysql:dbname=harp-orm/harp;host=127.0.0.1',
-            'username' => 'root',
-            'escaping' => DB::ESCAPING_MYSQL,
-        ]);
-
-        DB::get()->execute('ALTER TABLE Post AUTO_INCREMENT = 5');
-        DB::get()->execute('ALTER TABLE PostTag AUTO_INCREMENT = 4');
-        DB::get()->setLogger($this->logger);
-        DB::get()->beginTransaction();
+        $db->execute('ALTER TABLE Post AUTO_INCREMENT = 5')
+        $db->execute('ALTER TABLE PostTag AUTO_INCREMENT = 4')
+        $db->beginTransaction();
     }
 
     public function tearDown()
     {
-        DB::get()->rollback();
+        $this->getDb()->rollback();
 
         parent::tearDown();
     }

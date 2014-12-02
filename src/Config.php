@@ -5,11 +5,12 @@ namespace Harp\Harp;
 use Harp\Validate\AssertsTrait;
 use Harp\Serializer\SerializersTrait;
 use Harp\EventListeners\EventListenersTrait;
-use Harp\Harp\Rel\RelConfigTrait;
-use Harp\Harp\AbstractModel;
-use Harp\Harp\Rel\AbstractRel;
-use Harp\Harp\Repo\ReflectionModel;
-use Harp\Harp\Repo\Container;
+// use Harp\Harp\Rel\RelConfigTrait;
+use Harp\Harp\Model;
+// use Harp\Harp\Rel\AbstractRel;
+// use Harp\Harp\Repo\ReflectionModel;
+use ReflectionClass;
+// use Harp\Harp\Repo\Container;
 use InvalidArgumentException;
 
 /**
@@ -29,20 +30,20 @@ use InvalidArgumentException;
  */
 class Config
 {
-    use RelConfigTrait;
+    const PRIMARY_KEY = 'id';
+    const INHERITED_KEY = 'class';
+    const SOFT_DELETE_KEY = 'deletedAt';
+
+    // use RelConfigTrait;
     use AssertsTrait;
     use SerializersTrait;
     use EventListenersTrait;
+    use RelsTrait;
 
     /**
      * @var string
      */
     private $name;
-
-    /**
-     * @var string
-     */
-    private $primaryKey = 'id';
 
     /**
      * @var string
@@ -57,7 +58,7 @@ class Config
     /**
      * @var ReflectionModel
      */
-    private $reflectionModel;
+    private $reflection;
 
     /**
      * @var array
@@ -81,12 +82,17 @@ class Config
 
     public function __construct($class)
     {
-        $this->reflectionModel = new ReflectionModel($class);
-        $this->name = $this->table = $this->reflectionModel->getShortName();
-        $this->fields = $this->reflectionModel->getPublicPropertyNames();
-        $this->rootConfig = $this;
+        $this->reflection = new ReflectionModel($class);
+        $this->name = $this->table = $this->reflection->getShortName();
+        $this->fields = $this->reflection->getPublicPropertyNames();
 
-        $this->reflectionModel->initialize($this);
+        if ($this->reflection->hasMethod('initialize')) {
+            $this->reflection->getMethod('initialize')->invoke(null, $this);
+        }
+
+        $this->inherited = $this->reflection->hasInheritedTrait();
+        $this->softDelete = $this->reflection->hasSoftDeleteTrait();
+        $this->sessionInstanceId = $session->getInstanceId();
     }
 
     /**
@@ -102,7 +108,7 @@ class Config
      */
     public function getModelClass()
     {
-        return $this->reflectionModel->getName();
+        return $this->reflection->getName();
     }
 
     /**
@@ -145,9 +151,9 @@ class Config
     /**
      * @return ReflectionModel
      */
-    public function getReflectionModel()
+    public function getReflection()
     {
-        return $this->reflectionModel;
+        return $this->reflection;
     }
 
     /**
@@ -159,11 +165,11 @@ class Config
     }
 
     /**
-     * @return Repo
+     * @return Config
      */
-    public function getRepo()
+    public function isInherited()
     {
-        return Container::get($this->getModelClass());
+        return $this->inherited;
     }
 
     /**
@@ -177,74 +183,41 @@ class Config
     /**
      * @return boolean
      */
-    public function getSoftDelete()
+    public function isSoftDelete()
     {
         return $this->softDelete;
     }
 
-    /**
-     * Enables "soft delete" on models of this repo.
-     * You will need to add the SoftDeleteTrait to the model class too.
-     *
-     * @param  boolean      $softDelete
-     * @return Config $this
-     */
-    public function setSoftDelete($softDelete)
-    {
-        $this->softDelete = (bool) $softDelete;
+    // /**
+    //  * @return boolean
+    //  */
+    // public function getInherited()
+    // {
+    //     return $this->inherited;
+    // }
 
-        return $this;
-    }
+    // /**
+    //  * Enables Repo "inheritance" allowing multiple repos to share one storage table
+    //  * You will need to call setRootRepo on all the child repos.
+    //  *
+    //  * @param  boolean      $inherited
+    //  * @return Config $this
+    //  */
+    // public function setInherited($inherited)
+    // {
+    //     $this->inherited = (bool) $inherited;
 
-    /**
-     * @return boolean
-     */
-    public function getInherited()
-    {
-        return $this->inherited;
-    }
+    //     if ($inherited) {
+    //         if (! $this->reflection->isRoot()) {
+    //             $rootRepo = Container::get($this->reflection->getRoot()->getName());
+    //             $this->rootConfig = $rootRepo->getConfig();
+    //         }
 
-    /**
-     * Enables Repo "inheritance" allowing multiple repos to share one storage table
-     * You will need to call setRootRepo on all the child repos.
-     *
-     * @param  boolean      $inherited
-     * @return Config $this
-     */
-    public function setInherited($inherited)
-    {
-        $this->inherited = (bool) $inherited;
+    //         $this->table = $this->rootConfig->getTable();
+    //     }
 
-        if ($inherited) {
-            if (! $this->reflectionModel->isRoot()) {
-                $rootRepo = Container::get($this->reflectionModel->getRoot()->getName());
-                $this->rootConfig = $rootRepo->getConfig();
-            }
-
-            $this->table = $this->rootConfig->getTable();
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPrimaryKey()
-    {
-        return $this->primaryKey;
-    }
-
-    /**
-     * @param string
-     * @return Config $this
-     */
-    public function setPrimaryKey($primaryKey)
-    {
-        $this->primaryKey = $primaryKey;
-
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return string
@@ -263,33 +236,5 @@ class Config
         $this->nameKey = $nameKey;
 
         return $this;
-    }
-
-    /**
-     * Check if a model belongs to this repo. Child classes are also accepted
-     *
-     * @param  AbstractModel            $model
-     * @throws InvalidArgumentException If model not part of repo
-     */
-    public function assertModel(AbstractModel $model)
-    {
-        if (! $this->isModel($model)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Model must be instance of %s, but was %s',
-                    $this->getRootConfig()->getModelClass(),
-                    get_class($model)
-                )
-            );
-        }
-    }
-
-    /**
-     * @param  AbstractModel $model
-     * @return boolean
-     */
-    public function isModel(AbstractModel $model)
-    {
-        return $this->getRootConfig()->getReflectionModel()->isInstance($model);
     }
 }

@@ -53,7 +53,7 @@ class BelongsTo extends AbstractRelOne implements UpdateOneInterface, FindModels
      */
     public function getForeignKey()
     {
-        return $this->getConfig()->getPrimaryKey();
+        return $this->getRepo()->getConfig()->getPrimaryKey();
     }
 
     /**
